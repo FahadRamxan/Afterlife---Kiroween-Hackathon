@@ -6,7 +6,7 @@
   "license": "MIT",
   "packageManager": "pnpm@10.5.2",
   "engines": {
-    "node": ">=22"
+    "node": "\u003e=22"
   },
   "scripts": {
     "dev": "turbo run dev",
@@ -16,10 +16,11 @@
     "lint": "eslint .",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write .",
-    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm e2e",
+    "verify": "pnpm lint \u0026\u0026 pnpm typecheck \u0026\u0026 pnpm test \u0026\u0026 pnpm e2e",
     "prepare": "husky",
     "test:coverage": "vitest run --coverage",
-    "test:pbt": "vitest run prop.test"
+    "test:pbt": "vitest run prop.test",
+    "snapshots:linux": "node scripts/update-linux-snapshots.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",

@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 
 // The a11y-check Kiro hook sets A11Y_ROUTES to the pages that were just saved.
 // Without it, every known route is checked. Prompt 89 extends this to all routes in both languages.
-const routes = (process.env.A11Y_ROUTES ?? '/').split(',').filter(Boolean);
+const routes = (process.env.A11Y_ROUTES ?? '/,/design').split(',').filter(Boolean);
 
 for (const route of routes) {
   test(`no serious axe violations on ${route}`, async ({ page }) => {

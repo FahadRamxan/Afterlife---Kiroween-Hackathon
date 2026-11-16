@@ -10,6 +10,8 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [['list']],
   use: { baseURL, trace: 'retain-on-failure' },
+  // Small tolerance for anti-aliasing. Baselines exist per platform (win32 locally, linux for CI).
+  expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.01 } },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
     // CI tests the production build. Locally, dev mode is faster.
