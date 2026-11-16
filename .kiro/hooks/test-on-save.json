@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "test-on-save",
+      "trigger": "PostFileSave",
+      "description": "When a packages/*/src TypeScript file is saved, run that package's Vitest project and report failures.",
+      "matcher": "packages[\\\\/][^\\\\/]+[\\\\/]src[\\\\/].+\\.tsx?$",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/run.mjs test-on-save",
+        "timeout": 180
+      }
+    }
+  ]
+}
