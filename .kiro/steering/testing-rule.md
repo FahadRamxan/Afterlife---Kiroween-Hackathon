@@ -32,7 +32,7 @@ Never mark a task done if any test is skipped or failing.
 
 ## Property test examples
 
-Each example below runs for real in `tests/testing-rule-examples.test.ts`.
+Each example below runs for real in `tests/testing-rule-examples.prop.test.ts`.
 
 ### Round-trip
 

@@ -14,7 +14,7 @@ Status: `done` (verified, committed), `in review` (committed locally, not pushed
 | 3   | Steering docs             | S     | pushed | `chore/kiro-steering`     | product, tech, structure, crew; all `inclusion: always`                             |
 | 4   | Testing rule steering doc | F     | pushed | `chore/kiro-testing-rule` | Property examples run for real in `tests/testing-rule-examples.test.ts`             |
 | 5   | Husky and commitlint      | F     | pushed | `chore/git-hooks`         | Blocked commit proof in `docs/git-hooks-proof.md`. Screenshot still to take by hand |
-| 6   | GitHub Actions CI         | F     | todo   |                           |                                                                                     |
+| 6   | GitHub Actions CI         | F     | pushed | `ci/pipeline`             | ci.yml + nightly-pbt.yml, actionlint clean. CI runs once a PR is opened             |
 | 7   | Kiro agent hooks          | F     | todo   |                           |                                                                                     |
 | 8   | Design system             | Q     | todo   |                           |                                                                                     |
 | 9   | Web app shell             | Q     | todo   |                           |                                                                                     |
