@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "main": "Main",
+    "home": "Afterlife home",
+    "graveyard": "Graveyard",
+    "playground": "Playground",
+    "design": "Design"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "ur": "اردو"
+  },
+  "home": {
+    "title": "Afterlife",
+    "tagline": "Software that outlives its source code.",
+    "subline": "No source code. No developer. Just the .exe.",
+    "cta": "Visit the graveyard"
+  },
+  "graveyard": {
+    "title": "The Graveyard",
+    "emptyTitle": "No dead apps yet",
+    "emptyBody": "The sample DOS apps from the 1990s will rest here soon."
+  },
+  "raise": {
+    "title": "Raising {projectId}",
+    "tabsLabel": "Rebirth steps",
+    "tabs": {
+      "possession": "Possession",
+      "soul": "Soul",
+      "proof": "Proof",
+      "exorcism": "Exorcism",
+      "ghost-twin": "Ghost Twin",
+      "living-soul": "Living Soul"
+    },
+    "empty": {
+      "possession": "The agent has not taken over the old app yet. Press Raise to begin.",
+      "soul": "No rules exhumed yet. They appear after possession.",
+      "proof": "No proof run yet. It starts after the app is reborn.",
+      "exorcism": "No ghosts found yet. Legacy bugs are listed here.",
+      "ghost-twin": "Shadow mode has not started. Real shop days are replayed here.",
+      "living-soul": "No voice changes yet. Speak to change a rule."
+    }
+  },
+  "vessel": {
+    "title": "Reborn app",
+    "emptyTitle": "This app has not been reborn yet",
+    "emptyBody": "Project {projectId} will appear here after the rebirth step."
+  },
+  "verify": {
+    "title": "Verify a certificate",
+    "emptyTitle": "Certificate not found",
+    "emptyBody": "No certificate with id {certId} exists yet."
+  },
+  "playground": {
+    "title": "Judge Playground",
+    "emptyTitle": "The guided tour is being built",
+    "emptyBody": "Raise a dead app in five minutes, with no login."
+  }
+}
