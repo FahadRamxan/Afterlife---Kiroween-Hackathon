@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import type { ReactNode } from 'react';
+import { Footer } from '../components/Footer';
 import { TopBar } from '../components/TopBar';
 import { dirFor, type Locale } from '../lib/i18n';
 import { inter, nastaliq, plexMono } from './fonts';
@@ -20,10 +21,13 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       dir={dirFor(locale)}
       className={`${inter.variable} ${plexMono.variable} ${nastaliq.variable}`}
     >
-      <body className={locale === 'ur' ? 'font-urdu leading-loose' : undefined}>
+      <body
+        className={`flex min-h-dvh flex-col ${locale === 'ur' ? 'font-urdu leading-loose' : ''}`}
+      >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <TopBar />
-          {children}
+          <div className="flex-1">{children}</div>
+          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>

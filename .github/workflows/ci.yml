@@ -94,3 +94,14 @@ jobs:
             e2e/playwright-report/
             e2e/test-results/
           retention-days: 14
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: docker build -f apps/api/Dockerfile -t afterlife-api:local .
+      - run: docker build -f apps/worker/Dockerfile -t afterlife-worker:local .
+      - run: node scripts/docker-smoke.mjs

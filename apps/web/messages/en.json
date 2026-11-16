@@ -56,5 +56,14 @@
     "title": "Judge Playground",
     "emptyTitle": "The guided tour is being built",
     "emptyBody": "Raise a dead app in five minutes, with no login."
+  },
+  "footer": {
+    "credit": "Afterlife · MIT · Matrix AE",
+    "api": {
+      "checking": "Checking API…",
+      "healthy": "API healthy",
+      "down": "API down",
+      "unconfigured": "API not configured"
+    }
   }
 }
