@@ -17,7 +17,7 @@ Status: `done` (verified, committed), `in review` (committed locally, not pushed
 | 6   | GitHub Actions CI         | F     | pushed | `ci/pipeline`             | ci.yml + nightly-pbt.yml, actionlint clean. CI runs once a PR is opened                                                         |
 | 7   | Kiro agent hooks          | F     | pushed | `chore/kiro-hooks`        | 4 hook files + manual `/pre-commit-check`. Fired once each, logged in `docs/kiro-usage.md`. Confirm firing in a new IDE session |
 | 8   | Design system             | Q     | pushed | `feat/ui-design-system`   | 8 components, `/design`, 9 snapshots (win32 + linux), reduced-motion e2e, AA contrast tests                                     |
-| 9   | Web app shell             | Q     | todo   |                           |                                                                                                                                 |
+| 9   | Web app shell             | Q     | pushed | `feat/web-app-shell`      | 7 routes, top bar + logo, next-intl EN/UR (cookie, RTL), Radix tabs synced to `?tab=`, axe on every route                       |
 | 10  | Deploy skeleton           | F     | todo   |                           |                                                                                                                                 |
 
 Prompts 11 to 100 are all `todo`. Update this file in the same commit as each prompt.
