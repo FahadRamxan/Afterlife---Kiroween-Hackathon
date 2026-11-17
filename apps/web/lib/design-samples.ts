@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { diffTables, readDbf, type DbfRecord, type Table, type TableDiff } from '@afterlife/dbf';
-import { analyzeScreen, decodePng, decodeScreen, gridText } from '@afterlife/screen';
+import { analyzeScreen, decodePng, decodeScreen, fingerprint, gridText } from '@afterlife/screen';
 
 // next build and next dev run from apps/web.
 const DIST = path.join(process.cwd(), '..', '..', 'samples', 'graveyard', 'dist');
@@ -47,7 +47,7 @@ export function shifaStockDiff(): { before: Table; after: Table; diff: TableDiff
  * A recorded js-dos frame of the Shifa main menu (packages/screen/fixtures, from
  * `pnpm screen:capture`) and what decodeScreen reads from its pixels.
  */
-export function shifaMenuDecoded() {
+export async function shifaMenuDecoded() {
   const png = readFileSync(
     path.join(
       process.cwd(),
@@ -62,6 +62,7 @@ export function shifaMenuDecoded() {
   const img = decodePng(new Uint8Array(png));
   const grid = decodeScreen(img.rgba, img.width, img.height);
   const cells = grid.cells.flat();
+  const model = analyzeScreen(grid);
   return {
     src: `data:image/png;base64,${png.toString('base64')}`,
     width: img.width,
@@ -70,6 +71,7 @@ export function shifaMenuDecoded() {
     cells: cells.length,
     unknown: cells.filter((c) => c.code < 0).length,
     cursor: grid.cursor,
-    model: analyzeScreen(grid),
+    model,
+    fingerprint: await fingerprint(model),
   };
 }
