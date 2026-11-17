@@ -1,0 +1,14 @@
+**/node_modules
+**/.next
+**/.turbo
+**/dist
+**/coverage
+**/test-results
+**/playwright-report
+**/*.log
+.git
+.husky
+.env
+**/.env
+**/.env.local
+e2e/*-snapshots

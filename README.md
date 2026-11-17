@@ -14,7 +14,7 @@ Built for Kiroween 2026 (category: Resurrection) by Matrix AE.
 - `packages/*`: soul, vessel, dbf, screen, emulator, oracle, crew, certificate, mcp-emulator, ui
 - `powers/afterlife`, `samples/graveyard`, `e2e`, `docs`
 
-See [plan.md](plan.md) for the plan and [prompt.md](prompt.md) for the build prompts. Progress is tracked in [docs/progress.md](docs/progress.md).
+See [plan.md](plan.md) for the plan and [prompt.md](prompt.md) for the build prompts. Progress is tracked in [docs/progress.md](docs/progress.md). Deployment steps are in [docs/deploy.md](docs/deploy.md).
 
 ## Commands
 

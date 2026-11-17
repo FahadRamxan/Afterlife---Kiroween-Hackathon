@@ -18,8 +18,9 @@ describe('CI workflow (Prompt 6)', () => {
     expect(ci.on.push.branches).toEqual(['main']);
   });
 
-  it('every job uses Node 22 with the pnpm cache', () => {
-    for (const job of Object.values(ci.jobs)) {
+  it('every pnpm job uses Node 22 with the pnpm cache', () => {
+    for (const [name, job] of Object.entries(ci.jobs)) {
+      if (name === 'docker') continue;
       const s = stepText(job);
       expect(s).toContain('pnpm/action-setup');
       expect(s).toMatch(/"node-version":"?22/);
@@ -88,5 +89,15 @@ describe('root scripts (Prompt 6)', () => {
   it('has test:coverage and test:pbt', () => {
     expect(scripts['test:coverage']).toContain('--coverage');
     expect(scripts['test:pbt']).toContain('prop');
+  });
+});
+
+describe('docker job (Prompt 10)', () => {
+  const ci = wf('.github/workflows/ci.yml');
+  it('builds both images and runs the docker smoke check', () => {
+    const s = stepText(ci.jobs.docker);
+    expect(s).toContain('apps/api/Dockerfile');
+    expect(s).toContain('apps/worker/Dockerfile');
+    expect(s).toContain('scripts/docker-smoke.mjs');
   });
 });

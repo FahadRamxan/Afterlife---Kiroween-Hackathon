@@ -2,23 +2,25 @@
 
 Source of truth for what is done. Prompts come from [prompt.md](../prompt.md). Each prompt follows the loop in plan.md Rule 2: tests first, make them pass, wire into UI, e2e, `pnpm verify`, commit, push.
 
-Status: `done` (verified, committed), `in review` (committed locally, not pushed or merged), `todo`.
+Status: `pushed` (verified, committed, pushed to its branch), `partial` (code done, a step outside the repo is left), `todo`.
+
+Branches are stacked: each one starts from the previous. Merge the PRs in order 1 to 10.
 
 ## Phase 1: Foundation
 
-| #   | Prompt                    | Owner | Status | Branch                    | Notes                                                                                                                           |
-| --- | ------------------------- | ----- | ------ | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| 0   | Master context            | all   | n/a    |                           | Pasted per session                                                                                                              |
-| 1   | Monorepo scaffold         | F     | pushed | `chore/scaffold-monorepo` | See below                                                                                                                       |
-| 2   | Read Kiro docs            | S     | pushed | `docs/kiro-formats`       | docs/kiro-formats.md. Flags differences from plan.md                                                                            |
-| 3   | Steering docs             | S     | pushed | `chore/kiro-steering`     | product, tech, structure, crew; all `inclusion: always`                                                                         |
-| 4   | Testing rule steering doc | F     | pushed | `chore/kiro-testing-rule` | Property examples run for real in `tests/testing-rule-examples.test.ts`                                                         |
-| 5   | Husky and commitlint      | F     | pushed | `chore/git-hooks`         | Blocked commit proof in `docs/git-hooks-proof.md`. Screenshot still to take by hand                                             |
-| 6   | GitHub Actions CI         | F     | pushed | `ci/pipeline`             | ci.yml + nightly-pbt.yml, actionlint clean. CI runs once a PR is opened                                                         |
-| 7   | Kiro agent hooks          | F     | pushed | `chore/kiro-hooks`        | 4 hook files + manual `/pre-commit-check`. Fired once each, logged in `docs/kiro-usage.md`. Confirm firing in a new IDE session |
-| 8   | Design system             | Q     | pushed | `feat/ui-design-system`   | 8 components, `/design`, 9 snapshots (win32 + linux), reduced-motion e2e, AA contrast tests                                     |
-| 9   | Web app shell             | Q     | pushed | `feat/web-app-shell`      | 7 routes, top bar + logo, next-intl EN/UR (cookie, RTL), Radix tabs synced to `?tab=`, axe on every route                       |
-| 10  | Deploy skeleton           | F     | todo   |                           |                                                                                                                                 |
+| #   | Prompt                    | Owner | Status  | Branch                    | Notes                                                                                                                                                           |
+| --- | ------------------------- | ----- | ------- | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0   | Master context            | all   | n/a     |                           | Pasted per session                                                                                                                                              |
+| 1   | Monorepo scaffold         | F     | pushed  | `chore/scaffold-monorepo` | See below                                                                                                                                                       |
+| 2   | Read Kiro docs            | S     | pushed  | `docs/kiro-formats`       | docs/kiro-formats.md. Flags differences from plan.md                                                                                                            |
+| 3   | Steering docs             | S     | pushed  | `chore/kiro-steering`     | product, tech, structure, crew; all `inclusion: always`                                                                                                         |
+| 4   | Testing rule steering doc | F     | pushed  | `chore/kiro-testing-rule` | Property examples run for real in `tests/testing-rule-examples.prop.test.ts`                                                                                    |
+| 5   | Husky and commitlint      | F     | pushed  | `chore/git-hooks`         | Blocked commit proof in `docs/git-hooks-proof.md`. Screenshot still to take by hand                                                                             |
+| 6   | GitHub Actions CI         | F     | pushed  | `ci/pipeline`             | ci.yml + nightly-pbt.yml, actionlint clean. CI runs once a PR is opened                                                                                         |
+| 7   | Kiro agent hooks          | F     | pushed  | `chore/kiro-hooks`        | 4 hook files + manual `/pre-commit-check`. Fired once each, logged in `docs/kiro-usage.md`. Confirm firing in a new IDE session                                 |
+| 8   | Design system             | Q     | pushed  | `feat/ui-design-system`   | 8 components, `/design`, 9 snapshots (win32 + linux), reduced-motion e2e, AA contrast tests                                                                     |
+| 9   | Web app shell             | Q     | pushed  | `feat/web-app-shell`      | 7 routes, top bar + logo, next-intl EN/UR (cookie, RTL), Radix tabs synced to `?tab=`, axe on every route                                                       |
+| 10  | Deploy skeleton           | F     | partial | `chore/deploy-skeleton`   | `/health`, status chip, Dockerfiles (smoke-tested), render.yaml, prod-smoke workflow, docs/deploy.md. **Not deployed yet**: needs Vercel, Render, Neon accounts |
 
 Prompts 11 to 100 are all `todo`. Update this file in the same commit as each prompt.
 

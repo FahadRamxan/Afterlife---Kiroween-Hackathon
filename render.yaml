@@ -1,0 +1,30 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# Secrets use sync: false, so Render asks for them in the dashboard and they never live in git.
+services:
+  - type: web
+    name: afterlife-api
+    runtime: docker
+    dockerfilePath: ./apps/api/Dockerfile
+    dockerContext: .
+    plan: free
+    region: singapore
+    healthCheckPath: /health
+    envVars:
+      - key: WEB_ORIGINS
+        sync: false
+      - key: LOG_LEVEL
+        value: info
+      - key: DATABASE_URL
+        sync: false
+
+  - type: worker
+    name: afterlife-worker
+    runtime: docker
+    dockerfilePath: ./apps/worker/Dockerfile
+    dockerContext: .
+    # Render has no free plan for background workers.
+    plan: starter
+    region: singapore
+    envVars:
+      - key: DATABASE_URL
+        sync: false
