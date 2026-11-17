@@ -35,7 +35,9 @@ test.describe('/graveyard', () => {
       const link = page.getByRole('link', { name: `Raise ${app.name}` });
       await expect(link).toHaveAttribute('href', `/raise/${app.id}`);
       await link.click();
-      await expect(page).toHaveURL(new RegExp(`/raise/${app.id}$`));
+      // With 10 workers on a cold server, the first render of /raise/<id> can take more than the
+      // 5 s default (ci:local flaked twice on this line, then passed on retry in 0.7 s).
+      await expect(page).toHaveURL(new RegExp(`/raise/${app.id}$`), { timeout: 15_000 });
       await expect(
         page.getByRole('heading', { level: 1, name: `Raising ${app.id}` }),
       ).toBeVisible();
@@ -131,6 +133,8 @@ test.describe('/graveyard', () => {
       await expect(el).toHaveCSS('direction', 'ltr');
       await expect(el).toHaveCSS('font-family', /Inter/);
     }
+    // The DOS screen preview stays left to right: "1  New Bill", not "New Bill  1".
+    await expect(stone.locator('pre')).toHaveCSS('direction', 'ltr');
     // Urdu text keeps the Urdu font.
     await expect(page.getByRole('heading', { level: 1, name: 'قبرستان' })).toHaveCSS(
       'font-family',

@@ -46,6 +46,10 @@ describe('DbfTable', () => {
   it('right-aligns numbers', () => {
     expect(out).toMatch(/class="[^"]*text-right[^"]*"[^>]*>12\.50</);
   });
+
+  it('stays left to right on a right-to-left (Urdu) page', () => {
+    expect(out).toMatch(/<div dir="ltr" role="grid"/);
+  });
 });
 
 describe('DbfDiffView', () => {
@@ -79,6 +83,10 @@ describe('DbfDiffView', () => {
     expect(out).toContain('role="tooltip"');
     expect(out).toContain('240 → 236');
     expect(out).toMatch(/aria-describedby="[^"]+"/);
+  });
+
+  it('keeps the English legend left to right on the Urdu page', () => {
+    expect(out).toMatch(/^<div dir="ltr" lang="en"/);
   });
 
   it('says in text what each coloured row is, not only by colour', () => {

@@ -41,7 +41,9 @@ export function DbfDiffView({ caption, before, after, diff, height, className }:
   const rows = useMemo(() => buildDiffRows(before, after, diff), [before, after, diff]);
   const changedCells = diff.updated.reduce((n, u) => n + u.changes.length, 0);
   return (
-    <div className={cn('space-y-3', className)}>
+    // The legend is English text about a left-to-right table, so it stays LTR on the Urdu page
+    // ("2 changed cells, matched by CODE" was reordered to "changed cells, matched by CODE 2").
+    <div dir="ltr" lang="en" className={cn('space-y-3', className)}>
       <div className="flex flex-wrap items-center gap-2" aria-label={`${caption} changes`}>
         <DiffBadge kind="inserted" count={diff.inserted.length} />
         <DiffBadge kind="deleted" count={diff.deleted.length} />

@@ -35,7 +35,16 @@ function encodeValue(f: DbfField, v: DbfValue): Uint8Array {
   switch (f.type) {
     case 'C': {
       if (typeof v !== 'string') fail('a C field takes a string');
-      const b = unicodeToCp437(v as string);
+      let b: Uint8Array;
+      try {
+        b = unicodeToCp437(v as string);
+      } catch {
+        // A typed error like the others, so callers (the inspect API) can answer 400, not 500.
+        throw new DbfError(
+          'BAD_VALUE',
+          `${f.name}: has a character DOS cannot store (not in CP437): ${JSON.stringify(v)}`,
+        );
+      }
       if (b.length > f.length)
         throw new DbfError('WIDTH', `${f.name}: "${v}" is longer than ${f.length} characters`);
       const out = new Uint8Array(f.length).fill(0x20);

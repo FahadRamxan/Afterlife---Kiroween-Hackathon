@@ -100,8 +100,11 @@ export function DbfGrid({ caption, fields, rows, height = 320, className }: DbfG
   }
 
   return (
+    // dir="ltr": a .DBF is a left-to-right DOS table. On the Urdu page it would otherwise show
+    // its fields in reverse order, with the arrow keys moving the opposite way on screen.
     <div
       ref={gridRef}
+      dir="ltr"
       role="grid"
       aria-label={caption}
       aria-rowcount={tableRows.length + 1}

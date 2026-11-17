@@ -45,7 +45,9 @@ export function dosboxConf({ executable }: DosboxOptions): string {
 }
 
 /** Every file in a bundle gets this timestamp, so the same input gives the same bytes. */
-const FIXED_MTIME = new Date(Date.UTC(1998, 6, 15, 10, 0, 0));
+// Zip stores DOS local time and fflate reads the Date with local getters, so a UTC Date gave
+// 15:00 in Pakistan and 10:00 on a UTC machine. A local-time Date gives 10:00 everywhere.
+const FIXED_MTIME = new Date(1998, 6, 15, 10, 0, 0);
 
 export type BundleInput = {
   executable: string;

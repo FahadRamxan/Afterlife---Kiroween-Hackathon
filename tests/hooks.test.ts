@@ -143,9 +143,11 @@ describe('scripts/hooks/run.mjs (Prompt 7)', () => {
 });
 
 describe('scripts/hooks/run.mjs with real Kiro paths (review fix)', () => {
-  it('test-on-save runs the package for an absolute Windows path with spaces', () => {
+  // Uses the real repo path, which has spaces in "Matrix AE Hackathons" but not in other clones
+  // (the Crew nightly runs in C:\dev\afterlife-nightly). Paths with spaces are pinned in
+  // tests/hooks-lib.test.ts with a fixed root, so this must not depend on where the repo lives.
+  it('test-on-save runs the package for an absolute path to the repo', () => {
     const abs = resolve(root, 'packages/dbf/src/index.ts');
-    expect(abs).toMatch(/ /); // this repo lives in "Matrix AE Hackathons"
     const r = runHook('test-on-save', { file_path: abs });
     expect(r.status).toBe(0);
     expect(r.stdout).toContain('PASS @afterlife/dbf');

@@ -33,7 +33,7 @@ Hook files are in `.kiro/hooks/`. We created them with Kiro's own hook tool, whi
 
 ### First firing (Prompt 7)
 
-Each hook was fired once by piping it a save event. Hooks become active in the IDE at the next session start, so the firing inside the IDE still needs confirming in a new session. Add a line here when you see it.
+Each hook was fired once by piping it a save event. Firing inside the IDE was confirmed later, once the workspace was trusted (see "Confirmed in the IDE" below).
 
 Real firings are logged to `.kiro/.hook-runs.jsonl` with `"source": "kiro"`. Test runs go to a temp file with `"source": "test"`, so that log only holds real firings.
 
@@ -64,12 +64,33 @@ The review found that a hook given a full path reported "nothing to test" and ex
 
 After the fix, the same event gives `PASS @afterlife/dbf`. `file://` URIs are decoded. An event with no usable path now runs every package (or every route for `a11y-check`) and names the event's keys, so a hook can never look green without testing.
 
-### Still to confirm in the IDE
+### Confirmed in the IDE (Prompts 15 to 20)
 
-| Check                                                                                        | Result          |
-| -------------------------------------------------------------------------------------------- | --------------- |
-| Save `packages/dbf/src/index.ts` in a new session, `test-on-save` appears in the Hooks panel | not checked yet |
-| Timeout the Hooks panel shows for `a11y-check` (300 s is set at hook and action level)       | not checked yet |
+The hooks did not fire at first because Kiro IDE had the repo folder in Restricted Mode (VS Code
+Workspace Trust, banner hidden in our settings). An untrusted workspace disables v2 hooks, skips the
+workspace steering files, and asks before every shell command even when `permissions.yaml` allows
+it. Kiro's log said `hooks.v2.executionDisabledUntrustedWorkspace` at session start. After
+**Workspaces: Manage Workspace Trust → Trust** and a restart (17 Nov, 20:11 PKT), the hooks fired on
+their own while Kiro built Prompts 15 to 20. `.kiro/.hook-runs.jsonl` holds 22 real firings
+(`"source": "kiro"`) between 15:11 and 19:13 UTC on 17 Nov:
+
+| Hook           | Package or route      | Pass | Fail |
+| -------------- | --------------------- | ---- | ---- |
+| `test-on-save` | `@afterlife/dbf`      | 1    | 9    |
+| `test-on-save` | `@afterlife/ui`       | 3    | 4    |
+| `test-on-save` | `@afterlife/screen`   | 1    | 1    |
+| `test-on-save` | `@afterlife/emulator` | 0    | 2    |
+| `a11y-check`   | axe on `/design`      | 1    | 0    |
+
+The failures are the red step of test-first work: Kiro saved a new test before the code that makes
+it pass, the hook reported the failure, and the next save went green.
+
+| Check                                                                                  | Result                  |
+| -------------------------------------------------------------------------------------- | ----------------------- |
+| `test-on-save` runs by itself when Kiro saves a package file                           | confirmed, 21 firings   |
+| `a11y-check` runs by itself when a page file is saved                                  | confirmed, `/design`    |
+| Timeout the Hooks panel shows for `a11y-check` (300 s is set at hook and action level) | not checked yet         |
+| Screenshot of the Hooks panel for the write-up                                         | still to take (a human) |
 
 ## IDE vs CLI vs Crew
 
