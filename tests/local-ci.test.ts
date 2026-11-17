@@ -106,6 +106,14 @@ describe('pnpm smoke:prod <url> (review fix)', () => {
   });
 });
 
+describe('root typecheck (Prompt 15 fix)', () => {
+  it('pnpm typecheck also checks the repo-level tests and scripts', () => {
+    expect(scripts.typecheck).toBe('turbo run typecheck && tsc -p tsconfig.json');
+    const cfg = readFileSync(resolve(root, 'tsconfig.json'), 'utf8');
+    for (const p of ['tests/**/*.ts', 'scripts/**/*.ts']) expect(cfg).toContain(p);
+  });
+});
+
 describe('config fixes (review)', () => {
   it('turbo passes the env that e2e needs through strict mode', () => {
     const e2e = JSON.parse(read('turbo.json')).tasks.e2e;

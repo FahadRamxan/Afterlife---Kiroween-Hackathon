@@ -1,0 +1,54 @@
+{
+  "id": "iqra",
+  "name": "Iqra School Fees",
+  "version": "1.1",
+  "born": 2001,
+  "died": 2006,
+  "kind": "school",
+  "place": "Chaklala Scheme III, Rawalpindi",
+  "story": "Made in 2001 for Iqra Model School by a former student who had just learnt Clipper and C.\nHe moved to Dubai in 2006 and the school lost the only copy of his code.\nThe fee clerk still collects every month's fees with it.",
+  "executable": "IQRA.EXE",
+  "dataFiles": ["STUDENT.DBF", "FEES.DBF", "PAYMENT.DBF"],
+  "dosTime": "2001-03-12 10:00:00",
+  "preview": "menu/MENU.SCR",
+  "knownRules": [
+    {
+      "id": "fee-by-class",
+      "text": "The monthly fee is the fee for the student's class.",
+      "scenarios": ["pay-ontime", "schedule"]
+    },
+    {
+      "id": "sibling-discount-15",
+      "text": "The second and later children of a family get 15% off the monthly fee, truncated to the paisa.",
+      "scenarios": ["sibling"]
+    },
+    {
+      "id": "late-fee-50-per-week",
+      "text": "Paying after the 10th of the fee month costs Rs 50 per late week, capped at Rs 500. The late fee is not discounted.",
+      "scenarios": ["late-monday", "late-cap"]
+    },
+    {
+      "id": "receipt-sequential",
+      "text": "Receipt numbers go up by one for every payment.",
+      "scenarios": ["sibling", "receipts-today"]
+    },
+    {
+      "id": "month-paid-once",
+      "text": "A month already paid for a student is refused, naming the receipt.",
+      "scenarios": ["duplicate"]
+    },
+    {
+      "id": "valid-fee-month",
+      "text": "The fee month (MMYYYY) defaults to the current month; a month outside 1 to 12 is refused.",
+      "scenarios": ["pay-ontime", "errors"]
+    }
+  ],
+  "knownBugs": [
+    {
+      "id": "late-fee-calendar-weeks",
+      "text": "The late fee counts calendar weeks (Monday to Sunday) between the due date and the payment, not days: 1 day late can cost nothing, and 8 days late costs one week instead of two.",
+      "severity": "medium",
+      "scenarios": ["late-sunday", "late-8days"]
+    }
+  ]
+}

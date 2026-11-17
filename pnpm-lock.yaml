@@ -8,6 +8,12 @@ importers:
 
   .:
     devDependencies:
+      '@afterlife/emulator':
+        specifier: workspace:^
+        version: link:packages/emulator
+      '@afterlife/screen':
+        specifier: workspace:^
+        version: link:packages/screen
       '@commitlint/cli':
         specifier: ^21.2.4
         version: 21.2.4(conventional-commits-parser@7.1.4)(typescript@5.9.3)
@@ -35,6 +41,9 @@ importers:
       fast-check:
         specifier: ^4.10.2
         version: 4.10.2
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
       globals:
         specifier: ^17.14.0
         version: 17.14.0
@@ -47,6 +56,9 @@ importers:
       prettier:
         specifier: ^3.10.1
         version: 3.10.1
+      tsx:
+        specifier: ^4.23.15
+        version: 4.23.15
       turbo:
         specifier: ^2.11.11
         version: 2.11.11
@@ -181,7 +193,20 @@ importers:
         version: 5.1.0(@types/node@22.20.5)(@vitest/coverage-v8@5.1.0)(vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
 
   packages/emulator:
+    dependencies:
+      fflate:
+        specifier: ^0.8.3
+        version: 0.8.3
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
+      '@types/node':
+        specifier: ^22
+        version: 22.20.5
+      fast-check:
+        specifier: ^4.10.2
+        version: 4.10.2
       vitest:
         specifier: ^5.1.0
         version: 5.1.0(@types/node@22.20.5)(@vitest/coverage-v8@5.1.0)(vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
@@ -200,6 +225,9 @@ importers:
 
   packages/screen:
     devDependencies:
+      fast-check:
+        specifier: ^4.10.2
+        version: 4.10.2
       vitest:
         specifier: ^5.1.0
         version: 5.1.0(@types/node@22.20.5)(@vitest/coverage-v8@5.1.0)(vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
@@ -1848,6 +1876,9 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  fflate@0.8.3:
+    resolution: {integrity: sha512-tbZNuJrLwGUp3zshBtdy4W+ORxZuIh8a5ilyIEQDC5rY1f3U20JMry0Ll3WBzU58EZKsEuJFXhb5gwv8CsPvgA==}
 
   file-entry-cache@11.1.5:
     resolution: {integrity: sha512-+PFTHITI08JIGhnNpGNI8T8inUpgZfk3GNEqfT9R2zZV2iFXg3CvqzSl/uEhs7TSGujYRELEANyDvS8Fj7+S7Q==}
@@ -3978,6 +4009,8 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
       picomatch: 4.0.7
+
+  fflate@0.8.3: {}
 
   file-entry-cache@11.1.5:
     dependencies:

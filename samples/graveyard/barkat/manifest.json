@@ -1,0 +1,49 @@
+{
+  "id": "barkat",
+  "name": "Barkat Kiryana Ledger",
+  "version": "1.0",
+  "born": 1996,
+  "died": 2001,
+  "kind": "kiryana",
+  "place": "Raja Bazaar, Rawalpindi",
+  "story": "M. Yousaf wrote this udhaar (credit) register in 1996 for his uncle's kiryana store.\nHe stopped coming to the shop in 2001, and the disk with the source code was lost in a flood.\nIt still holds the credit account of every regular customer.",
+  "executable": "BARKAT.EXE",
+  "dataFiles": ["PARTY.DBF", "LEDGER.DBF"],
+  "dosTime": "1996-11-20 10:00:00",
+  "preview": "menu/MENU.SCR",
+  "knownRules": [
+    {
+      "id": "running-balance",
+      "text": "Each party has a running balance: a sale on credit adds to it, a payment subtracts, and every ledger row stores the balance after it.",
+      "scenarios": ["sale-ok", "payment-ok", "ledger"]
+    },
+    {
+      "id": "credit-limit",
+      "text": "A sale that would take the balance over the party's credit limit is refused. Exactly the limit is allowed.",
+      "scenarios": ["sale-limit"]
+    },
+    {
+      "id": "no-advance-payment",
+      "text": "A payment larger than the balance is refused.",
+      "scenarios": ["payment-too-much"]
+    },
+    {
+      "id": "monthly-reminders",
+      "text": "The reminder list holds every party that owes money and has not paid since the 1st of this month. No interest is charged.",
+      "scenarios": ["reminders", "payment-ok"]
+    },
+    {
+      "id": "ledger-sequence",
+      "text": "Ledger entries are numbered in order, and a payment sets the party's last payment date.",
+      "scenarios": ["sale-ok", "payment-ok"]
+    }
+  ],
+  "knownBugs": [
+    {
+      "id": "balance-overflow-n8-2",
+      "text": "BALANCE is N(8,2), so above Rs 99,999.99 it is written as ******** and reads back as 0: the party's whole balance disappears.",
+      "severity": "high",
+      "scenarios": ["overflow"]
+    }
+  ]
+}
