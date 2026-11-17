@@ -1,0 +1,2 @@
+# Full gate, including Playwright e2e.
+pnpm verify
