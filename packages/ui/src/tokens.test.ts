@@ -31,6 +31,19 @@ describe('Haunted Ledger tokens', () => {
   it('theme.css turns off motion for prefers-reduced-motion', () => {
     expect(theme).toMatch(/@media \(prefers-reduced-motion: reduce\)/);
   });
+
+  it('every animated class stops under prefers-reduced-motion', () => {
+    const reduced = theme.split('@media (prefers-reduced-motion: reduce)')[1] ?? '';
+    const animated = [...theme.matchAll(/\.([a-z-]+)\s*\{[^}]*animation:/g)].map((m) => m[1]!);
+    expect(animated.length).toBeGreaterThanOrEqual(3);
+    for (const cls of [...animated, 'ghost-cursor', 'candle-flame'])
+      expect(reduced, cls).toContain(`.${cls}`);
+  });
+
+  it('the dormant fog exists and is listed under reduced motion', () => {
+    expect(theme).toMatch(/@keyframes fog-drift/);
+    expect(theme).toMatch(/\.graveyard-fog\s*\{[^}]*animation:/);
+  });
 });
 
 describe('contrastRatio', () => {

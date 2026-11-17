@@ -74,3 +74,29 @@ export function publicEntry(m: GraveyardManifestT, preview: string[]): Graveyard
     preview,
   };
 }
+
+/** apps/web/lib/graveyard-catalog.json, written by pnpm graveyard:publish. */
+export const GraveyardCatalog = z
+  .object({
+    disclosure: z.string().min(1),
+    apps: z
+      .array(
+        z
+          .object({
+            id: Slug,
+            name: z.string().min(1),
+            version: z.string().min(1),
+            born: z.number().int(),
+            died: z.number().int(),
+            kind: z.enum(['pharmacy', 'school', 'kiryana']),
+            place: z.string().min(1),
+            story: z.string().min(1),
+            executable: z.string().min(1),
+            bundle: z.string().regex(/^\/graveyard\/[a-z0-9-]+\.jsdos$/),
+            preview: z.array(z.string()).length(25),
+          })
+          .strict(),
+      )
+      .min(1),
+  })
+  .strict();

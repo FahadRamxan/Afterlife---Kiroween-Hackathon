@@ -20,7 +20,8 @@ test.describe('app shell', () => {
     });
   }
 
-  for (const route of ['/graveyard', '/vessel/demo-project', '/verify/cert-123', '/playground']) {
+  // /graveyard has real content since Prompt 16 (e2e/graveyard.spec.ts).
+  for (const route of ['/vessel/demo-project', '/verify/cert-123', '/playground']) {
     test(`${route} shows an empty state`, async ({ page }) => {
       await page.goto(route);
       await expect(page.getByTestId('empty-state')).toBeVisible();

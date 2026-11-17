@@ -7,6 +7,7 @@ export {
   type DosboxOptions,
 } from './bundle';
 export {
+  GraveyardCatalog,
   GraveyardManifest,
   publicEntry,
   type GraveyardEntry,

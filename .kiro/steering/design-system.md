@@ -50,7 +50,8 @@ Fonts load through `next/font` in `apps/web/app/fonts.ts`.
 
 - Build with the components and tokens. Do not hard-code hex values in apps.
 - Use `cn()` from `@afterlife/ui` to merge classes (shadcn/ui pattern).
-- Respect `prefers-reduced-motion`: every animation must stop under it. `theme.css` does this for the classes `crt-scanlines`, `crt-glow`, `ghost-cursor` and `candle-flame`. New animations must be added there.
+- Respect `prefers-reduced-motion`: every animation must stop under it. `theme.css` does this for the classes `crt-scanlines`, `crt-glow`, `ghost-cursor`, `candle-flame` and `graveyard-fog`. New animations must be added there (`tokens.test.ts` fails otherwise).
+- `graveyard-fog` drifts over an idle CRT preview: it means the app is dormant, not running.
 - Motion timings: `fast` 150 ms, `base` 300 ms, `slow` 600 ms (`motion` in `tokens.ts`).
 - Decorative effects get `aria-hidden="true"`. Anything that carries meaning also needs text or an ARIA label.
 - Every new component goes on `/design` with a Playwright snapshot in `e2e/design.spec.ts`.

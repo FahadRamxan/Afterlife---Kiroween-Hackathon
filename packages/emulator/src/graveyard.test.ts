@@ -1,6 +1,11 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { GraveyardManifest, publicEntry, type GraveyardManifestT } from './graveyard';
+import {
+  GraveyardCatalog,
+  GraveyardManifest,
+  publicEntry,
+  type GraveyardManifestT,
+} from './graveyard';
 
 const valid: GraveyardManifestT = {
   id: 'shifa',
@@ -76,5 +81,22 @@ describe('publicEntry', () => {
         expect(json).not.toMatch(/knownRules|knownBugs|scenarios/);
       }),
     );
+  });
+});
+
+describe('GraveyardCatalog', () => {
+  const entry = publicEntry(
+    valid,
+    Array.from({ length: 25 }, () => ''),
+  );
+
+  it('accepts what publicEntry produces', () => {
+    expect(GraveyardCatalog.parse({ disclosure: 'x', apps: [entry] }).apps[0]).toEqual(entry);
+  });
+
+  it('rejects an entry carrying hidden data', () => {
+    expect(
+      GraveyardCatalog.safeParse({ disclosure: 'x', apps: [{ ...entry, knownRules: [] }] }).success,
+    ).toBe(false);
   });
 });
