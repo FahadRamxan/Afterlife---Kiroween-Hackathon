@@ -22,7 +22,9 @@
     "test:pbt": "node scripts/ci-local.mjs --only test",
     "snapshots:linux": "node scripts/update-linux-snapshots.mjs",
     "ci:local": "node scripts/ci-local.mjs",
-    "smoke:prod": "node scripts/smoke-prod.mjs"
+    "smoke:prod": "node scripts/smoke-prod.mjs",
+    "graveyard:build": "node scripts/graveyard.mjs build",
+    "graveyard:test": "node scripts/graveyard.mjs test"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
