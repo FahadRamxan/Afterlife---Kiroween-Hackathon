@@ -1,1 +1,10 @@
 * text=auto eol=lf
+
+# Binary files from the DOS samples. Never touch their bytes.
+*.EXE binary
+*.exe binary
+*.COM binary
+*.DBF binary
+*.dbf binary
+*.jsdos binary
+*.png binary

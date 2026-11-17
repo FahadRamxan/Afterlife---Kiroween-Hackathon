@@ -1,6 +1,9 @@
 node_modules/
 .next/
 dist/
+# The DOS sample EXEs are committed: the js-dos bundles need them and Vercel cannot compile them.
+# pnpm graveyard:test fails if this folder differs from a fresh build.
+!samples/graveyard/dist/
 coverage/
 .turbo/
 *.tsbuildinfo

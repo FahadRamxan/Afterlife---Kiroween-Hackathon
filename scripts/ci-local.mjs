@@ -34,6 +34,8 @@ export function planSteps({ docker }) {
         env: {},
       },
       { name: 'docker smoke', cmd: 'node scripts/docker-smoke.mjs', env: {} },
+      // Open Watcom + DOSBox: C tests on gcc and 16-bit DOS, dist/ up to date, HELLO.EXE runs.
+      { name: 'graveyard toolchain', cmd: 'pnpm graveyard:test', env: {} },
     );
   }
   return steps;

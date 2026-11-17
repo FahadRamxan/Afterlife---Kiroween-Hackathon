@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { formatDuration, planSteps, summarize } from '../scripts/ci-local.mjs';
+import { COMMANDS, IMAGE, dockerRunArgs } from '../scripts/graveyard.mjs';
 import { smokeArgs } from '../scripts/smoke-prod.mjs';
 
 const root = resolve(__dirname, '..');
@@ -23,7 +24,12 @@ describe('pnpm ci:local (review fix)', () => {
       'docker build api',
       'docker build worker',
       'docker smoke',
+      'graveyard toolchain',
     ]);
+  });
+
+  it('the graveyard step runs the DOS toolchain test', () => {
+    expect(planSteps({ docker: true }).at(-1)!.cmd).toBe('pnpm graveyard:test');
   });
 
   it('sets FC_NUM_RUNS through env, not shell syntax, so it works on Windows', () => {
@@ -137,10 +143,45 @@ describe('.gitignore (review fix)', () => {
     expect(ignored(p)).toBe(true);
   });
 
-  it.each(['apps/api/.env.example', 'apps/web/.env.example', '.kiro/steering/tech.md'])(
-    'does not ignore %s',
-    (p) => {
-      expect(ignored(p)).toBe(false);
-    },
-  );
+  it.each([
+    'apps/api/.env.example',
+    'apps/web/.env.example',
+    '.kiro/steering/tech.md',
+    'samples/graveyard/dist/hello/HELLO.EXE',
+  ])('does not ignore %s', (p) => {
+    expect(ignored(p)).toBe(false);
+  });
+});
+
+describe('pnpm graveyard:build / graveyard:test (Prompt 11)', () => {
+  it('are root scripts', () => {
+    expect(scripts['graveyard:build']).toBe('node scripts/graveyard.mjs build');
+    expect(scripts['graveyard:test']).toBe('node scripts/graveyard.mjs test');
+  });
+
+  it('mounts the graveyard folder and runs the matching script, with paths as separate arguments', () => {
+    const dir = 'C:\\Users\\fahad\\Matrix AE Hackathons\\x\\samples\\graveyard';
+    expect(dockerRunArgs(dir, 'build')).toEqual([
+      'run',
+      '--rm',
+      '-v',
+      `${dir}:/graveyard`,
+      IMAGE,
+      'bash',
+      'toolchain/build.sh',
+    ]);
+    expect(dockerRunArgs(dir, 'test').at(-1)).toBe('toolchain/test.sh');
+  });
+
+  it('rejects unknown commands', () => {
+    expect(() => dockerRunArgs('/x', 'rm -rf /')).toThrow(/Unknown command/);
+    expect(Object.keys(COMMANDS)).toEqual(['build', 'test']);
+  });
+
+  it('pins the image tag to the Open Watcom release date', () => {
+    expect(IMAGE).toBe('afterlife-dos-toolchain:2026-11-01');
+    expect(readFileSync(resolve(root, 'samples/graveyard/toolchain/Dockerfile'), 'utf8')).toContain(
+      '2026-11-01-Build',
+    );
+  });
 });
