@@ -12,7 +12,7 @@ import {
   colors,
 } from '@afterlife/ui';
 import type { ReactNode } from 'react';
-import { shifaMedicine, shifaStockDiff } from '../../lib/design-samples';
+import { shifaMedicine, shifaMenuDecoded, shifaStockDiff } from '../../lib/design-samples';
 import { findApp } from '../../lib/graveyard';
 
 export const metadata = { title: 'Design system · Afterlife' };
@@ -56,6 +56,7 @@ const SHIFA_MENU = [
 export default function DesignPage() {
   const medicine = shifaMedicine();
   const stock = shifaStockDiff();
+  const decoded = shifaMenuDecoded();
   // The demos use the real catalogue entry, so their years and place match the Graveyard.
   const shifa = findApp('shifa')!;
   const shifaTitle = `${shifa.name} v${shifa.version}`;
@@ -179,6 +180,44 @@ export default function DesignPage() {
           diff={stock.diff}
           height={260}
         />
+      </Section>
+
+      <Section
+        id="decoder"
+        title="Screen decoder"
+        meaning="How Afterlife reads the old app: every 8x16 cell of the emulator's frame is matched against the VGA font. No OCR."
+      >
+        <div className="grid gap-4 lg:grid-cols-2">
+          <figure className="min-w-0 space-y-2">
+            {/* A plain img: a small fixed-size data URL, nothing for next/image to optimise. */}
+            <img
+              src={decoded.src}
+              width={decoded.width}
+              height={decoded.height}
+              alt="js-dos frame of the Shifa main menu, recorded run"
+              className="h-[300px] w-[480px] max-w-full rounded border border-bone/15 [image-rendering:pixelated]"
+            />
+            <figcaption className="text-xs text-bone/75">
+              Recorded run: a js-dos frame, {decoded.width}x{decoded.height} pixels.
+            </figcaption>
+          </figure>
+          <figure className="min-w-0 space-y-2">
+            <pre
+              // Scrolls sideways on narrow screens, so it must be reachable by keyboard.
+              tabIndex={0}
+              aria-label="Decoded text"
+              className="overflow-x-auto rounded border border-bone/15 bg-black p-3 font-mono text-[10px] leading-[12px] text-phosphor"
+            >
+              {decoded.text.join('\n')}
+            </pre>
+            <figcaption className="font-mono text-xs text-bone/75" data-testid="decoder-stats">
+              {decoded.cells.toLocaleString('en')} cells read, {decoded.unknown} unknown
+              {decoded.cursor
+                ? `, cursor at row ${decoded.cursor.row + 1}, column ${decoded.cursor.col + 1}`
+                : ''}
+            </figcaption>
+          </figure>
+        </div>
       </Section>
 
       <Section

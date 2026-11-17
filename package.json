@@ -28,7 +28,8 @@
     "graveyard:update": "node scripts/graveyard.mjs update",
     "graveyard:publish": "tsx scripts/graveyard-publish.ts",
     "dbf:golden": "tsx scripts/dbf-golden.ts",
-    "screenshots": "pnpm --filter @afterlife/e2e screenshots"
+    "screenshots": "pnpm --filter @afterlife/e2e screenshots",
+    "screen:capture": "tsx scripts/screen-capture.ts"
   },
   "devDependencies": {
     "@afterlife/dbf": "workspace:^",
@@ -39,6 +40,7 @@
     "@commitlint/lint": "^21.2.4",
     "@commitlint/load": "^21.2.4",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.1",
     "@types/node": "^22.20.5",
     "@vitest/coverage-v8": "^5.1.0",
     "eslint": "^10.15.0",

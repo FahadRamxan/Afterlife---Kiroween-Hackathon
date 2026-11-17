@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "fflate": "^0.8.3",
+    "js-dos": "8.5.4",
     "zod": "^4.6.7"
   }
 }

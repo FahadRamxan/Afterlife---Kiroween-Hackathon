@@ -1,0 +1,236 @@
+[
+  {
+    "app": "shifa",
+    "scr": "menu/MENU",
+    "keys": "",
+    "backend": "dosboxDirect",
+    "png": "shifa-menu-menu-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "shifa",
+    "scr": "stock/STOCK1",
+    "keys": "2",
+    "backend": "dosboxDirect",
+    "png": "shifa-stock-stock1-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "shifa",
+    "scr": "stock/STOCK2",
+    "keys": "2{PgDn}",
+    "backend": "dosboxDirect",
+    "png": "shifa-stock-stock2-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "shifa",
+    "scr": "customers/CUSTS",
+    "keys": "3",
+    "backend": "dosboxDirect",
+    "png": "shifa-customers-custs-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "shifa",
+    "scr": "expired/EXPIRED",
+    "keys": "1{Enter}SEP200{Enter}",
+    "backend": "dosboxDirect",
+    "png": "shifa-expired-expired-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "shifa",
+    "scr": "bill-small/LINES",
+    "keys": "1{Enter}PAN500{Enter}4{Enter}BRU400{Enter}2{Enter}",
+    "backend": "dosboxDirect",
+    "png": "shifa-bill-small-lines-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "iqra",
+    "scr": "menu/MENU",
+    "keys": "",
+    "backend": "dosboxDirect",
+    "png": "iqra-menu-menu-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "iqra",
+    "scr": "menu/MENU2",
+    "keys": "{Down}",
+    "backend": "dosboxDirect",
+    "png": "iqra-menu-menu2-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "iqra",
+    "scr": "students/STU1",
+    "keys": "{Down}{Enter}",
+    "backend": "dosboxDirect",
+    "png": "iqra-students-stu1-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "iqra",
+    "scr": "schedule/SCHEDULE",
+    "keys": "{Down}{Down}{Enter}",
+    "backend": "dosboxDirect",
+    "png": "iqra-schedule-schedule-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "barkat",
+    "scr": "menu/MENU",
+    "keys": "",
+    "backend": "dosboxDirect",
+    "png": "barkat-menu-menu-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "barkat",
+    "scr": "balances/BAL1",
+    "keys": "B",
+    "backend": "dosboxDirect",
+    "png": "barkat-balances-bal1-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "barkat",
+    "scr": "ledger/LEDGER",
+    "keys": "LP003{Enter}",
+    "backend": "dosboxDirect",
+    "png": "barkat-ledger-ledger-640.png",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "app": "shifa",
+    "scr": "menu/MENU",
+    "keys": "",
+    "backend": "dosboxXDirect",
+    "png": "shifa-menu-menu-720.png",
+    "width": 720,
+    "height": 400
+  },
+  {
+    "app": "shifa",
+    "scr": "stock/STOCK1",
+    "keys": "2",
+    "backend": "dosboxXDirect",
+    "png": "shifa-stock-stock1-720.png",
+    "width": 720,
+    "height": 400
+  },
+  {
+    "app": "shifa",
+    "scr": "stock/STOCK2",
+    "keys": "2{PgDn}",
+    "backend": "dosboxXDirect",
+    "png": "shifa-stock-stock2-720.png",
+    "width": 720,
+    "height": 400
+  },
+  {
+    "app": "shifa",
+    "scr": "customers/CUSTS",
+    "keys": "3",
+    "backend": "dosboxXDirect",
+    "png": "shifa-customers-custs-720.png",
+    "width": 720,
+    "height": 400
+  },
+  {
+    "app": "shifa",
+    "scr": "expired/EXPIRED",
+    "keys": "1{Enter}SEP200{Enter}",
+    "backend": "dosboxXDirect",
+    "png": "shifa-expired-expired-720.png",
+    "width": 720,
+    "height": 400
+  },
+  {
+    "app": "shifa",
+    "scr": "bill-small/LINES",
+    "keys": "1{Enter}PAN500{Enter}4{Enter}BRU400{Enter}2{Enter}",
+    "backend": "dosboxXDirect",
+    "png": "shifa-bill-small-lines-720.png",
+    "width": 720,
+    "height": 400
+  },
+  {
+    "app": "iqra",
+    "scr": "menu/MENU",
+    "keys": "",
+    "backend": "dosboxXDirect",
+    "png": "iqra-menu-menu-720.png",
+    "width": 720,
+    "height": 400
+  },
+  {
+    "app": "iqra",
+    "scr": "menu/MENU2",
+    "keys": "{Down}",
+    "backend": "dosboxXDirect",
+    "png": "iqra-menu-menu2-720.png",
+    "width": 720,
+    "height": 400
+  },
+  {
+    "app": "iqra",
+    "scr": "students/STU1",
+    "keys": "{Down}{Enter}",
+    "backend": "dosboxXDirect",
+    "png": "iqra-students-stu1-720.png",
+    "width": 720,
+    "height": 400
+  },
+  {
+    "app": "iqra",
+    "scr": "schedule/SCHEDULE",
+    "keys": "{Down}{Down}{Enter}",
+    "backend": "dosboxXDirect",
+    "png": "iqra-schedule-schedule-720.png",
+    "width": 720,
+    "height": 400
+  },
+  {
+    "app": "barkat",
+    "scr": "menu/MENU",
+    "keys": "",
+    "backend": "dosboxXDirect",
+    "png": "barkat-menu-menu-720.png",
+    "width": 720,
+    "height": 400
+  },
+  {
+    "app": "barkat",
+    "scr": "balances/BAL1",
+    "keys": "B",
+    "backend": "dosboxXDirect",
+    "png": "barkat-balances-bal1-720.png",
+    "width": 720,
+    "height": 400
+  },
+  {
+    "app": "barkat",
+    "scr": "ledger/LEDGER",
+    "keys": "LP003{Enter}",
+    "backend": "dosboxXDirect",
+    "png": "barkat-ledger-ledger-720.png",
+    "width": 720,
+    "height": 400
+  }
+]
