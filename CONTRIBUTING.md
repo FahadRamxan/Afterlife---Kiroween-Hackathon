@@ -19,7 +19,7 @@ Use Node 22 and pnpm 10.
 3. **Wire into the UI.** Connect the feature to a real screen in `apps/web`. No hidden features.
 4. **Test the UI.** Add or extend a Playwright test in `/e2e`.
 5. **Commit.** Only when `pnpm verify` is green. Use a Conventional Commit message.
-6. **Push.** Push the feature branch, open a PR, wait for CI to go green, then merge to `main`.
+6. **Push.** Start every branch from the latest `main`. Push with `pnpm verify` green in the pre-push hook, open a PR, run `pnpm ci:local`, then merge to `main`. GitHub Actions is off for this repo.
 
 ## What the git hooks enforce
 
@@ -47,4 +47,6 @@ Types: `feat`, `fix`, `docs`, `test`, `chore`, `ci`, `perf`, `refactor`, `build`
 - [ ] `pnpm verify` is green
 - [ ] `docs/progress.md` updated
 - [ ] Conventional Commit message
-- [ ] Branch pushed, PR opened, CI green
+- [ ] Branch started from the latest `main`
+- [ ] `pnpm verify` green in the pre-push hook, branch pushed, PR opened
+- [ ] `pnpm ci:local` green before merging

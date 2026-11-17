@@ -4,9 +4,16 @@ dist/
 coverage/
 .turbo/
 *.tsbuildinfo
-.env
-.env.local
 playwright-report/
 test-results/
-.DS_Store*.log
+.DS_Store
+*.log
+.vercel
+
+# Env files hold secrets. Only the examples are committed.
+.env
+.env.*
+!.env.example
+
+# Local record of real Kiro hook firings (see docs/kiro-usage.md).
 .kiro/.hook-runs.jsonl

@@ -74,21 +74,57 @@ describe('nightly PBT workflow (Prompt 6)', () => {
   });
 });
 
-describe('README (Prompt 6)', () => {
+describe('README (local CI review fix)', () => {
   const readme = read('README.md');
-  it('shows the CI badge', () => {
-    expect(readme).toContain('actions/workflows/ci.yml/badge.svg');
+  it('has no CI badges, because Actions is off', () => {
+    expect(readme).not.toContain('badge.svg)](https://github.com');
+    expect(readme).not.toContain('actions/workflows');
+  });
+  it('has a "How we test" section covering the hooks, ci:local and the Crew nightly run', () => {
+    const section = readme.split(/^## How we test/m)[1]?.split(/^## /m)[0] ?? '';
+    for (const s of [
+      'pre-commit',
+      'pre-push',
+      'pnpm verify',
+      'pnpm ci:local',
+      'Kiro Crew',
+      'FC_NUM_RUNS=2000',
+    ])
+      expect(section, s).toContain(s);
+    expect(section).toMatch(/\d+ unit and property tests/);
   });
   it('has a coverage summary section', () => {
     expect(readme).toMatch(/^## Coverage/m);
   });
 });
 
+describe('workflow files (local CI review fix)', () => {
+  it.each(['ci.yml', 'nightly-pbt.yml', 'prod-smoke.yml'])(
+    '%s says Actions is off and points to the local command',
+    (f) => {
+      const text = read(`.github/workflows/${f}`);
+      expect(text.split('\n')[0]).toMatch(/^# GitHub Actions is off for this repo/);
+      expect(text.slice(0, 400)).toMatch(/pnpm (ci:local|smoke:prod)/);
+    },
+  );
+});
+
+describe('merge rule (local CI review fix)', () => {
+  it.each(['plan.md', 'CONTRIBUTING.md', '.kiro/steering/tech.md'])(
+    '%s asks for pnpm verify in pre-push and ci:local before merge',
+    (f) => {
+      const text = read(f);
+      expect(text).toContain('`pnpm verify` green in the pre-push hook');
+      expect(text).toContain('pnpm ci:local');
+      expect(text).not.toMatch(/CI (must be|to go) green|GitHub Actions for lint/);
+    },
+  );
+});
 describe('root scripts (Prompt 6)', () => {
   const scripts = JSON.parse(read('package.json')).scripts;
   it('has test:coverage and test:pbt', () => {
     expect(scripts['test:coverage']).toContain('--coverage');
-    expect(scripts['test:pbt']).toContain('prop');
+    expect(scripts['test:pbt']).toContain('ci-local.mjs --only test');
   });
 });
 

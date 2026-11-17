@@ -13,15 +13,7 @@ import {
 } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import {
-  completedTasks,
-  eventPaths,
-  isPbtTarget,
-  packageForFile,
-  relative,
-  routeForPage,
-  untestedTasks,
-} from './lib.mjs';
+import { completedTasks, planHook, relative, untestedTasks } from './lib.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const hook = process.argv[2];
@@ -56,12 +48,16 @@ function run(cmd, env = {}) {
   return { ok: r.status === 0, tail: out.split(/\r?\n/).filter(Boolean).slice(-25).join('\n') };
 }
 
+// "kiro" when Kiro fires the hook, "test" when tests/hooks.test.ts runs it. Tests also write to a
+// temp file, so .kiro/.hook-runs.jsonl only holds real firings.
+const SOURCE = process.env.AFTERLIFE_HOOK_SOURCE ?? 'kiro';
+const LOG = process.env.AFTERLIFE_HOOK_LOG ?? path.join(ROOT, '.kiro', '.hook-runs.jsonl');
+
 function log(entry) {
-  const dir = path.join(ROOT, '.kiro');
-  if (!existsSync(dir)) mkdirSync(dir);
+  mkdirSync(path.dirname(LOG), { recursive: true });
   appendFileSync(
-    path.join(dir, '.hook-runs.jsonl'),
-    JSON.stringify({ at: new Date().toISOString(), hook, ...entry }) + '\n',
+    LOG,
+    JSON.stringify({ at: new Date().toISOString(), hook, source: SOURCE, ...entry }) + '\n',
   );
 }
 
@@ -86,75 +82,54 @@ function finish(ok, summary) {
 }
 
 const event = await readStdin();
-const files = eventPaths(event);
 
-switch (hook) {
-  case 'test-on-save': {
-    const pkgs = [...new Set(files.map((f) => packageForFile(f, ROOT)).filter(Boolean))];
-    if (!pkgs.length) finish(true, 'No package source file in the event, nothing to test.');
-    else {
-      const r = run(`pnpm exec vitest run ${pkgs.map((p) => `--project ${p}`).join(' ')}`);
-      finish(r.ok, `${r.ok ? 'PASS' : 'FAIL'} ${pkgs.join(', ')}\n${r.tail}`);
-    }
-    break;
-  }
-  case 'pbt-on-oracle-change': {
-    if (files.length && !files.some((f) => isPbtTarget(f, ROOT))) {
-      finish(true, 'Not an oracle or vessel file, skipped.');
-      break;
-    }
-    const r = run(
-      'pnpm exec vitest run --project @afterlife/oracle --project @afterlife/vessel prop.test',
-    );
-    finish(r.ok, `${r.ok ? 'PASS' : 'FAIL'} oracle + vessel property suites\n${r.tail}`);
-    break;
-  }
-  case 'a11y-check': {
-    const routes = [...new Set(files.map((f) => routeForPage(f, ROOT)).filter(Boolean))];
-    if (!routes.length) {
+const plan = planHook(hook, event, ROOT);
+if (plan?.kind === 'skip') finish(true, plan.reason);
+else if (plan?.kind === 'run') {
+  if (plan.note) console.log(`[${hook}] ${plan.note} Running ${plan.label} instead.`);
+  const r = run(plan.cmd, plan.env);
+  finish(
+    r.ok,
+    `${r.ok ? 'PASS' : 'FAIL'} ${plan.label}${plan.note ? ` (${plan.note})` : ''}\n${r.tail}`,
+  );
+} else {
+  runOther();
+}
+
+function runOther() {
+  switch (hook) {
+    case 'spec-sync': {
+      const specsDir = path.join(ROOT, '.kiro/specs');
+      const testFiles = Object.fromEntries(
+        ['packages', 'apps', 'tests', 'e2e']
+          .flatMap((d) => walk(path.join(ROOT, d), (n) => /\.(test|spec)\.tsx?$/.test(n)))
+          .map((f) => [relative(f, ROOT), readFileSync(f, 'utf8')]),
+      );
+      const problems = [];
+      let checked = 0;
+      for (const spec of existsSync(specsDir) ? readdirSync(specsDir) : []) {
+        const tasksFile = path.join(specsDir, spec, 'tasks.md');
+        if (!existsSync(tasksFile)) continue;
+        const done = completedTasks(readFileSync(tasksFile, 'utf8'));
+        checked += done.length;
+        for (const t of untestedTasks(spec, done, testFiles))
+          problems.push(`${spec}#${t.id} ${t.title}`);
+      }
       finish(
-        true,
-        `No page file in the event (${files.map((f) => relative(f, ROOT)).join(', ') || 'none'}), skipped.`,
+        problems.length === 0,
+        problems.length
+          ? `${problems.length} completed task(s) have no test with "@spec <spec>#<id>":\n${problems.join('\n')}`
+          : `All ${checked} completed spec task(s) are referenced by a test.`,
       );
       break;
     }
-    const r = run('pnpm --filter @afterlife/e2e exec playwright test a11y.spec.ts', {
-      A11Y_ROUTES: routes.join(','),
-    });
-    finish(r.ok, `${r.ok ? 'PASS' : 'FAIL'} axe on ${routes.join(', ')}\n${r.tail}`);
-    break;
-  }
-  case 'spec-sync': {
-    const specsDir = path.join(ROOT, '.kiro/specs');
-    const testFiles = Object.fromEntries(
-      ['packages', 'apps', 'tests', 'e2e']
-        .flatMap((d) => walk(path.join(ROOT, d), (n) => /\.(test|spec)\.tsx?$/.test(n)))
-        .map((f) => [relative(f, ROOT), readFileSync(f, 'utf8')]),
-    );
-    const problems = [];
-    let checked = 0;
-    for (const spec of existsSync(specsDir) ? readdirSync(specsDir) : []) {
-      const tasksFile = path.join(specsDir, spec, 'tasks.md');
-      if (!existsSync(tasksFile)) continue;
-      const done = completedTasks(readFileSync(tasksFile, 'utf8'));
-      checked += done.length;
-      for (const t of untestedTasks(spec, done, testFiles))
-        problems.push(`${spec}#${t.id} ${t.title}`);
+    case 'verify': {
+      const r = run('pnpm verify');
+      finish(r.ok, `${r.ok ? 'PASS' : 'FAIL'} pnpm verify\n${r.tail}`);
+      break;
     }
-    finish(
-      problems.length === 0,
-      problems.length
-        ? `${problems.length} completed task(s) have no test with "@spec <spec>#<id>":\n${problems.join('\n')}`
-        : `All ${checked} completed spec task(s) are referenced by a test.`,
-    );
-    break;
+    default:
+      console.error(`Unknown hook "${hook}".`);
+      process.exit(2);
   }
-  case 'verify': {
-    const r = run('pnpm verify');
-    finish(r.ok, `${r.ok ? 'PASS' : 'FAIL'} pnpm verify\n${r.tail}`);
-    break;
-  }
-  default:
-    console.error(`Unknown hook "${hook}".`);
-    process.exit(2);
 }

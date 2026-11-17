@@ -1,5 +1,4 @@
-# Lint and format staged files, typecheck everything, test the packages changed since HEAD.
+# Lint and format staged files, typecheck everything, then run the whole test suite once.
 pnpm exec lint-staged
 pnpm typecheck
-pnpm exec turbo run test --filter=...[HEAD]
 pnpm exec vitest run

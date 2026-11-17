@@ -1,4 +1,4 @@
-﻿import { readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
@@ -47,5 +47,13 @@ describe('docs/kiro-formats.md (Prompt 2)', () => {
     );
     expect(checked.length).toBe(8);
     for (const s of checked) expect(s, s.slice(0, 30)).toContain('```');
+  });
+});
+
+describe('Kiro Crew Apps (review fix)', () => {
+  it('documents the Crew App Kit, not "no SDK page"', () => {
+    expect(doc).not.toMatch(/no .Crew App SDK. page/i);
+    for (const s of ['kiro.dev/docs/crew/apps', 'app.json', 'kirocrew app dev', 'registry'])
+      expect(doc).toContain(s);
   });
 });
