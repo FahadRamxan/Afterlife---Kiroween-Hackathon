@@ -1,0 +1,26 @@
+# LEGACY BUG: P001 owes 98500.00. A 2000.00 sale makes 100500.00, which N(8,2) cannot hold, so
+# BALANCE is written as ********. That reads back as 0, so the next 500.00 sale leaves 500.00:
+# Rs 1,00,500 of credit has vanished.
+S
+P001{Enter}
+2000{Enter}
+CHEENI 1 BORI{Enter}
+Y
+{Dump:SAVED}
+{Enter}
+B
+{Dump:BAL1}
+{Esc}
+S
+P001{Enter}
+{Dump:PARTY2}
+500{Enter}
+GHEE 2.5 KG{Enter}
+Y
+{Dump:SAVED2}
+{Enter}
+L
+P001{Enter}
+{Dump:LEDGER}
+{Esc}
+X

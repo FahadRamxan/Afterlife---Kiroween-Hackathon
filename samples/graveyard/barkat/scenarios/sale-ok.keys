@@ -1,0 +1,10 @@
+# Sale on credit to P003 BAJI SHAMIM: 5340.00 + 450.00 = 5790.00. Ledger entry 81.
+S
+P003{Enter}
+450{Enter}
+ATTA 20 KG{Enter}
+{Dump:CONFIRM}
+Y
+{Dump:SAVED}
+{Enter}
+X

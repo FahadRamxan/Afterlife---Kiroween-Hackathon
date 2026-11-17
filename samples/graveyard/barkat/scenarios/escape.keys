@@ -1,0 +1,9 @@
+# Esc returns to the menu from every screen, and Esc on the menu does not exit.
+S{Esc}
+P{Esc}
+L{Esc}
+B{Esc}
+R{Esc}
+{Esc}
+{Dump:MENU}
+X

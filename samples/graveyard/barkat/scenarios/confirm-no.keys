@@ -1,0 +1,9 @@
+# Answering N at the confirm prompt saves nothing.
+S
+P003{Enter}
+450{Enter}
+{Enter}
+N
+{Dump:NOTSAVED}
+{Enter}
+X

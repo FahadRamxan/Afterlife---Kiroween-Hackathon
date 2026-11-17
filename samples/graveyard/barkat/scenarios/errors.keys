@@ -1,0 +1,9 @@
+# Unknown party, then an amount with three decimals, then Esc.
+S
+P999{Enter}
+{Dump:NOTFOUND}
+{Backspace}{Backspace}{Backspace}{Backspace}P003{Enter}
+12.345{Enter}
+{Dump:BADAMT}
+{Esc}
+X

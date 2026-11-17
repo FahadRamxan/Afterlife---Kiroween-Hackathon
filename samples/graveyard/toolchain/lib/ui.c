@@ -52,6 +52,7 @@ int ui_input(int row, int col, int len, char *buf, int flags)
         }
         if (k < 32 || k > 126 || n >= len) continue;
         if ((flags & UI_DIGITS) && !isdigit(k)) continue;
+        if ((flags & UI_MONEY) && !isdigit(k) && !(k == '.' && strchr(buf, '.') == NULL)) continue;
         if (flags & UI_UPPER) k = toupper(k);
         buf[n++] = (char)k;
         buf[n] = '\0';
