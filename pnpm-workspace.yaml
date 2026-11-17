@@ -1,0 +1,5 @@
+packages:
+  - apps/*
+  - packages/*
+  - powers/*
+  - e2e
