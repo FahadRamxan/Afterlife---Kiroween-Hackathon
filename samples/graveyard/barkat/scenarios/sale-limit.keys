@@ -1,0 +1,10 @@
+# P005 owes 9800.00 of a 10000.00 limit. 450.00 is refused; 200.00 takes it to exactly the limit.
+S
+P005{Enter}
+{Dump:PARTY}
+450{Enter}
+{Dump:LIMIT}
+{Backspace}{Backspace}{Backspace}200{Enter}
+CHEENI 1 KG{Enter}
+Y{Enter}
+X

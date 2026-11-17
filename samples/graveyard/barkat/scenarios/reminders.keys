@@ -1,0 +1,7 @@
+# November 1996: everyone who owes money and has not paid since 1 November. No interest.
+R
+{Dump:REM1}
+{PgDn}
+{Dump:REM2}
+{Esc}
+X

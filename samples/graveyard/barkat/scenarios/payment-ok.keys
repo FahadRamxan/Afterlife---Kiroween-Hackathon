@@ -1,0 +1,14 @@
+# P003 pays 2000.00: 5340.00 -> 3340.00, and drops off the November reminder list.
+P
+P003{Enter}
+2000{Enter}
+NAQAD{Enter}
+Y
+{Dump:SAVED}
+{Enter}
+R
+{Dump:REM1}
+{PgDn}
+{Dump:REM2}
+{Esc}
+X

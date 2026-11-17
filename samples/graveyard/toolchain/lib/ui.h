@@ -14,6 +14,7 @@
 
 #define UI_UPPER 1  /* turn letters to upper case */
 #define UI_DIGITS 2 /* only accept 0-9 */
+#define UI_MONEY 4  /* only accept 0-9 and one decimal point */
 
 /* Clears to the body colour, draws the title bar (app name left, screen name centre, date right). */
 void ui_frame(const char *app, const char *screen, const char *date);

@@ -1,0 +1,7 @@
+# P011 owes 500.00: a payment of 600.00 is refused (no advance payments).
+P
+P011{Enter}
+600{Enter}
+{Dump:TOOMUCH}
+{Esc}
+X

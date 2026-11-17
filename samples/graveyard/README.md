@@ -6,7 +6,7 @@ Sample dead DOS apps, written by our team to simulate 1990s software. They are r
 | ------------------------------- | --------- | ---------------- |
 | Shifa Medical Store v2.3 (1998) | `shifa/`  | Done (Prompt 12) |
 | Iqra School Fees 1.1 (2001)     | `iqra/`   | Done (Prompt 13) |
-| Barkat Kiryana Ledger (1996)    | `barkat/` | Prompt 14        |
+| Barkat Kiryana Ledger (1996)    | `barkat/` | Done (Prompt 14) |
 
 `hello/` is the toolchain smoke test.
 
@@ -101,6 +101,22 @@ Monthly fee collection for Iqra Model School, Chaklala Scheme III, Rawalpindi. K
 - **Legacy bug:** the late fee counts calendar weeks (Monday to Sunday) between the due date and the payment, not days. Paying on Sunday 11 March 2001 (1 day late) costs nothing; paying on Sunday 18 March (8 days late) costs 1 week, not 2.
 
 The 13 scenarios in `iqra/scenarios` cover every rule and the bug. `tests/graveyard-iqra.test.ts` checks the seed receipts against an independent TypeScript version of the rules.
+
+## Barkat Kiryana Ledger (1996)
+
+The udhaar (credit) register of a kiryana store in Raja Bazaar, Rawalpindi. Letter hotkeys on the menu, and a Y/N confirm before every save.
+
+- **Menu:** S Sale on credit, P Payment, L Ledger of a party, B Balances, R Reminders, X Exit. Lower case works. Esc never leaves the program.
+- **Data:** `PARTY.DBF` (25 parties with romanised Urdu names, such as `PHUPHO NASREEN` and `CHACHA KHAIR DIN`) and `LEDGER.DBF` (80 entries, October and November 1996). `seed/make-seed.ps1` generates both and refuses any history that breaks the rules.
+- **Hidden rules:**
+  - a running balance per party: a sale adds, a payment subtracts, and each ledger row stores the balance after it
+  - a sale that would take the balance over the party's credit limit is refused. Exactly the limit is allowed
+  - a payment above the balance is refused (no advance payments)
+  - the monthly reminder list: every party that owes money and has not paid since the 1st of the month. It is interest-free, so it only reminds
+  - ledger entries are numbered in order, and a payment sets the party's last payment date
+- **Legacy bug:** `BALANCE` is `N(8,2)`, so it holds at most 99,999.99. A larger balance is written as `********`, the way dBASE's `STR()` does, and `********` reads back as 0. P001 owes Rs 98,500; after a Rs 2,000 sale the balance shows `********`, and the next Rs 500 sale leaves Rs 500. Rs 1,00,500 of credit disappears.
+
+The 12 scenarios in `barkat/scenarios` cover every rule and the bug.
 
 ## Open Watcom version
 

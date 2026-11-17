@@ -1,0 +1,9 @@
+# 25 parties, 17 per page.
+B
+{Dump:BAL1}
+{PgDn}
+{Dump:BAL2}
+{PgUp}
+{Dump:BAL1B}
+{Esc}
+X
