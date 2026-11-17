@@ -3,8 +3,9 @@
   "hooks": [
     {
       "name": "spec-sync",
-      "trigger": "PostTaskExec",
       "description": "After a spec task runs, check that every completed task in .kiro/specs/*/tasks.md is referenced by a test with '@spec <spec>#<task-id>'.",
+      "trigger": "PostTaskExec",
+      "timeout": 60,
       "action": {
         "type": "command",
         "command": "node scripts/hooks/run.mjs spec-sync",

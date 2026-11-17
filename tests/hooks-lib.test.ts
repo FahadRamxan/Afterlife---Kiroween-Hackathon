@@ -5,6 +5,7 @@ import {
   eventPaths,
   isPbtTarget,
   packageForFile,
+  planHook,
   routeForPage,
   untestedTasks,
 } from '../scripts/hooks/lib.mjs';
@@ -109,5 +110,95 @@ describe('spec-sync task checks', () => {
   it('does not confuse task 1 with task 1.2 or 11', () => {
     const tests = { 'a.test.ts': '// @spec s#1.2\n// @spec s#11' };
     expect(untestedTasks('s', [{ id: '1', title: 't' }], tests)).toEqual([{ id: '1', title: 't' }]);
+  });
+});
+
+// Review finding 1: the repo lives in "Matrix AE Hackathons", so real Kiro events carry
+// absolute paths with spaces, or file:// URIs with %20.
+describe('full paths with spaces (review fix)', () => {
+  const REAL = 'C:\\Users\\fahad\\Downloads\\Matrix AE Hackathons\\Afterlife---Kiroween-Hackathon';
+  const win = `${REAL}\\packages\\dbf\\src\\index.ts`;
+  const fwd = win.replace(/\\/g, '/');
+  const uri = 'file:///' + fwd.replace(/ /g, '%20');
+
+  it.each([
+    ['Windows absolute path', win],
+    ['forward-slash absolute path', fwd],
+    ['file:// URI', uri],
+  ])('eventPaths keeps a %s', (_label, p) => {
+    expect(eventPaths({ file_path: p })).toHaveLength(1);
+  });
+
+  it('decodes file:// URIs into plain paths', () => {
+    expect(eventPaths({ uri })).toEqual([fwd]);
+  });
+
+  it.each([
+    ['Windows absolute path', win],
+    ['forward-slash absolute path', fwd],
+    ['file:// URI', uri],
+  ])('packageForFile resolves a %s to @afterlife/dbf', (_label, p) => {
+    const [found] = eventPaths({ file_path: p });
+    expect(packageForFile(found!, REAL)).toBe('@afterlife/dbf');
+  });
+
+  it('routeForPage works with a path with spaces', () => {
+    expect(routeForPage(`${REAL}\\apps\\web\\app\\graveyard\\page.tsx`, REAL)).toBe('/graveyard');
+  });
+
+  it('relative paths still work', () => {
+    expect(packageForFile('packages/dbf/src/index.ts', REAL)).toBe('@afterlife/dbf');
+  });
+
+  it('still ignores strings that are not paths', () => {
+    expect(eventPaths({ path: 'hello world' })).toEqual([]);
+    expect(eventPaths({ path: 'two\nlines.ts' })).toEqual([]);
+  });
+});
+
+describe('planHook (review fix: never pass without testing)', () => {
+  const R = 'C:\\repo';
+
+  it('test-on-save runs the saved package', () => {
+    const p = planHook('test-on-save', { file_path: 'C:\\repo\\packages\\dbf\\src\\a.ts' }, R);
+    expect(p).toMatchObject({ kind: 'run', label: '@afterlife/dbf' });
+    expect(p.kind === 'run' && p.cmd).toBe('pnpm exec vitest run --project @afterlife/dbf');
+  });
+
+  it('test-on-save with no usable path runs every package and names the event keys', () => {
+    const p = planHook('test-on-save', { hook_event_name: 'PostFileSave', session_id: 'x' }, R);
+    expect(p).toMatchObject({ kind: 'run', label: 'all packages' });
+    expect(p.kind === 'run' && p.cmd).toBe('pnpm exec vitest run --project "@afterlife/*"');
+    expect(p.note).toContain('hook_event_name, session_id');
+  });
+
+  it('test-on-save skips a saved file that is not package source', () => {
+    expect(planHook('test-on-save', { file_path: 'README.md' }, R).kind).toBe('skip');
+  });
+
+  it('a11y-check with no usable path checks every route', () => {
+    const p = planHook('a11y-check', {}, R);
+    expect(p).toMatchObject({ kind: 'run', label: 'all routes' });
+    expect(p.kind === 'run' && p.env).toEqual({});
+  });
+
+  it('a11y-check on a page checks only that route', () => {
+    const p = planHook('a11y-check', { file_path: 'C:\\repo\\apps\\web\\app\\page.tsx' }, R);
+    expect(p.kind === 'run' && p.env).toEqual({ A11Y_ROUTES: '/' });
+  });
+
+  it('pbt-on-oracle-change runs the whole oracle and vessel suites, not only *.prop.test files', () => {
+    const p = planHook('pbt-on-oracle-change', { file_path: 'packages/oracle/src/x.ts' }, R);
+    expect(p.kind === 'run' && p.cmd).toBe(
+      'pnpm exec vitest run --project @afterlife/oracle --project @afterlife/vessel',
+    );
+  });
+
+  it('pbt-on-oracle-change with no usable path still runs', () => {
+    expect(planHook('pbt-on-oracle-change', {}, R).kind).toBe('run');
+  });
+
+  it('returns null for hooks it does not plan', () => {
+    expect(planHook('spec-sync', {}, R)).toBeNull();
   });
 });

@@ -1,6 +1,7 @@
 import { spawnSync } from 'node:child_process';
-import { readdirSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { mkdtempSync, readdirSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const root = resolve(__dirname, '..');
@@ -24,7 +25,8 @@ type Hook = {
   name: string;
   trigger: string;
   matcher?: string;
-  action: { type: string; command?: string };
+  timeout?: number;
+  action: { type: string; command?: string; timeout?: number };
 };
 const files = readdirSync(hooksDir).filter((f) => f.endsWith('.json'));
 const hooks = Object.fromEntries(
@@ -35,11 +37,14 @@ const hooks = Object.fromEntries(
   }),
 );
 
+const hookLog = join(mkdtempSync(join(tmpdir(), 'afterlife-hooks-')), 'runs.jsonl');
+
 function runHook(name: string, event: unknown) {
   return spawnSync(process.execPath, ['scripts/hooks/run.mjs', name], {
     cwd: root,
     input: JSON.stringify(event),
     encoding: 'utf8',
+    env: { ...process.env, AFTERLIFE_HOOK_SOURCE: 'test', AFTERLIFE_HOOK_LOG: hookLog },
   });
 }
 
@@ -75,6 +80,19 @@ describe('.kiro/hooks files (Prompt 7)', () => {
     ['a11y-check', 'packages/ui/src/Button.tsx', false],
   ])('%s matcher on %s is %s', (id, p, expected) => {
     expect(matches(id, p)).toBe(expected);
+  });
+
+  // kiro.dev/docs/hooks lists hooks[].timeout; Kiro's createHook tool writes action.timeout.
+  // Both are set to the same value until the Hooks panel shows which one the IDE reads.
+  it.each(Object.keys(hooks))('%s sets the same timeout at hook and action level', (id) => {
+    const h = hooks[id]!;
+    expect(h.timeout).toBeGreaterThan(0);
+    expect(h.action.timeout).toBe(h.timeout);
+  });
+
+  it('long hooks get more than the 60 s default', () => {
+    expect(hooks['a11y-check']!.timeout).toBeGreaterThanOrEqual(300);
+    expect(hooks['pbt-on-oracle-change']!.timeout).toBeGreaterThanOrEqual(300);
   });
 
   it('spec-sync fires after a spec task runs', () => {
@@ -121,5 +139,29 @@ describe('scripts/hooks/run.mjs (Prompt 7)', () => {
     const r = runHook('spec-sync', {});
     expect(r.status).toBe(0);
     expect(r.stdout).toMatch(/completed spec task/);
+  });
+});
+
+describe('scripts/hooks/run.mjs with real Kiro paths (review fix)', () => {
+  it('test-on-save runs the package for an absolute Windows path with spaces', () => {
+    const abs = resolve(root, 'packages/dbf/src/index.ts');
+    expect(abs).toMatch(/ /); // this repo lives in "Matrix AE Hackathons"
+    const r = runHook('test-on-save', { file_path: abs });
+    expect(r.status).toBe(0);
+    expect(r.stdout).toContain('PASS @afterlife/dbf');
+  });
+
+  it('test-on-save runs the package for a file:// URI', () => {
+    const uri =
+      'file:///' +
+      resolve(root, 'packages/dbf/src/index.ts').replace(/\\/g, '/').replace(/ /g, '%20');
+    const r = runHook('test-on-save', { uri });
+    expect(r.stdout).toContain('PASS @afterlife/dbf');
+  });
+
+  it('logs each run with source "test" (and "kiro" by default)', () => {
+    runHook('spec-sync', {});
+    const last = JSON.parse(readFileSync(hookLog, 'utf8').trim().split('\n').at(-1)!);
+    expect(last).toMatchObject({ hook: 'spec-sync', source: 'test', ok: true });
   });
 });

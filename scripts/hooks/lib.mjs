@@ -2,7 +2,23 @@
 import path from 'node:path';
 
 const PATH_KEYS = new Set(['file_path', 'filePath', 'path', 'paths', 'file', 'files', 'uri']);
-const looksLikeFile = (s) => /\.[A-Za-z0-9]+$/.test(s) && !/\s/.test(s);
+// Paths may contain spaces (this repo lives in "Matrix AE Hackathons"), but never line breaks.
+const looksLikeFile = (s) => /\.[A-Za-z0-9]+$/.test(s) && !/[\r\n\t]/.test(s);
+
+/**
+ * file:///C:/a%20b/x.ts -> C:/a b/x.ts, file:///home/x.ts -> /home/x.ts. Other strings are returned
+ * as they are. Parsed with URL (not fileURLToPath) so the result is the same on every OS.
+ * @param {string} s
+ */
+export function fromFileUri(s) {
+  if (!s.startsWith('file://')) return s;
+  try {
+    const p = decodeURIComponent(new URL(s).pathname);
+    return /^\/[A-Za-z]:\//.test(p) ? p.slice(1) : p;
+  } catch {
+    return s;
+  }
+}
 
 /**
  * Collects file paths from a hook event (JSON from stdin). The exact shape varies between
@@ -14,7 +30,8 @@ export function eventPaths(event) {
   const found = [];
   const visit = (value, key) => {
     if (typeof value === 'string') {
-      if (PATH_KEYS.has(key) && looksLikeFile(value)) found.push(value.replace(/^file:\/\//, ''));
+      const p = fromFileUri(value);
+      if (PATH_KEYS.has(key) && looksLikeFile(p)) found.push(p);
     } else if (Array.isArray(value)) {
       for (const v of value) visit(v, key);
     } else if (value && typeof value === 'object') {
@@ -99,4 +116,65 @@ export function untestedTasks(spec, tasks, testFiles) {
   const all = Object.values(testFiles).join('\n');
   const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   return tasks.filter((t) => !new RegExp(`@spec ${esc(spec)}#${esc(t.id)}(?![\\d.])`).test(all));
+}
+
+const ALL_PACKAGES = 'pnpm exec vitest run --project "@afterlife/*"';
+const A11Y = 'pnpm --filter @afterlife/e2e exec playwright test a11y.spec.ts';
+
+/**
+ * Decides what an event hook should run. A hook never passes without testing: if the event has
+ * no usable file path, it runs everything and says why.
+ * @param {string} hook
+ * @param {unknown} event
+ * @param {string} root
+ * @returns {null | { kind: 'skip', reason: string } | { kind: 'run', cmd: string, label: string, env: Record<string, string>, note?: string }}
+ */
+export function planHook(hook, event, root) {
+  const files = eventPaths(event);
+  const keys = event && typeof event === 'object' ? Object.keys(event).join(', ') : typeof event;
+  const note = files.length ? undefined : `No file path in the event (keys: ${keys || 'none'}).`;
+
+  switch (hook) {
+    case 'test-on-save': {
+      if (!files.length)
+        return { kind: 'run', cmd: ALL_PACKAGES, label: 'all packages', env: {}, note };
+      const pkgs = [...new Set(files.map((f) => packageForFile(f, root)).filter(Boolean))];
+      if (!pkgs.length)
+        return { kind: 'skip', reason: 'No package source file in the event, nothing to test.' };
+      return {
+        kind: 'run',
+        cmd: `pnpm exec vitest run ${pkgs.map((p) => `--project ${p}`).join(' ')}`,
+        label: pkgs.join(', '),
+        env: {},
+      };
+    }
+    case 'pbt-on-oracle-change': {
+      if (files.length && !files.some((f) => isPbtTarget(f, root)))
+        return { kind: 'skip', reason: 'Not an oracle or vessel file, skipped.' };
+      return {
+        kind: 'run',
+        cmd: 'pnpm exec vitest run --project @afterlife/oracle --project @afterlife/vessel',
+        label: 'oracle + vessel suites',
+        env: {},
+        note,
+      };
+    }
+    case 'a11y-check': {
+      if (!files.length) return { kind: 'run', cmd: A11Y, label: 'all routes', env: {}, note };
+      const routes = [...new Set(files.map((f) => routeForPage(f, root)).filter(Boolean))];
+      if (!routes.length)
+        return {
+          kind: 'skip',
+          reason: `No page file in the event (${files.map((f) => relative(f, root)).join(', ')}), skipped.`,
+        };
+      return {
+        kind: 'run',
+        cmd: A11Y,
+        label: `axe on ${routes.join(', ')}`,
+        env: { A11Y_ROUTES: routes.join(',') },
+      };
+    }
+    default:
+      return null;
+  }
 }

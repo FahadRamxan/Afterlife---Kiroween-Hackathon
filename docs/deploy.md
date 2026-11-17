@@ -44,7 +44,7 @@ Plan notes:
 
 - `https://<api>/health` returns `{"status":"ok","service":"afterlife-api",...}`.
 - The web footer shows a green **API healthy** chip. Amber means `NEXT_PUBLIC_API_URL` is not set. Red means the API is down or `WEB_ORIGINS` does not include the web URL.
-- Run the **Prod smoke** workflow (`.github/workflows/prod-smoke.yml`): GitHub → Actions → Prod smoke → Run workflow, with the Vercel URL. It runs the Playwright tests tagged `@smoke` against production.
+- Run `pnpm smoke:prod https://<vercel-url>`. It runs the Playwright tests tagged `@smoke` against production. (It replaces the `prod-smoke` workflow, because GitHub Actions is off.)
 
 ## Local checks before deploying
 
@@ -55,4 +55,4 @@ docker build -f apps/worker/Dockerfile -t afterlife-worker:local .
 node scripts/docker-smoke.mjs                                   # /health, CORS, non-root, clean SIGTERM
 ```
 
-CI runs the same Docker check in the `docker` job.
+`pnpm ci:local` runs the same Docker check when Docker is running.

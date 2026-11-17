@@ -29,12 +29,11 @@ describe('git hooks (Prompt 5)', () => {
     },
   );
 
-  it('pre-commit runs lint-staged, typecheck and tests for changed packages', () => {
-    const hook = read('.husky/pre-commit');
-    expect(hook).toContain('lint-staged');
-    expect(hook).toContain('pnpm typecheck');
-    expect(hook).toContain('--filter=...[HEAD]');
-    expect(hook).toMatch(/vitest run/);
+  it('pre-commit runs lint-staged, typecheck and the whole test suite once', () => {
+    const commands = read('.husky/pre-commit')
+      .split('\n')
+      .filter((l) => l.trim() && !l.startsWith('#'));
+    expect(commands).toEqual(['pnpm exec lint-staged', 'pnpm typecheck', 'pnpm exec vitest run']);
   });
 
   it('pre-push runs pnpm verify (with e2e)', () => {

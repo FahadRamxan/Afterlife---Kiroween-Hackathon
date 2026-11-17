@@ -33,7 +33,9 @@ Hook files are in `.kiro/hooks/`. We created them with Kiro's own hook tool, whi
 
 ### First firing (Prompt 7)
 
-Each hook was fired once by piping the event Kiro sends. Hooks become active in the IDE at the next session start, so the firing inside the IDE still needs confirming in a new session. Add a line here when you see it.
+Each hook was fired once by piping it a save event. Hooks become active in the IDE at the next session start, so the firing inside the IDE still needs confirming in a new session. Add a line here when you see it.
+
+Real firings are logged to `.kiro/.hook-runs.jsonl` with `"source": "kiro"`. Test runs go to a temp file with `"source": "test"`, so that log only holds real firings.
 
 | Hook                   | Event                                              | Result                                                   |
 | ---------------------- | -------------------------------------------------- | -------------------------------------------------------- |
@@ -52,6 +54,23 @@ Filled in by Prompts 32 and 33 ("MCP: Kiro driving a 1998 app").
 
 Filled in as feature specs are created in `.kiro/specs/`.
 
+### Bug found and fixed: paths with spaces (local-CI fix)
+
+The review found that a hook given a full path reported "nothing to test" and exited 0. The cause: `looksLikeFile` rejected paths with spaces, and this repo lives in `Matrix AE Hackathons`. Reproduced before the fix:
+
+```text
+[test-on-save] No package source file in the event, nothing to test.   (exit 0, tested nothing)
+```
+
+After the fix, the same event gives `PASS @afterlife/dbf`. `file://` URIs are decoded. An event with no usable path now runs every package (or every route for `a11y-check`) and names the event's keys, so a hook can never look green without testing.
+
+### Still to confirm in the IDE
+
+| Check                                                                                        | Result          |
+| -------------------------------------------------------------------------------------------- | --------------- |
+| Save `packages/dbf/src/index.ts` in a new session, `test-on-save` appears in the Hooks panel | not checked yet |
+| Timeout the Hooks panel shows for `a11y-check` (300 s is set at hook and action level)       | not checked yet |
+
 ## IDE vs CLI vs Crew
 
-Filled in from week 2.
+GitHub Actions is off for this repo. The nightly check is a Kiro Crew scheduled job that runs `pnpm ci:local` on `main` (job text in `docs/kiro-formats.md`). Fill in the first nightly result here.

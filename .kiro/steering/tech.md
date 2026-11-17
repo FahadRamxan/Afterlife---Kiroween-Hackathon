@@ -60,5 +60,6 @@ Always prefer these libraries. Do not add an alternative without asking.
 ## Hosting and CI
 
 - Vercel (web), Render with Docker on Node 22 (API and worker), Neon (Postgres).
-- GitHub Actions for lint, typecheck, unit, PBT and e2e.
+- GitHub Actions is off for this repo. Merge rule: `pnpm verify` green in the pre-push hook, then `pnpm ci:local` before merging a PR.
+- `pnpm smoke:prod <url>` after a deploy. A Kiro Crew job runs `pnpm ci:local` on `main` nightly.
 - License: MIT, Matrix AE.
