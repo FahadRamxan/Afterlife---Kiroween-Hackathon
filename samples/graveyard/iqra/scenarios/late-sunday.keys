@@ -1,0 +1,9 @@
+# LEGACY BUG: Sunday 11 March is 1 day late but in the due date's calendar week, so no late fee.
+# S0026, class 6: Rs 1800.00 (the school meant 1850.00).
+{Enter}
+S0026{Enter}
+{Enter}
+{Dump:CALC}
+{F2}
+{Enter}
+{Up}{Enter}

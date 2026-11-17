@@ -1,0 +1,7 @@
+# S0001 already paid February (receipt 000001): refused.
+{Enter}
+S0001{Enter}
+{Backspace}{Backspace}{Backspace}{Backspace}{Backspace}{Backspace}022001{Enter}
+{Dump:DUP}
+{Esc}
+{Up}{Enter}

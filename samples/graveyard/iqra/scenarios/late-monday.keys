@@ -1,0 +1,8 @@
+# Monday 12 March: next calendar week, Rs 50 late fee. S0027, class 5: 1600 + 50 = 1650.00.
+# F2 straight after the student: it calculates and saves in one step.
+{Enter}
+S0027{Enter}
+{F2}
+{Dump:SAVED}
+{Enter}
+{Up}{Enter}

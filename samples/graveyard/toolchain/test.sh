@@ -18,9 +18,12 @@ fail() { echo "FAIL: $*"; exit 1; }
 unit_tests=$(ls toolchain/test/*test.c */test/*test.c 2>/dev/null | sort -u)
 mkdir -p "$NEW/unit"
 
+# Test names are <folder>-<file> (shifa-rulestest), because several apps have a rulestest.c.
+test_name() { echo "$(echo "$1" | cut -d/ -f1)-$(basename "$1" .c)"; }
+
 echo "== 1. C unit tests (gcc)"
 for t in $unit_tests; do
-  name=$(basename "$t" .c)
+  name=$(test_name "$t")
   srcs=$(sed -n 's/^ \* SOURCES: //p; s/^\/\* SOURCES: //p' "$t" | sed 's/ \*\/$//')
   [ -n "$srcs" ] || fail "$t has no SOURCES comment"
   w=$(mktemp -d)
@@ -32,9 +35,11 @@ for t in $unit_tests; do
 done
 
 echo "== 2. C unit tests (16-bit DOS in DOSBox)"
+n=0
 for t in $unit_tests; do
-  name=$(basename "$t" .c)
-  exe=$(echo "${name:0:8}" | tr '[:lower:]' '[:upper:]').EXE
+  name=$(test_name "$t")
+  n=$((n + 1))
+  exe="UNIT$n.EXE" # DOS names are 8.3
   srcs=$(sed -n 's/^ \* SOURCES: //p; s/^\/\* SOURCES: //p' "$t" | sed 's/ \*\/$//')
   abs=""
   for s in $srcs; do abs="$abs /graveyard/$s"; done
@@ -50,7 +55,7 @@ done
 echo "== 3. seed CSV round trip"
 for csv in */seed/*.csv; do
   [ -e "$csv" ] || continue
-  "$T/csv2dbf" "$csv" "$T/rt.dbf" 980101
+  "$T/csv2dbf" "$csv" "$T/rt.dbf" 19980101
   if ! diff <(grep -v '^#' "$csv") <("$T/dbf2csv" "$T/rt.dbf" | grep -v '^#') > /dev/null; then
     diff <(grep -v '^#' "$csv") <("$T/dbf2csv" "$T/rt.dbf" | grep -v '^#') || true
     fail "$csv does not round-trip"
@@ -78,9 +83,11 @@ cp "$run/OUT.TXT" "$run/HELLO.DBF" "$NEW/hello/"
 echo "== 5b. scripted scenarios in DOSBox"
 for dir in */scenarios; do
   app=$(dirname "$dir")
-  EXE=""
+  EXE=""; DOS_TIME=""
   # shellcheck disable=SC1090
   source "$app/build.env"
+  # The app's default DOS clock (build.env DOS_TIME), else 15 July 1998.
+  app_time="${DOS_TIME:-1998-07-15 10:00:00}"
   base=${EXE%.EXE}
   tst="${base:0:5}TST.EXE"
   bin=$(mktemp -d)
@@ -92,7 +99,7 @@ for dir in */scenarios; do
     cp "$bin/$tst" "$run/"
     cp "$keys" "$run/KEYS.TXT"
     time_file="$dir/$s.time"
-    dos_time="1998-07-15 10:00:00"
+    dos_time="$app_time"
     [ -f "$time_file" ] && dos_time=$(cat "$time_file")
     DOS_TIME="$dos_time" toolchain/run-dos.sh "$run" "$tst"
     out="$NEW/$app/$s"

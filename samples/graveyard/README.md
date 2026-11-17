@@ -5,7 +5,7 @@ Sample dead DOS apps, written by our team to simulate 1990s software. They are r
 | App                             | Folder    | Status           |
 | ------------------------------- | --------- | ---------------- |
 | Shifa Medical Store v2.3 (1998) | `shifa/`  | Done (Prompt 12) |
-| Iqra School Fees 1.1 (2001)     | `iqra/`   | Prompt 13        |
+| Iqra School Fees 1.1 (2001)     | `iqra/`   | Done (Prompt 13) |
 | Barkat Kiryana Ledger (1996)    | `barkat/` | Prompt 14        |
 
 `hello/` is the toolchain smoke test.
@@ -21,7 +21,7 @@ toolchain/                 Docker image and scripts (Open Watcom v2, DOSBox, fak
   lib/kbd_parse.c          key-script parser ("1{Enter}PAN500{Enter}4{Enter}{Dump:LINES}")
   tools/csv2dbf, dbf2csv   host tools: seed CSV -> DBF, and DBF -> CSV for fixtures
   test/*test.c             C unit tests, run on gcc and on 16-bit DOS in DOSBox
-<app>/build.env            EXE, LIBS (from toolchain/lib), SOURCES, SEED_DATE
+<app>/build.env            EXE, LIBS (from toolchain/lib), SOURCES, SEED_DATE (YYYYMMDD), DOS_TIME
 <app>/src/                 the app's C source
 <app>/seed/*.csv           seed data, turned into .DBF files by the build
 <app>/test/*test.c         the app's C unit tests (for example its business rules)
@@ -57,7 +57,7 @@ The test build (`SHIFATST.EXE`) is the same app linked with `kbd_script.c` inste
 ## Rules
 
 - **`dist/` is committed.** The js-dos bundles (Prompt 15) need the EXEs, and Vercel cannot compile them. Run `pnpm graveyard:build` after changing any C source, and commit `dist/`.
-- **The DOS date is 15 July 1998** unless a scenario has a `.time` file. DOSBox 0.74 has no `DATE` command and reads the host clock, so `run-dos.sh` starts it with `faketime`.
+- **The DOS date** is the app's `DOS_TIME` in `build.env` (default 15 July 1998), or a scenario's `.time` file. DOSBox 0.74 has no `DATE` command and reads the host clock, so `run-dos.sh` starts it with `faketime`.
 - **DOSBox runs at a fixed speed** (`cycles=fixed 20000`). With `cycles=max`, DOSBox hung in 4 of 100 runs. With fixed cycles there were 0 hangs in 200 runs, and each run takes about 1 second.
 - **Runs are byte-for-byte repeatable.** Same EXE, same keys, same date, same output.
 - **Stack size is 8 KB** (`-k8192`). Open Watcom's 2 KB default overflowed in `HELLO.EXE`, so the program stopped and printed nothing.
@@ -84,6 +84,23 @@ A pharmacy in Satellite Town, Rawalpindi. Blue and white text screens, keyboard 
   2. Quantity 0 skips the stock check, and F3 (edit last quantity) never checks stock. `THY050` (3 in stock) can be sold 5 times, leaving -2.
 
 The 12 scenarios in `shifa/scenarios` cover every rule and both bugs.
+
+## Iqra School Fees 1.1 (2001)
+
+Monthly fee collection for Iqra Model School, Chaklala Scheme III, Rawalpindi. Keyboard navigation: a highlight-bar menu (Up/Down, Enter), Enter and Up between form fields, F2 to save, Esc to go back.
+
+- **Menu:** Collect Fee, Students, Fee Schedule, Today's Receipts, Exit. Up from the top wraps to Exit. Esc never leaves the program.
+- **Data:** `STUDENT.DBF` (60 students in 48 families: 37 only children, 10 pairs, 1 family of 3), `FEES.DBF` (classes 1 to 10), `PAYMENT.DBF` (6 February 2001 receipts).
+- **Hidden rules:**
+  - the monthly fee comes from the student's class
+  - 15% sibling discount for the second and later children (`SIB` >= 2), truncated to the paisa
+  - Rs 50 late fee per week after the 10th of the fee month, capped at Rs 500. The late fee is not discounted
+  - receipt numbers are sequential (`000007` after `000006`)
+  - a month already paid for that student is refused, naming the receipt
+  - the fee month (MMYYYY) defaults to the current month, and month 13 or year 1979 is refused
+- **Legacy bug:** the late fee counts calendar weeks (Monday to Sunday) between the due date and the payment, not days. Paying on Sunday 11 March 2001 (1 day late) costs nothing; paying on Sunday 18 March (8 days late) costs 1 week, not 2.
+
+The 13 scenarios in `iqra/scenarios` cover every rule and the bug. `tests/graveyard-iqra.test.ts` checks the seed receipts against an independent TypeScript version of the rules.
 
 ## Open Watcom version
 

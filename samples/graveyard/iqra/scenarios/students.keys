@@ -1,0 +1,14 @@
+# 60 students, 17 per page: 4 pages. PgDn on the last page stays, PgUp goes back.
+{Down}{Enter}
+{Dump:STU1}
+{PgDn}
+{Dump:STU2}
+{PgDn}
+{Dump:STU3}
+{PgDn}
+{Dump:STU4}
+{PgDn}
+{PgUp}
+{Dump:STU3B}
+{Esc}
+{Up}{Enter}

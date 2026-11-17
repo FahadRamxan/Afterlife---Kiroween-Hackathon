@@ -1,9 +1,10 @@
 /*
- * csv2dbf <in.csv> <out.dbf> <YYMMDD>: builds a dBASE III file from our seed CSV format.
+ * csv2dbf <in.csv> <out.dbf> <YYYYMMDD>: builds a dBASE III file from our seed CSV format.
  *   - lines starting with # are comments
  *   - the first line is the header: NAME:TYPE:LEN for C, D and L, NAME:TYPE:LEN:DEC for N
  *   - a first column named _DEL (written by dbf2csv) holds "*" for deleted records
  *   - values cannot contain commas
+ * The date goes into the header as dBASE III stores it: years since 1900 (2001 -> 101).
  * Host tool (gcc), used by build.sh. Exits 1 with the line number on any bad value.
  */
 #include <stdio.h>
@@ -75,13 +76,17 @@ int main(int argc, char **argv)
     char rec[DBF_MAX_RECLEN];
     int ncols = 0, nfields = 0, has_del = 0, header = 0, i, yy, mm, dd;
 
-    if (argc != 4 || strlen(argv[3]) != 6) {
-        fprintf(stderr, "usage: csv2dbf <in.csv> <out.dbf> <YYMMDD>\n");
+    if (argc != 4 || strlen(argv[3]) != 8 || strspn(argv[3], "0123456789") != 8) {
+        fprintf(stderr, "usage: csv2dbf <in.csv> <out.dbf> <YYYYMMDD>\n");
         return 2;
     }
-    yy = (argv[3][0] - '0') * 10 + (argv[3][1] - '0');
-    mm = (argv[3][2] - '0') * 10 + (argv[3][3] - '0');
-    dd = (argv[3][4] - '0') * 10 + (argv[3][5] - '0');
+    yy = atoi(argv[3]) / 10000 - 1900;
+    mm = (argv[3][4] - '0') * 10 + (argv[3][5] - '0');
+    dd = (argv[3][6] - '0') * 10 + (argv[3][7] - '0');
+    if (yy < 0 || yy > 255 || mm < 1 || mm > 12 || dd < 1 || dd > 31) {
+        fprintf(stderr, "csv2dbf: bad date %s\n", argv[3]);
+        return 2;
+    }
     in = fopen(argv[1], "r");
     if (!in) fail("cannot open", argv[1]);
 
