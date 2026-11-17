@@ -1,0 +1,156 @@
+{
+  "rows": 25,
+  "title": {
+    "row": 0,
+    "text": "SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98",
+    "parts": [
+      "SHIFA MEDICAL STORE",
+      "v2.3",
+      "NEW BILL",
+      "15/07/98"
+    ],
+    "name": "NEW BILL"
+  },
+  "status": {
+    "row": 24,
+    "text": "Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel",
+    "hints": [
+      {
+        "key": "Enter",
+        "action": "Add"
+      },
+      {
+        "key": "Enter on blank code",
+        "action": "Finish"
+      },
+      {
+        "key": "F3",
+        "action": "Edit last qty"
+      },
+      {
+        "key": "Esc",
+        "action": "Cancel"
+      }
+    ]
+  },
+  "menu": null,
+  "fields": [
+    {
+      "kind": "reverse",
+      "label": "Code",
+      "row": 21,
+      "col": 7,
+      "length": 6,
+      "value": "",
+      "focused": false
+    },
+    {
+      "kind": "prompt",
+      "label": "Qty",
+      "row": 21,
+      "col": 21,
+      "length": null,
+      "value": "",
+      "focused": false
+    }
+  ],
+  "labels": [
+    {
+      "label": "Customer",
+      "value": "WALK-IN",
+      "row": 2,
+      "col": 1
+    }
+  ],
+  "tables": [
+    {
+      "headerRow": 4,
+      "columns": [
+        {
+          "name": "#",
+          "col": 2,
+          "length": 1,
+          "align": "right"
+        },
+        {
+          "name": "CODE",
+          "col": 4,
+          "length": 6,
+          "align": "left"
+        },
+        {
+          "name": "NAME",
+          "col": 11,
+          "length": 19,
+          "align": "left"
+        },
+        {
+          "name": "BATCH",
+          "col": 32,
+          "length": 6,
+          "align": "left"
+        },
+        {
+          "name": "PRICE",
+          "col": 45,
+          "length": 5,
+          "align": "right"
+        },
+        {
+          "name": "QTY",
+          "col": 53,
+          "length": 3,
+          "align": "right"
+        },
+        {
+          "name": "AMOUNT",
+          "col": 62,
+          "length": 6,
+          "align": "right"
+        }
+      ],
+      "rows": [
+        {
+          "row": 5,
+          "cells": [
+            "1",
+            "PAN500",
+            "PANADOL 500MG STRIP",
+            "B98031",
+            "12.50",
+            "4",
+            "50.00"
+          ]
+        },
+        {
+          "row": 6,
+          "cells": [
+            "2",
+            "BRU400",
+            "BRUFEN 400MG STRIP",
+            "B97112",
+            "18.75",
+            "2",
+            "37.50"
+          ]
+        }
+      ]
+    }
+  ],
+  "messages": [],
+  "texts": [
+    {
+      "text": "SUBTOTAL",
+      "row": 20,
+      "col": 45,
+      "highlight": false
+    },
+    {
+      "text": "87.50",
+      "row": 20,
+      "col": 63,
+      "highlight": true
+    }
+  ],
+  "cursor": null
+}

@@ -38,6 +38,15 @@ test.describe('/design', () => {
     await expect(text).toContainText('1  New Bill');
     await expect(text).toContainText('15/07/98');
     await expect(section.getByTestId('decoder-stats')).toContainText('2,000 cells read, 0 unknown');
+    // Prompt 23: what the screen means.
+    const model = section.getByTestId('screen-model');
+    await expect(model).toContainText('MAIN MENU');
+    await expect(model).toContainText('Menu (numbered)');
+    await expect(model).toContainText(
+      '1 New Bill · 2 Stock · 3 Customers · 4 Daily Report · 5 Exit',
+    );
+    await expect(model).toContainText('Choice: (prompt');
+    await expect(model).toContainText('1-5 Select');
   });
 
   test('the Shifa demos use the catalogue years (1998 to 2004)', async ({ page }) => {

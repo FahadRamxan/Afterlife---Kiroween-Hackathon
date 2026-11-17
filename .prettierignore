@@ -4,3 +4,5 @@ dist
 coverage
 pnpm-lock.yaml
 .turbo
+# Byte-exact test snapshots (JSON.stringify output).
+packages/screen/src/__screens__/

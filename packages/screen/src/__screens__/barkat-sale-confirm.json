@@ -1,0 +1,94 @@
+{
+  "rows": 25,
+  "title": {
+    "row": 0,
+    "text": "BARKAT KIRYANA LEDGER           SALE ON CREDIT                        20/11/96",
+    "parts": [
+      "BARKAT KIRYANA LEDGER",
+      "SALE ON CREDIT",
+      "20/11/96"
+    ],
+    "name": "SALE ON CREDIT"
+  },
+  "status": {
+    "row": 24,
+    "text": "Enter=Next  Esc=Back to menu",
+    "hints": [
+      {
+        "key": "Enter",
+        "action": "Next"
+      },
+      {
+        "key": "Esc",
+        "action": "Back to menu"
+      }
+    ]
+  },
+  "menu": null,
+  "fields": [
+    {
+      "kind": "reverse",
+      "label": "Party ID",
+      "row": 2,
+      "col": 13,
+      "length": 4,
+      "value": "P003",
+      "focused": false
+    },
+    {
+      "kind": "reverse",
+      "label": "Amount Rs",
+      "row": 8,
+      "col": 13,
+      "length": 9,
+      "value": "450",
+      "focused": false
+    },
+    {
+      "kind": "reverse",
+      "label": "Note",
+      "row": 9,
+      "col": 13,
+      "length": 20,
+      "value": "ATTA 20 KG",
+      "focused": false
+    }
+  ],
+  "labels": [
+    {
+      "label": "Name",
+      "value": "BAJI SHAMIM",
+      "row": 3,
+      "col": 1
+    },
+    {
+      "label": "Area",
+      "value": "DHOKE RATTA",
+      "row": 4,
+      "col": 1
+    },
+    {
+      "label": "Limit",
+      "value": "20000.00",
+      "row": 5,
+      "col": 1
+    },
+    {
+      "label": "Balance",
+      "value": "5340.00",
+      "row": 6,
+      "col": 1
+    }
+  ],
+  "tables": [],
+  "messages": [
+    {
+      "kind": "info",
+      "text": "SAVE SALE OF RS 450.00 FOR P003? (Y/N)",
+      "row": 23,
+      "col": 2
+    }
+  ],
+  "texts": [],
+  "cursor": null
+}

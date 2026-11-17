@@ -1,0 +1,84 @@
+{
+  "rows": 25,
+  "title": {
+    "row": 0,
+    "text": "BARKAT KIRYANA LEDGER             MAIN MENU                           20/11/96",
+    "parts": [
+      "BARKAT KIRYANA LEDGER",
+      "MAIN MENU",
+      "20/11/96"
+    ],
+    "name": "MAIN MENU"
+  },
+  "status": {
+    "row": 24,
+    "text": "Press a letter    Software by M. Yousaf, 1996",
+    "hints": []
+  },
+  "menu": {
+    "kind": "lettered",
+    "items": [
+      {
+        "key": "S",
+        "label": "Sale on credit (udhaar)",
+        "row": 8,
+        "col": 24,
+        "selected": false
+      },
+      {
+        "key": "P",
+        "label": "Payment received",
+        "row": 10,
+        "col": 24,
+        "selected": false
+      },
+      {
+        "key": "L",
+        "label": "Ledger of a party",
+        "row": 12,
+        "col": 24,
+        "selected": false
+      },
+      {
+        "key": "B",
+        "label": "Balances of all parties",
+        "row": 14,
+        "col": 24,
+        "selected": false
+      },
+      {
+        "key": "R",
+        "label": "Reminders (no interest)",
+        "row": 16,
+        "col": 24,
+        "selected": false
+      },
+      {
+        "key": "X",
+        "label": "Exit",
+        "row": 18,
+        "col": 24,
+        "selected": false
+      }
+    ]
+  },
+  "fields": [],
+  "labels": [],
+  "tables": [],
+  "messages": [],
+  "texts": [
+    {
+      "text": "BARKAT KIRYANA STORE",
+      "row": 3,
+      "col": 24,
+      "highlight": true
+    },
+    {
+      "text": "Raja Bazaar, Rawalpindi",
+      "row": 4,
+      "col": 24,
+      "highlight": false
+    }
+  ],
+  "cursor": null
+}
