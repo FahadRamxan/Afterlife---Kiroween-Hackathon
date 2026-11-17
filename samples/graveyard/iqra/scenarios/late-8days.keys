@@ -1,0 +1,9 @@
+# LEGACY BUG: Sunday 18 March is 8 days late. Calendar weeks give 1 (Rs 50); the school meant 2.
+# S0028, class 4: 1500 + 50 = 1550.00.
+{Enter}
+S0028{Enter}
+{Enter}
+{Dump:CALC}
+{F2}
+{Enter}
+{Up}{Enter}

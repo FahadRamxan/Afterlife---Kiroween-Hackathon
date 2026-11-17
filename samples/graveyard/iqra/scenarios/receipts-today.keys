@@ -1,0 +1,10 @@
+# Monday 12 March, two fees, then Today's Receipts.
+# S0005 HAMZA, class 9: 2400 + 50 = 2450.00. S0006 ZAINAB, second child, class 7: 2000 - 300 + 50 = 1750.00.
+{Enter}
+S0005{Enter}{F2}{Enter}
+{Enter}
+S0006{Enter}{F2}{Enter}
+{Up}{Up}{Enter}
+{Dump:TODAY}
+{Esc}
+{Up}{Enter}

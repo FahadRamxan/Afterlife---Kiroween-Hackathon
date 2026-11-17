@@ -135,13 +135,18 @@ describe('hello sample: run in DOSBox (Prompt 11)', () => {
 
 describe('dbf3 unit tests ran on both compilers (Prompt 11)', () => {
   it.each(['gcc', 'dos'])('%s run passed', (target) => {
-    const log = read(`fixtures/unit/dbf3test-${target}.txt`);
+    const log = read(`fixtures/unit/toolchain-dbf3test-${target}.txt`);
     expect(log).toMatch(/^ALL \d+ CHECKS PASSED$/m);
     expect(log).not.toContain('FAIL');
   });
 
   it('the fixtures exist', () => {
-    for (const t of ['dbf3test', 'kbdtest', 'rulestest'])
+    for (const t of [
+      'toolchain-dbf3test',
+      'toolchain-kbdtest',
+      'shifa-rulestest',
+      'iqra-rulestest',
+    ])
       for (const target of ['gcc', 'dos'])
         expect(existsSync(resolve(g, `fixtures/unit/${t}-${target}.txt`)), `${t}-${target}`).toBe(
           true,

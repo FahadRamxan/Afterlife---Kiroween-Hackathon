@@ -1,0 +1,9 @@
+# Friday 1 June, paying March: 12 weeks late, Rs 600 capped at Rs 500.
+# The month field starts as 062001: six Backspaces, then 032001. S0029, class 3: 1400 + 500 = 1900.00.
+{Enter}
+S0029{Enter}
+{Backspace}{Backspace}{Backspace}{Backspace}{Backspace}{Backspace}032001{Enter}
+{Dump:CALC}
+{F2}
+{Enter}
+{Up}{Enter}

@@ -12,7 +12,7 @@ toolchain/tools/build-tools.sh "$tools"
 
 for envfile in */build.env; do
   app=$(dirname "$envfile")
-  EXE=""; SEED_DATE=980701
+  EXE=""; SEED_DATE=19980701
   # shellcheck disable=SC1090
   source "$envfile"
   mkdir -p "$OUT/$app"

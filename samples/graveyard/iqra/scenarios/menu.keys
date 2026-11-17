@@ -1,0 +1,7 @@
+# Highlight-bar menu: Down moves, Up from the top wraps to Exit, Enter selects.
+{Dump:MENU}
+{Down}
+{Dump:MENU2}
+{Up}{Up}
+{Dump:WRAP}
+{Enter}

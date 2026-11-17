@@ -1,0 +1,11 @@
+# Unknown student, then an invalid month (13), then Up back to the student field, then Esc.
+{Enter}
+S9999{Enter}
+{Dump:NOTFOUND}
+{Backspace}{Backspace}{Backspace}{Backspace}{Backspace}S0005{Enter}
+{Backspace}{Backspace}{Backspace}{Backspace}{Backspace}{Backspace}132001{Enter}
+{Dump:BADMONTH}
+{Up}
+{Dump:BACKUP}
+{Esc}
+{Up}{Enter}
