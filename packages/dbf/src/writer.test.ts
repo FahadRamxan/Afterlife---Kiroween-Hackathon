@@ -117,11 +117,15 @@ describe('values that do not fit are refused with a typed error', () => {
     ['the wrong number of decimals', t('N', 8, 2, '45.5'), 'BAD_VALUE'],
     ['not a number', t('N', 8, 2, '12,50'), 'BAD_VALUE'],
     ['a bad date', t('D', 8, 0, '1998-07-15'), 'BAD_VALUE'],
-    ['a character CP437 does not have', t('C', 3, 0, '€'), undefined],
+    ['a character CP437 does not have', t('C', 3, 0, '€'), 'BAD_VALUE'],
+    ['Urdu text (DOS stores it romanised)', t('C', 10, 0, 'شفا'), 'BAD_VALUE'],
     ['a string in a logical field', t('L', 1, 0, 'T'), 'BAD_VALUE'],
   ])('%s', (_label, table, code) => {
-    if (code) expect(codeOf(() => writeDbf(table))).toBe(code);
-    else expect(() => writeDbf(table)).toThrow(/CP437/);
+    expect(codeOf(() => writeDbf(table))).toBe(code);
+  });
+
+  it('names the field and the problem for a character DOS cannot store', () => {
+    expect(() => writeDbf(t('C', 3, 0, '€'))).toThrow(/X: .*not in CP437/);
   });
 
   it.each([

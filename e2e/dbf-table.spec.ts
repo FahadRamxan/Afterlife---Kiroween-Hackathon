@@ -190,6 +190,21 @@ test.describe('DbfDiffView on /design', () => {
   });
 });
 
+test('in Urdu the tables keep the file order, left to right', async ({ page, context }) => {
+  await context.addCookies([
+    { name: 'afterlife-locale', value: 'ur', url: 'http://localhost:3000' },
+  ]);
+  await page.goto('/design');
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  for (const g of [grid(page), diffGrid(page)]) {
+    await expect(g).toHaveCSS('direction', 'ltr');
+    const first = await g.getByRole('columnheader').first().boundingBox();
+    const second = await g.getByRole('columnheader').nth(1).boundingBox();
+    expect(first!.x, '# is the left-most column').toBeLessThan(second!.x);
+  }
+  await expect(page.getByText('2 changed cells, matched by CODE')).toHaveCSS('direction', 'ltr');
+});
+
 test('DbfTable scrolls sideways at 360 px instead of breaking the page', async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 740 });
   await page.goto('/design');

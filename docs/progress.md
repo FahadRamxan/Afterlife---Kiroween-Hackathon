@@ -21,7 +21,7 @@ Status:
 | 4   | Testing rule steering doc | F     | partial | PR #4. Property examples run in `tests/testing-rule-examples.prop.test.ts`. Refusal check not recorded |
 | 5   | Husky and commitlint      | F     | partial | PR #5. Blocked-commit proof in `docs/git-hooks-proof.md`. Screenshot missing                           |
 | 6   | GitHub Actions CI         | F     | merged  | PR #6. Actions is off, replaced by `pnpm ci:local` (see below). Workflow files kept as documentation   |
-| 7   | Kiro agent hooks          | F     | partial | PR #7. Path-with-spaces bug fixed in the local-CI fix. Firing inside the IDE not confirmed yet         |
+| 7   | Kiro agent hooks          | F     | merged  | PR #7. Fires in the IDE since the workspace was trusted: 22 real runs (`docs/kiro-usage.md`)           |
 | 8   | Design system             | Q     | merged  | PR #8. 8 components, `/design`, 9 snapshots (win32 + linux), reduced-motion e2e, AA contrast tests     |
 | 9   | Web app shell             | Q     | merged  | PR #9. 7 routes, top bar, next-intl EN/UR (cookie, RTL), tabs synced to `?tab=`, axe on every route    |
 | 10  | Deploy skeleton           | F     | partial | PR #10. `/health`, status chip, Dockerfiles, render.yaml, docs/deploy.md. Not deployed yet             |
@@ -50,7 +50,7 @@ README updated at Prompt 20 (counts, coverage, screenshots). Update this file in
 
 - [ ] Prompt 4: ask Kiro to finish a task without tests, and record that it refuses (`docs/kiro-usage.md`).
 - [ ] Prompt 5: screenshot of a blocked commit, saved as `docs/git-hooks-proof.png`.
-- [ ] Prompt 7: open a new Kiro session, save a file in `packages/dbf/src`, check the Hooks panel, record it and the timeout it shows in `docs/kiro-usage.md`.
+- [ ] Prompt 7: hooks fire in the IDE (confirmed). Still to do: a screenshot of the Hooks panel, and the timeout it shows, in `docs/kiro-usage.md`.
 - [ ] Prompt 10: deploy (Neon, Render, Vercel) using `docs/deploy.md`, then `pnpm smoke:prod <vercel-url>`.
 - [ ] Turn GitHub Actions off: repo Settings → Actions → General → Disable actions.
 - [ ] Sheheryar: schedule the Kiro Crew nightly `pnpm ci:local` job (text in `docs/kiro-formats.md`).

@@ -21,7 +21,13 @@ export function CRTFrame({ label, children, className }: CRTFrameProps) {
         className,
       )}
     >
-      <div className="relative overflow-hidden rounded-lg bg-black p-4 font-mono text-phosphor">
+      {/* dir="ltr": a DOS screen is always left to right. On the Urdu (right-to-left) page the
+          bidi algorithm otherwise turns "1  New Bill" into "New Bill  1" and "Choice:" into
+          ":Choice". */}
+      <div
+        dir="ltr"
+        className="relative overflow-hidden rounded-lg bg-black p-4 font-mono text-phosphor"
+      >
         <div className="crt-glow relative whitespace-pre">{children}</div>
         <div aria-hidden="true" className="crt-scanlines pointer-events-none absolute inset-0" />
       </div>

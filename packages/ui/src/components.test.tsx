@@ -80,6 +80,11 @@ describe('CRTFrame', () => {
     expect(out).toContain('crt-scanlines');
     expect(out).toContain('crt-glow');
   });
+
+  it('keeps the DOS screen left to right on a right-to-left (Urdu) page', () => {
+    const out = html(<CRTFrame label="Shifa 1998">1 New Bill</CRTFrame>);
+    expect(out).toMatch(/<div dir="ltr"[^>]*>(?:(?!<\/div>).)*crt-glow/s);
+  });
 });
 
 describe('GhostCursor', () => {

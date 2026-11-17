@@ -56,7 +56,9 @@ export default function DesignPage() {
   const medicine = shifaMedicine();
   const stock = shifaStockDiff();
   return (
-    <main className="mx-auto max-w-5xl space-y-14 px-6 py-12">
+    // This page is English only. lang/dir keep it readable when the site is in Urdu (right to
+    // left), where "A .DBF file as it really is." became ".A .DBF file as it really is".
+    <main lang="en" dir="ltr" className="mx-auto max-w-5xl space-y-14 px-6 py-12">
       <header>
         <h1 className="text-3xl font-semibold">Haunted Ledger</h1>
         <p className="mt-2 text-bone/75">
