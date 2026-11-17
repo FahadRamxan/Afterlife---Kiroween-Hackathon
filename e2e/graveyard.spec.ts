@@ -32,7 +32,9 @@ test.describe('/graveyard', () => {
   for (const app of apps) {
     test(`Raise ${app.id} opens /raise/${app.id}`, async ({ page }) => {
       await page.goto('/graveyard');
-      await page.getByRole('link', { name: `Raise ${app.name}` }).click();
+      const link = page.getByRole('link', { name: `Raise ${app.name}` });
+      await expect(link).toHaveAttribute('href', `/raise/${app.id}`);
+      await link.click();
       await expect(page).toHaveURL(new RegExp(`/raise/${app.id}$`));
       await expect(
         page.getByRole('heading', { level: 1, name: `Raising ${app.id}` }),
