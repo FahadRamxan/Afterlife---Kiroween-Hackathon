@@ -4,7 +4,9 @@ import { describe, expect, it } from 'vitest';
 
 const norm = (s: string) => s.replace(/\r\n/g, '\n');
 const doc = norm(readFileSync(resolve(__dirname, '../.kiro/steering/testing-rule.md'), 'utf8'));
-const examples = norm(readFileSync(resolve(__dirname, 'testing-rule-examples.test.ts'), 'utf8'));
+const examples = norm(
+  readFileSync(resolve(__dirname, 'testing-rule-examples.prop.test.ts'), 'utf8'),
+);
 
 describe('.kiro/steering/testing-rule.md (Prompt 4)', () => {
   it('is always included', () => {
@@ -36,7 +38,7 @@ describe('.kiro/steering/testing-rule.md (Prompt 4)', () => {
     expect(doc).toMatch(new RegExp(`^### ${kind}`, 'm'));
   });
 
-  it('every ts example in the doc is real, running code in testing-rule-examples.test.ts', () => {
+  it('every ts example in the doc is real, running code in testing-rule-examples.prop.test.ts', () => {
     // Compare with whitespace collapsed, because Prettier re-indents code inside Markdown.
     const squash = (s: string) => s.replace(/\s+/g, ' ').trim();
     const blocks = [...doc.matchAll(/```ts\n([\s\S]*?)```/g)].map((m) => squash(m[1]!));

@@ -1,0 +1,26 @@
+name: Nightly PBT
+
+on:
+  schedule:
+    # 21:00 UTC = 02:00 PKT
+    - cron: '0 21 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pbt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      FC_NUM_RUNS: 2000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test:pbt

@@ -12,7 +12,10 @@ export default defineConfig({
   use: { baseURL, trace: 'retain-on-failure' },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: 'pnpm --filter @afterlife/web dev',
+    // CI tests the production build. Locally, dev mode is faster.
+    command: process.env.CI
+      ? 'pnpm --filter @afterlife/web build && pnpm --filter @afterlife/web start'
+      : 'pnpm --filter @afterlife/web dev',
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

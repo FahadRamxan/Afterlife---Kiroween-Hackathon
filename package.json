@@ -6,18 +6,20 @@
   "license": "MIT",
   "packageManager": "pnpm@10.5.2",
   "engines": {
-    "node": "\u003e=22"
+    "node": ">=22"
   },
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "test": "turbo run test \u0026\u0026 vitest run",
+    "test": "vitest run",
     "e2e": "turbo run e2e",
     "lint": "eslint .",
     "typecheck": "turbo run typecheck",
     "format": "prettier --write .",
-    "verify": "pnpm lint \u0026\u0026 pnpm typecheck \u0026\u0026 pnpm test \u0026\u0026 pnpm e2e",
-    "prepare": "husky"
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm e2e",
+    "prepare": "husky",
+    "test:coverage": "vitest run --coverage",
+    "test:pbt": "vitest run prop.test"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
@@ -26,15 +28,18 @@
     "@commitlint/load": "^21.2.4",
     "@eslint/js": "^10.0.1",
     "@types/node": "^22.20.5",
+    "@vitest/coverage-v8": "^5.1.0",
     "eslint": "^10.15.0",
     "fast-check": "^4.10.2",
+    "globals": "^17.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.1",
     "prettier": "^3.10.1",
     "turbo": "^2.11.11",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.73.0",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.0",
+    "yaml": "^2.9.1"
   },
   "lint-staged": {
     "*.{ts,tsx,mjs,js}": [
