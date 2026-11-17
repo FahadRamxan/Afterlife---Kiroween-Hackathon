@@ -3,20 +3,26 @@
 // Usage:
 //   pnpm graveyard:build   compile every sample into samples/graveyard/dist
 //   pnpm graveyard:test    C unit tests (gcc and 16-bit DOS in DOSBox), dist up-to-date check,
-//                          and run HELLO.EXE in DOSBox (refreshes samples/graveyard/fixtures)
+//                          and every scripted scenario in DOSBox, compared with fixtures/
+//   pnpm graveyard:update  the same, but rewrites fixtures/ (review the diff, then commit)
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const IMAGE = 'afterlife-dos-toolchain:2026-11-01';
-export const COMMANDS = { build: 'toolchain/build.sh', test: 'toolchain/test.sh' };
+export const COMMANDS = {
+  build: { script: 'toolchain/build.sh', env: [] },
+  test: { script: 'toolchain/test.sh', env: [] },
+  update: { script: 'toolchain/test.sh', env: ['UPDATE_FIXTURES=1'] },
+};
 
 /** Docker arguments for one toolchain command. Paths are passed as arguments, never through a shell. */
 export function dockerRunArgs(graveyardDir, command) {
-  const script = COMMANDS[command];
-  if (!script)
-    throw new Error(`Unknown command "${command}". Use: ${Object.keys(COMMANDS).join(', ')}`);
-  return ['run', '--rm', '-v', `${graveyardDir}:/graveyard`, IMAGE, 'bash', script];
+  // Object.hasOwn: a name like "constructor" must not match something on Object.prototype.
+  const c = Object.hasOwn(COMMANDS, command) ? COMMANDS[command] : undefined;
+  if (!c) throw new Error(`Unknown command "${command}". Use: ${Object.keys(COMMANDS).join(', ')}`);
+  const env = c.env.flatMap((e) => ['-e', e]);
+  return ['run', '--rm', ...env, '-v', `${graveyardDir}:/graveyard`, IMAGE, 'bash', c.script];
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

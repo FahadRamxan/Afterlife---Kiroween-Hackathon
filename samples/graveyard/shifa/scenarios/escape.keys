@@ -1,0 +1,13 @@
+# Esc always returns safely: from every screen back to the menu, and Esc on the menu does not exit.
+1
+{Esc}
+{Enter}
+2
+{Esc}
+3
+{Esc}
+4
+{Esc}
+{Esc}
+{Dump:MENU}
+5

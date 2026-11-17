@@ -1,0 +1,9 @@
+# Customer C0002, INS100 x8 = 5200.00, over Rs 5,000: 10% off (520.00), GST on 4680.00 = 795.60.
+1
+C0002{Enter}
+INS100{Enter}8{Enter}
+{Enter}
+{Dump:TOTALS}
+{F2}
+{Enter}
+5

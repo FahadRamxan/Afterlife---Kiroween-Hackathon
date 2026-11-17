@@ -1,0 +1,10 @@
+# LEGACY BUG 1 in 2000: SEP200 expired on 30 June 1998 but is sold, because 98 > 00.
+# Runs with the DOS clock at 15 January 2000 (y2k-sells-expired.time). Bill 0001-0001.
+1
+{Enter}
+SEP200{Enter}1{Enter}
+{Enter}
+{F2}
+{Dump:SAVED}
+{Enter}
+5

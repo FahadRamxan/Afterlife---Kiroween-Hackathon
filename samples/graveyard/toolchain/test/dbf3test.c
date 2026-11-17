@@ -2,7 +2,8 @@
  * Unit tests for lib/dbf3.c. Built twice by toolchain/test.sh:
  *   - with gcc on Linux (fast feedback)
  *   - with Open Watcom for 16-bit DOS and run in DOSBox, where int is 16 bits
- * Prints "ALL n TESTS PASSED" on success. Exit code 0 only if every check passed.
+ * Prints "ALL n CHECKS PASSED" on success. Exit code 0 only if every check passed.
+ * SOURCES: toolchain/lib/dbf3.c
  */
 #include <stdio.h>
 #include <string.h>

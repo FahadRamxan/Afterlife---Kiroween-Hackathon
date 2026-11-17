@@ -1,0 +1,11 @@
+# SEP200 expired on 30 June 1998 and AMP500 on 1 July 1998: both blocked. Then cancel.
+1
+{Enter}
+SEP200{Enter}
+{Dump:EXPIRED}
+AMP500{Enter}
+{Dump:EXPIRED2}
+{Esc}
+{Dump:CANCEL}
+{Enter}
+5

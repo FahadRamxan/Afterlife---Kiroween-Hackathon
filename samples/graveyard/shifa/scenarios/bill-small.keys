@@ -1,0 +1,13 @@
+# Walk-in bill under Rs 5,000: PAN500 x4 (50.00) + BRU400 x2 (37.50) = 87.50.
+# GST 17% of 87.50 = 14.875, truncated to 14.87. Total 102.37. Bill 9807-0001.
+1
+{Enter}
+PAN500{Enter}4{Enter}
+BRU400{Enter}2{Enter}
+{Dump:LINES}
+{Enter}
+{Dump:TOTALS}
+{F2}
+{Dump:SAVED}
+{Enter}
+5

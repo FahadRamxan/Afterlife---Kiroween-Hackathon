@@ -10,7 +10,9 @@ cat > "$conf" <<EOF
 [sdl]
 output=surface
 [cpu]
-cycles=max
+# Fixed speed. cycles=max hung DOSBox in about 1 run in 25 (measured: 4 of 100 with max,
+# 0 of 200 with fixed 20000). A fixed speed also makes runs repeatable.
+cycles=fixed 20000
 [mixer]
 nosound=true
 [speaker]
@@ -21,6 +23,9 @@ c:
 $cmd > OUT.TXT
 exit
 EOF
-timeout 120 faketime -f "@$dos_time" dosbox -conf "$conf" -exit > /dev/null 2>&1
+if ! timeout 120 faketime -f "@$dos_time" dosbox -conf "$conf" -exit > /dev/null 2>&1; then
+  echo "run-dos.sh: DOSBox did not finish in 120 s running $cmd" >&2
+  exit 124
+fi
 rm -f "$conf"
 tr -d '\r' < "$dir/OUT.TXT" > "$dir/OUT.LF" && mv "$dir/OUT.LF" "$dir/OUT.TXT"

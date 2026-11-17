@@ -1,0 +1,18 @@
+# Two bills today, then the daily report: 9807-0001 (PAN500 x1 = 14.62) and
+# 9807-0002 (FLA400 x2 = 22.93). Sales 37.55, GST 5.45.
+1
+{Enter}
+PAN500{Enter}1{Enter}
+{Enter}
+{F2}
+{Enter}
+1
+{Enter}
+FLA400{Enter}2{Enter}
+{Enter}
+{F2}
+{Enter}
+4
+{Dump:REPORT}
+{Esc}
+5
