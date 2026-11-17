@@ -3,15 +3,25 @@
 import type { DbfField } from '@afterlife/dbf';
 import { tableFeatures, useTable, type ColumnDef } from '@tanstack/react-table';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react';
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type FocusEvent,
+  type KeyboardEvent,
+} from 'react';
 import { cn } from './cn';
 import {
+  clampCell,
   columnWidth,
   fieldLabel,
   formatValue,
   gridKey,
   isNumeric,
   moveCell,
+  tabStop,
   type GridRow,
   type RowKind,
 } from './dbf-grid';
@@ -45,7 +55,7 @@ export function DbfGrid({ caption, fields, rows, height = 320, className }: DbfG
   const uid = useId();
   const scrollRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState({ row: 0, col: 0 });
+  const [picked, setActive] = useState({ row: 0, col: 0 });
   const wantFocus = useRef(false);
 
   const columns = useMemo<ColumnDef<typeof features, GridRow>[]>(
@@ -62,6 +72,11 @@ export function DbfGrid({ caption, fields, rows, height = 320, className }: DbfG
   const table = useTable({ features, columns, data: rows });
   const tableRows = table.getRowModel().rows;
   const colCount = columns.length;
+  // Kept inside the table when `rows` shrinks below the active row, so a cell keeps the tab stop.
+  const active = useMemo(
+    () => clampCell(picked, { rows: tableRows.length, cols: colCount }),
+    [picked, tableRows.length, colCount],
+  );
   const template = ['6ch', ...fields.map((f) => `${columnWidth(f)}ch`)].join(' ');
 
   const virtualizer = useVirtualizer({
@@ -96,7 +111,23 @@ export function DbfGrid({ caption, fields, rows, height = 320, className }: DbfG
     if (!k || tableRows.length === 0) return;
     e.preventDefault();
     wantFocus.current = true;
-    setActive((a) => moveCell(a, k, { rows: tableRows.length, cols: colCount }));
+    const size = { rows: tableRows.length, cols: colCount };
+    setActive((a) => moveCell(clampCell(a, size), k, size));
+  }
+
+  const items = virtualizer.getVirtualItems();
+  // Exactly one tab stop: the active cell, or the grid while that cell is not rendered.
+  const stop = tabStop(
+    active.row,
+    items.map((i) => i.index),
+    tableRows.length,
+  );
+
+  function onGridFocus(e: FocusEvent<HTMLDivElement>) {
+    // Only when the grid itself got focus (Tab in after the active row scrolled away).
+    if (e.target !== e.currentTarget || tableRows.length === 0) return;
+    wantFocus.current = true;
+    setActive({ ...active });
   }
 
   return (
@@ -109,8 +140,13 @@ export function DbfGrid({ caption, fields, rows, height = 320, className }: DbfG
       aria-label={caption}
       aria-rowcount={tableRows.length + 1}
       aria-colcount={colCount}
+      tabIndex={stop === 'grid' ? 0 : undefined}
+      onFocus={onGridFocus}
       onKeyDown={onKeyDown}
-      className={cn('rounded-lg border border-bone/15 font-mono text-sm text-bone', className)}
+      className={cn(
+        'rounded-lg border border-bone/15 font-mono text-sm text-bone outline-none focus-visible:outline-2 focus-visible:outline-ectoplasm',
+        className,
+      )}
     >
       <div
         ref={scrollRef}
@@ -151,7 +187,7 @@ export function DbfGrid({ caption, fields, rows, height = 320, className }: DbfG
             ))}
           </div>
           <div role="rowgroup">
-            {virtualizer.getVirtualItems().map((item) => {
+            {items.map((item) => {
               const row = tableRows[item.index]!;
               const data = row.original;
               return (

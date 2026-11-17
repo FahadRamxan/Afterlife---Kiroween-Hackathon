@@ -131,6 +131,28 @@ test.describe('DbfTable on /design', () => {
     await page.keyboard.press('Tab');
     await expect(g.locator(':focus')).toHaveCount(0);
   });
+
+  test('keeps its tab stop after the mouse wheel scrolls the active row away', async ({ page }) => {
+    const g = grid(page);
+    await focusFirstCell(g);
+    await g.hover();
+    await page.mouse.wheel(0, 2000);
+    await expect(g.getByText('PAN500')).toHaveCount(0); // row 1 is no longer rendered
+    // Still exactly one tab stop: the grid itself stands in for the unrendered cell.
+    await expect(g).toHaveAttribute('tabindex', '0');
+    await expect(g.locator('[tabindex="0"]')).toHaveCount(0);
+    // Tab in from the element before the grid lands on the active cell, scrolled back into view.
+    await g.evaluate((el) => {
+      const before = document.createElement('button');
+      before.textContent = 'before the grid';
+      el.before(before);
+      before.focus();
+    });
+    await page.keyboard.press('Tab');
+    await expect(focused(page)).toHaveAttribute('data-cell', '0-0');
+    await expect(focused(page)).toBeInViewport();
+    await expect(g).not.toHaveAttribute('tabindex', '0');
+  });
 });
 
 test.describe('DbfDiffView on /design', () => {

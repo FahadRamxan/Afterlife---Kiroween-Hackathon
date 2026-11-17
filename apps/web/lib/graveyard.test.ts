@@ -1,6 +1,6 @@
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { loadCatalog, storyLines } from './graveyard';
+import { findApp, loadCatalog, storyLines } from './graveyard';
 import { MAX_UPLOAD_BYTES, checkUpload } from './upload';
 
 describe('loadCatalog', () => {
@@ -54,6 +54,24 @@ describe('checkUpload', () => {
     fc.assert(
       fc.property(fc.integer({ min: 0, max: 2 * MAX_UPLOAD_BYTES }), (size) => {
         expect(checkUpload({ name: 'a.zip', size }).ok).toBe(size >= 1 && size <= MAX_UPLOAD_BYTES);
+      }),
+    );
+  });
+});
+
+describe('findApp (Raise page)', () => {
+  it('finds each Graveyard app by id, with its real name', () => {
+    expect(findApp('shifa')?.name).toBe('Shifa Medical Store');
+    expect(findApp('iqra')?.name).toBe('Iqra School Fees');
+    expect(findApp('barkat')?.name).toBe('Barkat Kiryana Ledger');
+  });
+
+  it('returns undefined for any id that is not in the catalogue', () => {
+    const ids = new Set(loadCatalog().apps.map((a) => a.id));
+    fc.assert(
+      fc.property(fc.string(), (id) => {
+        fc.pre(!ids.has(id));
+        expect(findApp(id)).toBeUndefined();
       }),
     );
   });

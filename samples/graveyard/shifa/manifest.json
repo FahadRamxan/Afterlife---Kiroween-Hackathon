@@ -60,6 +60,12 @@
       "text": "A quantity of 0 skips the stock check, and editing the line (F3) never checks again, so a bill can take stock below zero.",
       "severity": "medium",
       "scenarios": ["negative-stock"]
+    },
+    {
+      "id": "discount-overflow",
+      "text": "The 10% discount is worked out as subtotal x 10 in a 32-bit number, which wraps around above Rs 21,47,483.64. A bill for 9,999 insulin (qty 0, then F3) gets a negative discount and saves at Rs 78,48,837.88 instead of Rs 68,43,815.55.",
+      "severity": "medium",
+      "scenarios": ["discount-overflow"]
     }
   ]
 }

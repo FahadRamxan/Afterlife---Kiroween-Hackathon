@@ -36,7 +36,7 @@
     }
   },
   "raise": {
-    "title": "Raising {projectId}",
+    "title": "Raising {name}",
     "tabsLabel": "Rebirth steps",
     "tabs": {
       "possession": "Possession",
@@ -47,7 +47,7 @@
       "living-soul": "Living Soul"
     },
     "empty": {
-      "possession": "The agent has not taken over the old app yet. Press Raise to begin.",
+      "possession": "The agent has not taken over the old app yet. Possession starts on this tab.",
       "soul": "No rules exhumed yet. They appear after possession.",
       "proof": "No proof run yet. It starts after the app is reborn.",
       "exorcism": "No ghosts found yet. Legacy bugs are listed here.",
@@ -78,5 +78,10 @@
       "down": "API down",
       "unconfigured": "API not configured"
     }
+  },
+  "notFound": {
+    "title": "No such app",
+    "body": "Nothing is buried here. Pick a dead app from the Graveyard.",
+    "back": "Back to the graveyard"
   }
 }

@@ -100,8 +100,9 @@ A pharmacy in Satellite Town, Rawalpindi. Blue and white text screens, keyboard 
 - **Legacy bugs:**
   1. The expiry check compares two-digit years. In 1998 it blocks a batch good until 2000 (`ORS001`). In January 2000 it sells a batch that expired in 1998 (`SEP200`).
   2. Quantity 0 skips the stock check, and F3 (edit last quantity) never checks stock. `THY050` (3 in stock) can be sold 5 times, leaving -2.
+  3. The 10% discount is `subtotal * 10 / 100` in a 32-bit `long`, which wraps around above Rs 21,47,483.64. Through bug 2, `INS100` (Rs 650) at qty 0, then F3 to 9,999, gives a subtotal of Rs 64,99,350.00, a discount of **minus** Rs 2,09,058.45, and a saved total of Rs 78,48,837.88 instead of Rs 68,43,815.55. gcc on 64-bit Linux has a 64-bit `long`, so the C test pins this only where `long` is 32 bits (the DOS build). Found in the Prompts 11 to 20 review.
 
-The 12 scenarios in `shifa/scenarios` cover every rule and both bugs.
+The 13 scenarios in `shifa/scenarios` cover every rule and all three bugs.
 
 ## Iqra School Fees 1.1 (2001)
 
