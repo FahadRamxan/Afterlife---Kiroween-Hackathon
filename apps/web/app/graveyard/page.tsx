@@ -22,7 +22,7 @@ export default function GraveyardPage() {
           <UploadCard />
         </li>
       </ul>
-      <p lang="en" className="mt-8 text-xs text-bone/70">
+      <p lang="en" dir="ltr" className="mt-8 text-xs text-bone/70">
         {catalog.disclosure}
       </p>
     </PageShell>

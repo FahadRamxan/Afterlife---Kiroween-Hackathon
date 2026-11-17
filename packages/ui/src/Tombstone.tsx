@@ -3,6 +3,8 @@ import { cn } from './cn';
 
 export type TombstoneProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
   name: string;
+  /** Language of the name, when it differs from the page (English app names on the Urdu page). */
+  nameLang?: string;
   born: number;
   died: number;
   /** Era story or other details. */
@@ -15,6 +17,7 @@ export type TombstoneProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
 /** A dead app in the Graveyard. The arch shape means "this software is dead and can be raised". */
 export function Tombstone({
   name,
+  nameLang,
   born,
   died,
   children,
@@ -30,9 +33,14 @@ export function Tombstone({
         className,
       )}
     >
-      <p className="font-mono text-xs tracking-[0.3em] text-bone/70">R.I.P.</p>
-      <h3 className="text-lg font-semibold">{name}</h3>
-      <p className="font-mono text-sm text-candle">
+      {/* dir="ltr": inside an Urdu (right-to-left) page, "1998–2004" must not become "2004–1998". */}
+      <p dir="ltr" className="font-mono text-xs tracking-[0.3em] text-bone/70">
+        R.I.P.
+      </p>
+      <h3 lang={nameLang} dir={nameLang ? 'ltr' : undefined} className="text-lg font-semibold">
+        {name}
+      </h3>
+      <p dir="ltr" className="font-mono text-sm text-candle">
         {born}–{died}
       </p>
       {children ? <div className="text-sm text-bone/80">{children}</div> : null}

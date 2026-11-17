@@ -1,5 +1,17 @@
 export { Button, buttonVariants, type ButtonProps } from './Button';
 export { Card } from './Card';
+export { DbfDiffView, DbfTable, type DbfDiffViewProps, type DbfTableProps } from './DbfTable';
+export { DbfGrid, type DbfGridProps } from './DbfGrid';
+export {
+  buildDiffRows,
+  fieldLabel,
+  formatValue,
+  moveCell,
+  tableRows,
+  type GridKey,
+  type GridRow,
+  type RowKind,
+} from './dbf-grid';
 export { CertificateFrame, type CertificateFrameProps } from './CertificateFrame';
 export { CRTFrame, type CRTFrameProps } from './CRTFrame';
 export { DiffBadge, diffStyles, type DiffBadgeProps, type DiffKind } from './DiffBadge';
