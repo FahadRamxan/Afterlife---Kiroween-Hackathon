@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@afterlife/dbf':
+        specifier: workspace:^
+        version: link:packages/dbf
       '@afterlife/emulator':
         specifier: workspace:^
         version: link:packages/emulator

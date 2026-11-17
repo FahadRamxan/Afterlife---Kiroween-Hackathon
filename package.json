@@ -26,9 +26,11 @@
     "graveyard:build": "node scripts/graveyard.mjs build",
     "graveyard:test": "node scripts/graveyard.mjs test",
     "graveyard:update": "node scripts/graveyard.mjs update",
-    "graveyard:publish": "tsx scripts/graveyard-publish.ts"
+    "graveyard:publish": "tsx scripts/graveyard-publish.ts",
+    "dbf:golden": "tsx scripts/dbf-golden.ts"
   },
   "devDependencies": {
+    "@afterlife/dbf": "workspace:^",
     "@afterlife/emulator": "workspace:^",
     "@afterlife/screen": "workspace:^",
     "@commitlint/cli": "^21.2.4",

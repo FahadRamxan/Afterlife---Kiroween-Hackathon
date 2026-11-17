@@ -38,6 +38,7 @@ pnpm graveyard:build    # compile every sample into dist/<app>/<EXE>
 pnpm graveyard:test     # all toolchain checks, see below
 pnpm graveyard:update   # same, but rewrites fixtures/ (review the git diff, then commit)
 pnpm graveyard:publish  # js-dos bundles + the Graveyard page catalogue (no Docker needed)
+pnpm dbf:golden         # golden/<app>/*.DBF from the seed CSVs with the TypeScript writer
 ```
 
 `graveyard:test` runs:
@@ -46,7 +47,7 @@ pnpm graveyard:publish  # js-dos bundles + the Graveyard page catalogue (no Dock
 2. the same tests built for 16-bit DOS and run in DOSBox, where `int` is 16 bits
 3. every seed CSV through `csv2dbf` and `dbf2csv`, which must give the same CSV back
 4. a fresh build compared with the committed `dist/`. It fails if they differ
-5. `HELLO.EXE`, then every `<app>/scenarios/*.keys`, in DOSBox
+5. `HELLO.EXE`, then every `<app>/scenarios/*.keys`, in DOSBox, then every scenario again on `golden/` (DBFs written by `@afterlife/dbf`), which must give identical results
 6. all outputs compared byte for byte with the committed `fixtures/`
 
 `pnpm ci:local` runs it when Docker is running. The Vitest suites `tests/graveyard-*.test.ts` then check the fixtures against hand-worked expected values, so a wrong fixture cannot be committed by accident.

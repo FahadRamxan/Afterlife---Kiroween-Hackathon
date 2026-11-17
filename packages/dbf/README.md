@@ -23,7 +23,13 @@ records[0].values.PRICE; // "12.50": exact decimal text, never a float
 
 Errors are a `DbfError` with a `code`: `TOO_SHORT`, `BAD_VERSION`, `BAD_HEADER`, `BAD_FIELD`, `TRUNCATED`, `BAD_VALUE`, `WIDTH`.
 
+## Writer
+
+`writeDbf({ fields, records, lastUpdate?, version?, codePage? })` writes byte-exact dBASE III: header, NUL-padded field descriptors, `0x0D`, fixed-width records (text left-aligned, numbers right-aligned), then `0x1A`. The update date defaults to 1 Jan 1980, so output never depends on the clock. Numbers must be decimal text with exactly the field's decimals (never a JS number). A value that does not fit throws `DbfError` with code `WIDTH`.
+
 ## Tests
 
 - `reader.test.ts`: every `.DBF` of the three sample apps (written by our C library) against its seed CSV, `HELLO.DBF` written inside DOSBox, every field type, and every error.
 - `roundtrip.prop.test.ts`: `readDbf(writeDbf(x)) == x` for generated tables, at least 1,000 runs, and `write(read(write(x)))` is byte-identical.
+- `writer.test.ts`: rewriting all 9 sample files gives the same bytes the C library wrote; the exact layout; every refused value.
+- Golden: every DOS scenario runs on files written by this writer and gives identical results. See `docs/dbf-golden.md`.
