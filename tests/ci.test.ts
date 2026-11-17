@@ -45,7 +45,13 @@ describe('CI workflow (Prompt 6)', () => {
     const e2e = ci.jobs.e2e;
     expect(e2e.services.postgres.image).toMatch(/^postgres:16/);
     const s = stepText(e2e);
-    expect(s).toContain('playwright install');
+    // Browsers come from the Playwright image, pinned to the same version as e2e/package.json.
+    const pw = JSON.parse(read('e2e/package.json')).devDependencies['@playwright/test'].replace(
+      /^\^|~/,
+      '',
+    );
+    expect(e2e.container).toBe(`mcr.microsoft.com/playwright:v${pw}-noble`);
+    expect(e2e.env.DATABASE_URL).toContain('@postgres:5432');
     expect(s).toContain('pnpm e2e');
     expect(read('e2e/playwright.config.ts')).toMatch(/next build|build && .*start/);
   });

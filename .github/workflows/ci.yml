@@ -60,6 +60,9 @@ jobs:
 
   e2e:
     runs-on: ubuntu-latest
+    # Same image as pnpm snapshots:linux, so screenshot baselines match exactly.
+    # Keep the tag in sync with @playwright/test in e2e/package.json.
+    container: mcr.microsoft.com/playwright:v1.65.1-noble
     services:
       postgres:
         image: postgres:16
@@ -67,15 +70,13 @@ jobs:
           POSTGRES_USER: afterlife
           POSTGRES_PASSWORD: afterlife
           POSTGRES_DB: afterlife
-        ports:
-          - 5432:5432
         options: >-
           --health-cmd "pg_isready -U afterlife"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
     env:
-      DATABASE_URL: postgres://afterlife:afterlife@localhost:5432/afterlife
+      DATABASE_URL: postgres://afterlife:afterlife@postgres:5432/afterlife
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -84,7 +85,6 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @afterlife/e2e exec playwright install --with-deps chromium
       - run: pnpm e2e
       - uses: actions/upload-artifact@v4
         if: failure()
