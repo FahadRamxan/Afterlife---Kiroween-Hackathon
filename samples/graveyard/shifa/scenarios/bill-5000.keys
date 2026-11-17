@@ -1,0 +1,10 @@
+# Exactly Rs 5,000.00 (INS100 x7 = 4550.00 + DIS500 x72 = 450.00): no discount, GST 850.00.
+1
+{Enter}
+INS100{Enter}7{Enter}
+DIS500{Enter}72{Enter}
+{Enter}
+{Dump:TOTALS}
+{F2}
+{Enter}
+5

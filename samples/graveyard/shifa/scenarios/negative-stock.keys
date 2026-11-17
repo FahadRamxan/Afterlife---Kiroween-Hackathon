@@ -1,0 +1,13 @@
+# LEGACY BUG 2: THY050 has 3 in stock. Qty 5 is refused, but qty 0 is accepted, and F3 edits it
+# to 5 without checking stock. Saving takes the stock to -2.
+1
+{Enter}
+THY050{Enter}5{Enter}
+{Dump:REFUSED}
+THY050{Enter}0{Enter}
+{F3}5{Enter}
+{Dump:EDITED}
+{Enter}
+{F2}
+{Enter}
+5

@@ -1,0 +1,12 @@
+# Stock list: 40 medicines on 3 pages of 17.
+2
+{Dump:STOCK1}
+{PgDn}
+{Dump:STOCK2}
+{PgDn}
+{Dump:STOCK3}
+{PgDn}
+{PgUp}
+{Dump:STOCK2B}
+{Esc}
+5

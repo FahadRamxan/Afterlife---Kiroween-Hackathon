@@ -157,6 +157,7 @@ describe('pnpm graveyard:build / graveyard:test (Prompt 11)', () => {
   it('are root scripts', () => {
     expect(scripts['graveyard:build']).toBe('node scripts/graveyard.mjs build');
     expect(scripts['graveyard:test']).toBe('node scripts/graveyard.mjs test');
+    expect(scripts['graveyard:update']).toBe('node scripts/graveyard.mjs update');
   });
 
   it('mounts the graveyard folder and runs the matching script, with paths as separate arguments', () => {
@@ -175,7 +176,23 @@ describe('pnpm graveyard:build / graveyard:test (Prompt 11)', () => {
 
   it('rejects unknown commands', () => {
     expect(() => dockerRunArgs('/x', 'rm -rf /')).toThrow(/Unknown command/);
-    expect(Object.keys(COMMANDS)).toEqual(['build', 'test']);
+    expect(() => dockerRunArgs('/x', 'constructor')).toThrow(/Unknown command/);
+    expect(Object.keys(COMMANDS)).toEqual(['build', 'test', 'update']);
+  });
+
+  it('update runs the test script with UPDATE_FIXTURES=1, test never does', () => {
+    expect(dockerRunArgs('/g', 'update')).toEqual([
+      'run',
+      '--rm',
+      '-e',
+      'UPDATE_FIXTURES=1',
+      '-v',
+      '/g:/graveyard',
+      IMAGE,
+      'bash',
+      'toolchain/test.sh',
+    ]);
+    expect(dockerRunArgs('/g', 'test')).not.toContain('UPDATE_FIXTURES=1');
   });
 
   it('pins the image tag to the Open Watcom release date', () => {

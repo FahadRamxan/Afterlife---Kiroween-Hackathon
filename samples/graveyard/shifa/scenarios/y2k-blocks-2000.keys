@@ -1,0 +1,8 @@
+# LEGACY BUG 1 in 1998: ORS001 expires 30 June 2000 but is blocked, because 00 < 98.
+1
+{Enter}
+ORS001{Enter}
+{Dump:BLOCKED}
+{Esc}
+{Enter}
+5

@@ -1,0 +1,11 @@
+# Customer list, then add ALI RAZA: gets the next id, C0009. A blank name is refused.
+3
+{Dump:CUSTS}
+A{Enter}
+{Dump:NONAME}
+A
+ALI RAZA{Enter}
+051-4567890{Enter}
+{Dump:ADDED}
+{Esc}
+5

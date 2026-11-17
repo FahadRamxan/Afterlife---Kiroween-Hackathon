@@ -18,20 +18,37 @@ describe('toolchain image (Prompt 11)', () => {
     expect(dockerfile).toMatch(/--checksum=sha256:[0-9a-f]{64}/);
   });
 
+  it('runs DOSBox at a fixed speed with a fixed date and a timeout', () => {
+    const sh = read('toolchain/run-dos.sh');
+    // cycles=max hung DOSBox in 4 of 100 runs; fixed cycles gave 0 hangs in 200.
+    expect(sh).toContain('cycles=fixed 20000');
+    expect(sh).not.toMatch(/^cycles=max/m);
+    expect(sh).toContain('faketime');
+    expect(sh).toMatch(/timeout 120 /);
+  });
+
   it('includes DOSBox to run the EXEs and gcc for host tests', () => {
     expect(dockerfile).toMatch(/\bdosbox\b/);
     expect(dockerfile).toMatch(/\bfaketime\b/);
     expect(dockerfile).toMatch(/\bgcc\b/);
   });
 
-  it('build.sh compiles 16-bit DOS EXEs with warnings as errors and copies seed DBFs', () => {
-    const sh = read('toolchain/build.sh');
+  it('compile.sh builds 16-bit DOS EXEs, warnings as errors, with an 8 KB stack', () => {
+    const sh = read('toolchain/compile.sh');
     expect(sh).toMatch(/wcl -bt=dos -ms/);
     expect(sh).toContain('-we');
-    expect(sh).toMatch(/seed\/\*\.DBF/);
-    expect(sh).toContain('OUT="${OUT:-dist}"'); // defaults to dist/
-    expect(sh).toContain('-fe="$OUT/$app/$EXE"'); // so each app lands in dist/<app>/<EXE>
     expect(sh).toContain('-k8192'); // the 2 KB default stack overflows
+    // The shipped EXE reads the real keyboard; only the test build reads a key script.
+    expect(sh).toContain('kbd_bios.c');
+    expect(sh).toMatch(/mode" = test .*kbd_script\.c/);
+  });
+
+  it('build.sh puts each app in dist/<app>/<EXE> and turns seed CSVs into DBFs', () => {
+    const sh = read('toolchain/build.sh');
+    expect(sh).toContain('OUT="${OUT:-dist}"');
+    expect(sh).toContain('compile.sh "$app" "$OUT/$app/$EXE" app');
+    expect(sh).toContain('csv2dbf');
+    expect(sh).toContain('seed/*.csv');
   });
 });
 
@@ -118,12 +135,16 @@ describe('hello sample: run in DOSBox (Prompt 11)', () => {
 
 describe('dbf3 unit tests ran on both compilers (Prompt 11)', () => {
   it.each(['gcc', 'dos'])('%s run passed', (target) => {
-    const log = read(`fixtures/dbf3test/${target}.txt`);
+    const log = read(`fixtures/unit/dbf3test-${target}.txt`);
     expect(log).toMatch(/^ALL \d+ CHECKS PASSED$/m);
     expect(log).not.toContain('FAIL');
   });
 
   it('the fixtures exist', () => {
-    expect(existsSync(resolve(g, 'fixtures/dbf3test/dos.txt'))).toBe(true);
+    for (const t of ['dbf3test', 'kbdtest', 'rulestest'])
+      for (const target of ['gcc', 'dos'])
+        expect(existsSync(resolve(g, `fixtures/unit/${t}-${target}.txt`)), `${t}-${target}`).toBe(
+          true,
+        );
   });
 });

@@ -24,7 +24,8 @@
     "ci:local": "node scripts/ci-local.mjs",
     "smoke:prod": "node scripts/smoke-prod.mjs",
     "graveyard:build": "node scripts/graveyard.mjs build",
-    "graveyard:test": "node scripts/graveyard.mjs test"
+    "graveyard:test": "node scripts/graveyard.mjs test",
+    "graveyard:update": "node scripts/graveyard.mjs update"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.4",
