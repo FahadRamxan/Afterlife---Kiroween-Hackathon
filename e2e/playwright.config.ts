@@ -14,7 +14,10 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: [['list']],
-  use: { baseURL, trace: 'retain-on-failure' },
+  // A trace only when a test is retried (ci:local retries once). Tracing every test made the first
+  // wave of 10 browsers take 20-30 s per page (measured: /graveyard 1 s without tracing), and tests
+  // timed out. Locally (no retries), rerun a failing test with --trace on.
+  use: { baseURL, trace: 'on-first-retry' },
   // Small tolerance for anti-aliasing. Baselines exist per platform (win32 locally, linux for CI).
   // Dev mode (local runs, the pre-push hook) compiles each route on its first visit, which can take
   // more than 5 s; the production build (CI=1, ci:local) does not.

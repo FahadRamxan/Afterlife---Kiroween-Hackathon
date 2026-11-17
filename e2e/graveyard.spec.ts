@@ -44,7 +44,7 @@ test.describe('/graveyard', () => {
     });
   }
 
-  test('the upload card takes a zip and refuses anything else', async ({ page }) => {
+  test('the upload card takes only a real zip', async ({ page }) => {
     await page.goto('/graveyard');
     const card = page.getByTestId('upload-card');
     await expect(card.getByRole('heading', { name: 'Upload your own dead app' })).toBeVisible();
@@ -62,8 +62,8 @@ test.describe('/graveyard', () => {
       mimeType: 'application/zip',
       buffer: Buffer.from('PK\x03\x04'),
     });
-    await expect(card.getByRole('status')).toContainText('myapp.zip');
-    await expect(card.getByRole('status')).toContainText('not uploaded yet');
+    // Since Prompt 21 the card also looks inside the zip (e2e/dbf-inspect.spec.ts).
+    await expect(card.getByRole('alert')).toHaveText('That file is not a real zip.');
   });
 
   test('works at 360 px wide: one column, no sideways scroll', async ({ page }) => {

@@ -1,6 +1,9 @@
 // Screenshot tour of every screen, for docs/screenshots and the README.
 // Not part of `pnpm e2e` (the file name does not end in .spec.ts). Run: pnpm screenshots
-import { test, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { expect, test, type Page } from '@playwright/test';
+import { zipSync } from 'fflate';
 
 const OUT = '../docs/screenshots';
 
@@ -72,4 +75,21 @@ test('dbf diff scrolled to the end', async ({ page }) => {
   await page.keyboard.press('Control+End');
   await page.mouse.move(0, 0);
   await diff.screenshot({ path: `${OUT}/09-dbf-diff-end.png` });
+});
+
+test('upload preview (DBF inspector)', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 1500 });
+  await ready(page, '/graveyard');
+  const dist = (n: string) =>
+    new Uint8Array(readFileSync(resolve(__dirname, '../samples/graveyard/dist/shifa', n)));
+  const card = page.getByTestId('upload-card');
+  await card.getByLabel('Choose a zip with the EXE and DBF files').setInputFiles({
+    name: 'shifa.zip',
+    mimeType: 'application/zip',
+    buffer: Buffer.from(
+      zipSync({ 'SHIFA.EXE': dist('SHIFA.EXE'), 'MEDICINE.DBF': dist('MEDICINE.DBF') }),
+    ),
+  });
+  await expect(card.getByTestId('upload-preview')).toBeVisible();
+  await card.screenshot({ path: `${OUT}/10-upload-preview.png` });
 });

@@ -72,7 +72,14 @@ describe('buildBundle', () => {
   it('property: unzip(buildBundle(files)) gives back exactly the files', () => {
     const name = fc
       .tuple(
-        fc.stringMatching(/^[A-Z0-9_-]{1,8}$/),
+        // The same names as /^[A-Z0-9_-]{1,8}$/, built from characters: fc.stringMatching is too
+        // slow for 2000 runs while every project's tests run at once (it timed out in ci:local).
+        fc
+          .array(fc.constantFrom(...'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-'), {
+            minLength: 1,
+            maxLength: 8,
+          })
+          .map((c) => c.join('')),
         fc.constantFrom('DBF', 'EXE', 'COM', 'TXT', 'DAT'),
       )
       .map(([b, e]) => `${b}.${e}`);

@@ -27,12 +27,23 @@
       "title": "Upload your own dead app",
       "body": "A zip with the DOS program (EXE or COM) and its DBF data files, up to 20 MB.",
       "choose": "Choose a zip with the EXE and DBF files",
-      "chosen": "{name} is ready, but not uploaded yet: uploading arrives in a later build.",
       "errors": {
         "not-zip": "Choose a .zip file.",
         "empty": "That file is empty.",
-        "too-big": "That file is over 20 MB."
-      }
+        "too-big": "That file is over 20 MB.",
+        "not-a-zip": "That file is not a real zip.",
+        "no-program": "The zip has no DOS program (EXE or COM).",
+        "no-dbf": "The zip has no DBF data files."
+      },
+      "found": "Found <program>{name}</program> and {count, plural, one {# DBF file} other {# DBF files}}.",
+      "entries": "Files in the zip",
+      "reading": "Reading the tables…",
+      "apiDown": "The tables could not be read: the API is not reachable.",
+      "apiError": "The tables could not be read:",
+      "unconfigured": "The API is not configured, so the tables cannot be previewed.",
+      "tableCaption": "{file} ({count} records)",
+      "moreRows": "Showing the first {shown} of {total} records.",
+      "notStored": "Nothing is stored. Raising an uploaded app comes in a later build."
     }
   },
   "raise": {

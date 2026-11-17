@@ -19,7 +19,7 @@ export type DbfRecord = { deleted: boolean; values: Record<string, DbfValue> };
 export type DbfDate = { year: number; month: number; day: number };
 
 export type DbfHeader = {
-  /** 0x03 dBASE III, 0x83 dBASE III with memo, 0xF5 FoxPro 2.x with memo, 0x30 Visual FoxPro. */
+  /** 0x03 dBASE III (and Clipper), 0x83 dBASE III with memo, 0xF5 FoxPro 2.x with memo. */
   version: number;
   lastUpdate: DbfDate;
   recordCount: number;
@@ -30,7 +30,16 @@ export type DbfHeader = {
   hasMemo: boolean;
 };
 
-export type DbfFile = { header: DbfHeader; fields: DbfField[]; records: DbfRecord[] };
+/** Something odd about a file that could still be read. */
+export type DbfWarning = { code: 'TRUNCATED'; message: string };
+
+export type DbfFile = {
+  header: DbfHeader;
+  fields: DbfField[];
+  records: DbfRecord[];
+  /** Only present when there is something to warn about. */
+  warnings?: DbfWarning[];
+};
 
 /** What writeDbf takes. version defaults to 0x03, lastUpdate to 1 Jan 1980, codePage to 0. */
 export type DbfTable = {
