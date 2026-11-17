@@ -1,0 +1,113 @@
+import { cp437ToUnicode } from '@afterlife/screen';
+import { DbfError, type DbfField, type DbfFile, type DbfValue, type FieldType } from './types';
+
+const VERSIONS = new Set([0x03, 0x83, 0xf5, 0x30]);
+const MEMO_VERSIONS = new Set([0x83, 0xf5, 0x30]);
+const TYPES = new Set<FieldType>(['C', 'N', 'F', 'D', 'L', 'M']);
+const HEADER = 32;
+const DESCRIPTOR = 32;
+
+const ascii = (b: Uint8Array) => String.fromCharCode(...b);
+
+function decodeValue(f: DbfField, raw: Uint8Array): DbfValue {
+  switch (f.type) {
+    case 'C':
+      // Trailing spaces and NUL padding are not part of the value.
+      return cp437ToUnicode(raw).replace(/[ \u2400]+$/, '');
+    case 'N':
+    case 'F': {
+      const t = ascii(raw).trim();
+      return t === '' ? null : t;
+    }
+    case 'D': {
+      const t = ascii(raw).trim();
+      return t === '' ? null : t;
+    }
+    case 'L': {
+      const c = ascii(raw);
+      if ('TtYy'.includes(c)) return true;
+      if ('FfNn'.includes(c)) return false;
+      return null;
+    }
+    case 'M': {
+      const t = ascii(raw).trim();
+      return /^\d+$/.test(t) ? Number(t) : null;
+    }
+  }
+}
+
+/** Reads a dBASE III or FoxPro 2.x .DBF. Pure: works on bytes, in the browser and in Node. */
+export function readDbf(buf: Uint8Array): DbfFile {
+  if (buf.length < HEADER + 1)
+    throw new DbfError('TOO_SHORT', `A .DBF needs at least ${HEADER + 1} bytes, got ${buf.length}`);
+  const version = buf[0]!;
+  if (!VERSIONS.has(version))
+    throw new DbfError(
+      'BAD_VERSION',
+      `Not a supported .DBF version byte: 0x${version.toString(16)}`,
+    );
+  const view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
+  const recordCount = view.getUint32(4, true);
+  const headerLength = view.getUint16(8, true);
+  const recordLength = view.getUint16(10, true);
+  if (headerLength < HEADER + DESCRIPTOR + 1 || headerLength > buf.length)
+    throw new DbfError(
+      'BAD_HEADER',
+      `Header length ${headerLength} does not fit a ${buf.length}-byte file`,
+    );
+
+  const fields: DbfField[] = [];
+  let offset = 1;
+  for (let p = HEADER; p + DESCRIPTOR <= headerLength && buf[p] !== 0x0d; p += DESCRIPTOR) {
+    const nameBytes = buf.subarray(p, p + 11);
+    const nul = nameBytes.indexOf(0);
+    const name = ascii(nul >= 0 ? nameBytes.subarray(0, nul) : nameBytes).trim();
+    const type = String.fromCharCode(buf[p + 11]!) as FieldType;
+    if (!TYPES.has(type))
+      throw new DbfError('BAD_FIELD', `Field ${name} has an unknown type ${JSON.stringify(type)}`);
+    const length = buf[p + 16]!;
+    const decimals = type === 'N' || type === 'F' ? buf[p + 17]! : 0;
+    if (!name || length === 0)
+      throw new DbfError('BAD_FIELD', `Field ${fields.length + 1} has no name or no length`);
+    fields.push({ name, type, length, decimals });
+    offset += length;
+  }
+  if (fields.length === 0) throw new DbfError('BAD_HEADER', 'No field descriptors');
+  if (offset !== recordLength)
+    throw new DbfError(
+      'BAD_HEADER',
+      `Record length ${recordLength} does not match the fields (${offset})`,
+    );
+  if (headerLength + recordCount * recordLength > buf.length)
+    throw new DbfError(
+      'TRUNCATED',
+      `${recordCount} records of ${recordLength} bytes do not fit in ${buf.length} bytes`,
+    );
+
+  const records = [];
+  for (let r = 0; r < recordCount; r++) {
+    const start = headerLength + r * recordLength;
+    let at = start + 1;
+    const values: Record<string, DbfValue> = {};
+    for (const f of fields) {
+      values[f.name] = decodeValue(f, buf.subarray(at, at + f.length));
+      at += f.length;
+    }
+    records.push({ deleted: buf[start] === 0x2a, values });
+  }
+
+  return {
+    header: {
+      version,
+      // The year byte counts from 1900: 98 is 1998, 101 is 2001.
+      lastUpdate: { year: 1900 + buf[1]!, month: buf[2]!, day: buf[3]! },
+      recordCount,
+      headerLength,
+      recordLength,
+      codePage: buf[29]!,
+      hasMemo: MEMO_VERSIONS.has(version),
+    },
+    fields,
+    records,
+  };
+}
