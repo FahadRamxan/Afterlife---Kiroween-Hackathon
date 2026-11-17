@@ -18,7 +18,8 @@ export default function GraveyardPage() {
             <GraveyardCard app={app} />
           </li>
         ))}
-        <li>
+        {/* The card takes the whole row while it previews tables, so they have room. */}
+        <li className="has-[[data-upload-preview]]:col-span-full">
           <UploadCard />
         </li>
       </ul>

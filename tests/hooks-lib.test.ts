@@ -48,7 +48,13 @@ describe('packageForFile', () => {
   });
 
   it('property: any packages/<name>/src/**.ts path maps to @afterlife/<name>', () => {
-    const seg = fc.stringMatching(/^[a-z][a-z0-9-]{0,12}$/);
+    // = /^[a-z][a-z0-9-]{0,12}$/, built from characters (fc.stringMatching is slow at 2000 runs).
+    const seg = fc
+      .tuple(
+        fc.constantFrom(...'abcdefghijklmnopqrstuvwxyz'),
+        fc.array(fc.constantFrom(...'abcdefghijklmnopqrstuvwxyz0123456789-'), { maxLength: 12 }),
+      )
+      .map(([a, rest]) => a + rest.join(''));
     fc.assert(
       fc.property(seg, fc.array(seg, { maxLength: 3 }), seg, (pkg, dirs, file) => {
         const p = ['packages', pkg, 'src', ...dirs, `${file}.ts`].join('/');

@@ -1,6 +1,7 @@
 import cors from '@fastify/cors';
 import Fastify, { type FastifyServerOptions } from 'fastify';
 import pkg from '../package.json' with { type: 'json' };
+import { dbfInspectRoutes } from './dbf-inspect';
 import type { Env } from './env';
 
 /** Builds the API without listening, so tests can use app.inject(). */
@@ -19,5 +20,6 @@ export function buildApp(env: Env, opts: FastifyServerOptions = {}) {
     };
   });
 
+  app.register(dbfInspectRoutes);
   return app;
 }

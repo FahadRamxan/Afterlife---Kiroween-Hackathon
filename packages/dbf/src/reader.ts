@@ -1,8 +1,17 @@
 import { cp437ToUnicode } from '@afterlife/screen';
-import { DbfError, type DbfField, type DbfFile, type DbfValue, type FieldType } from './types';
+import {
+  DbfError,
+  type DbfField,
+  type DbfFile,
+  type DbfValue,
+  type DbfWarning,
+  type FieldType,
+} from './types';
 
-const VERSIONS = new Set([0x03, 0x83, 0xf5, 0x30]);
-const MEMO_VERSIONS = new Set([0x83, 0xf5, 0x30]);
+const VERSIONS = new Set([0x03, 0x83, 0xf5]);
+const MEMO_VERSIONS = new Set([0x83, 0xf5]);
+// Visual FoxPro: a 263-byte backlink after the fields and types (I, B, T, Y, 0) we do not read yet.
+const VISUAL_FOXPRO = new Set([0x30, 0x31, 0x32]);
 const TYPES = new Set<FieldType>(['C', 'N', 'F', 'D', 'L', 'M']);
 const HEADER = 32;
 const DESCRIPTOR = 32;
@@ -36,11 +45,20 @@ function decodeValue(f: DbfField, raw: Uint8Array): DbfValue {
   }
 }
 
-/** Reads a dBASE III or FoxPro 2.x .DBF. Pure: works on bytes, in the browser and in Node. */
+/**
+ * Reads a dBASE III, Clipper or FoxPro 2.x .DBF. Pure: works on bytes, in the browser and in Node.
+ * A file whose header counts more records than it holds (an app that crashed while appending)
+ * gives the complete records and a TRUNCATED warning instead of an error.
+ */
 export function readDbf(buf: Uint8Array): DbfFile {
   if (buf.length < HEADER + 1)
     throw new DbfError('TOO_SHORT', `A .DBF needs at least ${HEADER + 1} bytes, got ${buf.length}`);
   const version = buf[0]!;
+  if (VISUAL_FOXPRO.has(version))
+    throw new DbfError(
+      'BAD_VERSION',
+      `Visual FoxPro files (version byte 0x${version.toString(16)}) are not supported yet. Save the table as FoxPro 2.x or dBASE III`,
+    );
   if (!VERSIONS.has(version))
     throw new DbfError(
       'BAD_VERSION',
@@ -65,7 +83,8 @@ export function readDbf(buf: Uint8Array): DbfFile {
     const type = String.fromCharCode(buf[p + 11]!) as FieldType;
     if (!TYPES.has(type))
       throw new DbfError('BAD_FIELD', `Field ${name} has an unknown type ${JSON.stringify(type)}`);
-    const length = buf[p + 16]!;
+    // Clipper stores a character field longer than 255 as low byte + 256 x the decimals byte.
+    const length = type === 'C' ? buf[p + 16]! + 256 * buf[p + 17]! : buf[p + 16]!;
     const decimals = type === 'N' || type === 'F' ? buf[p + 17]! : 0;
     if (!name || length === 0)
       throw new DbfError('BAD_FIELD', `Field ${fields.length + 1} has no name or no length`);
@@ -78,14 +97,17 @@ export function readDbf(buf: Uint8Array): DbfFile {
       'BAD_HEADER',
       `Record length ${recordLength} does not match the fields (${offset})`,
     );
-  if (headerLength + recordCount * recordLength > buf.length)
-    throw new DbfError(
-      'TRUNCATED',
-      `${recordCount} records of ${recordLength} bytes do not fit in ${buf.length} bytes`,
-    );
+  const warnings: DbfWarning[] = [];
+  const fit = Math.floor((buf.length - headerLength) / recordLength);
+  const readable = Math.min(recordCount, fit);
+  if (readable < recordCount)
+    warnings.push({
+      code: 'TRUNCATED',
+      message: `The header says ${recordCount} records, but the file holds only ${readable} complete records`,
+    });
 
   const records = [];
-  for (let r = 0; r < recordCount; r++) {
+  for (let r = 0; r < readable; r++) {
     const start = headerLength + r * recordLength;
     let at = start + 1;
     const values: Record<string, DbfValue> = {};
@@ -109,5 +131,6 @@ export function readDbf(buf: Uint8Array): DbfFile {
     },
     fields,
     records,
+    ...(warnings.length ? { warnings } : {}),
   };
 }

@@ -17,6 +17,7 @@ export {
   type TableDiff,
   type TableSnapshot,
 } from './diff';
+export { INSPECT_ROWS, inspectDbf, type InspectedTable } from './inspect';
 export { readDbf } from './reader';
 export { writeDbf } from './writer';
 export {
@@ -29,5 +30,6 @@ export {
   type DbfRecord,
   type DbfTable,
   type DbfValue,
+  type DbfWarning,
   type FieldType,
 } from './types';

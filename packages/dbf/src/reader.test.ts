@@ -108,8 +108,8 @@ function handmade(opts: {
     const d = new Array(32).fill(0);
     for (let i = 0; i < name.length; i++) d[i] = name.charCodeAt(i);
     d[11] = type.charCodeAt(0);
-    d[16] = len;
-    d[17] = dec;
+    d[16] = len & 255;
+    d[17] = type === 'C' && len > 255 ? len >> 8 : dec;
     out.push(...d);
   }
   out.push(0x0d);
@@ -219,9 +219,9 @@ describe('readDbf errors', () => {
       'BAD_VERSION',
     ],
     [
-      'more records than bytes',
-      handmade({ fields: one, records: [' x'], recordCount: 5 }),
-      'TRUNCATED',
+      'a Visual FoxPro (0x30) file',
+      handmade({ version: 0x30, fields: [['N', 'I', 4, 0]], records: [' \x01\x00\x00\x00'] }),
+      'BAD_VERSION',
     ],
     [
       'an unknown field type',
@@ -243,5 +243,42 @@ describe('readDbf errors', () => {
     const buf = handmade({ fields: one, records: [' x'] });
     buf[10] = 9; // record length byte
     expect(() => readDbf(buf)).toThrow(DbfError);
+  });
+});
+
+describe('readDbf on real-world files (Prompt 21)', () => {
+  it('reads a Clipper character field longer than 255 (length = low byte + 256 x decimals byte)', () => {
+    const text = 'A'.repeat(299) + 'Z';
+    const dbf = readDbf(handmade({ fields: [['DESC', 'C', 300, 0]], records: [' ' + text] }));
+    expect(dbf.fields).toEqual([{ name: 'DESC', type: 'C', length: 300, decimals: 0 }]);
+    expect(dbf.records[0]!.values.DESC).toBe(text);
+    expect(dbf.warnings).toBeUndefined();
+  });
+
+  it('reads the complete records when the header counts more than the file holds, with a warning', () => {
+    // An app that crashed while appending: the count says 5, the file has 2 records and a half.
+    const whole = handmade({ fields: [['A', 'C', 3, 0]], records: [' abc', ' def'], eof: false });
+    const buf = new Uint8Array([...whole, 0x20, 0x67]);
+    buf[4] = 5;
+    const dbf = readDbf(buf);
+    expect(dbf.header.recordCount).toBe(5);
+    expect(dbf.records.map((r) => r.values.A)).toEqual(['abc', 'def']);
+    expect(dbf.warnings).toEqual([
+      {
+        code: 'TRUNCATED',
+        message: 'The header says 5 records, but the file holds only 2 complete records',
+      },
+    ]);
+  });
+
+  it('refuses Visual FoxPro with a clear message', () => {
+    const buf = handmade({ version: 0x30, fields: [['A', 'C', 1, 0]], records: [' x'] });
+    expect(() => readDbf(buf)).toThrow(/Visual FoxPro.*not supported/);
+  });
+
+  it('a file read without problems has no warnings', () => {
+    expect(
+      readDbf(handmade({ fields: [['A', 'C', 1, 0]], records: [' x'] })).warnings,
+    ).toBeUndefined();
   });
 });

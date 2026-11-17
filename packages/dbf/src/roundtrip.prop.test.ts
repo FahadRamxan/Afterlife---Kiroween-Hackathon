@@ -10,7 +10,12 @@ const CHARS = [
 ];
 
 const fieldName = fc
-  .tuple(fc.constantFrom(...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), fc.stringMatching(/^[A-Z0-9_]{0,9}$/))
+  .tuple(
+    fc.constantFrom(...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+    fc
+      .array(fc.constantFrom(...'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'), { maxLength: 9 })
+      .map((c) => c.join('')) /* = /^[A-Z0-9_]{0,9}$/, faster than fc.stringMatching */,
+  )
   .map(([a, b]) => a + b);
 
 const field: fc.Arbitrary<Omit<DbfField, 'name'>> = fc.oneof(
