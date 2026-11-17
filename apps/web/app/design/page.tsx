@@ -185,7 +185,7 @@ export default function DesignPage() {
       <Section
         id="decoder"
         title="Screen decoder"
-        meaning="How Afterlife reads the old app: every 8x16 cell of the emulator's frame is matched against the VGA font. No OCR."
+        meaning="How Afterlife reads the old app: every 8x16 cell of the emulator's frame is matched against the VGA font (no OCR), then the screen's menu, fields and keys are worked out from its text and colours."
       >
         <div className="grid gap-4 lg:grid-cols-2">
           <figure className="min-w-0 space-y-2">
@@ -218,6 +218,34 @@ export default function DesignPage() {
             </figcaption>
           </figure>
         </div>
+        <dl
+          data-testid="screen-model"
+          className="grid gap-x-6 gap-y-1 text-sm sm:grid-cols-[max-content_1fr]"
+        >
+          <dt className="text-bone/75">Screen</dt>
+          <dd className="font-mono text-phosphor">{decoded.model.title?.name}</dd>
+          <dt className="text-bone/75">Menu ({decoded.model.menu?.kind})</dt>
+          <dd className="font-mono text-phosphor">
+            {decoded.model.menu?.items.map((i) => `${i.key} ${i.label}`).join(' · ')}
+          </dd>
+          <dt className="text-bone/75">Fields</dt>
+          <dd className="font-mono">
+            {/* Phosphor is only for the old app's own text; our notes about it are bone. */}
+            {decoded.model.fields.map((f) => (
+              <span key={`${f.row}-${f.col}`}>
+                <span className="text-phosphor">{f.label}:</span>{' '}
+                <span className="text-bone/75">
+                  ({f.kind}
+                  {f.focused ? ', cursor here' : ''})
+                </span>
+              </span>
+            ))}
+          </dd>
+          <dt className="text-bone/75">Keys</dt>
+          <dd className="font-mono text-phosphor">
+            {decoded.model.status?.hints.map((h) => `${h.key} ${h.action}`).join(' · ')}
+          </dd>
+        </dl>
       </Section>
 
       <Section

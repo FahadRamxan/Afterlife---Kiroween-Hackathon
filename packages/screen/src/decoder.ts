@@ -315,3 +315,35 @@ export function renderScreen({
 export function gridText(grid: ScreenGrid): string[] {
   return grid.cells.map((line) => line.map((c) => c.char).join(''));
 }
+
+/**
+ * The grid decodeScreen would read from a screen drawn with these cells (each cell in its
+ * canonical form). For tests, and for screens recorded as text and attributes.
+ */
+export function gridFromCells(
+  cells: CellInput[][],
+  { cellWidth = 8, cursor = null }: { cellWidth?: CellWidth; cursor?: ScreenGrid['cursor'] } = {},
+): ScreenGrid {
+  const rows = cells.length;
+  if (rows !== 25 && rows !== 50)
+    throw new ScreenDecodeError(`A text screen has 25 or 50 rows, not ${rows}`);
+  const cellHeight: CellHeight = rows === 25 ? 16 : 8;
+  return {
+    cols: 80,
+    rows,
+    cellWidth,
+    cellHeight,
+    cells: cells.map((line, r) =>
+      line.map((c, col) =>
+        cursor && cursor.row === r && cursor.col === col
+          ? decodeCell(
+              renderCell(c.code, c.fg, c.bg, cellWidth, cellHeight, true),
+              cellWidth,
+              cellHeight,
+            ).cell
+          : canonicalCell(c.code, c.fg, c.bg, cellHeight, cellWidth),
+      ),
+    ),
+    cursor,
+  };
+}

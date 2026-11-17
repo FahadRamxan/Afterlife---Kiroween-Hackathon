@@ -1,0 +1,86 @@
+{
+  "rows": 25,
+  "title": {
+    "row": 0,
+    "text": "IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001",
+    "parts": [
+      "IQRA SCHOOL FEES 1.1",
+      "MAIN MENU",
+      "12-03-2001"
+    ],
+    "name": "MAIN MENU"
+  },
+  "status": {
+    "row": 24,
+    "text": "Up/Down=Move  Enter=Select    Iqra Soft (C) 2001",
+    "hints": [
+      {
+        "key": "Up/Down",
+        "action": "Move"
+      },
+      {
+        "key": "Enter",
+        "action": "Select"
+      }
+    ]
+  },
+  "menu": {
+    "kind": "bar",
+    "items": [
+      {
+        "key": null,
+        "label": "Collect Fee",
+        "row": 8,
+        "col": 30,
+        "selected": false
+      },
+      {
+        "key": null,
+        "label": "Students",
+        "row": 10,
+        "col": 30,
+        "selected": true
+      },
+      {
+        "key": null,
+        "label": "Fee Schedule",
+        "row": 12,
+        "col": 30,
+        "selected": false
+      },
+      {
+        "key": null,
+        "label": "Today's Receipts",
+        "row": 14,
+        "col": 30,
+        "selected": false
+      },
+      {
+        "key": null,
+        "label": "Exit",
+        "row": 16,
+        "col": 30,
+        "selected": false
+      }
+    ]
+  },
+  "fields": [],
+  "labels": [],
+  "tables": [],
+  "messages": [],
+  "texts": [
+    {
+      "text": "IQRA MODEL SCHOOL",
+      "row": 3,
+      "col": 28,
+      "highlight": true
+    },
+    {
+      "text": "Chaklala Scheme III, Rawalpindi",
+      "row": 4,
+      "col": 23,
+      "highlight": false
+    }
+  ],
+  "cursor": null
+}

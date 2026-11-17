@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { diffTables, readDbf, type DbfRecord, type Table, type TableDiff } from '@afterlife/dbf';
-import { decodePng, decodeScreen, gridText } from '@afterlife/screen';
+import { analyzeScreen, decodePng, decodeScreen, gridText } from '@afterlife/screen';
 
 // next build and next dev run from apps/web.
 const DIST = path.join(process.cwd(), '..', '..', 'samples', 'graveyard', 'dist');
@@ -70,5 +70,6 @@ export function shifaMenuDecoded() {
     cells: cells.length,
     unknown: cells.filter((c) => c.code < 0).length,
     cursor: grid.cursor,
+    model: analyzeScreen(grid),
   };
 }

@@ -6,6 +6,7 @@ export {
   decodeCell,
   decodeScreen,
   glyph,
+  gridFromCells,
   gridText,
   renderCell,
   renderScreen,
@@ -16,3 +17,11 @@ export {
   type ScreenGrid,
 } from './decoder';
 export { PngError, decodePng, encodePng, type RgbaImage } from './png';
+export {
+  ScreenModelSchema,
+  ScreenRefineError,
+  analyzeScreen,
+  refineScreen,
+  type ScreenModel,
+  type ScreenRefiner,
+} from './semantics';

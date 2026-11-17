@@ -1,0 +1,105 @@
+{
+  "rows": 25,
+  "title": {
+    "row": 0,
+    "text": "SHIFA MEDICAL STORE  v2.3         MAIN MENU                           15/07/98",
+    "parts": [
+      "SHIFA MEDICAL STORE",
+      "v2.3",
+      "MAIN MENU",
+      "15/07/98"
+    ],
+    "name": "MAIN MENU"
+  },
+  "status": {
+    "row": 24,
+    "text": "1-5 Select    (C) 1998 Shifa Software House, Rawalpindi",
+    "hints": [
+      {
+        "key": "1-5",
+        "action": "Select"
+      }
+    ]
+  },
+  "menu": {
+    "kind": "numbered",
+    "items": [
+      {
+        "key": "1",
+        "label": "New Bill",
+        "row": 9,
+        "col": 32,
+        "selected": false
+      },
+      {
+        "key": "2",
+        "label": "Stock",
+        "row": 10,
+        "col": 32,
+        "selected": false
+      },
+      {
+        "key": "3",
+        "label": "Customers",
+        "row": 11,
+        "col": 32,
+        "selected": false
+      },
+      {
+        "key": "4",
+        "label": "Daily Report",
+        "row": 12,
+        "col": 32,
+        "selected": false
+      },
+      {
+        "key": "5",
+        "label": "Exit",
+        "row": 13,
+        "col": 32,
+        "selected": false
+      }
+    ]
+  },
+  "fields": [
+    {
+      "kind": "prompt",
+      "label": "Choice",
+      "row": 18,
+      "col": 40,
+      "length": null,
+      "value": "",
+      "focused": false
+    }
+  ],
+  "labels": [],
+  "tables": [],
+  "messages": [],
+  "texts": [
+    {
+      "text": "S H I F A",
+      "row": 3,
+      "col": 21,
+      "highlight": true
+    },
+    {
+      "text": "M E D I C A L",
+      "row": 3,
+      "col": 33,
+      "highlight": true
+    },
+    {
+      "text": "S T O R E",
+      "row": 3,
+      "col": 49,
+      "highlight": true
+    },
+    {
+      "text": "Satellite Town, Rawalpindi",
+      "row": 4,
+      "col": 27,
+      "highlight": false
+    }
+  ],
+  "cursor": null
+}

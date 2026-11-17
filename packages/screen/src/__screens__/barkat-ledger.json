@@ -1,0 +1,143 @@
+{
+  "rows": 25,
+  "title": {
+    "row": 0,
+    "text": "BARKAT KIRYANA LEDGER            PARTY LEDGER                         20/11/96",
+    "parts": [
+      "BARKAT KIRYANA LEDGER",
+      "PARTY LEDGER",
+      "20/11/96"
+    ],
+    "name": "PARTY LEDGER"
+  },
+  "status": {
+    "row": 24,
+    "text": "Esc=Back to menu",
+    "hints": [
+      {
+        "key": "Esc",
+        "action": "Back to menu"
+      }
+    ]
+  },
+  "menu": null,
+  "fields": [],
+  "labels": [],
+  "tables": [
+    {
+      "headerRow": 5,
+      "columns": [
+        {
+          "name": "DATE",
+          "col": 1,
+          "length": 8,
+          "align": "left"
+        },
+        {
+          "name": "KIND",
+          "col": 10,
+          "length": 4,
+          "align": "left"
+        },
+        {
+          "name": "AMOUNT",
+          "col": 18,
+          "length": 7,
+          "align": "right"
+        },
+        {
+          "name": "BALANCE",
+          "col": 27,
+          "length": 7,
+          "align": "right"
+        },
+        {
+          "name": "NOTE",
+          "col": 36,
+          "length": 14,
+          "align": "left"
+        }
+      ],
+      "rows": [
+        {
+          "row": 6,
+          "cells": [
+            "01/10/96",
+            "SALE",
+            "3200.00",
+            "3200.00",
+            "PURANA HISAB"
+          ]
+        },
+        {
+          "row": 7,
+          "cells": [
+            "08/10/96",
+            "SALE",
+            "850.00",
+            "4050.00",
+            "GHEE 2.5 KG"
+          ]
+        },
+        {
+          "row": 8,
+          "cells": [
+            "22/10/96",
+            "PAID",
+            "2000.00",
+            "2050.00",
+            "NAQAD"
+          ]
+        },
+        {
+          "row": 9,
+          "cells": [
+            "03/11/96",
+            "SALE",
+            "1290.00",
+            "3340.00",
+            "ATTA 20 KG"
+          ]
+        },
+        {
+          "row": 10,
+          "cells": [
+            "14/11/96",
+            "SALE",
+            "2000.00",
+            "5340.00",
+            "CHAWAL BASMATI"
+          ]
+        }
+      ]
+    }
+  ],
+  "messages": [],
+  "texts": [
+    {
+      "text": "P003",
+      "row": 2,
+      "col": 1,
+      "highlight": true
+    },
+    {
+      "text": "BAJI SHAMIM",
+      "row": 2,
+      "col": 7,
+      "highlight": true
+    },
+    {
+      "text": "(DHOKE RATTA)",
+      "row": 2,
+      "col": 20,
+      "highlight": true
+    },
+    {
+      "text": "BALANCE RS 5340.00",
+      "row": 3,
+      "col": 1,
+      "highlight": false
+    }
+  ],
+  "cursor": null
+}

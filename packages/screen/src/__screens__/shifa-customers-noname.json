@@ -1,0 +1,149 @@
+{
+  "rows": 25,
+  "title": {
+    "row": 0,
+    "text": "SHIFA MEDICAL STORE  v2.3         CUSTOMERS                           15/07/98",
+    "parts": [
+      "SHIFA MEDICAL STORE",
+      "v2.3",
+      "CUSTOMERS",
+      "15/07/98"
+    ],
+    "name": "CUSTOMERS"
+  },
+  "status": {
+    "row": 24,
+    "text": "A=Add customer  PgDn/PgUp=Page  Esc=Back",
+    "hints": [
+      {
+        "key": "A",
+        "action": "Add customer"
+      },
+      {
+        "key": "PgDn/PgUp",
+        "action": "Page"
+      },
+      {
+        "key": "Esc",
+        "action": "Back"
+      }
+    ]
+  },
+  "menu": null,
+  "fields": [],
+  "labels": [],
+  "tables": [
+    {
+      "headerRow": 3,
+      "columns": [
+        {
+          "name": "ID",
+          "col": 1,
+          "length": 5,
+          "align": "left"
+        },
+        {
+          "name": "NAME",
+          "col": 8,
+          "length": 20,
+          "align": "left"
+        },
+        {
+          "name": "PHONE",
+          "col": 35,
+          "length": 12,
+          "align": "left"
+        }
+      ],
+      "rows": [
+        {
+          "row": 4,
+          "cells": [
+            "C0001",
+            "MUHAMMAD ASLAM",
+            "051-4412345"
+          ]
+        },
+        {
+          "row": 5,
+          "cells": [
+            "C0002",
+            "NASREEN BIBI",
+            "0300-5551234"
+          ]
+        },
+        {
+          "row": 6,
+          "cells": [
+            "C0003",
+            "RAJA TARIQ",
+            "051-5567890"
+          ]
+        },
+        {
+          "row": 7,
+          "cells": [
+            "C0004",
+            "SHAHEEN AKHTAR",
+            "0333-5012345"
+          ]
+        },
+        {
+          "row": 8,
+          "cells": [
+            "C0005",
+            "HAJI ABDUL GHAFOOR",
+            "051-4490011"
+          ]
+        },
+        {
+          "row": 9,
+          "cells": [
+            "C0006",
+            "DR. FARZANA (CLINIC)",
+            "051-4433221"
+          ]
+        },
+        {
+          "row": 10,
+          "cells": [
+            "C0007",
+            "IMRAN ELECTRONICS",
+            "051-5501122"
+          ]
+        },
+        {
+          "row": 11,
+          "cells": [
+            "C0008",
+            "ZAHIDA PARVEEN",
+            "0321-5098765"
+          ]
+        }
+      ]
+    }
+  ],
+  "messages": [
+    {
+      "kind": "error",
+      "text": "NAME REQUIRED",
+      "row": 23,
+      "col": 2
+    }
+  ],
+  "texts": [
+    {
+      "text": "Page 1 of 1",
+      "row": 22,
+      "col": 1,
+      "highlight": false
+    },
+    {
+      "text": "8 customers",
+      "row": 22,
+      "col": 15,
+      "highlight": false
+    }
+  ],
+  "cursor": null
+}

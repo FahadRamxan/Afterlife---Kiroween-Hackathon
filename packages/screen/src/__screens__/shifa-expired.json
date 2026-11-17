@@ -1,0 +1,138 @@
+{
+  "rows": 25,
+  "title": {
+    "row": 0,
+    "text": "SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98",
+    "parts": [
+      "SHIFA MEDICAL STORE",
+      "v2.3",
+      "NEW BILL",
+      "15/07/98"
+    ],
+    "name": "NEW BILL"
+  },
+  "status": {
+    "row": 24,
+    "text": "Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel",
+    "hints": [
+      {
+        "key": "Enter",
+        "action": "Add"
+      },
+      {
+        "key": "Enter on blank code",
+        "action": "Finish"
+      },
+      {
+        "key": "F3",
+        "action": "Edit last qty"
+      },
+      {
+        "key": "Esc",
+        "action": "Cancel"
+      }
+    ]
+  },
+  "menu": null,
+  "fields": [
+    {
+      "kind": "reverse",
+      "label": "Code",
+      "row": 21,
+      "col": 7,
+      "length": 6,
+      "value": "",
+      "focused": false
+    },
+    {
+      "kind": "prompt",
+      "label": "Qty",
+      "row": 21,
+      "col": 21,
+      "length": null,
+      "value": "",
+      "focused": false
+    }
+  ],
+  "labels": [
+    {
+      "label": "Customer",
+      "value": "WALK-IN",
+      "row": 2,
+      "col": 1
+    }
+  ],
+  "tables": [
+    {
+      "headerRow": 4,
+      "columns": [
+        {
+          "name": "#",
+          "col": 2,
+          "length": 2,
+          "align": "left"
+        },
+        {
+          "name": "CODE",
+          "col": 4,
+          "length": 7,
+          "align": "left"
+        },
+        {
+          "name": "NAME",
+          "col": 11,
+          "length": 21,
+          "align": "left"
+        },
+        {
+          "name": "BATCH",
+          "col": 32,
+          "length": 13,
+          "align": "left"
+        },
+        {
+          "name": "PRICE",
+          "col": 45,
+          "length": 8,
+          "align": "left"
+        },
+        {
+          "name": "QTY",
+          "col": 53,
+          "length": 9,
+          "align": "left"
+        },
+        {
+          "name": "AMOUNT",
+          "col": 62,
+          "length": 7,
+          "align": "left"
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "messages": [
+    {
+      "kind": "error",
+      "text": "BATCH S97090 EXPIRED - CANNOT SELL",
+      "row": 23,
+      "col": 2
+    }
+  ],
+  "texts": [
+    {
+      "text": "SUBTOTAL",
+      "row": 20,
+      "col": 45,
+      "highlight": false
+    },
+    {
+      "text": "0.00",
+      "row": 20,
+      "col": 64,
+      "highlight": true
+    }
+  ],
+  "cursor": null
+}
