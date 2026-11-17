@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.base.json",
+  // Repo-level tests and scripts. The packages and apps have their own tsconfig.
+  "compilerOptions": { "types": ["node"], "allowJs": true, "checkJs": false },
+  "include": ["tests/**/*.ts", "scripts/**/*.ts", "vitest.setup.ts"]
+}

@@ -1,0 +1,65 @@
+{
+  "id": "shifa",
+  "name": "Shifa Medical Store",
+  "version": "2.3",
+  "born": 1998,
+  "died": 2004,
+  "kind": "pharmacy",
+  "place": "Satellite Town, Rawalpindi",
+  "story": "Written in 1998 by a two-person software house for a family pharmacy in Satellite Town.\nIt printed every bill and kept the stock until the software house closed in 2004.\nThe shop still runs it every day. Nobody has the source code.",
+  "executable": "SHIFA.EXE",
+  "dataFiles": ["MEDICINE.DBF", "CUSTOMER.DBF", "BILLS.DBF", "BILLITEM.DBF"],
+  "dosTime": "1998-07-15 10:00:00",
+  "preview": "menu/MENU.SCR",
+  "knownRules": [
+    {
+      "id": "gst-17-truncated",
+      "text": "GST is 17% of the bill after discount, truncated (not rounded) to the paisa.",
+      "scenarios": ["bill-small", "bill-discount"]
+    },
+    {
+      "id": "discount-over-5000",
+      "text": "A bill whose subtotal is over Rs 5,000 gets 10% off, truncated. Exactly Rs 5,000 gets no discount. The discount comes before GST.",
+      "scenarios": ["bill-discount", "bill-5000"]
+    },
+    {
+      "id": "expired-batch-blocked",
+      "text": "A medicine whose batch has expired cannot be added to a bill. A batch that expires today can.",
+      "scenarios": ["expired"]
+    },
+    {
+      "id": "stock-decrement",
+      "text": "Saving a bill takes the quantity of each item off that medicine's stock.",
+      "scenarios": ["bill-small", "bill-discount"]
+    },
+    {
+      "id": "bill-number-yymm",
+      "text": "Bill numbers are YYMM-#### from the bill date, counting from 0001 again each month.",
+      "scenarios": ["bill-small", "daily-report", "y2k-sells-expired"]
+    },
+    {
+      "id": "qty-over-stock-refused",
+      "text": "A quantity larger than the stock is refused when the item is added.",
+      "scenarios": ["negative-stock"]
+    },
+    {
+      "id": "customer-next-id",
+      "text": "A new customer gets the next id (C0009 after C0008), and a blank name is refused.",
+      "scenarios": ["customers"]
+    }
+  ],
+  "knownBugs": [
+    {
+      "id": "y2k-expiry",
+      "text": "The expiry check compares two-digit years. In 1998 it blocks batches good until 2000; from 2000 it sells batches that expired in the 1990s.",
+      "severity": "high",
+      "scenarios": ["y2k-blocks-2000", "y2k-sells-expired"]
+    },
+    {
+      "id": "zero-qty-negative-stock",
+      "text": "A quantity of 0 skips the stock check, and editing the line (F3) never checks again, so a bill can take stock below zero.",
+      "severity": "medium",
+      "scenarios": ["negative-stock"]
+    }
+  ]
+}

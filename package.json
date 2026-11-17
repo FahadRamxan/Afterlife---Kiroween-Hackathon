@@ -6,7 +6,7 @@
   "license": "MIT",
   "packageManager": "pnpm@10.5.2",
   "engines": {
-    "node": "\u003e=22"
+    "node": ">=22"
   },
   "scripts": {
     "dev": "turbo run dev",
@@ -14,9 +14,9 @@
     "test": "vitest run",
     "e2e": "turbo run e2e",
     "lint": "eslint .",
-    "typecheck": "turbo run typecheck",
+    "typecheck": "turbo run typecheck && tsc -p tsconfig.json",
     "format": "prettier --write .",
-    "verify": "pnpm lint \u0026\u0026 pnpm typecheck \u0026\u0026 pnpm test \u0026\u0026 pnpm e2e",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm e2e",
     "prepare": "husky",
     "test:coverage": "vitest run --coverage",
     "test:pbt": "node scripts/ci-local.mjs --only test",
@@ -25,9 +25,12 @@
     "smoke:prod": "node scripts/smoke-prod.mjs",
     "graveyard:build": "node scripts/graveyard.mjs build",
     "graveyard:test": "node scripts/graveyard.mjs test",
-    "graveyard:update": "node scripts/graveyard.mjs update"
+    "graveyard:update": "node scripts/graveyard.mjs update",
+    "graveyard:publish": "tsx scripts/graveyard-publish.ts"
   },
   "devDependencies": {
+    "@afterlife/emulator": "workspace:^",
+    "@afterlife/screen": "workspace:^",
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@commitlint/lint": "^21.2.4",
@@ -37,10 +40,12 @@
     "@vitest/coverage-v8": "^5.1.0",
     "eslint": "^10.15.0",
     "fast-check": "^4.10.2",
+    "fflate": "^0.8.3",
     "globals": "^17.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.1",
     "prettier": "^3.10.1",
+    "tsx": "^4.23.15",
     "turbo": "^2.11.11",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.73.0",

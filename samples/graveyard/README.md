@@ -37,6 +37,7 @@ fixtures/                  output of real DOSBox runs: unit test logs, screen du
 pnpm graveyard:build    # compile every sample into dist/<app>/<EXE>
 pnpm graveyard:test     # all toolchain checks, see below
 pnpm graveyard:update   # same, but rewrites fixtures/ (review the git diff, then commit)
+pnpm graveyard:publish  # js-dos bundles + the Graveyard page catalogue (no Docker needed)
 ```
 
 `graveyard:test` runs:
@@ -49,6 +50,22 @@ pnpm graveyard:update   # same, but rewrites fixtures/ (review the git diff, the
 6. all outputs compared byte for byte with the committed `fixtures/`
 
 `pnpm ci:local` runs it when Docker is running. The Vitest suites `tests/graveyard-*.test.ts` then check the fixtures against hand-worked expected values, so a wrong fixture cannot be committed by accident.
+
+## Manifests and bundles
+
+Each app has `<app>/manifest.json`, validated by the zod schema `GraveyardManifest` in `packages/emulator`. It holds the name, the born and died years, the era story (2 to 3 lines), the executable, the data files, the DOS clock, and two **hidden** lists:
+
+- `knownRules`: the business rules the Archaeologist must find
+- `knownBugs`: the legacy bugs the Exorcist must find
+
+Every rule and bug names the scenarios that demonstrate it. The lists are used only to score the Crew (Prompt 56), and never leave the repo.
+
+`pnpm graveyard:publish` writes:
+
+- `apps/web/public/graveyard/<app>.jsdos`: a js-dos bundle (a zip with `.jsdos/dosbox.conf` plus the EXE and DBF files from `dist/`). It is byte-for-byte repeatable
+- `apps/web/lib/graveyard-catalog.json`: what the Graveyard page shows. It has no hidden rules or bugs, adds the disclosure that our team wrote these apps, and includes the first screen of each app from a real DOSBox run as the preview
+
+`tests/graveyard-manifests.test.ts` fails if either output is out of date, or if anything hidden reaches the catalogue.
 
 ## How a scripted run works
 
