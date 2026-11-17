@@ -16,7 +16,12 @@ export default defineConfig({
   reporter: [['list']],
   use: { baseURL, trace: 'retain-on-failure' },
   // Small tolerance for anti-aliasing. Baselines exist per platform (win32 locally, linux for CI).
-  expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.01 } },
+  // Dev mode (local runs, the pre-push hook) compiles each route on its first visit, which can take
+  // more than 5 s; the production build (CI=1, ci:local) does not.
+  expect: {
+    timeout: process.env.CI ? 5_000 : 15_000,
+    toHaveScreenshot: { maxDiffPixelRatio: 0.01 },
+  },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: remote
     ? undefined
