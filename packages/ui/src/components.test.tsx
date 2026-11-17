@@ -55,6 +55,12 @@ describe('Tombstone', () => {
     expect(out).toContain('Shifa Medical Store');
     expect(out).toContain('1998\u20132009');
   });
+
+  it('keeps the years and R.I.P. left to right inside Urdu (right-to-left) pages', () => {
+    const out = html(<Tombstone name="Shifa Medical Store" born={1998} died={2009} />);
+    expect(out).toMatch(/<p dir="ltr"[^>]*>R\.I\.P\.<\/p>/);
+    expect(out).toMatch(/<p dir="ltr"[^>]*>1998\u20132009<\/p>/);
+  });
 });
 
 describe('Tombstone attributes', () => {

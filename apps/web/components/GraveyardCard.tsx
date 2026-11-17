@@ -1,17 +1,17 @@
 import { Button, CRTFrame, Tombstone } from '@afterlife/ui';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { storyLines, type GraveyardApp } from '../lib/graveyard';
 
 /** One dead app: its first screen from a real DOSBox run, idle under fog, and a Raise button. */
 export function GraveyardCard({ app }: { app: GraveyardApp }) {
   const t = useTranslations('graveyard');
-  const locale = useLocale();
   return (
     <Tombstone
       data-testid="tombstone"
       className="h-full"
       name={`${app.name} v${app.version}`}
+      nameLang="en"
       born={app.born}
       died={app.died}
       actions={
@@ -36,13 +36,10 @@ export function GraveyardCard({ app }: { app: GraveyardApp }) {
           className="graveyard-fog pointer-events-none absolute inset-0 rounded-2xl"
         />
       </div>
-      <p className="mt-3 text-xs text-bone/70">{app.place}</p>
-      <div
-        data-testid="story"
-        lang="en"
-        className="mt-2 space-y-1 text-left text-sm"
-        dir={locale === 'ur' ? 'ltr' : undefined}
-      >
+      <p data-testid="place" lang="en" dir="ltr" className="mt-3 text-xs text-bone/70">
+        {app.place}
+      </p>
+      <div data-testid="story" lang="en" className="mt-2 space-y-1 text-left text-sm" dir="ltr">
         {storyLines(app.story).map((line) => (
           <p key={line}>{line}</p>
         ))}

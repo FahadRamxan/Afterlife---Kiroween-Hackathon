@@ -11,6 +11,10 @@
   body {
     @apply bg-graveyard font-sans text-bone antialiased;
   }
+  /* English text inside the Urdu page (names, stories, the disclosure) keeps the Latin font. */
+  [lang='en'] {
+    font-family: var(--font-sans);
+  }
   :focus-visible {
     outline-color: var(--color-ectoplasm);
   }

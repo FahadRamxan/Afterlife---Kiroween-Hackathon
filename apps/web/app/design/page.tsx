@@ -3,6 +3,8 @@ import {
   Card,
   CertificateFrame,
   CRTFrame,
+  DbfDiffView,
+  DbfTable,
   DiffBadge,
   GhostCursor,
   ProgressCandle,
@@ -10,6 +12,7 @@ import {
   colors,
 } from '@afterlife/ui';
 import type { ReactNode } from 'react';
+import { shifaMedicine, shifaStockDiff } from '../../lib/design-samples';
 
 export const metadata = { title: 'Design system · Afterlife' };
 
@@ -50,6 +53,8 @@ const SHIFA_MENU = [
 ].join('\n');
 
 export default function DesignPage() {
+  const medicine = shifaMedicine();
+  const stock = shifaStockDiff();
   return (
     <main className="mx-auto max-w-5xl space-y-14 px-6 py-12">
       <header>
@@ -142,6 +147,32 @@ export default function DesignPage() {
           <DiffBadge kind="changed" count={2} />
           <DiffBadge kind="same" />
         </div>
+      </Section>
+
+      <Section
+        id="dbftable"
+        title="DbfTable"
+        meaning="A .DBF file as it really is: field types in the header, every record, deleted ones struck. Arrow keys, Home/End, PageUp/PageDown, Ctrl+Home/End."
+      >
+        <DbfTable
+          caption="MEDICINE.DBF (Shifa, 40 medicines)"
+          fields={medicine.fields}
+          records={medicine.records}
+        />
+      </Section>
+
+      <Section
+        id="dbfdiff"
+        title="DbfDiffView"
+        meaning="What the old app changed: inserted rows teal, deleted rows red and struck, changed cells amber with old → new."
+      >
+        <DbfDiffView
+          caption="MEDICINE.DBF changes"
+          before={stock.before}
+          after={stock.after}
+          diff={stock.diff}
+          height={260}
+        />
       </Section>
 
       <Section

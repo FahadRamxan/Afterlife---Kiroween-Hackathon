@@ -28,6 +28,7 @@ See [plan.md](plan.md) for the plan and [prompt.md](prompt.md) for the build pro
 | `pnpm typecheck`        | TypeScript strict checks                                                                   |
 | `pnpm verify`           | lint, typecheck, test and e2e, all of them                                                 |
 | `pnpm ci:local`         | Everything CI did: verify with 2000 property runs, production e2e, Docker builds and smoke |
+| `pnpm screenshots`      | Retake the UI tour in `docs/screenshots`                                                   |
 | `pnpm smoke:prod <url>` | The `@smoke` Playwright tests against a deployed site                                      |
 
 ## How we test
@@ -41,19 +42,34 @@ GitHub Actions is off for this repo, so every check runs locally. The workflow f
 5. **Nightly**: a Kiro Crew scheduled job runs `pnpm ci:local` on `main` and sends the result.
 6. **After a deploy**: `pnpm smoke:prod <url>`.
 
-Current counts: 281 unit and property tests in 22 files, and 40 Playwright tests (Prompt 10, plus the local CI fixes).
+Current counts: 671 unit and property tests in 39 files, and 63 Playwright tests (Prompt 20).
 
 ## Coverage
 
 Package code coverage from `pnpm test:coverage` (HTML report in `coverage/`). This table is refreshed with each README update (every 20 prompts).
 
-| Metric    | %   | Covered |
-| --------- | --- | ------- |
-| Lines     | 71% | 49/69   |
-| Functions | 85% | 23/27   |
-| Branches  | 89% | 24/27   |
+| Metric     | %   | Covered |
+| ---------- | --- | ------- |
+| Lines      | 91% | 415/456 |
+| Statements | 90% | 493/545 |
+| Functions  | 90% | 111/123 |
+| Branches   | 88% | 321/363 |
 
-As of Prompt 10. Property tests run with `FC_NUM_RUNS=100` in the git hooks and 2000 in `pnpm ci:local`.
+As of Prompt 20. Property tests run with `FC_NUM_RUNS=100` in the git hooks and 2000 in `pnpm ci:local`.
+
+## Status
+
+Prompts 1 to 20 are merged: the monorepo, steering and hooks, the Haunted Ledger design system, the app shell (English and Urdu), the deploy skeleton, the DOS toolchain, three sample dead apps (Shifa Medical Store, Iqra School Fees, Barkat Kiryana Ledger), the Graveyard page, and the `.DBF` reader, writer, snapshot, diff and viewer. Details are in [docs/progress.md](docs/progress.md).
+
+## Screenshots
+
+Taken by `pnpm screenshots` from the real app.
+
+| Graveyard                                       | Graveyard in Urdu                                            | DBF diff                                              |
+| ----------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------- |
+| ![Graveyard](docs/screenshots/02-graveyard.png) | ![Graveyard in Urdu](docs/screenshots/04-graveyard-urdu.png) | ![DBF diff](docs/screenshots/08-dbf-diff-tooltip.png) |
+
+All shots are in [docs/screenshots](docs/screenshots).
 
 ## License
 

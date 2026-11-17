@@ -105,4 +105,36 @@ test.describe('/graveyard', () => {
     // The era stories are English data, so they are marked as English for screen readers.
     await expect(page.getByTestId('story').first()).toHaveAttribute('lang', 'en');
   });
+
+  test('in Urdu, English and numbers keep their left-to-right order and their own font', async ({
+    page,
+    context,
+  }) => {
+    await context.addCookies([
+      { name: 'afterlife-locale', value: 'ur', url: 'http://localhost:3000' },
+    ]);
+    await page.goto('/graveyard');
+    const stone = page.getByTestId('tombstone').first();
+    // "1998–2004" must not be shown as "2004–1998", nor "R.I.P." as ".R.I.P".
+    for (const text of ['1998–2004', 'R.I.P.']) {
+      const el = stone.getByText(text, { exact: true });
+      await expect(el).toHaveCSS('direction', 'ltr');
+      await expect(el).toHaveCSS('unicode-bidi', 'isolate');
+    }
+    // English names, stories and the disclosure are left to right, in Inter, not Nastaliq.
+    for (const el of [
+      stone.getByRole('heading').first(),
+      stone.getByTestId('place'),
+      stone.getByTestId('story'),
+      page.getByText(/written by our team/),
+    ]) {
+      await expect(el).toHaveCSS('direction', 'ltr');
+      await expect(el).toHaveCSS('font-family', /Inter/);
+    }
+    // Urdu text keeps the Urdu font.
+    await expect(page.getByRole('heading', { level: 1, name: 'قبرستان' })).toHaveCSS(
+      'font-family',
+      /Nastaliq/,
+    );
+  });
 });

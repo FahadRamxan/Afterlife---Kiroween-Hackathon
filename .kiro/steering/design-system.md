@@ -45,6 +45,8 @@ Fonts load through `next/font` in `apps/web/app/fonts.ts`.
 | `DiffBadge`        | Data change kind: `inserted` teal, `deleted` red with strike, `changed` amber, `same` bone                           |
 | `ProgressCandle`   | Progress. The candle burns down as work completes. It is a `progressbar`                                             |
 | `CertificateFrame` | The signed proof of rebirth: bone paper and a wax seal                                                               |
+| `DbfTable`         | Records from a legacy `.DBF` file: phosphor mono cells, typed headers, arrow-key focus, virtualised rows             |
+| `DbfDiffView`      | A `.DBF` diff: each row coloured by `DiffBadge` kind, changed cells show old → new in a tooltip                      |
 
 ## Rules
 

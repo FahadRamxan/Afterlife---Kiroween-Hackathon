@@ -27,7 +27,8 @@
     "graveyard:test": "node scripts/graveyard.mjs test",
     "graveyard:update": "node scripts/graveyard.mjs update",
     "graveyard:publish": "tsx scripts/graveyard-publish.ts",
-    "dbf:golden": "tsx scripts/dbf-golden.ts"
+    "dbf:golden": "tsx scripts/dbf-golden.ts",
+    "screenshots": "pnpm --filter @afterlife/e2e screenshots"
   },
   "devDependencies": {
     "@afterlife/dbf": "workspace:^",

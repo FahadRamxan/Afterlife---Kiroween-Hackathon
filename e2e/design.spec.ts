@@ -7,6 +7,8 @@ const sections = [
   'card',
   'tombstone',
   'crt',
+  'dbftable',
+  'dbfdiff',
   'diff',
   'candle',
   'certificate',
