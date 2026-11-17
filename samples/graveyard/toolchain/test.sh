@@ -4,7 +4,8 @@
 #   2. the same tests built for 16-bit DOS and run in DOSBox, where int is 16 bits
 #   3. every seed CSV round-trips through csv2dbf and dbf2csv unchanged
 #   4. a fresh build matches the committed dist/
-#   5. HELLO.EXE, and every <app>/scenarios/*.keys, run in DOSBox
+#   5. HELLO.EXE, and every <app>/scenarios/*.keys, run in DOSBox; then the scenarios again on the
+#      golden DBFs written by @afterlife/dbf, which must give identical results
 #   6. all outputs match the committed fixtures/ byte for byte (UPDATE_FIXTURES=1 rewrites them)
 # A unit test file names the sources it needs in a comment: "SOURCES: path/a.c path/b.c".
 set -euo pipefail
@@ -80,40 +81,63 @@ test "$(stat -c %s "$run/HELLO.DBF")" = 128 || fail "HELLO.DBF size"
 mkdir -p "$NEW/hello"
 cp "$run/OUT.TXT" "$run/HELLO.DBF" "$NEW/hello/"
 
-echo "== 5b. scripted scenarios in DOSBox"
-for dir in */scenarios; do
-  app=$(dirname "$dir")
-  EXE=""; DOS_TIME=""
-  # shellcheck disable=SC1090
-  source "$app/build.env"
-  # The app's default DOS clock (build.env DOS_TIME), else 15 July 1998.
-  app_time="${DOS_TIME:-1998-07-15 10:00:00}"
-  base=${EXE%.EXE}
-  tst="${base:0:5}TST.EXE"
-  bin=$(mktemp -d)
-  toolchain/compile.sh "$app" "$bin/$tst" test
-  for keys in "$dir"/*.keys; do
-    s=$(basename "$keys" .keys)
-    run=$(mktemp -d)
-    cp "dist/$app"/* "$run/"
-    cp "$bin/$tst" "$run/"
-    cp "$keys" "$run/KEYS.TXT"
-    time_file="$dir/$s.time"
-    dos_time="$app_time"
-    [ -f "$time_file" ] && dos_time=$(cat "$time_file")
-    DOS_TIME="$dos_time" toolchain/run-dos.sh "$run" "$tst"
-    out="$NEW/$app/$s"
-    mkdir -p "$out"
-    [ -f "$run/EXIT.TXT" ] || fail "$app/$s: no EXIT.TXT (crash or hang)"
-    tr -d '\r' < "$run/EXIT.TXT" > "$out/EXIT.TXT"
-    for scr in "$run"/*.SCR; do [ -e "$scr" ] && tr -d '\r' < "$scr" > "$out/$(basename "$scr")"; done
-    for dbf in "$run"/*.DBF; do "$T/dbf2csv" "$dbf" > "$out/$(basename "$dbf" .DBF).csv"; done
-    result=$(cat "$out/EXIT.TXT")
-    echo "$app/$s: $result"
-    [ "$result" = OK ] || { [ -f "$out/END.SCR" ] && head -25 "$out/END.SCR"; fail "$app/$s: $result"; }
+# Runs every <app>/scenarios/*.keys in DOSBox. Usage: run_scenarios <out-root> <data>
+#   data = dist:   the DBFs from dist/ (written by the C csv2dbf tool)
+#   data = golden: the DBFs from golden/ (written by @afterlife/dbf, pnpm dbf:golden)
+run_scenarios() {
+  local root="$1" data="$2"
+  for dir in */scenarios; do
+    app=$(dirname "$dir")
+    EXE=""; DOS_TIME=""
+    # shellcheck disable=SC1090
+    source "$app/build.env"
+    # The app's default DOS clock (build.env DOS_TIME), else 15 July 1998.
+    app_time="${DOS_TIME:-1998-07-15 10:00:00}"
+    base=${EXE%.EXE}
+    tst="${base:0:5}TST.EXE"
+    bin=$(mktemp -d)
+    toolchain/compile.sh "$app" "$bin/$tst" test
+    for keys in "$dir"/*.keys; do
+      s=$(basename "$keys" .keys)
+      run=$(mktemp -d)
+      cp "dist/$app"/* "$run/"
+      if [ "$data" = golden ]; then
+        [ -d "golden/$app" ] || fail "golden/$app is missing: run pnpm dbf:golden"
+        cp "golden/$app"/*.DBF "$run/"
+      fi
+      cp "$bin/$tst" "$run/"
+      cp "$keys" "$run/KEYS.TXT"
+      time_file="$dir/$s.time"
+      dos_time="$app_time"
+      [ -f "$time_file" ] && dos_time=$(cat "$time_file")
+      DOS_TIME="$dos_time" toolchain/run-dos.sh "$run" "$tst"
+      out="$root/$app/$s"
+      mkdir -p "$out"
+      [ -f "$run/EXIT.TXT" ] || fail "$app/$s ($data): no EXIT.TXT (crash or hang)"
+      tr -d '\r' < "$run/EXIT.TXT" > "$out/EXIT.TXT"
+      for scr in "$run"/*.SCR; do [ -e "$scr" ] && tr -d '\r' < "$scr" > "$out/$(basename "$scr")"; done
+      for dbf in "$run"/*.DBF; do "$T/dbf2csv" "$dbf" > "$out/$(basename "$dbf" .DBF).csv"; done
+      result=$(cat "$out/EXIT.TXT")
+      echo "$app/$s ($data): $result"
+      [ "$result" = OK ] || { [ -f "$out/END.SCR" ] && head -25 "$out/END.SCR"; fail "$app/$s ($data): $result"; }
+    done
   done
-done
+}
 
+echo "== 5b. scripted scenarios in DOSBox"
+run_scenarios "$NEW" dist
+
+echo "== 5c. the same scenarios on the golden DBFs written by @afterlife/dbf"
+GOLD=$(mktemp -d)
+run_scenarios "$GOLD" golden
+for app_dir in "$GOLD"/*; do
+  app=$(basename "$app_dir")
+  if ! diff -r "$NEW/$app" "$app_dir" > /dev/null; then
+    diff -r "$NEW/$app" "$app_dir" | head -20 || true
+    fail "$app: the DOS app behaves differently on the golden DBFs (TypeScript writer)"
+  fi
+done
+echo "golden DBFs: every scenario gives the same screens and data"
 echo "== 6. fixtures"
 if [ "${UPDATE_FIXTURES:-0}" = 1 ]; then
   rm -rf fixtures
