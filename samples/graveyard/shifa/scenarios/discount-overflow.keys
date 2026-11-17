@@ -1,0 +1,12 @@
+# LEGACY BUG 3: the 10% discount is worked out as subtotal * 10 in a 32-bit long, which wraps above
+# Rs 21,47,483.64. Reached through bug 2: INS100 (Rs 650, 12 in stock) at qty 0, then F3 to 9999.
+# Subtotal 6499350.00, discount -209058.45, GST 1140429.43, total 7848837.88 (should be 6843815.55).
+1
+{Enter}
+INS100{Enter}0{Enter}
+{F3}9999{Enter}
+{Enter}
+{Dump:TOTALS}
+{F2}
+{Enter}
+5

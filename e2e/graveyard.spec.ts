@@ -39,7 +39,7 @@ test.describe('/graveyard', () => {
       // 5 s default (ci:local flaked twice on this line, then passed on retry in 0.7 s).
       await expect(page).toHaveURL(new RegExp(`/raise/${app.id}$`), { timeout: 15_000 });
       await expect(
-        page.getByRole('heading', { level: 1, name: `Raising ${app.id}` }),
+        page.getByRole('heading', { level: 1, name: `Raising ${app.name}` }),
       ).toBeVisible();
     });
   }

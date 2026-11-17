@@ -12,3 +12,11 @@ export function loadCatalog(): Catalog {
 export function storyLines(story: string): string[] {
   return story.split('\n').filter((l) => l.trim() !== '');
 }
+
+/**
+ * The Graveyard app with this id, or undefined. The Raise page 404s on undefined.
+ * TODO(Prompt 40): uploaded projects get ids too; look them up in the API as well.
+ */
+export function findApp(id: string): GraveyardApp | undefined {
+  return loadCatalog().apps.find((a) => a.id === id);
+}

@@ -43,6 +43,27 @@ static void test_discount(void)
     CHECK(rule_discount(0L) == 0L);
 }
 
+static void test_legacy_bug_discount_overflow(void)
+{
+    BILL_TOTALS t;
+    /* LEGACY BUG 3, kept on purpose: subtotal * 10 is done in a long. On DOS a long is 32 bits,
+     * so above Rs 21,47,483.64 it wraps around. INS100 at qty 9,999 (reached through bug 2):
+     * subtotal 649,935,000 * 10 wraps to -2,090,584,592, and the discount is -20,905,845.
+     * gcc on 64-bit Linux has a 64-bit long, which does not overflow: there the discount is
+     * correct, so these checks only pin the bug where long is 32 bits (the real DOS build). */
+    if (sizeof(long) == 4) {
+        CHECK(rule_discount(214748364L) == 21474836L); /* largest subtotal that does not wrap */
+        CHECK(rule_discount(214748365L) < 0L);         /* the first one that does */
+        CHECK(rule_discount(649935000L) == -20905845L);
+        rule_totals(649935000L, &t);
+        CHECK(t.discount == -20905845L && t.gst == 114042943L && t.total == 784883788L);
+    } else {
+        CHECK(rule_discount(649935000L) == 64993500L);
+        rule_totals(649935000L, &t);
+        CHECK(t.total == 684381555L);
+    }
+}
+
 static void test_totals(void)
 {
     BILL_TOTALS t;
@@ -125,6 +146,7 @@ int main(void)
     test_expiry();
     test_legacy_bug_two_digit_year();
     test_legacy_bug_zero_qty();
+    test_legacy_bug_discount_overflow();
     if (failures) {
         printf("%d OF %d CHECKS FAILED\n", failures, checks);
         return 1;

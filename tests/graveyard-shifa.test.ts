@@ -244,6 +244,31 @@ describe('LEGACY BUG 2: qty 0 then edit allows negative stock', () => {
   });
 });
 
+describe('LEGACY BUG 3: the discount overflows 32 bits on a huge bill', () => {
+  // INS100 (Rs 650) at qty 0, then F3 to 9,999 (bug 2 skips the stock check): subtotal
+  // Rs 64,99,350.00 = 649,935,000 paisa. subtotal * 10 = 6,499,350,000 does not fit a 32-bit long
+  // and wraps to -2,090,584,592, so the discount is -20,905,845 paisa (C division truncates).
+  // GST: 17% of 670,840,845 = 114,042,943 (17 * 6,708,408 + trunc(45 * 17 / 100)).
+  // Correct: discount 64,993,500, GST 99,440,055, total 684,381,555 (Rs 68,43,815.55).
+  it('saves a negative discount, and a total Rs 10,05,022.33 too high', () => {
+    expect(lastBill('discount-overflow')).toMatchObject({
+      BILL_NO: '9807-0001',
+      SUBTOTAL: '6499350.00',
+      DISCOUNT: '-209058.45',
+      GST: '1140429.43',
+      TOTAL: '7848837.88',
+    });
+    const [line] = items('discount-overflow', '9807-0001');
+    expect(line).toMatchObject({ CODE: 'INS100', QTY: '9999', AMOUNT: '6499350.00' });
+    expect(byCode('discount-overflow').INS100!.QTY).toBe('-9987');
+  });
+  it('shows the negative discount on the totals screen', () => {
+    expect(readScreen(fx('discount-overflow', 'TOTALS.SCR')).all).toMatch(
+      /DISCOUNT 10%\s+-209058\.45/,
+    );
+  });
+});
+
 describe('stock screen', () => {
   const pages = ['STOCK1', 'STOCK2', 'STOCK3'].map((p) => readScreen(fx('stock', `${p}.SCR`)));
 

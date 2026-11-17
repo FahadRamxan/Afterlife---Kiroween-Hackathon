@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 const routes: [string, string | RegExp][] = [
   ['/', 'Afterlife'],
   ['/graveyard', 'The Graveyard'],
-  ['/raise/demo-project', 'Raising demo-project'],
+  ['/raise/shifa', 'Raising Shifa Medical Store'],
   ['/vessel/demo-project', 'Reborn app'],
   ['/verify/cert-123', 'Verify a certificate'],
   ['/playground', 'Judge Playground'],
@@ -44,18 +44,19 @@ test.describe('raise tabs', () => {
   const tabs = ['Possession', 'Soul', 'Proof', 'Exorcism', 'Ghost Twin', 'Living Soul'];
 
   test('shows the six tabs in order, Possession first', async ({ page }) => {
-    await page.goto('/raise/demo-project');
+    await page.goto('/raise/shifa');
     const list = page.getByRole('tablist', { name: 'Rebirth steps' });
     await expect(list.getByRole('tab')).toHaveText(tabs);
     await expect(list.getByRole('tab', { name: 'Possession' })).toHaveAttribute(
       'aria-selected',
       'true',
     );
-    await expect(page.getByRole('tabpanel')).toContainText('Press Raise to begin');
+    await expect(page.getByRole('tabpanel')).toContainText('has not taken over the old app yet');
+    await expect(page.getByRole('tabpanel')).not.toContainText('Press Raise');
   });
 
   test('selecting a tab updates the URL, and the URL restores the tab', async ({ page }) => {
-    await page.goto('/raise/demo-project');
+    await page.goto('/raise/shifa');
     await page.getByRole('tab', { name: 'Proof' }).click();
     await expect(page).toHaveURL(/\?tab=proof$/);
     await expect(page.getByRole('tabpanel')).toContainText('No proof run yet');
@@ -64,7 +65,7 @@ test.describe('raise tabs', () => {
   });
 
   test('tabs work with the keyboard', async ({ page }) => {
-    await page.goto('/raise/demo-project');
+    await page.goto('/raise/shifa');
     await page.getByRole('tab', { name: 'Possession' }).focus();
     await page.keyboard.press('ArrowRight');
     await expect(page.getByRole('tab', { name: 'Soul', exact: true })).toBeFocused();
@@ -92,13 +93,30 @@ test.describe('language toggle', () => {
     await page.reload();
     await expect(page.getByRole('heading', { level: 1, name: 'قبرستان' })).toBeVisible();
 
-    await page.goto('/raise/demo-project');
+    await page.goto('/raise/shifa');
     await expect(page.getByRole('tab', { name: 'روح', exact: true })).toBeVisible();
 
     await page.getByRole('button', { name: 'English' }).click();
     await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
     await expect(
-      page.getByRole('heading', { level: 1, name: 'Raising demo-project' }),
+      page.getByRole('heading', { level: 1, name: 'Raising Shifa Medical Store' }),
     ).toBeVisible();
+  });
+});
+
+test.describe('raise page', () => {
+  test('names the app in the heading and the browser tab title', async ({ page }) => {
+    await page.goto('/raise/iqra');
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Raising Iqra School Fees', exact: true }),
+    ).toBeVisible();
+    await expect(page).toHaveTitle('Raising Iqra School Fees · Afterlife');
+  });
+
+  test('an id that is not in the Graveyard is a 404', async ({ page }) => {
+    const res = await page.goto('/raise/does-not-exist');
+    expect(res?.status()).toBe(404);
+    await expect(page.getByRole('heading', { level: 1, name: 'No such app' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Back to the graveyard' })).toBeVisible();
   });
 });

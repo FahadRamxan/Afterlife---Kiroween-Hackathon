@@ -13,6 +13,7 @@ import {
 } from '@afterlife/ui';
 import type { ReactNode } from 'react';
 import { shifaMedicine, shifaStockDiff } from '../../lib/design-samples';
+import { findApp } from '../../lib/graveyard';
 
 export const metadata = { title: 'Design system · Afterlife' };
 
@@ -55,6 +56,9 @@ const SHIFA_MENU = [
 export default function DesignPage() {
   const medicine = shifaMedicine();
   const stock = shifaStockDiff();
+  // The demos use the real catalogue entry, so their years and place match the Graveyard.
+  const shifa = findApp('shifa')!;
+  const shifaTitle = `${shifa.name} v${shifa.version}`;
   return (
     // This page is English only. lang/dir keep it readable when the site is in Urdu (right to
     // left), where "A .DBF file as it really is." became ".A .DBF file as it really is".
@@ -116,12 +120,12 @@ export default function DesignPage() {
       <Section id="tombstone" title="Tombstone" meaning="A dead app that can be raised.">
         <Tombstone
           className="max-w-xs"
-          name="Shifa Medical Store v2.3"
-          born={1998}
-          died={2009}
+          name={shifaTitle}
+          born={shifa.born}
+          died={shifa.died}
           actions={<Button>Raise</Button>}
         >
-          Billing and stock for a pharmacy in Rawalpindi.
+          Billing and stock for a pharmacy in {shifa.place}.
         </Tombstone>
       </Section>
 
@@ -191,8 +195,8 @@ export default function DesignPage() {
 
       <Section id="certificate" title="CertificateFrame" meaning="The signed proof of rebirth.">
         <CertificateFrame title="Certificate of Rebirth" className="max-w-xl">
-          <p className="text-center">Shifa Medical Store v2.3</p>
-          <p className="text-center font-mono text-sm">Died 2009 · Reborn 2026</p>
+          <p className="text-center">{shifaTitle}</p>
+          <p className="text-center font-mono text-sm">Died {shifa.died} · Reborn 2026</p>
           <p className="mt-4 text-center font-mono text-sm">2,000 cases · 0 differences</p>
         </CertificateFrame>
       </Section>

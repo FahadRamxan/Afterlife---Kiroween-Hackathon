@@ -131,6 +131,28 @@ export function moveCell(
   }
 }
 
+/** The active cell kept inside the grid, for when `rows` shrinks below it. Empty grid: 0, 0. */
+export function clampCell(
+  at: { row: number; col: number },
+  size: { rows: number; cols: number },
+): { row: number; col: number } {
+  if (size.rows === 0 || size.cols === 0) return { row: 0, col: 0 };
+  const clamp = (v: number, max: number) => Math.max(0, Math.min(max - 1, v));
+  return { row: clamp(at.row, size.rows), col: clamp(at.col, size.cols) };
+}
+
+/**
+ * Where the grid's one tab stop is. The active cell, if its row is rendered. Otherwise (scrolled
+ * out of the virtual window, or an empty table) the grid itself, which moves focus to the cell.
+ */
+export function tabStop(
+  activeRow: number,
+  renderedRows: number[],
+  rowCount: number,
+): 'cell' | 'grid' {
+  return rowCount > 0 && renderedRows.includes(activeRow) ? 'cell' : 'grid';
+}
+
 /** A keyboard event as a GridKey, or null if the grid does not handle it. */
 export function gridKey(e: { key: string; ctrlKey: boolean; metaKey: boolean }): GridKey | null {
   const ctrl = e.ctrlKey || e.metaKey;

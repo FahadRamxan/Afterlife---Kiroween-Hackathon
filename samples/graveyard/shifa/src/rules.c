@@ -14,6 +14,7 @@ long rule_line_amount(long price, long qty, int *err)
 
 long rule_discount(long subtotal)
 {
+    /* LEGACY BUG 3: subtotal * 10 overflows a 32-bit long above Rs 21,47,483.64. */
     return subtotal > DISCOUNT_OVER ? subtotal * DISCOUNT_PERCENT / 100L : 0L;
 }
 

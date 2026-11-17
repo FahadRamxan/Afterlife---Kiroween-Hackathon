@@ -5,7 +5,7 @@ import { expect, test } from '@playwright/test';
 // Without it, every known route is checked. Prompt 89 extends this to all routes in both languages.
 const routes = (
   process.env.A11Y_ROUTES ??
-  '/,/graveyard,/raise/demo,/vessel/demo,/verify/demo,/playground,/design'
+  '/,/graveyard,/raise/shifa,/vessel/demo,/verify/demo,/playground,/design'
 )
   .split(',')
   .filter(Boolean);

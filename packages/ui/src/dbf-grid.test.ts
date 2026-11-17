@@ -6,9 +6,58 @@ import {
   columnWidth,
   fieldLabel,
   formatValue,
+  clampCell,
   moveCell,
+  tabStop,
   type GridKey,
 } from './dbf-grid';
+
+describe('clampCell (the active cell when rows change)', () => {
+  it('keeps a cell that is still inside the grid', () => {
+    expect(clampCell({ row: 3, col: 2 }, { rows: 10, cols: 5 })).toEqual({ row: 3, col: 2 });
+  });
+
+  it('moves to the last row when the table shrinks below the active row', () => {
+    expect(clampCell({ row: 39, col: 6 }, { rows: 5, cols: 7 })).toEqual({ row: 4, col: 6 });
+    expect(clampCell({ row: 3, col: 9 }, { rows: 5, cols: 4 })).toEqual({ row: 3, col: 3 });
+  });
+
+  it('is the first cell of an empty table', () => {
+    expect(clampCell({ row: 7, col: 3 }, { rows: 0, cols: 4 })).toEqual({ row: 0, col: 0 });
+  });
+
+  it('always lands inside the grid, and never moves a cell that was already inside', () => {
+    const cell = fc.record({ row: fc.nat(1000), col: fc.nat(50) });
+    const size = fc.record({
+      rows: fc.integer({ min: 1, max: 1000 }),
+      cols: fc.integer({ min: 1, max: 50 }),
+    });
+    fc.assert(
+      fc.property(cell, size, (at, s) => {
+        const c = clampCell(at, s);
+        expect(c.row).toBeGreaterThanOrEqual(0);
+        expect(c.row).toBeLessThan(s.rows);
+        expect(c.col).toBeGreaterThanOrEqual(0);
+        expect(c.col).toBeLessThan(s.cols);
+        if (at.row < s.rows && at.col < s.cols) expect(c).toEqual(at);
+      }),
+    );
+  });
+});
+
+describe('tabStop (exactly one tab stop)', () => {
+  it('is the active cell while its row is rendered', () => {
+    expect(tabStop(3, [0, 1, 2, 3, 4], 40)).toBe('cell');
+  });
+
+  it('is the grid itself when the active row is scrolled out of the rendered window', () => {
+    expect(tabStop(0, [30, 31, 32, 33], 40)).toBe('grid');
+  });
+
+  it('is the grid itself when the table is empty', () => {
+    expect(tabStop(0, [], 0)).toBe('grid');
+  });
+});
 
 const F: DbfField[] = [
   { name: 'CODE', type: 'C', length: 6, decimals: 0 },

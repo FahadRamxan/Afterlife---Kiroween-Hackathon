@@ -29,6 +29,13 @@ test.describe('/design', () => {
     ).toHaveAttribute('aria-valuenow', '1284');
   });
 
+  test('the Shifa demos use the catalogue years (1998 to 2004)', async ({ page }) => {
+    await expect(page.getByTestId('ds-tombstone')).toContainText('1998–2004');
+    await expect(page.getByTestId('ds-certificate')).toContainText('Died 2004');
+    await expect(page.getByTestId('ds-tombstone')).toContainText('Satellite Town, Rawalpindi');
+    await expect(page.locator('main')).not.toContainText('2009');
+  });
+
   for (const s of sections) {
     test(`snapshot: ${s}`, async ({ page }) => {
       await expect(page.getByTestId(`ds-${s}`)).toHaveScreenshot(`${s}.png`, {

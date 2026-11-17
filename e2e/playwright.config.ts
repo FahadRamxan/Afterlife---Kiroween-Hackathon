@@ -22,7 +22,18 @@ export default defineConfig({
     timeout: process.env.CI ? 5_000 : 15_000,
     toHaveScreenshot: { maxDiffPixelRatio: 0.01 },
   },
-  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  // Local runs open every route once first (warmup.setup.ts), so `next dev` does not compile them
+  // all at once under 10 workers. A deployed site (BASE_URL) is already built.
+  projects: remote
+    ? [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }]
+    : [
+        { name: 'warmup', testMatch: 'warmup.setup.ts' },
+        {
+          name: 'chromium',
+          use: { ...devices['Desktop Chrome'] },
+          dependencies: ['warmup'],
+        },
+      ],
   webServer: remote
     ? undefined
     : [

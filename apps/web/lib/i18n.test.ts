@@ -69,4 +69,10 @@ describe('messages', () => {
     expect(ur.nav.graveyard).toMatch(/[\u0600-\u06FF]/);
     expect(ur.home.tagline).toMatch(/[\u0600-\u06FF]/);
   });
+
+  it('no message lost its characters to a bad encoding ("??" or U+FFFD)', () => {
+    for (const v of [...values(en), ...values(ur)]) {
+      expect(v as string).not.toMatch(/\?\?|\uFFFD/);
+    }
+  });
 });

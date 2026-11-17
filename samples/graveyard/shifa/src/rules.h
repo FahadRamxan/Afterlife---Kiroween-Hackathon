@@ -19,7 +19,9 @@ typedef struct {
 
 /* price * qty. Sets *err when qty is negative or the amount does not fit N(10,2). */
 long rule_line_amount(long price, long qty, int *err);
-/* 10% of the subtotal, truncated, when the subtotal is over Rs 5,000. Otherwise 0. */
+/* 10% of the subtotal, truncated, when the subtotal is over Rs 5,000. Otherwise 0.
+ * LEGACY BUG 3, kept on purpose: subtotal * 10 is a long, so above Rs 21,47,483.64 it wraps around
+ * on DOS (32-bit long) and the discount comes out wrong, even negative. */
 long rule_discount(long subtotal);
 /* 17% of the amount, truncated to the paisa. */
 long rule_gst(long taxable);
