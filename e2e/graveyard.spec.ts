@@ -1,0 +1,106 @@
+import { expect, test } from '@playwright/test';
+
+const apps = [
+  { id: 'shifa', name: 'Shifa Medical Store', years: '1998–2004', screen: 'SHIFA MEDICAL STORE' },
+  { id: 'iqra', name: 'Iqra School Fees', years: '2001–2006', screen: 'IQRA SCHOOL FEES' },
+  {
+    id: 'barkat',
+    name: 'Barkat Kiryana Ledger',
+    years: '1996–2001',
+    screen: 'BARKAT KIRYANA LEDGER',
+  },
+];
+
+test.describe('/graveyard', () => {
+  test('shows one tombstone per dead app, with years, story and preview', async ({ page }) => {
+    await page.goto('/graveyard');
+    await expect(page.getByRole('heading', { level: 1, name: 'The Graveyard' })).toBeVisible();
+    const stones = page.getByTestId('tombstone');
+    await expect(stones).toHaveCount(3);
+    for (const [i, app] of apps.entries()) {
+      const stone = stones.nth(i);
+      await expect(stone.getByRole('heading', { name: app.name })).toBeVisible();
+      await expect(stone).toContainText(app.years);
+      await expect(stone.getByTestId('story')).not.toBeEmpty();
+      const crt = stone.getByRole('region', { name: new RegExp(`${app.name}.*dormant`) });
+      await expect(crt).toBeVisible();
+      await expect(crt).toContainText(app.screen);
+    }
+    await expect(page.getByText(/written by our team/)).toBeVisible();
+  });
+
+  for (const app of apps) {
+    test(`Raise ${app.id} opens /raise/${app.id}`, async ({ page }) => {
+      await page.goto('/graveyard');
+      await page.getByRole('link', { name: `Raise ${app.name}` }).click();
+      await expect(page).toHaveURL(new RegExp(`/raise/${app.id}$`));
+      await expect(
+        page.getByRole('heading', { level: 1, name: `Raising ${app.id}` }),
+      ).toBeVisible();
+    });
+  }
+
+  test('the upload card takes a zip and refuses anything else', async ({ page }) => {
+    await page.goto('/graveyard');
+    const card = page.getByTestId('upload-card');
+    await expect(card.getByRole('heading', { name: 'Upload your own dead app' })).toBeVisible();
+    const input = card.getByLabel('Choose a zip with the EXE and DBF files');
+
+    await input.setInputFiles({
+      name: 'myapp.exe',
+      mimeType: 'application/octet-stream',
+      buffer: Buffer.from('MZ'),
+    });
+    await expect(card.getByRole('alert')).toContainText('Choose a .zip file');
+
+    await input.setInputFiles({
+      name: 'myapp.zip',
+      mimeType: 'application/zip',
+      buffer: Buffer.from('PK\x03\x04'),
+    });
+    await expect(card.getByRole('status')).toContainText('myapp.zip');
+    await expect(card.getByRole('status')).toContainText('not uploaded yet');
+  });
+
+  test('works at 360 px wide: one column, no sideways scroll', async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 740 });
+    await page.goto('/graveyard');
+    const stones = page.getByTestId('tombstone');
+    await expect(stones).toHaveCount(3);
+    const [a, b] = [await stones.nth(0).boundingBox(), await stones.nth(1).boundingBox()];
+    expect(b!.y).toBeGreaterThan(a!.y + a!.height - 1); // stacked, not side by side
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - window.innerWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+
+  test('the dormant fog drifts, and stops under reduced motion', async ({ browser }) => {
+    for (const [motion, expected] of [
+      ['no-preference', 'fog-drift'],
+      ['reduce', 'none'],
+    ] as const) {
+      const ctx = await browser.newContext({ reducedMotion: motion });
+      const page = await ctx.newPage();
+      await page.goto('/graveyard');
+      const name = await page
+        .locator('.graveyard-fog')
+        .first()
+        .evaluate((el) => getComputedStyle(el).animationName);
+      expect(name, motion).toBe(expected);
+      await ctx.close();
+    }
+  });
+
+  test('in Urdu the page and the Raise buttons are translated', async ({ page, context }) => {
+    await context.addCookies([
+      { name: 'afterlife-locale', value: 'ur', url: 'http://localhost:3000' },
+    ]);
+    await page.goto('/graveyard');
+    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+    await expect(page.getByRole('heading', { level: 1, name: 'قبرستان' })).toBeVisible();
+    await expect(page.getByRole('link', { name: /زندہ کریں/ })).toHaveCount(3);
+    // The era stories are English data, so they are marked as English for screen readers.
+    await expect(page.getByTestId('story').first()).toHaveAttribute('lang', 'en');
+  });
+});

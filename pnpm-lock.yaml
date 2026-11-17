@@ -102,6 +102,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@afterlife/emulator':
+        specifier: workspace:^
+        version: link:../../packages/emulator
       '@afterlife/ui':
         specifier: workspace:^
         version: link:../../packages/ui

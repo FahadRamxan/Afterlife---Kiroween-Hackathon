@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 import { cn } from './cn';
 
-export type TombstoneProps = {
+export type TombstoneProps = Omit<HTMLAttributes<HTMLElement>, 'children'> & {
   name: string;
   born: number;
   died: number;
@@ -13,9 +13,18 @@ export type TombstoneProps = {
 };
 
 /** A dead app in the Graveyard. The arch shape means "this software is dead and can be raised". */
-export function Tombstone({ name, born, died, children, actions, className }: TombstoneProps) {
+export function Tombstone({
+  name,
+  born,
+  died,
+  children,
+  actions,
+  className,
+  ...rest
+}: TombstoneProps) {
   return (
     <article
+      {...rest}
       className={cn(
         'flex flex-col items-center gap-3 rounded-t-full border border-bone/25 bg-gradient-to-b from-[#1b201c] to-graveyard px-6 pt-14 pb-6 text-center text-bone',
         className,

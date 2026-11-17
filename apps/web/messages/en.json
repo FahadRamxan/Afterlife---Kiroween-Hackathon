@@ -19,8 +19,21 @@
   },
   "graveyard": {
     "title": "The Graveyard",
-    "emptyTitle": "No dead apps yet",
-    "emptyBody": "The sample DOS apps from the 1990s will rest here soon."
+    "subtitle": "Dead DOS business apps. No source code, no developer, just the .exe and its data files.",
+    "raise": "Raise",
+    "raiseApp": "Raise {name}",
+    "preview": "{name} ({year}), first screen, dormant",
+    "upload": {
+      "title": "Upload your own dead app",
+      "body": "A zip with the DOS program (EXE or COM) and its DBF data files, up to 20 MB.",
+      "choose": "Choose a zip with the EXE and DBF files",
+      "chosen": "{name} is ready, but not uploaded yet: uploading arrives in a later build.",
+      "errors": {
+        "not-zip": "Choose a .zip file.",
+        "empty": "That file is empty.",
+        "too-big": "That file is over 20 MB."
+      }
+    }
   },
   "raise": {
     "title": "Raising {projectId}",

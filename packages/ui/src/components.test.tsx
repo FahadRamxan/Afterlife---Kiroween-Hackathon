@@ -57,6 +57,16 @@ describe('Tombstone', () => {
   });
 });
 
+describe('Tombstone attributes', () => {
+  it('passes extra attributes (test ids, aria) to the article', () => {
+    const out = html(
+      <Tombstone name="X" born={1990} died={1991} data-testid="tombstone" aria-label="X" />,
+    );
+    expect(out).toContain('data-testid="tombstone"');
+    expect(out).toContain('aria-label="X"');
+  });
+});
+
 describe('CRTFrame', () => {
   it('marks itself as the live legacy screen and has scanlines', () => {
     const out = html(<CRTFrame label="Shifa 1998">C:\&gt;</CRTFrame>);
