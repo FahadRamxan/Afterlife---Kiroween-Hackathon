@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "pbt-on-oracle-change",
+      "trigger": "PostFileSave",
+      "description": "When a file in packages/oracle or packages/vessel is saved, run their property-based test suites.",
+      "matcher": "packages[\\\\/](oracle|vessel)[\\\\/]",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/run.mjs pbt-on-oracle-change",
+        "timeout": 600
+      }
+    }
+  ]
+}
