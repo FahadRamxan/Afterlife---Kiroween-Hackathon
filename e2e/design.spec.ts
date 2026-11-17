@@ -9,6 +9,7 @@ const sections = [
   'crt',
   'dbftable',
   'dbfdiff',
+  'decoder',
   'diff',
   'candle',
   'certificate',
@@ -27,6 +28,16 @@ test.describe('/design', () => {
     await expect(
       page.getByRole('progressbar', { name: 'Proof cases', exact: true }),
     ).toHaveAttribute('aria-valuenow', '1284');
+  });
+
+  test('the screen decoder reads the recorded Shifa frame exactly', async ({ page }) => {
+    const section = page.getByTestId('ds-decoder');
+    await expect(section.getByRole('img', { name: /Shifa main menu, recorded run/ })).toBeVisible();
+    const text = section.getByLabel('Decoded text');
+    await expect(text).toContainText('SHIFA MEDICAL STORE  v2.3');
+    await expect(text).toContainText('1  New Bill');
+    await expect(text).toContainText('15/07/98');
+    await expect(section.getByTestId('decoder-stats')).toContainText('2,000 cells read, 0 unknown');
   });
 
   test('the Shifa demos use the catalogue years (1998 to 2004)', async ({ page }) => {
