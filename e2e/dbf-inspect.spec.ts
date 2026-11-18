@@ -3,6 +3,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
+import { writeDbf } from '@afterlife/dbf';
 import { zipSync } from 'fflate';
 
 const DIST = resolve(__dirname, '../samples/graveyard/dist/shifa');
@@ -81,13 +82,78 @@ test.describe('upload card: DBF inspector', () => {
     await expect(card.getByRole('alert')).toHaveText('The zip has no DBF data files.');
   });
 
-  test("shows the API's reason for a DBF it cannot read", async ({ page }) => {
-    const card = await upload(page, 'broken.zip', {
+  test('one broken or empty DBF shows its reason in its place, and the others still show', async ({
+    page,
+  }) => {
+    const card = await upload(page, 'shop.zip', {
       'SHIFA.EXE': file('SHIFA.EXE'),
-      'BROKEN.DBF': file('SHIFA.EXE'),
+      'DATA/BROKEN.DBF': file('SHIFA.EXE'),
+      'DATA/TEMP0001.DBF': new Uint8Array(0),
+      'DATA/MEDICINE.DBF': file('MEDICINE.DBF'),
     });
-    await expect(card.getByRole('alert')).toContainText(
-      'The tables could not be read: BROKEN.DBF: Not a supported .DBF version byte',
+    await expect(card.getByRole('grid', { name: 'DATA/MEDICINE.DBF (40 records)' })).toBeVisible();
+    const unread = card.getByTestId('unread-file');
+    await expect(unread).toHaveCount(2);
+    await expect(unread.nth(0)).toContainText('DATA/BROKEN.DBF');
+    await expect(unread.nth(0)).toContainText(
+      'This file could not be read: Not a supported .DBF version byte',
+    );
+    await expect(unread.nth(1)).toContainText('DATA/TEMP0001.DBF');
+    await expect(unread.nth(1)).toContainText('A .DBF needs at least 33 bytes, got 0');
+  });
+
+  test('years of bill lines preview fine: only the first 100 records are sent', async ({
+    page,
+  }) => {
+    // 600,000 bill lines of 41 bytes: about 25 MB, over the 20 MB the API takes.
+    const lines = writeDbf({
+      fields: [
+        { name: 'BILL_NO', type: 'C', length: 9, decimals: 0 },
+        { name: 'LINE', type: 'N', length: 2, decimals: 0 },
+        { name: 'CODE', type: 'C', length: 6, decimals: 0 },
+        { name: 'QTY', type: 'N', length: 5, decimals: 0 },
+        { name: 'PRICE', type: 'N', length: 8, decimals: 2 },
+        { name: 'AMOUNT', type: 'N', length: 10, decimals: 2 },
+      ],
+      records: Array.from({ length: 600_000 }, (_, i) => ({
+        deleted: false,
+        values: {
+          BILL_NO: '9807-0001',
+          LINE: String(i % 99),
+          CODE: 'PAN500',
+          QTY: '1',
+          PRICE: '12.50',
+          AMOUNT: '12.50',
+        },
+      })),
+    });
+    expect(lines.length).toBeGreaterThan(20 * 1024 * 1024);
+    const sent: number[] = [];
+    page.on('request', (r) => {
+      if (r.url().endsWith('/api/dbf/inspect')) sent.push(r.postDataBuffer()?.length ?? 0);
+    });
+    const card = await upload(page, 'shifa-years.zip', {
+      'SHIFA.EXE': file('SHIFA.EXE'),
+      'BILLITEM.DBF': lines,
+    });
+    await expect(card.getByRole('grid', { name: 'BILLITEM.DBF (600,000 records)' })).toBeVisible({
+      timeout: 30_000,
+    });
+    await expect(card).toContainText('Showing the first 100 of 600000 records.');
+    expect(sent).toHaveLength(1);
+    expect(sent[0]).toBeLessThan(64 * 1024);
+  });
+
+  test('a folder with more than 50 DBFs previews the first 50 and says how many were left out', async ({
+    page,
+  }) => {
+    const entries: Record<string, Uint8Array> = { 'SHIFA.EXE': file('SHIFA.EXE') };
+    for (let i = 0; i < 53; i++)
+      entries[`T${String(i).padStart(2, '0')}.DBF`] = file('CUSTOMER.DBF');
+    const card = await upload(page, 'many.zip', entries);
+    await expect(card.getByRole('grid')).toHaveCount(50, { timeout: 30_000 });
+    await expect(card).toContainText(
+      '3 more DBF files were not previewed: the first 50 are shown.',
     );
   });
 

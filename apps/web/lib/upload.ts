@@ -1,4 +1,4 @@
-import type { InspectedTable } from '@afterlife/dbf';
+import { dbfPreviewBytes, type InspectedTable } from '@afterlife/dbf';
 import { unzipSync } from 'fflate';
 
 /** The inspect API refuses anything larger, so the browser checks first. */
@@ -55,38 +55,52 @@ export function inspectUrl(base: string | undefined): string | null {
   return `${base.replace(/\/+$/, '')}/api/dbf/inspect`;
 }
 
-export type InspectedFile = InspectedTable & { file: string };
+/** One DBF of the preview: its table, or why it could not be read. `file` is its path in the zip. */
+export type InspectedFile =
+  | (InspectedTable & { file: string; ok: true })
+  | { file: string; ok: false; code: string; message: string };
 
 /** `message: null` means the API could not be reached. */
 export type InspectResult =
-  { ok: true; tables: InspectedFile[] } | { ok: false; message: string | null };
+  { ok: true; files: InspectedFile[]; leftOut: number } | { ok: false; message: string | null };
+
+/** The API takes at most this many files at once; a bigger folder previews its first ones. */
+export const MAX_PREVIEW_FILES = 50;
+/** Records per table in the preview. */
+const PREVIEW_ROWS = 100;
 
 const fileName = (path: string) => path.split('/').pop() ?? path;
 
-/** Sends the DBF files to POST /api/dbf/inspect. Never throws. */
+/**
+ * Sends the DBF files to POST /api/dbf/inspect: at most the first 50, each cut to its header and
+ * first 100 records (years of bill lines are megabytes, and the preview shows 100). Never throws.
+ */
 export async function postInspect(
   base: string,
   dbfs: DbfUpload[],
   fetcher: typeof fetch = fetch,
 ): Promise<InspectResult> {
+  const sent = dbfs.slice(0, MAX_PREVIEW_FILES);
   const form = new FormData();
-  for (const d of dbfs) form.append('files', new Blob([d.bytes as BlobPart]), fileName(d.name));
+  form.append('cut', String(PREVIEW_ROWS));
+  for (const d of sent)
+    form.append(
+      'files',
+      new Blob([dbfPreviewBytes(d.bytes, PREVIEW_ROWS) as BlobPart]),
+      fileName(d.name),
+    );
   try {
     const res = await fetcher(inspectUrl(base)!, { method: 'POST', body: form });
-    const body = (await res.json()) as {
-      tables?: InspectedFile[];
-      file?: string;
-      message?: string;
-    };
+    const body = (await res.json()) as { files?: InspectedFile[]; message?: string };
     // The API keeps only the file name and answers in the order the files were sent, so each
-    // table gets back its path in the zip: DATA/MEDICINE.DBF and BACKUP/MEDICINE.DBF stay apart.
-    if (res.ok && body.tables)
+    // file gets back its path in the zip: DATA/MEDICINE.DBF and BACKUP/MEDICINE.DBF stay apart.
+    if (res.ok && body.files)
       return {
         ok: true,
-        tables: body.tables.map((t, i) => ({ ...t, file: dbfs[i]?.name ?? t.file })),
+        files: body.files.map((t, i) => ({ ...t, file: sent[i]?.name ?? t.file })),
+        leftOut: dbfs.length - sent.length,
       };
-    const why = body.message ?? `The API answered ${res.status}`;
-    return { ok: false, message: body.file ? `${body.file}: ${why}` : why };
+    return { ok: false, message: body.message ?? `The API answered ${res.status}` };
   } catch {
     return { ok: false, message: null };
   }

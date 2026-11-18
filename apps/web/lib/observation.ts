@@ -23,14 +23,39 @@ const show = (v: unknown) => (v === null || v === '' ? '(blank)' : String(v));
 
 /**
  * What a finished "replay N times" says. Only when every run finished can it call them identical:
- * if one failed, the runs that did finish prove nothing.
+ * if one failed, the runs that did finish prove nothing. Nor do runs that left the data as it was
+ * before (`before`): if every key were lost, the "same result" would be the starting data.
  */
-export function replayVerdict(hashes: string[], total: number): { ok: boolean; text: string } {
+export function replayVerdict(
+  hashes: string[],
+  total: number,
+  before?: string,
+): { ok: boolean; text: string } {
   if (hashes.length < total)
     return { ok: false, text: `Only ${hashes.length} of ${total} runs finished.` };
-  return hashes.every((h) => h === hashes[0])
-    ? { ok: true, text: `${total} of ${total} runs gave identical data files.` }
-    : { ok: false, text: 'The runs gave different data files: not repeatable.' };
+  if (!hashes.every((h) => h === hashes[0]))
+    return { ok: false, text: 'The runs gave different data files: not repeatable.' };
+  if (before !== undefined && hashes[0] === before)
+    return { ok: false, text: 'The keys changed no data, so the runs prove nothing.' };
+  return { ok: true, text: `${total} of ${total} runs gave identical data files.` };
+}
+
+const records = (n: number) => `${n} record${n === 1 ? '' : 's'}`;
+
+/** The tables whose record count differs, in name order: "BILLS.DBF: 3 → 4 records". */
+export function recordCountChanges(
+  before: Record<string, number>,
+  after: Record<string, number>,
+): string[] {
+  const names = [...new Set([...Object.keys(before), ...Object.keys(after)])].sort();
+  return names.flatMap((n) => {
+    const a = before[n];
+    const b = after[n];
+    if (a === b) return [];
+    if (a === undefined) return [`${n}: new, ${records(b!)}`];
+    if (b === undefined) return [`${n}: gone (was ${records(a)})`];
+    return [`${n}: ${a} → ${records(b)}`];
+  });
 }
 
 /** An observation in words, for the live emulator panel. Tables in name order. */

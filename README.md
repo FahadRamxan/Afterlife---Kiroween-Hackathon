@@ -85,4 +85,4 @@ All shots are in [docs/screenshots](docs/screenshots).
 
 ## License
 
-MIT, Matrix AE.
+MIT, Matrix AE. The site also serves js-dos (GPL-2.0, used unmodified) and open fonts: see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

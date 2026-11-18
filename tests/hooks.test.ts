@@ -142,7 +142,9 @@ describe('scripts/hooks/run.mjs (Prompt 7)', () => {
   });
 });
 
-describe('scripts/hooks/run.mjs with real Kiro paths (review fix)', () => {
+// These tests start a real Vitest run of a package (FC_NUM_RUNS=2000 in ci:local), which takes
+// longer than the 5 s default when the machine is busy.
+describe('scripts/hooks/run.mjs with real Kiro paths (review fix)', { timeout: 60_000 }, () => {
   // Uses the real repo path, which has spaces in "Matrix AE Hackathons" but not in other clones
   // (the Crew nightly runs in C:\dev\afterlife-nightly). Paths with spaces are pinned in
   // tests/hooks-lib.test.ts with a fixed root, so this must not depend on where the repo lives.

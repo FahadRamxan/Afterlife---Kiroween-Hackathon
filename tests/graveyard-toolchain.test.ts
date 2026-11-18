@@ -24,7 +24,16 @@ describe('toolchain image (Prompt 11)', () => {
     expect(sh).toContain('cycles=fixed 20000');
     expect(sh).not.toMatch(/^cycles=max/m);
     expect(sh).toContain('faketime');
-    expect(sh).toMatch(/timeout 120 /);
+    expect(sh).toMatch(/DOSBOX_TIMEOUT:-120/);
+  });
+
+  it('retries a run that hangs once, from a fresh copy of its folder, and says so', () => {
+    // DOSBox hung about once in 300 runs in the Prompts 21 to 30 review. The behaviour itself is
+    // checked inside the toolchain image (docs/progress.md, row "fix" for prompts 21 to 30).
+    const sh = read('toolchain/run-dos.sh');
+    expect(sh).toMatch(/cp -a "\$dir\/\." "\$fresh\/"/);
+    expect(sh).toMatch(/retrying once from a fresh copy/);
+    expect(sh.match(/attempt [12]/g)?.length ?? 0).toBeGreaterThan(0);
   });
 
   it('includes DOSBox to run the EXEs and gcc for host tests', () => {

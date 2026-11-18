@@ -43,7 +43,9 @@
       "unconfigured": "The API is not configured, so the tables cannot be previewed.",
       "tableCaption": "{file} ({count, plural, one {# record} other {# records}})",
       "moreRows": "Showing the first {shown} of {total} records.",
-      "notStored": "Nothing is stored. Raising an uploaded app comes in a later build."
+      "notStored": "Nothing is stored. Raising an uploaded app comes in a later build.",
+      "unreadable": "This file could not be read:",
+      "leftOut": "{count, plural, one {# more DBF file was} other {# more DBF files were}} not previewed: the first {shown} are shown."
     }
   },
   "raise": {

@@ -19,7 +19,10 @@ export type DbfRecord = { deleted: boolean; values: Record<string, DbfValue> };
 export type DbfDate = { year: number; month: number; day: number };
 
 export type DbfHeader = {
-  /** 0x03 dBASE III (and Clipper), 0x83 dBASE III with memo, 0xF5 FoxPro 2.x with memo. */
+  /**
+   * 0x03 dBASE III (and Clipper), 0x83 dBASE III with memo, 0x8B dBASE IV with memo, 0xF5 FoxPro
+   * 2.x with memo, 0xFB FoxBASE+.
+   */
   version: number;
   lastUpdate: DbfDate;
   recordCount: number;

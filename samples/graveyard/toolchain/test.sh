@@ -13,6 +13,8 @@ cd /graveyard
 NEW=$(mktemp -d)
 T=$(mktemp -d)
 toolchain/tools/build-tools.sh "$T"
+# run-dos.sh retries a hung DOSBox run once (checked with a stand-in dosbox, no real DOS).
+bash toolchain/retry-test.sh
 fail() { echo "FAIL: $*"; exit 1; }
 
 # */test also matches toolchain/test, so remove duplicates.

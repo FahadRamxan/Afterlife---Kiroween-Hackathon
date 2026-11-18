@@ -17,7 +17,13 @@ export {
   type TableDiff,
   type TableSnapshot,
 } from './diff';
-export { INSPECT_ROWS, inspectDbf, type InspectedTable } from './inspect';
+export {
+  INSPECT_ROWS,
+  dbfPreviewBytes,
+  inspectDbf,
+  type InspectOptions,
+  type InspectedTable,
+} from './inspect';
 export { readDbf } from './reader';
 export { writeDbf } from './writer';
 export {

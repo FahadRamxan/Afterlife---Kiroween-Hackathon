@@ -131,30 +131,50 @@ function Preview({ inspect }: { inspect: InspectResult | 'reading' | 'unconfigur
     );
   return (
     <div className="space-y-4" data-testid="upload-preview" data-upload-preview>
-      {inspect.tables.map((table, i) => (
+      {inspect.files.map((f, i) =>
         // The index too: a zip can hold the same path twice.
-        <section key={`${i}:${table.file}`} className="min-w-0 space-y-1">
-          <h3 dir="ltr" className="font-mono text-sm text-bone">
-            {t('tableCaption', { file: table.file, count: table.recordCount })}
-          </h3>
-          <DbfTable
-            caption={t('tableCaption', { file: table.file, count: table.recordCount })}
-            fields={table.fields}
-            records={table.rows}
-            height={220}
-          />
-          {table.moreRows > 0 ? (
-            <p className="text-xs text-bone/75">
-              {t('moreRows', { shown: table.rows.length, total: table.recordCount })}
+        f.ok ? (
+          <section key={`${i}:${f.file}`} className="min-w-0 space-y-1">
+            <h3 dir="ltr" className="font-mono text-sm text-bone">
+              {t('tableCaption', { file: f.file, count: f.recordCount })}
+            </h3>
+            <DbfTable
+              caption={t('tableCaption', { file: f.file, count: f.recordCount })}
+              fields={f.fields}
+              records={f.rows}
+              height={220}
+            />
+            {f.moreRows > 0 ? (
+              <p className="text-xs text-bone/75">
+                {t('moreRows', { shown: f.rows.length, total: f.recordCount })}
+              </p>
+            ) : null}
+            {f.warnings.map((w) => (
+              <p key={w.message} className="text-xs text-candle" dir="ltr" lang="en">
+                {w.message}
+              </p>
+            ))}
+          </section>
+        ) : (
+          // One broken file shows its reason here; the other tables still show.
+          <section key={`${i}:${f.file}`} className="space-y-1" data-testid="unread-file">
+            <h3 dir="ltr" className="font-mono text-sm text-bone">
+              {f.file}
+            </h3>
+            <p className="text-sm text-blood">
+              {t('unreadable')}{' '}
+              <span dir="ltr" lang="en">
+                {f.message}
+              </span>
             </p>
-          ) : null}
-          {table.warnings.map((w) => (
-            <p key={w.message} className="text-xs text-candle" dir="ltr" lang="en">
-              {w.message}
-            </p>
-          ))}
-        </section>
-      ))}
+          </section>
+        ),
+      )}
+      {inspect.leftOut > 0 ? (
+        <p className="text-sm text-candle">
+          {t('leftOut', { count: inspect.leftOut, shown: inspect.files.length })}
+        </p>
+      ) : null}
       <p className="text-xs text-bone/75">{t('notStored')}</p>
     </div>
   );
