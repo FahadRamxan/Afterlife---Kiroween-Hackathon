@@ -1,1 +1,1 @@
-export const packageName = '@afterlife/mcp-emulator';
+export { createEmulatorServer, type AppSource, type ServerOptions } from './server';

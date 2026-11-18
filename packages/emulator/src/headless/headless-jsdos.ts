@@ -1,5 +1,6 @@
 /// <reference lib="dom" />
-// HeadlessJsDos (Prompt 28): the same js-dos and the same BrowserJsDos logic as the web app, in a
+// HeadlessJsDos (Prompt 28; moved here from apps/worker in Prompt 32 so the MCP server can use it):
+// the same js-dos and the same BrowserJsDos logic as the web app, in a
 // headless Chromium page. Only js-dos runs in the page; each js-dos call crosses page.evaluate.
 import { readFileSync, realpathSync } from 'node:fs';
 import { createRequire } from 'node:module';
@@ -10,7 +11,7 @@ import {
   type JsDosCi,
   type JsDosEmulators,
   type JsDosFsNode,
-} from '@afterlife/emulator';
+} from '../browser-jsdos';
 import { chromium, type Browser, type Page } from 'playwright';
 import { Pool } from './pool';
 

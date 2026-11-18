@@ -1,7 +1,7 @@
 // A small pool with a hard limit (Prompt 28): at most `size` emulators run at once, the rest
 // wait in turn. Items are never reused: each one is destroyed on release, so every run starts
 // from a fresh boot.
-import { MAX_CYCLES, MIN_CYCLES } from '@afterlife/emulator';
+import { MAX_CYCLES, MIN_CYCLES } from '../controller';
 import { z } from 'zod';
 
 export class PoolClosedError extends Error {

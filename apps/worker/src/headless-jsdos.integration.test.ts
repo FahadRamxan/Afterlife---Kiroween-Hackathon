@@ -9,7 +9,7 @@ import { controllerContract } from '@afterlife/emulator/contract';
 import { decodeScreen, gridText } from '@afterlife/screen';
 import { chromium, type Browser } from 'playwright';
 import { afterAll, describe, expect, it, vi } from 'vitest';
-import { HeadlessJsDos, HeadlessPool, openJsDosPage } from './headless-jsdos';
+import { HeadlessJsDos, HeadlessPool, openJsDosPage } from '@afterlife/emulator/headless';
 
 // Booting a real emulator takes a second or two; a bill takes a few more.
 vi.setConfig({ testTimeout: 90_000 });

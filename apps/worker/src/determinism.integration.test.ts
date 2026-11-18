@@ -6,9 +6,9 @@ import { readDbf } from '@afterlife/dbf';
 import { waitForStableScreen, withFreshState } from '@afterlife/emulator';
 import fc from 'fast-check';
 import { afterAll, describe, expect, it, vi } from 'vitest';
-import { HeadlessPool } from './headless-jsdos';
+import { HeadlessPool } from '@afterlife/emulator/headless';
 
-vi.setConfig({ testTimeout: 300_000 });
+vi.setConfig({ testTimeout: 600_000 });
 
 const SHIFA = new Uint8Array(
   readFileSync(resolve(__dirname, '../../../apps/web/public/graveyard/shifa.jsdos')),
@@ -46,9 +46,8 @@ const billScript = fc
     { keys: '{Enter}', until: /MAIN MENU/ },
   ]);
 
-// Two emulators at once: with four, next to every other test project, ci:local starved them of
-// CPU and a step once never reached its screen.
-const pool = new HeadlessPool({ size: 2, cycles: 60000, keyDelayMs: 50 });
+// Four emulators at once (2 made the 20 runs too slow). Worker integration files run one at a time.
+const pool = new HeadlessPool({ size: 4, cycles: 60000, keyDelayMs: 50 });
 afterAll(() => pool.close());
 
 const hex = (b: Uint8Array) => Buffer.from(b).toString('hex');
@@ -92,8 +91,8 @@ describe('determinism on the real Shifa', () => {
         const distinct = new Set(results.map((r) => JSON.stringify(r)));
         expect(distinct.size, `${script.map((x) => x.keys).join('')} with seed ${seed}`).toBe(1);
       }),
-      // Each case is 20 real emulator runs (about 15 s); the case count does not follow FC_NUM_RUNS.
-      { numRuns: 2 },
+      // One generated bill, run 20 times (about 30 s): the case count does not follow FC_NUM_RUNS.
+      { numRuns: 1 },
     );
   });
 

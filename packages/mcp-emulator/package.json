@@ -7,9 +7,23 @@
   "types": "./src/index.ts",
   "scripts": {
     "test": "vitest run --passWithNoTests",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "start": "tsx src/main.ts"
   },
   "devDependencies": {
+    "@types/node": "^22",
+    "fast-check": "^4.10.2",
+    "tsx": "^4.23.15",
     "vitest": "^5.1.0"
+  },
+  "dependencies": {
+    "@afterlife/dbf": "workspace:^",
+    "@afterlife/emulator": "workspace:^",
+    "@afterlife/screen": "workspace:^",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^4.6.7"
+  },
+  "exports": {
+    ".": "./src/index.ts"
   }
 }

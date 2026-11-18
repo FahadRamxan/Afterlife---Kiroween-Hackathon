@@ -106,7 +106,8 @@ describe('.kiro/hooks files (Prompt 7)', () => {
   });
 });
 
-describe('scripts/hooks/run.mjs (Prompt 7)', () => {
+// The hook runs a real Vitest run of the saved file's package: 60 s, like the block below.
+describe('scripts/hooks/run.mjs (Prompt 7)', { timeout: 60_000 }, () => {
   it('rejects an unknown hook name', () => {
     expect(runHook('nope', {}).status).toBe(2);
   });
