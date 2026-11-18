@@ -1,6 +1,13 @@
 'use client';
 
-import { KeyParseError, recordAction } from '@afterlife/emulator';
+import { snapshot } from '@afterlife/dbf';
+import {
+  KeyParseError,
+  recordAction,
+  waitForStableScreen,
+  withFreshState,
+  type EmulatorController,
+} from '@afterlife/emulator';
 import { ScreenDecodeError, analyzeScreen, decodeScreen, type ScreenGrid } from '@afterlife/screen';
 import { Button, CrtScreen, DiffBadge } from '@afterlife/ui';
 import { useEffect, useId, useState } from 'react';
@@ -8,6 +15,22 @@ import { summarizeObservation, type ObservationSummary } from '../lib/observatio
 import { useEmulator } from '../lib/use-emulator';
 
 type Props = { bundle: string; name: string; dosTime: string };
+
+const REPLAYS = 3;
+
+/** A short id of every .DBF on drive C: (SHA-256 of each file, from the DBF snapshot). */
+async function dataHash(e: EmulatorController): Promise<string> {
+  const names = (await e.listFiles()).filter((f) => f.endsWith('.DBF'));
+  const snap = await snapshot(
+    Object.fromEntries(await Promise.all(names.map(async (n) => [n, await e.readFile(n)]))),
+  );
+  const all = names.map((n) => snap.tables[n]!.hash).join('');
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(all));
+  return [...new Uint8Array(digest)]
+    .slice(0, 6)
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
 
 /**
  * The real old app running in js-dos in this page. Its screen is read back with decodeScreen
@@ -23,6 +46,8 @@ export function LiveEmulator({ bundle, name, dosTime }: Props) {
   const [files, setFiles] = useState<{ name: string; size: number }[] | null>(null);
   const [observed, setObserved] = useState<ObservationSummary | null>(null);
   const [recording, setRecording] = useState(false);
+  const [replays, setReplays] = useState<string[] | null>(null);
+  const [replaying, setReplaying] = useState(false);
   const c = emu.controller;
 
   useEffect(() => {
@@ -134,6 +159,32 @@ export function LiveEmulator({ bundle, name, dosTime }: Props) {
           >
             Read files
           </Button>
+          <Button
+            variant="secondary"
+            disabled={replaying}
+            onClick={() =>
+              void act(async () => {
+                setReplaying(true);
+                setReplays([]);
+                try {
+                  const bytes = new Uint8Array(await (await fetch(bundle)).arrayBuffer());
+                  for (let i = 0; i < REPLAYS; i++) {
+                    const hash = await withFreshState(c, bytes, { dosTime }, async (e) => {
+                      await waitForStableScreen(e);
+                      await e.sendKeys(keys);
+                      await waitForStableScreen(e);
+                      return dataHash(e);
+                    });
+                    setReplays((r) => [...(r ?? []), hash]);
+                  }
+                } finally {
+                  setReplaying(false);
+                }
+              })
+            }
+          >
+            {replaying ? 'Replaying…' : `Replay ${REPLAYS} times from a fresh state`}
+          </Button>
           <Button variant="ghost" onClick={() => void act(() => c.reset())}>
             Reset
           </Button>
@@ -145,6 +196,7 @@ export function LiveEmulator({ bundle, name, dosTime }: Props) {
         </p>
       ) : null}
       {observed ? <ObservationView o={observed} /> : null}
+      {replays && replays.length > 0 ? <ReplayView hashes={replays} done={!replaying} /> : null}
       {files ? (
         <table className="font-mono text-sm" aria-label="Files on drive C:">
           <thead>
@@ -202,6 +254,32 @@ function ObservationView({ o }: { o: ObservationSummary }) {
           ))}
         </ul>
       )}
+    </section>
+  );
+}
+
+/** The data files after each replay: the same id every time means a repeatable run. */
+function ReplayView({ hashes, done }: { hashes: string[]; done: boolean }) {
+  const same = hashes.every((h) => h === hashes[0]);
+  return (
+    <section
+      aria-label="Replays"
+      className="space-y-2 rounded-lg border border-bone/15 p-4 text-sm"
+    >
+      <ol className="font-mono text-xs">
+        {hashes.map((h, i) => (
+          <li key={i}>
+            Run {i + 1}: data files {h}
+          </li>
+        ))}
+      </ol>
+      {done ? (
+        <p role="status" className={same ? 'text-ectoplasm' : 'text-blood'}>
+          {same
+            ? `${hashes.length} of ${hashes.length} runs gave identical data files.`
+            : `The runs gave different data files: not repeatable.`}
+        </p>
+      ) : null}
     </section>
   );
 }

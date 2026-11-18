@@ -55,3 +55,4 @@ export {
   type ObservedScreen,
   type RecordOptions,
 } from './recorder';
+export { seededDosTime, withFreshState, type FreshOptions } from './determinism';

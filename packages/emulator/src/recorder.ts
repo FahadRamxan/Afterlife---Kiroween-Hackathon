@@ -41,6 +41,11 @@ export type RecordOptions = {
   pollMs?: number;
   /** Give up waiting for a settled screen after this (default 10 s). */
   maxWaitMs?: number;
+  /**
+   * The screen the keys should lead to. A busy DOS program (saving files, or short of CPU) can
+   * leave the old screen still for longer than stableMs; with `until` that does not count.
+   */
+  until?: (screen: ObservedScreen) => boolean;
 };
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -66,11 +71,12 @@ async function dataSnapshot(emu: EmulatorController, files: string[]) {
 
 /**
  * Waits until the screen has looked the same for stableMs: the same fingerprint and the same
- * text, so a value still being typed counts as a change. Stops at maxWaitMs.
+ * text, so a value still being typed counts as a change. With `until`, the settled screen must
+ * also be the expected one. Stops at maxWaitMs (stable: false).
  */
 export async function waitForStableScreen(
   emu: EmulatorController,
-  { stableMs = 300, pollMs = 50, maxWaitMs = 10_000 }: Omit<RecordOptions, 'files'> = {},
+  { stableMs = 300, pollMs = 50, maxWaitMs = 10_000, until }: Omit<RecordOptions, 'files'> = {},
 ): Promise<{ screen: ObservedScreen; stable: boolean }> {
   const start = Date.now();
   let screen = await observeScreen(emu);
@@ -78,7 +84,8 @@ export async function waitForStableScreen(
   const same = (a: ObservedScreen, b: ObservedScreen) =>
     a.fingerprint === b.fingerprint && a.text.join('\n') === b.text.join('\n');
   for (;;) {
-    if (Date.now() - since >= stableMs) return { screen, stable: true };
+    if (Date.now() - since >= stableMs && (!until || until(screen)))
+      return { screen, stable: true };
     if (Date.now() - start >= maxWaitMs) return { screen, stable: false };
     await sleep(pollMs);
     const next = await observeScreen(emu);

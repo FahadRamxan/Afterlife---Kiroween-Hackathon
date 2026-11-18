@@ -115,6 +115,10 @@ export class BrowserJsDos implements EmulatorController {
     await this.start(prepared);
   }
 
+  /**
+   * Presses the keys one by one, keyDelayMs apart. The DOS keyboard buffer holds 15 keys, so a
+   * slow program can lose keys typed far ahead of it: send one action, then wait for the screen.
+   */
   async sendKeys(keys: string | KeyStroke[]): Promise<void> {
     const ci = this.running();
     const presses = jsdosKeys(typeof keys === 'string' ? parseKeys(keys) : keys);
