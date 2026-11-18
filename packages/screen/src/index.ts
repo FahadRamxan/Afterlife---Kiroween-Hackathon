@@ -25,3 +25,4 @@ export {
   type ScreenModel,
   type ScreenRefiner,
 } from './semantics';
+export { fingerprint, layoutKey } from './fingerprint';

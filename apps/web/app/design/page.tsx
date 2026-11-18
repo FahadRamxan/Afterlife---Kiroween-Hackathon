@@ -53,10 +53,10 @@ const SHIFA_MENU = [
   '   Choice: _',
 ].join('\n');
 
-export default function DesignPage() {
+export default async function DesignPage() {
   const medicine = shifaMedicine();
   const stock = shifaStockDiff();
-  const decoded = shifaMenuDecoded();
+  const decoded = await shifaMenuDecoded();
   // The demos use the real catalogue entry, so their years and place match the Graveyard.
   const shifa = findApp('shifa')!;
   const shifaTitle = `${shifa.name} v${shifa.version}`;
@@ -240,6 +240,10 @@ export default function DesignPage() {
                 </span>
               </span>
             ))}
+          </dd>
+          <dt className="text-bone/75">Fingerprint</dt>
+          <dd className="font-mono text-bone" data-testid="screen-fingerprint">
+            {decoded.fingerprint}
           </dd>
           <dt className="text-bone/75">Keys</dt>
           <dd className="font-mono text-phosphor">

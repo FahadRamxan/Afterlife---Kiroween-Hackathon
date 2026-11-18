@@ -47,6 +47,11 @@ test.describe('/design', () => {
     );
     await expect(model).toContainText('Choice: (prompt');
     await expect(model).toContainText('1-5 Select');
+    // Prompt 24: the layout's id. The same screen always gets the same one.
+    const fp = await section.getByTestId('screen-fingerprint').innerText();
+    expect(fp).toMatch(/^fp_[0-9a-f]{16}$/);
+    await page.reload();
+    await expect(section.getByTestId('screen-fingerprint')).toHaveText(fp);
   });
 
   test('the Shifa demos use the catalogue years (1998 to 2004)', async ({ page }) => {
