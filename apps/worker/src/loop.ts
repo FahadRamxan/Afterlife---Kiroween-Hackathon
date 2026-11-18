@@ -84,6 +84,9 @@ async function runJob(o: LoopOptions, type: JobType, job: Job<unknown>) {
   };
   const log: StepContext['log'] = (message, level = 'info') => emit('log', { level, message });
 
+  const [project] = await db.select().from(projects).where(eq(projects.id, data.projectId));
+  // Deleted while queued: nothing to do, and nothing to write (its rows are gone).
+  if (!project) return { projectDeleted: true };
   const [row] = await db.select().from(pipelineSteps).where(where);
   // Idempotent: a duplicate delivery of a finished step does nothing (unless forced).
   if (row?.status === 'done' && !data.force) {
@@ -113,6 +116,7 @@ async function runJob(o: LoopOptions, type: JobType, job: Job<unknown>) {
     const result = await withTimeout(opts.timeoutSeconds, job.signal, (signal) =>
       registry[type]({
         projectId: data.projectId,
+        project: { name: project.name, source: project.source, sourceApp: project.sourceApp },
         step: type,
         attempt,
         force: !!data.force,

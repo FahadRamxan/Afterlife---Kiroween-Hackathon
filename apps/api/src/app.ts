@@ -2,6 +2,7 @@ import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
+import websocket from '@fastify/websocket';
 import Fastify, { type FastifyServerOptions } from 'fastify';
 import {
   jsonSchemaTransform,
@@ -12,10 +13,16 @@ import {
 import pkg from '../package.json' with { type: 'json' };
 import { dbfInspectRoutes } from './dbf-inspect';
 import type { Env } from './env';
-import { MemoryProjectStore, projectRoutes, type ProjectStore } from './projects';
+import { liveRoutes, type LiveHub } from './live';
+import { MemoryProjectStore, projectRoutes, type Pipeline, type ProjectStore } from './projects';
 import { MemorySessionStore, sessionRoutes, type SessionStore } from './sessions';
 
-export type AppStores = { sessions?: SessionStore; projects?: ProjectStore };
+export type AppStores = {
+  sessions?: SessionStore;
+  projects?: ProjectStore;
+  live?: LiveHub;
+  pipeline?: Pipeline;
+};
 
 export type AppOptions = {
   /**
@@ -50,6 +57,8 @@ export function buildApp(
     global: true,
     max: limits.perMinute,
     timeWindow: '1 minute',
+    // A request without a socket address (an injected WebSocket upgrade) still gets a bucket.
+    keyGenerator: (req) => req.ip || 'unknown',
     // Thrown as the error; the routes send it as `{error, message}` with status 429.
     errorResponseBuilder: (_req, ctx) => ({
       statusCode: 429,
@@ -69,6 +78,8 @@ export function buildApp(
     transformObject: jsonSchemaTransformObject,
   });
   app.register(swaggerUi, { routePrefix: '/api/docs' });
+  // Live progress: 1 MB is plenty for a client that only listens.
+  app.register(websocket, { options: { maxPayload: 1024 * 1024 } });
 
   app.register(async (scope) => {
     // Uptime checks and the footer chip poll this: never rate limited.
@@ -87,6 +98,9 @@ export function buildApp(
 
   app.register(dbfInspectRoutes);
   app.register(sessionRoutes(sessions));
-  app.register(projectRoutes(projects, { createPerMinute: limits.createPerMinute }));
+  app.register(
+    projectRoutes(projects, { createPerMinute: limits.createPerMinute, pipeline: stores.pipeline }),
+  );
+  app.register(liveRoutes(stores.live ?? null, env.WEB_ORIGINS));
   return app;
 }

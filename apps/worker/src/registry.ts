@@ -1,9 +1,12 @@
 // What each job type does. The Crew's agents fill this in, prompt by prompt; until then a step
 // says it is not built yet and is marked "skipped" (never "done").
 import type { EventType, JobType } from '@afterlife/db';
+import { graveyardBundle, possessFirstLook, type EmulatorPool } from './possess';
 
 export type StepContext = {
   projectId: string;
+  /** The project's app: where it came from and its id (`shifa`, or an upload's file name). */
+  project: { name: string; source: 'graveyard' | 'upload'; sourceApp: string };
   step: JobType;
   /** 1 for the first try. */
   attempt: number;
@@ -26,10 +29,15 @@ export const notBuiltYet =
   (step: JobType, prompt: string): StepHandler =>
   async () => ({ status: 'skipped', reason: `The ${step} step is not built yet (${prompt})` });
 
-/** The handlers the worker runs today. */
-export function defaultRegistry(): Registry {
+/**
+ * The handlers the worker runs today. With an emulator pool, possess boots the app and sends its
+ * first screen (the Possessor's exploration is Prompt 48).
+ */
+export function defaultRegistry(deps: { pool?: EmulatorPool } = {}): Registry {
   return {
-    possess: notBuiltYet('possess', 'Prompt 48'),
+    possess: deps.pool
+      ? possessFirstLook({ pool: deps.pool, bundleFor: graveyardBundle })
+      : notBuiltYet('possess', 'Prompt 48'),
     archaeology: notBuiltYet('archaeology', 'Prompt 55'),
     rebirth: notBuiltYet('rebirth', 'Prompt 63'),
     undertake: notBuiltYet('undertake', 'Prompt 64'),

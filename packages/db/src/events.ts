@@ -1,6 +1,6 @@
 // Progress events (crew.md): every step writes what it does, for the live view (Prompt 38) and
 // the "Show your work" panel.
-import { and, asc, eq, gt } from 'drizzle-orm';
+import { and, asc, desc, eq, gt } from 'drizzle-orm';
 import { z } from 'zod';
 import type { Db } from './client';
 import { EVENT_TYPES, JOB_TYPES, projectEvents, type EventType } from './schema';
@@ -41,6 +41,22 @@ export async function emitEvent(
     payload: row!.payload,
     at: row!.createdAt.toISOString(),
   };
+}
+
+/** A project's newest `n` events, oldest first (the replay a live view starts with). */
+export async function lastEvents(db: Db, projectId: string, n = 200): Promise<ProjectEvent[]> {
+  const rows = await db
+    .select()
+    .from(projectEvents)
+    .where(eq(projectEvents.projectId, projectId))
+    .orderBy(desc(projectEvents.seq))
+    .limit(n);
+  return rows.reverse().map((r) => ({
+    seq: r.seq,
+    type: r.type as EventType,
+    payload: r.payload,
+    at: r.createdAt.toISOString(),
+  }));
 }
 
 /** A project's events after `afterSeq`, oldest first (at most `limit`). */

@@ -31,6 +31,14 @@ async function enums(t: TestDatabase): Promise<string[]> {
   return r.rows.map((x) => x.typname);
 }
 
+async function functions(t: TestDatabase): Promise<string[]> {
+  const r = await t.db.$client.query<{ proname: string }>(
+    `SELECT p.proname FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace
+     WHERE n.nspname = 'public' ORDER BY 1`,
+  );
+  return r.rows.map((x) => x.proname);
+}
+
 describe('migrations on a clean database', () => {
   let t: TestDatabase;
   beforeAll(async () => {
@@ -50,6 +58,7 @@ describe('migrations on a clean database', () => {
     expect(await migrateDown(t.db.$client)).toEqual(ids.slice().reverse());
     expect(await tables(t)).toEqual([MIGRATIONS_TABLE]);
     expect(await enums(t)).toEqual([]);
+    expect(await functions(t)).toEqual([]);
     expect(await appliedMigrations(t.db.$client)).toEqual([]);
 
     expect(await migrateUp(t.db.$client)).toEqual(ids);

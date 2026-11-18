@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// The API for Playwright, on a real Postgres 16: starts a throwaway database in Docker (or uses
-// E2E_DATABASE_URL), then the API with DATABASE_URL pointing at it. The API migrates it on start.
+// The API and the worker for Playwright, on a real Postgres 16: starts a throwaway database in
+// Docker (or uses E2E_DATABASE_URL), then both with DATABASE_URL pointing at it. They migrate it.
 // Playwright stops this process when the run ends; the container goes with it. A container left
 // behind by a killed run is removed the next time.
 import { execFileSync, spawn } from 'node:child_process';
@@ -101,6 +101,15 @@ const stop = () => {
     container = undefined;
   }
 };
+// The worker too: Raise queues possession, and the live view (Prompt 38) shows what it does.
+const worker = spawn('pnpm', ['--filter', '@afterlife/worker', 'start'], {
+  stdio: 'inherit',
+  shell: true,
+  env: { ...process.env, DATABASE_URL: url, JSDOS_POOL_SIZE: '1' },
+});
+worker.on('exit', (code) => {
+  if (code) console.error(`the e2e worker stopped with code ${code}`);
+});
 for (const sig of ['SIGINT', 'SIGTERM'])
-  process.on(sig, () => (api.kill(sig), stop(), process.exit(0)));
-api.on('exit', (code) => (stop(), process.exit(code ?? 0)));
+  process.on(sig, () => (api.kill(sig), worker.kill(sig), stop(), process.exit(0)));
+api.on('exit', (code) => (worker.kill(), stop(), process.exit(code ?? 0)));

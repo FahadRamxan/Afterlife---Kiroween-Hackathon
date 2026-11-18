@@ -27,3 +27,4 @@ export {
   type ScreenRefiner,
 } from './semantics';
 export { fingerprint, layoutKey } from './fingerprint';
+export { ScreenWireSchema, fromWire, toWire, type ScreenWire } from './wire';
