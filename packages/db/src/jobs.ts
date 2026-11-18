@@ -1,17 +1,56 @@
 // The job queue (Prompt 37): pg-boss on the same Postgres. One queue per job type. A project step
 // is one job, keyed `<projectId>:<type>`, so the same step is never queued or run twice at once.
-import { sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { PgBoss } from 'pg-boss';
 import { z } from 'zod';
 import type { Db } from './client';
-import { JOB_TYPES, pipelineSteps, type JobType } from './schema';
+import { JOB_TYPES, pipelineSteps, projects, type JobType } from './schema';
 
 export const JobDataSchema = z.strictObject({
   projectId: z.uuid(),
   /** Run the step again even if it is already done (re-run one step alone, Prompt 39). */
   force: z.boolean().optional(),
+  /** Part of a pipeline run: when this step settles, the next one is queued (Prompt 39). */
+  pipeline: z.boolean().optional(),
 });
 export type JobData = z.infer<typeof JobDataSchema>;
+
+/** The rebirth, in order (crew.md). twin-replay and voice-change run on demand, not here. */
+export const PIPELINE = [
+  'possess',
+  'archaeology',
+  'rebirth',
+  'undertake',
+  'prove',
+  'exorcise',
+] as const satisfies readonly JobType[];
+export type PipelineStep = (typeof PIPELINE)[number];
+
+/** The step after `step` in the pipeline, or null after the last one (or for an on-demand job). */
+export function nextStep(step: JobType): PipelineStep | null {
+  const i = (PIPELINE as readonly string[]).indexOf(step);
+  return i < 0 || i === PIPELINE.length - 1 ? null : PIPELINE[i + 1]!;
+}
+
+/**
+ * Starts (or resumes) a project's pipeline at `from`: queues that step as part of a pipeline run.
+ * Each step queues the next when it settles; a step that is already done passes straight on, so a
+ * pipeline that stopped resumes where it stopped.
+ */
+export async function startPipeline(
+  boss: PgBoss,
+  db: Db,
+  projectId: string,
+  opts: { from?: PipelineStep } = {},
+): Promise<string | null> {
+  const id = await enqueueStep(boss, db, opts.from ?? 'possess', { projectId, pipeline: true });
+  // Running from now on (a resumed pipeline is no longer "failed"); the steps set it from here.
+  await db
+    .update(projects)
+    .set({ status: 'running', updatedAt: sql`now()` })
+    .where(eq(projects.id, projectId));
+  return id;
+}
 
 export type JobOptions = {
   /** How many times a failed attempt is tried again. */

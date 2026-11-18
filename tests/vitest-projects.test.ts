@@ -20,7 +20,7 @@ function testFiles(dir: string): string[] {
 
 /** A test that boots real js-dos: a HeadlessPool or HeadlessJsDos, the worker's smoke boot, or the MCP server process. */
 const usesRealEmulator = (file: string) =>
-  /new HeadlessPool|new HeadlessJsDos|chromium\.launch|smokeBoot\(|resolve\(__dirname, 'main\.ts'\)/.test(
+  /new HeadlessPool|new HeadlessJsDos|chromium\.launch|smokeBoot\(|real-jsdos:|resolve\(__dirname, 'main\.ts'\)/.test(
     readFileSync(join(ROOT, file), 'utf8'),
   );
 
@@ -55,7 +55,9 @@ describe('vitest projects', () => {
     const usesPg = (f: string) => /freshDatabase\(/.test(readFileSync(join(ROOT, f), 'utf8'));
     const pg = files.filter(usesPg);
     expect(pg.length).toBeGreaterThanOrEqual(3);
-    expect(pg.filter((f) => !isPgTest(f))).toEqual([]);
+    // A real-emulator test may use Postgres too: the emulator project starts it as well.
+    const { isEmulatorTest } = await import('../vitest.shared.mts');
+    expect(pg.filter((f) => !isPgTest(f) && !isEmulatorTest(f))).toEqual([]);
     expect(files.filter((f) => isPgTest(f) && !usesPg(f))).toEqual([]);
 
     const root = (await import('../vitest.config.mts')).default;
@@ -65,6 +67,11 @@ describe('vitest projects', () => {
         typeof p !== 'string' && p.test?.name === 'postgres',
     );
     expect(postgres?.test?.globalSetup).toEqual([PG_GLOBAL_SETUP]);
+    const emulator = projects.find(
+      (p): p is TestProjectInlineConfiguration =>
+        typeof p !== 'string' && p.test?.name === 'emulator',
+    );
+    expect(emulator?.test?.globalSetup).toEqual([PG_GLOBAL_SETUP]);
     expect(sharedConfig({ fromRoot: true }).test!.exclude).toEqual(
       expect.arrayContaining(PG_TESTS),
     );

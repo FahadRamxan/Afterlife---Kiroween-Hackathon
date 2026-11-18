@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { findApp } from '../lib/graveyard';
 import { getProject, type Failure, type Project, type TimelineEvent } from '../lib/projects';
 import type { RaiseTab } from '../lib/raise-tabs';
+import { useProjectLive } from '../lib/use-project-live';
 import { LivePanel } from './LivePanel';
 import { PageShell } from './PageShell';
 import { RaiseTabs } from './RaiseTabs';
 import { SeanceRecorder } from './SeanceRecorder';
+import { StepsList } from './StepsList';
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,6 +22,8 @@ type State =
 export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab }) {
   const t = useTranslations('raise');
   const [state, setState] = useState<State>({ phase: 'loading' });
+  // Opened at once, so the first screen is not missed while the project loads.
+  const live = useProjectLive(id);
 
   useEffect(() => {
     let alive = true;
@@ -65,6 +69,16 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
           {project.id}
         </code>
       </p>
+      {project.mode === 'recorded' ? (
+        <p
+          data-testid="run-mode"
+          data-mode="recorded"
+          className="mt-2 inline-block rounded-md border border-bone/30 px-2 py-1 text-sm"
+        >
+          {t('project.recorded')}
+        </p>
+      ) : null}
+      <StepsList projectId={project.id} events={live.events} />
       <section aria-labelledby="timeline-heading" className="mt-4">
         <h2 id="timeline-heading" className="text-sm font-semibold">
           {t('project.timeline')}
@@ -91,7 +105,7 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
             ? {
                 possession: (
                   <>
-                    <LivePanel projectId={project.id} name={app.name} />
+                    <LivePanel events={live.events} status={live.status} name={app.name} />
                     <SeanceRecorder
                       projectId={app.id}
                       bundle={app.bundle}

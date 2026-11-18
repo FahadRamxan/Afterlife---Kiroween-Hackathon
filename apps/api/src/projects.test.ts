@@ -75,6 +75,34 @@ describe('POST /api/projects', () => {
     expect(res.json()).toMatchObject({ error: 'UNSUPPORTED_MEDIA_TYPE' });
   });
 
+  it('a raise is live unless it asks for a recorded run (demo mode)', async () => {
+    const a = app();
+    expect((await raise(a, { source: 'graveyard', app: 'shifa' })).json().mode).toBe('live');
+    const rec = await raise(a, { source: 'graveyard', app: 'shifa', mode: 'recorded' });
+    expect(rec.statusCode).toBe(201);
+    expect(rec.json().mode).toBe('recorded');
+    expect((await raise(a, { source: 'graveyard', app: 'shifa', mode: 'fake' })).statusCode).toBe(
+      400,
+    );
+  });
+
+  it('without a database there is no pipeline: steps answer 503, saying why', async () => {
+    const a = app();
+    const p = (await raise(a, { source: 'graveyard', app: 'shifa' })).json();
+    for (const [method, url] of [
+      ['GET', `/api/projects/${p.id}/steps`],
+      ['POST', `/api/projects/${p.id}/steps/possess/run`],
+    ] as const) {
+      const res = await a.inject({ method, url });
+      expect(res.statusCode, url).toBe(503);
+      expect(res.json().error).toBe('NO_DATABASE');
+    }
+    expect(
+      (await a.inject({ method: 'POST', url: `/api/projects/${p.id}/steps/twin-replay/run` }))
+        .statusCode,
+    ).toBe(400);
+  });
+
   it('an upload is not raised yet (Prompt 40): 501, saying so', async () => {
     const res = await raise(app(), { source: 'upload', uploadId: uuidv7() });
     expect(res.statusCode).toBe(501);
