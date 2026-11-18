@@ -8,16 +8,16 @@ import {
   withFreshState,
   type EmulatorController,
 } from '@afterlife/emulator';
-import { ScreenDecodeError, analyzeScreen, decodeScreen, type ScreenGrid } from '@afterlife/screen';
+import { analyzeScreen } from '@afterlife/screen';
 import { Button, CrtScreen, DiffBadge } from '@afterlife/ui';
-import { useEffect, useId, useState } from 'react';
+import { useId, useState } from 'react';
 import {
   recordCountChanges,
   replayVerdict,
   summarizeObservation,
   type ObservationSummary,
 } from '../lib/observation';
-import { useEmulator } from '../lib/use-emulator';
+import { useEmulator, useScreenGrid } from '../lib/use-emulator';
 
 type Props = { bundle: string; name: string; dosTime: string };
 
@@ -52,7 +52,6 @@ export function LiveEmulator({ bundle, name, dosTime }: Props) {
   const keysId = useId();
   const [url, setUrl] = useState<string | null>(null);
   const emu = useEmulator(url, { dosTime });
-  const [grid, setGrid] = useState<ScreenGrid | null>(null);
   const [keys, setKeys] = useState('2');
   const [message, setMessage] = useState<string | null>(null);
   const [files, setFiles] = useState<{ name: string; size: number }[] | null>(null);
@@ -63,25 +62,7 @@ export function LiveEmulator({ bundle, name, dosTime }: Props) {
   );
   const [replaying, setReplaying] = useState(false);
   const c = emu.controller;
-
-  useEffect(() => {
-    if (!c) return;
-    let busy = false;
-    const timer = setInterval(async () => {
-      if (busy) return;
-      busy = true;
-      try {
-        const shot = await c.screenshot();
-        setGrid(decodeScreen(shot.rgba, shot.width, shot.height));
-      } catch (e) {
-        // While DOS starts it may be in another video mode for a moment.
-        if (!(e instanceof ScreenDecodeError)) setMessage((e as Error).message);
-      } finally {
-        busy = false;
-      }
-    }, 250);
-    return () => clearInterval(timer);
-  }, [c]);
+  const grid = useScreenGrid(c, setMessage);
 
   async function act(what: () => Promise<void>) {
     setMessage(null);

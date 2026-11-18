@@ -11,6 +11,7 @@
       "place": "Satellite Town, Rawalpindi",
       "story": "Written in 1998 by a two-person software house for a family pharmacy in Satellite Town.\nIt printed every bill and kept the stock until the software house closed in 2004.\nThe shop still runs it every day. Nobody has the source code.",
       "executable": "SHIFA.EXE",
+      "dosTime": "1998-07-15 10:00:00",
       "bundle": "/graveyard/shifa.jsdos",
       "preview": [
         " SHIFA MEDICAL STORE  v2.3         MAIN MENU                           15/07/98 ",
@@ -50,6 +51,7 @@
       "place": "Chaklala Scheme III, Rawalpindi",
       "story": "Made in 2001 for Iqra Model School by a former student who had just learnt Clipper and C.\nHe moved to Dubai in 2006 and the school lost the only copy of his code.\nThe fee clerk still collects every month's fees with it.",
       "executable": "IQRA.EXE",
+      "dosTime": "2001-03-12 10:00:00",
       "bundle": "/graveyard/iqra.jsdos",
       "preview": [
         " IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001 ",
@@ -89,6 +91,7 @@
       "place": "Raja Bazaar, Rawalpindi",
       "story": "M. Yousaf wrote this udhaar (credit) register in 1996 for his uncle's kiryana store.\nHe stopped coming to the shop in 2001, and the disk with the source code was lost in a flood.\nIt still holds the credit account of every regular customer.",
       "executable": "BARKAT.EXE",
+      "dosTime": "1996-11-20 10:00:00",
       "bundle": "/graveyard/barkat.jsdos",
       "preview": [
         " BARKAT KIRYANA LEDGER             MAIN MENU                           20/11/96 ",

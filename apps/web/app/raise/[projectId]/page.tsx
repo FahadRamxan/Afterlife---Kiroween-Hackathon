@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { PageShell } from '../../../components/PageShell';
 import { RaiseTabs } from '../../../components/RaiseTabs';
+import { SeanceRecorder } from '../../../components/SeanceRecorder';
 import { findApp } from '../../../lib/graveyard';
 import { parseTab } from '../../../lib/raise-tabs';
 
@@ -27,7 +28,19 @@ export default async function RaisePage({ params, searchParams }: Props) {
   const t = await getTranslations('raise');
   return (
     <PageShell title={t('title', { name: app.name })}>
-      <RaiseTabs initial={parseTab(tab)} />
+      <RaiseTabs
+        initial={parseTab(tab)}
+        panels={{
+          possession: (
+            <SeanceRecorder
+              projectId={app.id}
+              bundle={app.bundle}
+              name={app.name}
+              dosTime={app.dosTime}
+            />
+          ),
+        }}
+      />
     </PageShell>
   );
 }

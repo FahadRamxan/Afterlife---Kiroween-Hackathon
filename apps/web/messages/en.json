@@ -96,5 +96,25 @@
     "title": "No such app",
     "body": "Nothing is buried here. Pick a dead app from the Graveyard.",
     "back": "Back to the graveyard"
+  },
+  "seance": {
+    "title": "Record a séance",
+    "intro": "Work the old app yourself: click its screen and type as you always do. Every key is recorded with what it changed, and you can talk while you work.",
+    "start": "Record a séance",
+    "booting": "Starting {name}…",
+    "bootFailed": "The old app could not start: {reason}",
+    "keyboard": "{name} keyboard: type here",
+    "live": "{name}, running live",
+    "screen": "Screen:",
+    "pending": "{count, plural, one {# key waiting} other {# keys waiting}}",
+    "voiceStart": "Record my voice too",
+    "voiceOn": "Recording your voice",
+    "voiceDenied": "The microphone is not available, so only the keys are recorded.",
+    "save": "Save the séance ({count, plural, one {# action} other {# actions}})",
+    "saving": "Saving…",
+    "saved": "Saved as session {id}.",
+    "saveFailed": "The séance could not be saved: {reason}",
+    "unconfigured": "The API is not configured, so the séance cannot be saved.",
+    "timeline": "Séance timeline"
   }
 }

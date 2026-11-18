@@ -2,12 +2,19 @@
 
 import * as Tabs from '@radix-ui/react-tabs';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { RAISE_TABS, type RaiseTab } from '../lib/raise-tabs';
 import { EmptyState } from './EmptyState';
 
 /** The six rebirth steps. The active tab is kept in ?tab= so links and refreshes restore it. */
-export function RaiseTabs({ initial }: { initial: RaiseTab }) {
+export function RaiseTabs({
+  initial,
+  panels = {},
+}: {
+  initial: RaiseTab;
+  /** What a step shows under its empty-state note (the séance recorder on Possession). */
+  panels?: Partial<Record<RaiseTab, ReactNode>>;
+}) {
   const t = useTranslations('raise');
   const [tab, setTab] = useState<RaiseTab>(initial);
 
@@ -39,6 +46,7 @@ export function RaiseTabs({ initial }: { initial: RaiseTab }) {
         <Tabs.Content key={id} value={id} className="focus-visible:outline-2">
           <h2 className="sr-only">{t(`tabs.${id}`)}</h2>
           <EmptyState body={t(`empty.${id}`)} />
+          {panels[id]}
         </Tabs.Content>
       ))}
     </Tabs.Root>

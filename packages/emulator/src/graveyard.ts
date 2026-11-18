@@ -56,7 +56,16 @@ export type GraveyardManifestT = z.infer<typeof GraveyardManifest>;
 /** What the Graveyard page may show: everything except the hidden rules and bugs. */
 export type GraveyardEntry = Pick<
   GraveyardManifestT,
-  'id' | 'name' | 'version' | 'born' | 'died' | 'kind' | 'place' | 'story' | 'executable'
+  | 'id'
+  | 'name'
+  | 'version'
+  | 'born'
+  | 'died'
+  | 'kind'
+  | 'place'
+  | 'story'
+  | 'executable'
+  | 'dosTime'
 > & { bundle: string; preview: string[] };
 
 export function publicEntry(m: GraveyardManifestT, preview: string[]): GraveyardEntry {
@@ -70,6 +79,7 @@ export function publicEntry(m: GraveyardManifestT, preview: string[]): Graveyard
     place: m.place,
     story: m.story,
     executable: m.executable,
+    dosTime: m.dosTime,
     bundle: `/graveyard/${m.id}.jsdos`,
     preview,
   };
@@ -92,6 +102,8 @@ export const GraveyardCatalog = z
             place: z.string().min(1),
             story: z.string().min(1),
             executable: z.string().min(1),
+            /** The DOS clock the app's scenarios run at ("YYYY-MM-DD HH:MM:SS"). */
+            dosTime: z.string().regex(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/),
             bundle: z.string().regex(/^\/graveyard\/[a-z0-9-]+\.jsdos$/),
             preview: z.array(z.string()).length(25),
           })

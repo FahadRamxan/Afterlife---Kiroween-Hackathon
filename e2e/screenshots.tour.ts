@@ -130,3 +130,22 @@ test('recorded observation: saving a Shifa bill', async ({ page }) => {
   await expect(last).toContainText('+ 9807-0001', { timeout: 20_000 });
   await section.screenshot({ path: `${OUT}/12-observation.png` });
 });
+
+test('séance recording on the Raise page', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.setViewportSize({ width: 1280, height: 1300 });
+  await ready(page, '/raise/shifa');
+  const section = page.getByRole('region', { name: 'Record a séance' });
+  await section.getByRole('button', { name: 'Record a séance' }).click();
+  await expect(section.getByTestId('seance-screen')).toHaveText('MAIN MENU', { timeout: 60_000 });
+  await section.getByRole('application').click();
+  for (const key of ['2', 'PageDown', 'Escape', '3', 'Escape']) {
+    await page.keyboard.press(key);
+    await expect(section.getByText(/keys? waiting/)).toHaveCount(0, { timeout: 20_000 });
+  }
+  await expect(
+    section.getByRole('list', { name: 'Séance timeline' }).getByRole('listitem'),
+  ).toHaveCount(5);
+  await page.mouse.click(5, 5);
+  await section.screenshot({ path: `${OUT}/13-seance.png` });
+});
