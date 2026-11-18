@@ -2,9 +2,9 @@ import { writeDbf, type DbfRecord } from '@afterlife/dbf';
 import { renderScreen, type CellInput } from '@afterlife/screen';
 import { describe, expect, it } from 'vitest';
 import { buildBundle } from './bundle';
-import type { Screenshot } from './controller';
+import type { EmulatorController, Screenshot } from './controller';
 import { FakeEmulator } from './fake-emulator';
-import { recordAction } from './recorder';
+import { recordAction, sameScreen, waitForStableScreen, type ObservedScreen } from './recorder';
 
 /** A blue DOS screen with a cyan title bar saying `title`, and `lines` of body text. */
 function screen(title: string, lines: string[] = []): Screenshot {
@@ -156,5 +156,52 @@ describe('recordAction', () => {
     const emu = new FakeEmulator({ screen: screen('MAIN MENU') });
     await emu.boot(bundle);
     expect((await recordAction(emu, '{enter}{alt+x}', FAST)).keys).toBe('{Enter}{Alt+X}');
+  });
+});
+
+describe('the blinking cursor (found in the Prompts 21 to 30 review)', () => {
+  /** A still form with an empty "____" field; the cursor blinks on its first cell. */
+  function blinkingForm(): EmulatorController {
+    const cells: CellInput[][] = Array.from({ length: 25 }, (_, r) =>
+      Array.from({ length: 80 }, () => ({ code: 0x20, fg: 15, bg: r === 0 ? 3 : 1 })),
+    );
+    const put = (r: number, c: number, s: string) =>
+      [...s].forEach((ch, k) => (cells[r]![c + k]!.code = ch.charCodeAt(0)));
+    put(0, 1, 'SHIFA MEDICAL STORE');
+    put(0, 36, 'CUSTOMERS');
+    put(5, 4, `Name: ${'_'.repeat(20)}`);
+    const on = renderScreen({ cellWidth: 8, cellHeight: 16, cells, cursor: { row: 5, col: 10 } });
+    const off = renderScreen({ cellWidth: 8, cellHeight: 16, cells });
+    let n = 0;
+    // Every other look catches the cursor blinked off, as polling a real DOS screen does.
+    return { screenshot: async () => (n++ % 2 ? on : off) } as unknown as EmulatorController;
+  }
+
+  it('a still screen whose cursor blinks on a "____" field settles', async () => {
+    const r = await waitForStableScreen(blinkingForm(), FAST);
+    expect(r.stable).toBe(true);
+  });
+
+  const seen = (text: string, cursor: ObservedScreen['cursor'], fp = 'fp_1'): ObservedScreen => ({
+    fingerprint: fp,
+    text: [text],
+    model: {} as ObservedScreen['model'],
+    cursor,
+  });
+
+  it('sameScreen: a look-alike counts as the same only under the cursor', () => {
+    const at = { row: 0, col: 6 };
+    expect(sameScreen(seen('Name: ____', null), seen('Name:  ___', at))).toBe(true);
+    expect(sameScreen(seen('qty', { row: 0, col: 0 }), seen('gty', null))).toBe(true);
+    // Away from the cursor, the same difference is a real change.
+    expect(sameScreen(seen('Name: ____', null), seen('Name:  ___', { row: 0, col: 9 }))).toBe(
+      false,
+    );
+  });
+
+  it('sameScreen: a typed character and a new fingerprint are changes', () => {
+    const at = { row: 0, col: 6 };
+    expect(sameScreen(seen('Name: ____', at), seen('Name: P___', { row: 0, col: 7 }))).toBe(false);
+    expect(sameScreen(seen('Name: ____', at), seen('Name: ____', at, 'fp_2'))).toBe(false);
   });
 });

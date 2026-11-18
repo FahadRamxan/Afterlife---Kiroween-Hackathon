@@ -78,7 +78,13 @@ export async function postInspect(
       file?: string;
       message?: string;
     };
-    if (res.ok && body.tables) return { ok: true, tables: body.tables };
+    // The API keeps only the file name and answers in the order the files were sent, so each
+    // table gets back its path in the zip: DATA/MEDICINE.DBF and BACKUP/MEDICINE.DBF stay apart.
+    if (res.ok && body.tables)
+      return {
+        ok: true,
+        tables: body.tables.map((t, i) => ({ ...t, file: dbfs[i]?.name ?? t.file })),
+      };
     const why = body.message ?? `The API answered ${res.status}`;
     return { ok: false, message: body.file ? `${body.file}: ${why}` : why };
   } catch {

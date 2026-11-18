@@ -1,6 +1,6 @@
 import type { Observation } from '@afterlife/emulator';
 import { describe, expect, it } from 'vitest';
-import { summarizeObservation } from './observation';
+import { replayVerdict, summarizeObservation } from './observation';
 
 const screen = (name: string | null) =>
   ({
@@ -101,5 +101,26 @@ describe('summarizeObservation', () => {
       }),
     );
     expect(s.tables[0]!.lines).toEqual(['- record 5']);
+  });
+});
+
+describe('replayVerdict', () => {
+  it('calls the runs identical only when all of them finished with the same data', () => {
+    expect(replayVerdict(['a1', 'a1', 'a1'], 3)).toEqual({
+      ok: true,
+      text: '3 of 3 runs gave identical data files.',
+    });
+    expect(replayVerdict(['a1', 'b2', 'a1'], 3)).toEqual({
+      ok: false,
+      text: 'The runs gave different data files: not repeatable.',
+    });
+  });
+
+  it('does not say "2 of 2 identical" when the third run failed', () => {
+    expect(replayVerdict(['a1', 'a1'], 3)).toEqual({
+      ok: false,
+      text: 'Only 2 of 3 runs finished.',
+    });
+    expect(replayVerdict([], 3).ok).toBe(false);
   });
 });

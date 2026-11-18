@@ -6,6 +6,7 @@ import {
   decodeScreen,
   fingerprint,
   gridText,
+  lookAlikeUnderCursor,
   type ScreenModel,
 } from '@afterlife/screen';
 import type { EmulatorController } from './controller';
@@ -70,9 +71,30 @@ async function dataSnapshot(emu: EmulatorController, files: string[]) {
 }
 
 /**
- * Waits until the screen has looked the same for stableMs: the same fingerprint and the same
- * text, so a value still being typed counts as a change. With `until`, the settled screen must
- * also be the expected one. Stops at maxWaitMs (stable: false).
+ * The same screen: the same fingerprint and the same text, so a value still being typed counts as
+ * a change. One exception: the cell under the cursor in either frame may read as its look-alike
+ * ("_" or a space, "q" or "g"). The cursor blinks faster than stableMs, so without this a still
+ * screen with the cursor on such a cell never settles.
+ */
+export function sameScreen(a: ObservedScreen, b: ObservedScreen): boolean {
+  if (a.fingerprint !== b.fingerprint || a.text.length !== b.text.length) return false;
+  const cursors = [a.cursor, b.cursor].filter((p) => p !== null);
+  return a.text.every((line, r) => {
+    const other = b.text[r]!;
+    if (line === other) return true;
+    if (line.length !== other.length) return false;
+    for (let c = 0; c < line.length; c++) {
+      if (line[c] === other[c]) continue;
+      const atCursor = cursors.some((p) => p.row === r && p.col === c);
+      if (!atCursor || !lookAlikeUnderCursor(line[c]!, other[c]!)) return false;
+    }
+    return true;
+  });
+}
+
+/**
+ * Waits until the screen has looked the same (sameScreen) for stableMs. With `until`, the
+ * settled screen must also be the expected one. Stops at maxWaitMs (stable: false).
  */
 export async function waitForStableScreen(
   emu: EmulatorController,
@@ -81,15 +103,13 @@ export async function waitForStableScreen(
   const start = Date.now();
   let screen = await observeScreen(emu);
   let since = Date.now();
-  const same = (a: ObservedScreen, b: ObservedScreen) =>
-    a.fingerprint === b.fingerprint && a.text.join('\n') === b.text.join('\n');
   for (;;) {
     if (Date.now() - since >= stableMs && (!until || until(screen)))
       return { screen, stable: true };
     if (Date.now() - start >= maxWaitMs) return { screen, stable: false };
     await sleep(pollMs);
     const next = await observeScreen(emu);
-    if (!same(next, screen)) {
+    if (!sameScreen(next, screen)) {
       screen = next;
       since = Date.now();
     }

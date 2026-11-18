@@ -50,6 +50,7 @@ export {
 export {
   observeScreen,
   recordAction,
+  sameScreen,
   waitForStableScreen,
   type Observation,
   type ObservedScreen,

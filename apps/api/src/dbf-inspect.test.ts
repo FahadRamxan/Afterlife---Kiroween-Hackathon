@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { writeDbf, type DbfRecord } from '@afterlife/dbf';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildApp } from './app';
-import { InspectResponse, MAX_INSPECT_BYTES } from './dbf-inspect';
+import { InspectResponse, MAX_FILES, MAX_INSPECT_BYTES } from './dbf-inspect';
 import { parseEnv } from './env';
 
 const DIST = resolve(__dirname, '../../../samples/graveyard/dist');
@@ -102,6 +102,46 @@ describe('POST /api/dbf/inspect', () => {
     ]);
     expect(res.statusCode).toBe(413);
     expect(res.json()).toMatchObject({ error: 'TOO_LARGE' });
+  });
+
+  it(`answers a typed 413 for more than ${MAX_FILES} files`, async () => {
+    const medicine = sample('shifa/MEDICINE.DBF');
+    const files = Array.from({ length: MAX_FILES + 1 }, (_, i): [string, Uint8Array] => [
+      `M${i}.DBF`,
+      medicine,
+    ]);
+    const res = await inspect(files);
+    expect(res.statusCode).toBe(413);
+    expect(res.json()).toEqual({
+      error: 'TOO_MANY_FILES',
+      message: `Send at most ${MAX_FILES} .DBF files at once`,
+    });
+  });
+
+  it('answers a typed 400 for a form field that is not a file', async () => {
+    const form = new FormData();
+    form.append('note', 'hello');
+    form.append('files', new Blob([sample('shifa/MEDICINE.DBF')]), 'MEDICINE.DBF');
+    const req = new Request('http://localhost/', { method: 'POST', body: form });
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/dbf/inspect',
+      payload: Buffer.from(await req.arrayBuffer()),
+      headers: { 'content-type': req.headers.get('content-type')! },
+    });
+    expect(res.statusCode).toBe(400);
+    expect(res.json()).toMatchObject({ error: 'NOT_A_FILE' });
+  });
+
+  it('answers 200, with lastUpdate null, for a header date that is not a real date', async () => {
+    // Was a 500 with the zod issue list in the message ("1998-200-01" failed the response schema).
+    const bytes = sample('shifa/MEDICINE.DBF').slice();
+    bytes[2] = 200;
+    const res = await inspect([['MEDICINE.DBF', bytes]]);
+    expect(res.statusCode).toBe(200);
+    const t = InspectResponse.parse(res.json()).tables[0]!;
+    expect(t.lastUpdate).toBeNull();
+    expect(t.recordCount).toBe(40);
   });
 
   it('answers 415 for a body that is not multipart', async () => {
