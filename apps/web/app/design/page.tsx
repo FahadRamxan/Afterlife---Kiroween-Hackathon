@@ -13,6 +13,7 @@ import {
   colors,
 } from '@afterlife/ui';
 import type { ReactNode } from 'react';
+import { KeySequencePreview } from '../../components/KeySequencePreview';
 import {
   shifaBillScreen,
   shifaMedicine,
@@ -163,6 +164,14 @@ export default async function DesignPage() {
           ghost={bill.ghost}
           changed={bill.changed}
         />
+      </Section>
+
+      <Section
+        id="keys"
+        title="Key sequences"
+        meaning="How the Possessor types into the old app: plain text, {Name} for a key, {Alt+X} for a combination, {{} for a brace."
+      >
+        <KeySequencePreview initial="1{Enter}PANADOL{Tab}2{F2}" />
       </Section>
 
       <Section
