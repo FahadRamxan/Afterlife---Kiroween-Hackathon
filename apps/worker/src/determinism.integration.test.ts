@@ -37,17 +37,23 @@ const billScript = fc
   .map((lines): Step[] => [
     { keys: '1', until: /Customer ID \(blank = walk-in\):/ },
     { keys: '{Enter}', until: /Code:/ },
-    ...lines.map(([c, q], i) => ({
-      keys: `${c}{Enter}${q}{Enter}`,
-      until: new RegExp(`^ +${i + 1} ${c} .* ${q} +[\\d.]+ *$`, 'm'),
-    })),
+    // The code, seen in its field, then its quantity: a 10-key burst once lost all but "PA".
+    ...lines.flatMap(([c, q], i): Step[] => [
+      { keys: c, until: new RegExp(`Code: ${c} `) },
+      {
+        keys: `{Enter}${q}{Enter}`,
+        until: new RegExp(`^ +${i + 1} ${c} .* ${q} +[\\d.]+ *$`, 'm'),
+      },
+    ]),
     { keys: '{Enter}', until: /F2=Save bill/ },
     { keys: '{F2}', until: /SAVED/ },
     { keys: '{Enter}', until: /MAIN MENU/ },
   ]);
 
-// Four emulators at once (2 made the 20 runs too slow). Worker integration files run one at a time.
-const pool = new HeadlessPool({ size: 4, cycles: 60000, keyDelayMs: 50 });
+// Four emulators at once (2 made the 20 runs too slow). Real-emulator files run one at a time,
+// after every other test. Keys go at the controller's default pace (100 ms): at 50 ms a loaded
+// machine lost keys (js-dos stamps each key with wall-clock time, and a starved DOSBox lags it).
+const pool = new HeadlessPool({ size: 4, cycles: 60000 });
 afterAll(() => pool.close());
 
 const hex = (b: Uint8Array) => Buffer.from(b).toString('hex');

@@ -29,6 +29,7 @@ See [plan.md](plan.md) for the plan and [prompt.md](prompt.md) for the build pro
 | `pnpm verify`           | lint, typecheck, test and e2e, all of them                                                 |
 | `pnpm ci:local`         | Everything CI did: verify with 2000 property runs, production e2e, Docker builds and smoke |
 | `pnpm screenshots`      | Retake the UI tour in `docs/screenshots`                                                   |
+| `pnpm mcp:gif`          | Record the MCP demo GIF from a real session (`apps/web/public/mcp/afterlife-mcp.gif`)      |
 | `pnpm screen:capture`   | Record the VGA fonts and real js-dos frames of the sample apps (screen decoder fixtures)   |
 | `pnpm smoke:prod <url>` | The `@smoke` Playwright tests against a deployed site                                      |
 
@@ -82,6 +83,52 @@ Taken by `pnpm screenshots` from the real app.
 | ![Live js-dos](docs/screenshots/11-live-jsdos.png)         | ![Observation](docs/screenshots/12-observation.png) |
 
 All shots are in [docs/screenshots](docs/screenshots).
+
+## Use Afterlife's emulator from your own Kiro
+
+The `afterlife-emulator` MCP server lets Kiro (or any MCP client) run the sample dead DOS apps and work them like a person: press keys, read the screen, and see what each action changed in the `.DBF` data files. The apps run in js-dos v8 (DOSBox in WebAssembly) in headless Chromium on your machine. The screen is read back from the emulator's pixels by glyph matching, not OCR.
+
+![The Shifa Medical Store app (1998) driven through the afterlife-emulator MCP tools](apps/web/public/mcp/afterlife-mcp.gif)
+
+The GIF shows the emulator's real screen after each tool call of a scripted MCP session (`pnpm mcp:gif`): `boot_app shifa`, `send_keys 2` (Stock), `{PgDn}`, `{Esc}`, `snapshot_data`, then a bill for 2 PAN500 and 1 BRU400 saved with `{F2}`, and `diff_data` (2 bill lines inserted).
+
+### Install
+
+1. Clone this repo and run `pnpm install` (Node 22, pnpm 10).
+2. Install the browser it runs in: `pnpm --filter @afterlife/e2e exec playwright install chromium`.
+3. Add the server to `.kiro/settings/mcp.json` in your workspace (or `~/.kiro/settings/mcp.json` for all workspaces). With a path outside this repo, use the full path to `main.ts`:
+
+   ```json
+   {
+     "mcpServers": {
+       "afterlife-emulator": {
+         "command": "node",
+         "args": ["--import", "tsx", "packages/mcp-emulator/src/main.ts"],
+         "disabled": false,
+         "autoApprove": ["list_apps", "read_screen", "read_table", "snapshot_data", "diff_data"]
+       }
+     }
+   }
+   ```
+
+   Use `node` directly, not `pnpm`: pnpm prints to stdout, which is the MCP channel. Saving the file reloads Kiro's servers.
+
+4. Ask Kiro: "Boot shifa and show me the stock list."
+
+### Tools
+
+| Tool            | What it does                                                                                                                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `list_apps`     | The apps you can start: `shifa` (pharmacy, 1998), `iqra` (school fees, 2001), `barkat` (kiryana credit ledger, 1996)                                                            |
+| `boot_app`      | Starts an app from its original files, with the DOS clock set to its own year. Returns its first screen                                                                         |
+| `send_keys`     | Types keys and waits until the screen settles: text as is, `{Enter}`, `{Esc}`, `{F1}`-`{F12}`, `{Up}`, `{PgDn}`, `{Alt+X}`. Returns the new screen and which data files changed |
+| `read_screen`   | The 80x25 text and its ScreenModel: title, menu, fields, tables, messages                                                                                                       |
+| `snapshot_data` | Remembers the `.DBF` files now, for `diff_data`                                                                                                                                 |
+| `diff_data`     | What changed since `snapshot_data`: inserted, deleted and changed records, with exact numeric deltas                                                                            |
+| `read_table`    | A `.DBF` table's fields and first records                                                                                                                                       |
+| `reset`         | Starts the app again from its original files                                                                                                                                    |
+
+Send one action at a time: a DOS keyboard buffer holds 15 keys. The apps never touch your files; everything runs inside the emulator.
 
 ## License
 
