@@ -79,6 +79,28 @@ test.describe('live js-dos on /design', () => {
     ).toContainText('BILL 9807-0001 SAVED');
   });
 
+  test('replaying a bill 3 times from a fresh state gives identical data files', async ({
+    page,
+  }) => {
+    await page.goto('/design');
+    const section = page.getByTestId('ds-live');
+    await section.getByRole('button', { name: 'Boot Shifa Medical Store in js-dos' }).click();
+    await expect(section.getByTestId('live-screen-name')).toHaveText('Screen: MAIN MENU', {
+      timeout: 60_000,
+    });
+    await section
+      .getByLabel('Keys to send')
+      .fill('1{Enter}PAN500{Enter}4{Enter}{Enter}{F2}{Enter}');
+    await section.getByRole('button', { name: 'Replay 3 times from a fresh state' }).click();
+    const replays = section.getByRole('region', { name: 'Replays' });
+    await expect(replays.getByRole('status')).toHaveText('3 of 3 runs gave identical data files.', {
+      timeout: 90_000,
+    });
+    const runs = await replays.getByRole('listitem').allInnerTexts();
+    expect(runs).toHaveLength(3);
+    expect(new Set(runs.map((r) => r.split(': ')[1])).size).toBe(1);
+  });
+
   test('a bad key sequence is refused with the reason', async ({ page }) => {
     await page.goto('/design');
     const section = page.getByTestId('ds-live');

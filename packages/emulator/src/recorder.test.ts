@@ -119,6 +119,32 @@ describe('recordAction', () => {
     }
   });
 
+  it('with `until`, a still screen that is not yet the expected one keeps waiting', async () => {
+    // A busy app: the old screen stays still for 150 ms (longer than stableMs) before the new one.
+    const emu = new FakeEmulator({
+      screen: screen('NEW BILL', ['SUBTOTAL 87.50']),
+      onKeys: (_keys, app) => {
+        setTimeout(() => app.setScreen(screen('NEW BILL', ['BILL 9807-0001 SAVED'])), 150);
+      },
+    });
+    await emu.boot(bundle);
+    const obs = await recordAction(emu, '{F2}', {
+      ...FAST,
+      until: (s) => s.text.join('\n').includes('SAVED'),
+    });
+    expect(obs.stable).toBe(true);
+    expect(obs.screenAfter.text.join('\n')).toContain('BILL 9807-0001 SAVED');
+    expect(obs.durationMs).toBeGreaterThanOrEqual(150);
+  });
+
+  it('with `until` never met, it stops at maxWaitMs as not stable', async () => {
+    const emu = new FakeEmulator({ screen: screen('MAIN MENU') });
+    await emu.boot(bundle);
+    const obs = await recordAction(emu, '{Esc}', { ...FAST, maxWaitMs: 150, until: () => false });
+    expect(obs.stable).toBe(false);
+    expect(obs.durationMs).toBeGreaterThanOrEqual(150);
+  });
+
   it('only the files asked for are watched', async () => {
     const emu = new FakeEmulator({ screen: screen('MAIN MENU') });
     await emu.boot(bundle);

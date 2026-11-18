@@ -45,6 +45,8 @@ export type EmulatorErrorCode =
   | 'BAD_PATH'
   | 'BAD_SPEED'
   | 'BAD_BUNDLE'
+  /** Drive C: is not the bundle's files, so a run would not start from a known state. */
+  | 'NOT_FRESH'
   /** The emulator did not answer in time. */
   | 'TIMEOUT';
 
