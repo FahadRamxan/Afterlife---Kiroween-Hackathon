@@ -31,7 +31,9 @@ const word = fc
   .array(fc.constantFrom(...'ABCDEFGHJKMNPRSTVWXYZ0123456789'), { minLength: 1, maxLength: 12 })
   .map((a) => a.join(''));
 
-describe('layoutKey properties (the fingerprint hashes it)', () => {
+// Each run analyses a whole screen: 2000 runs take a few seconds, more while every project's tests
+// run at once (ci:local timed out at the 5 s default).
+describe('layoutKey properties (the fingerprint hashes it)', { timeout: 60_000 }, () => {
   it('changing only the values typed into fields keeps it', () => {
     fc.assert(
       fc.property(screen, fc.array(word, { minLength: 4, maxLength: 4 }), (s, words) => {

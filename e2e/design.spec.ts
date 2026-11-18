@@ -8,6 +8,7 @@ const sections = [
   'tombstone',
   'crt',
   'crtscreen',
+  'keys',
   'dbftable',
   'dbfdiff',
   'decoder',
@@ -73,6 +74,25 @@ test.describe('/design', () => {
     // The title bar is in the app's own colours: bright white on cyan.
     const title = crt.locator('[data-crt-row="0"] span').first();
     await expect(title).toHaveCSS('background-color', 'rgb(0, 170, 170)');
+  });
+
+  test('the key sequence preview shows how a sequence is pressed', async ({ page }) => {
+    const section = page.getByTestId('ds-keys');
+    const strokes = section.getByRole('list', { name: 'Keystrokes' }).getByRole('listitem');
+    await expect(strokes).toHaveText([
+      'type "1"',
+      'Enter',
+      'type "PANADOL"',
+      'Tab',
+      'type "2"',
+      'F2',
+    ]);
+    await expect(section.getByRole('status')).toHaveText('6 keystrokes, 12 key presses in js-dos');
+    const input = section.getByLabel('Key sequence');
+    await input.fill('{alt+x}{Ctrl+Alt+Del}');
+    await expect(strokes).toHaveText(['Alt+X', 'Ctrl+Alt+Del']);
+    await input.fill('2{PgDown}');
+    await expect(section.getByRole('alert')).toHaveText('unknown key "PgDown" at 1');
   });
 
   test('the Shifa demos use the catalogue years (1998 to 2004)', async ({ page }) => {
