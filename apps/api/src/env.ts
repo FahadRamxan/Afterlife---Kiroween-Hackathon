@@ -15,6 +15,17 @@ const schema = z.object({
     )
     .pipe(z.array(z.url())),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
+  /**
+   * Postgres (Neon in prod, Docker locally). Without it séances are kept in memory, and lost on a
+   * restart; the server says so when it starts.
+   */
+  DATABASE_URL: z
+    .string()
+    .optional()
+    .transform((s) => (s ? s : undefined))
+    .refine((s) => s === undefined || /^postgres(ql)?:\/\/[^\s]+$/.test(s), {
+      message: 'must be a postgres:// URL',
+    }),
 });
 
 export type Env = z.infer<typeof schema>;

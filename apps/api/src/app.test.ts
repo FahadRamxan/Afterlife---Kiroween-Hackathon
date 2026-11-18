@@ -17,6 +17,11 @@ describe('GET /health', () => {
     expect(body.version).toMatch(/^\d+\.\d+\.\d+/);
     expect(typeof body.uptimeSeconds).toBe('number');
   });
+
+  it('says where data is kept: memory here (no database), so the UI can warn it is lost on restart', async () => {
+    const res = await app.inject({ method: 'GET', url: '/health' });
+    expect(res.json().storage).toBe('memory');
+  });
 });
 
 describe('CORS', () => {

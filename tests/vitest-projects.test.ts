@@ -48,6 +48,32 @@ describe('vitest projects', () => {
     expect(files.filter((f) => isEmulatorTest(f) && !usesRealEmulator(f))).toEqual([]);
   });
 
+  it('every test file on a real Postgres is a *.pg.test.ts, which the postgres project runs', async () => {
+    const { isPgTest, PG_GLOBAL_SETUP, sharedConfig, PG_TESTS } =
+      await import('../vitest.shared.mts');
+    const files = [...testFiles(join(ROOT, 'packages')), ...testFiles(join(ROOT, 'apps'))];
+    const usesPg = (f: string) => /freshDatabase\(/.test(readFileSync(join(ROOT, f), 'utf8'));
+    const pg = files.filter(usesPg);
+    expect(pg.length).toBeGreaterThanOrEqual(3);
+    expect(pg.filter((f) => !isPgTest(f))).toEqual([]);
+    expect(files.filter((f) => isPgTest(f) && !usesPg(f))).toEqual([]);
+
+    const root = (await import('../vitest.config.mts')).default;
+    const projects = root.test!.projects! as (string | TestProjectInlineConfiguration)[];
+    const postgres = projects.find(
+      (p): p is TestProjectInlineConfiguration =>
+        typeof p !== 'string' && p.test?.name === 'postgres',
+    );
+    expect(postgres?.test?.globalSetup).toEqual([PG_GLOBAL_SETUP]);
+    expect(sharedConfig({ fromRoot: true }).test!.exclude).toEqual(
+      expect.arrayContaining(PG_TESTS),
+    );
+    // On its own, a package with Postgres tests starts the database itself.
+    expect(sharedConfig({ fromRoot: false, postgres: true }).test!.globalSetup).toEqual([
+      PG_GLOBAL_SETUP,
+    ]);
+  });
+
   it('package configs leave real-emulator tests out when run from the root, and keep them alone', async () => {
     const { sharedConfig, EMULATOR_TESTS } = await import('../vitest.shared.mts');
     expect(sharedConfig({ fromRoot: true }).test!.exclude).toEqual(

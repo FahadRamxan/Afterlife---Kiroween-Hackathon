@@ -41,6 +41,16 @@ export function ApiStatusChip() {
       <span aria-hidden="true" className={cn('size-2 rounded-full', DOT[state])} />
       {t(state)}
       {status?.state === 'healthy' ? <span className="text-bone/60">v{status.version}</span> : null}
+      {/* Data in memory is lost when the API restarts: say so, in full-strength body text. */}
+      {status?.state === 'healthy' && status.storage !== 'unknown' ? (
+        <span
+          data-testid="api-storage"
+          data-storage={status.storage}
+          className={status.storage === 'memory' ? 'text-bone' : 'text-bone/60'}
+        >
+          {t(`storage.${status.storage}`)}
+        </span>
+      ) : null}
     </p>
   );
 }

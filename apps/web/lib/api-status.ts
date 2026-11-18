@@ -1,5 +1,9 @@
+/** Where the API keeps séances and projects. An older API does not say: 'unknown'. */
+export type ApiStorage = 'postgres' | 'memory' | 'unknown';
 export type ApiStatus =
-  { state: 'healthy'; version: string } | { state: 'down' } | { state: 'unconfigured' };
+  | { state: 'healthy'; version: string; storage: ApiStorage }
+  | { state: 'down' }
+  | { state: 'unconfigured' };
 
 export function healthUrl(base: string | undefined): string | null {
   if (!base) return null;
@@ -16,9 +20,14 @@ export async function checkApiHealth(
   try {
     const res = await fetcher(url, { cache: 'no-store', signal: AbortSignal.timeout(5000) });
     if (!res.ok) return { state: 'down' };
-    const body = (await res.json()) as { status?: unknown; version?: unknown };
+    const body = (await res.json()) as { status?: unknown; version?: unknown; storage?: unknown };
     return body.status === 'ok'
-      ? { state: 'healthy', version: String(body.version) }
+      ? {
+          state: 'healthy',
+          version: String(body.version),
+          storage:
+            body.storage === 'postgres' || body.storage === 'memory' ? body.storage : 'unknown',
+        }
       : { state: 'down' };
   } catch {
     return { state: 'down' };

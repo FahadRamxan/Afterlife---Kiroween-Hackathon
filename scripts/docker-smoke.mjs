@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 // Builds nothing. Runs the locally built images and checks they behave:
-//   API: answers /health with CORS for the allowed origin, runs as a non-root user, stops on SIGTERM.
+//   API: on a Postgres 16 container it migrates the database and says so on /health, answers
+//        /health with CORS for the allowed origin, runs as a non-root user, stops on SIGTERM.
 //   Worker: starts, logs, stops on SIGTERM with exit code 0.
 // Usage: docker build -f apps/api/Dockerfile -t afterlife-api:local . (same for worker), then
 //        node scripts/docker-smoke.mjs
 import { execFileSync } from 'node:child_process';
 
-const sh = (...args) => execFileSync('docker', args, { encoding: 'utf8' }).trim();
+const sh = (...args) =>
+  execFileSync('docker', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 const quiet = (...args) => {
   try {
     sh(...args);
@@ -19,16 +21,44 @@ const fail = (msg) => {
   process.exitCode = 1;
 };
 
-quiet('rm', '-f', 'al-api', 'al-worker');
+quiet('rm', '-f', 'al-api', 'al-worker', 'al-pg');
+quiet('network', 'rm', 'al-net');
+sh('network', 'create', 'al-net');
+sh(
+  'run',
+  '-d',
+  '--name',
+  'al-pg',
+  '--network',
+  'al-net',
+  '-e',
+  'POSTGRES_PASSWORD=smoke',
+  'postgres:16-alpine',
+);
+// The API migrates on start and refuses to start without its database: wait for Postgres first.
+let pgReady = false;
+for (let i = 0; i < 120 && !pgReady; i++) {
+  try {
+    sh('exec', 'al-pg', 'pg_isready', '-U', 'postgres', '-h', '127.0.0.1');
+    pgReady = true;
+  } catch {
+    await new Promise((r) => setTimeout(r, 500));
+  }
+}
+if (!pgReady) fail('Postgres never became ready');
 sh(
   'run',
   '-d',
   '--name',
   'al-api',
+  '--network',
+  'al-net',
   '-p',
   '4100:4000',
   '-e',
   'WEB_ORIGINS=https://afterlife.example',
+  '-e',
+  'DATABASE_URL=postgres://postgres:smoke@al-pg:5432/postgres',
   'afterlife-api:local',
 );
 sh('run', '-d', '--name', 'al-worker', 'afterlife-worker:local');
@@ -50,6 +80,18 @@ try {
     console.log(`api /health ${res.status} ${JSON.stringify(body)}`);
     console.log(`api cors ${res.headers.get('access-control-allow-origin')}`);
     if (res.status !== 200 || body.status !== 'ok') fail('API /health');
+    if (body.storage !== 'postgres') fail('API is not on Postgres');
+    const tables = sh(
+      'exec',
+      'al-pg',
+      'psql',
+      '-U',
+      'postgres',
+      '-tAc',
+      "select count(*) from information_schema.tables where table_schema = 'public'",
+    );
+    console.log(`postgres tables ${tables}`);
+    if (Number(tables) < 12) fail('the API did not migrate the database');
     if (res.headers.get('access-control-allow-origin') !== 'https://afterlife.example')
       fail('API CORS');
   }
@@ -68,6 +110,14 @@ try {
   console.log(`api exit ${aExit}`);
   if (aExit !== '0') fail('API did not stop cleanly');
 } finally {
-  quiet('rm', '-f', 'al-api', 'al-worker');
+  if (process.exitCode) {
+    try {
+      console.log(`api logs:\n${execFileSync('docker', ['logs', 'al-api'], { encoding: 'utf8' })}`);
+    } catch {
+      /* no API container */
+    }
+  }
+  quiet('rm', '-f', 'al-api', 'al-worker', 'al-pg');
+  quiet('network', 'rm', 'al-net');
 }
 console.log(process.exitCode ? 'docker smoke FAILED' : 'docker smoke PASSED');
