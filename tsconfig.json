@@ -1,6 +1,12 @@
 {
   "extends": "./tsconfig.base.json",
   // Repo-level tests and scripts. The packages and apps have their own tsconfig.
-  "compilerOptions": { "types": ["node"], "allowJs": true, "checkJs": false },
+  // allowImportingTsExtensions: tests import the root vitest configs (`./vitest.shared.mts`).
+  "compilerOptions": {
+    "types": ["node"],
+    "allowJs": true,
+    "checkJs": false,
+    "allowImportingTsExtensions": true
+  },
   "include": ["tests/**/*.ts", "scripts/**/*.ts", "vitest.setup.ts"]
 }

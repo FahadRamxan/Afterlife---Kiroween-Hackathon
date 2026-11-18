@@ -1,9 +1,11 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
-import { TEST_TIMEOUT } from './vitest.shared.mts';
+
+// Before the package configs load: they leave the real-emulator tests to the "emulator" project.
+process.env.AFTERLIFE_EMULATOR_LAST = '1';
+const { TEST_TIMEOUT } = await import('./vitest.shared.mts');
 
 const setup = fileURLToPath(new URL('./vitest.setup.ts', import.meta.url));
-
 export default defineConfig({
   test: {
     projects: [
@@ -15,6 +17,23 @@ export default defineConfig({
           include: ['tests/**/*.test.ts'],
           setupFiles: [setup],
           testTimeout: TEST_TIMEOUT,
+        },
+      },
+      {
+        // Real js-dos in headless Chromium: after every other project, one file at a time, so no
+        // property test or other emulator takes its CPU (a starved DOS app drops typed keys).
+        test: {
+          name: 'emulator',
+          include: [
+            'packages/*/src/**/*.integration.test.ts',
+            'packages/*/src/**/*.stdio.test.ts',
+            'apps/*/src/**/*.integration.test.ts',
+            'apps/*/src/**/*.stdio.test.ts',
+          ],
+          setupFiles: [setup],
+          testTimeout: TEST_TIMEOUT,
+          fileParallelism: false,
+          sequence: { groupOrder: 1 },
         },
       },
     ],
