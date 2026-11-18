@@ -3,6 +3,7 @@ import {
   Card,
   CertificateFrame,
   CRTFrame,
+  CrtScreen,
   DbfDiffView,
   DbfTable,
   DiffBadge,
@@ -12,7 +13,12 @@ import {
   colors,
 } from '@afterlife/ui';
 import type { ReactNode } from 'react';
-import { shifaMedicine, shifaMenuDecoded, shifaStockDiff } from '../../lib/design-samples';
+import {
+  shifaBillScreen,
+  shifaMedicine,
+  shifaMenuDecoded,
+  shifaStockDiff,
+} from '../../lib/design-samples';
 import { findApp } from '../../lib/graveyard';
 
 export const metadata = { title: 'Design system · Afterlife' };
@@ -57,6 +63,7 @@ export default async function DesignPage() {
   const medicine = shifaMedicine();
   const stock = shifaStockDiff();
   const decoded = await shifaMenuDecoded();
+  const bill = shifaBillScreen();
   // The demos use the real catalogue entry, so their years and place match the Graveyard.
   const shifa = findApp('shifa')!;
   const shifaTitle = `${shifa.name} v${shifa.version}`;
@@ -141,6 +148,21 @@ export default async function DesignPage() {
             <GhostCursor col={11} row={8} />
           </div>
         </CRTFrame>
+      </Section>
+
+      <Section
+        id="crtscreen"
+        title="CrtScreen"
+        meaning="The old app's real text screen in its own DOS colours. Ectoplasm ring: the field the agent is working on. Candle outline: data that just changed (it pulses, unless motion is reduced)."
+      >
+        <CrtScreen
+          className="max-w-3xl"
+          grid={bill.grid}
+          label="Shifa Medical Store, 1998, recorded run"
+          highlight={bill.highlight}
+          ghost={bill.ghost}
+          changed={bill.changed}
+        />
       </Section>
 
       <Section

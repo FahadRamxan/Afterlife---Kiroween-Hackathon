@@ -35,24 +35,25 @@ Fonts load through `next/font` in `apps/web/app/fonts.ts`.
 
 ## Components
 
-| Component          | Means                                                                                                                |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| `Button`           | `primary` moves the flow forward. `danger` changes old behaviour. Also `secondary`, `ghost`. Use `asChild` for links |
-| `Card`             | A neutral container                                                                                                  |
-| `Tombstone`        | A dead app that can be raised. Shows name and born–died years                                                        |
-| `CRTFrame`         | The real legacy app running live. Never wrap the reborn app in it                                                    |
-| `GhostCursor`      | The cell the Possessor is typing into. Place inside a relative grid with `--cell-h`                                  |
-| `DiffBadge`        | Data change kind: `inserted` teal, `deleted` red with strike, `changed` amber, `same` bone                           |
-| `ProgressCandle`   | Progress. The candle burns down as work completes. It is a `progressbar`                                             |
-| `CertificateFrame` | The signed proof of rebirth: bone paper and a wax seal                                                               |
-| `DbfTable`         | Records from a legacy `.DBF` file: phosphor mono cells, typed headers, arrow-key focus, virtualised rows             |
-| `DbfDiffView`      | A `.DBF` diff: each row coloured by `DiffBadge` kind, changed cells show old → new in a tooltip                      |
+| Component          | Means                                                                                                                                                            |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Button`           | `primary` moves the flow forward. `danger` changes old behaviour. Also `secondary`, `ghost`. Use `asChild` for links                                             |
+| `Card`             | A neutral container                                                                                                                                              |
+| `Tombstone`        | A dead app that can be raised. Shows name and born–died years                                                                                                    |
+| `CRTFrame`         | The real legacy app running live. Never wrap the reborn app in it                                                                                                |
+| `CrtScreen`        | A decoded DOS text screen inside CRTFrame, in its own 16 colours. Ectoplasm ring: the field the agent works on. Candle outline and pulse: data that just changed |
+| `GhostCursor`      | The cell the Possessor is typing into. Place inside a relative grid with `--cell-h`                                                                              |
+| `DiffBadge`        | Data change kind: `inserted` teal, `deleted` red with strike, `changed` amber, `same` bone                                                                       |
+| `ProgressCandle`   | Progress. The candle burns down as work completes. It is a `progressbar`                                                                                         |
+| `CertificateFrame` | The signed proof of rebirth: bone paper and a wax seal                                                                                                           |
+| `DbfTable`         | Records from a legacy `.DBF` file: phosphor mono cells, typed headers, arrow-key focus, virtualised rows                                                         |
+| `DbfDiffView`      | A `.DBF` diff: each row coloured by `DiffBadge` kind, changed cells show old → new in a tooltip                                                                  |
 
 ## Rules
 
 - Build with the components and tokens. Do not hard-code hex values in apps.
 - Use `cn()` from `@afterlife/ui` to merge classes (shadcn/ui pattern).
-- Respect `prefers-reduced-motion`: every animation must stop under it. `theme.css` does this for the classes `crt-scanlines`, `crt-glow`, `ghost-cursor`, `candle-flame` and `graveyard-fog`. New animations must be added there (`tokens.test.ts` fails otherwise).
+- Respect `prefers-reduced-motion`: every animation must stop under it. `theme.css` does this for the classes `crt-scanlines`, `crt-glow`, `ghost-cursor`, `candle-flame`, `data-pulse` and `graveyard-fog`. New animations must be added there (`tokens.test.ts` fails otherwise).
 - `graveyard-fog` drifts over an idle CRT preview: it means the app is dormant, not running.
 - Motion timings: `fast` 150 ms, `base` 300 ms, `slow` 600 ms (`motion` in `tokens.ts`).
 - Decorative effects get `aria-hidden="true"`. Anything that carries meaning also needs text or an ARIA label.

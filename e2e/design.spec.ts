@@ -7,6 +7,7 @@ const sections = [
   'card',
   'tombstone',
   'crt',
+  'crtscreen',
   'dbftable',
   'dbfdiff',
   'decoder',
@@ -54,6 +55,26 @@ test.describe('/design', () => {
     await expect(section.getByTestId('screen-fingerprint')).toHaveText(fp);
   });
 
+  test('CrtScreen draws the recorded Shifa bill with its overlays', async ({ page }) => {
+    const section = page.getByTestId('ds-crtscreen');
+    const crt = section.getByRole('region', { name: 'Shifa Medical Store, 1998, recorded run' });
+    await expect(crt).toContainText('PANADOL 500MG STRIP');
+    await expect(crt).toContainText('NEW BILL');
+    // 25 rows of 80 columns fit the frame: nothing is cut off on the right.
+    const frame = (await crt.boundingBox())!;
+    const lastRow = (await crt.locator('[data-crt-row="24"]').boundingBox())!;
+    expect(lastRow.x + lastRow.width).toBeLessThanOrEqual(frame.x + frame.width);
+    await expect(crt.locator('[data-crt-row]')).toHaveCount(25);
+    // The overlays are there, and said in words.
+    await expect(section.locator('[data-crt-highlight="true"]')).toBeVisible();
+    await expect(section.locator('.ghost-cursor')).toBeVisible();
+    await expect(section.locator('.data-pulse')).toBeVisible();
+    await expect(section).toContainText('Field Code is highlighted. Data changed on row 7.');
+    // The title bar is in the app's own colours: bright white on cyan.
+    const title = crt.locator('[data-crt-row="0"] span').first();
+    await expect(title).toHaveCSS('background-color', 'rgb(0, 170, 170)');
+  });
+
   test('the Shifa demos use the catalogue years (1998 to 2004)', async ({ page }) => {
     await expect(page.getByTestId('ds-tombstone')).toContainText('1998–2004');
     await expect(page.getByTestId('ds-certificate')).toContainText('Died 2004');
@@ -73,25 +94,38 @@ test.describe('/design', () => {
 test.describe('/design with reduced motion', () => {
   test.use({ reducedMotion: 'reduce' });
 
-  test('the CRT scanlines, glow, ghost cursor and flame do not animate', async ({ page }) => {
+  test('the CRT scanlines, glow, ghost cursor, flame and data pulse do not animate', async ({
+    page,
+  }) => {
     await page.goto('/design');
-    for (const sel of ['.crt-scanlines', '.crt-glow', '.ghost-cursor', '.candle-flame']) {
+    for (const sel of [
+      '.crt-scanlines',
+      '.crt-glow',
+      '.ghost-cursor',
+      '.candle-flame',
+      '.data-pulse',
+    ]) {
       const name = await page
         .locator(sel)
         .first()
         .evaluate((el) => getComputedStyle(el).animationName);
       expect(name, sel).toBe('none');
     }
+    // Without the pulse the changed data keeps its candle outline, so the meaning stays.
+    await expect(page.locator('.data-pulse').first()).toHaveCSS('outline-style', 'solid');
   });
 
   test('with motion allowed they do animate', async ({ browser }) => {
     const ctx = await browser.newContext({ reducedMotion: 'no-preference' });
     const page = await ctx.newPage();
     await page.goto('/design');
-    const name = await page
-      .locator('.crt-scanlines')
-      .evaluate((el) => getComputedStyle(el).animationName);
-    expect(name).not.toBe('none');
+    for (const sel of ['.crt-scanlines', '.data-pulse']) {
+      const name = await page
+        .locator(sel)
+        .first()
+        .evaluate((el) => getComputedStyle(el).animationName);
+      expect(name, sel).not.toBe('none');
+    }
     await ctx.close();
   });
 });
