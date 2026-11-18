@@ -34,7 +34,8 @@
     "db:migrate": "pnpm --filter @afterlife/db migrate",
     "db:migrate:down": "pnpm --filter @afterlife/db migrate:down",
     "db:seed": "pnpm --filter @afterlife/db seed",
-    "db:generate": "pnpm --filter @afterlife/db generate"
+    "db:generate": "pnpm --filter @afterlife/db generate",
+    "pipeline:record": "pnpm --filter @afterlife/worker record"
   },
   "devDependencies": {
     "@afterlife/db": "workspace:^",

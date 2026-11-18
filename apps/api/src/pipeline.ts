@@ -1,7 +1,18 @@
-// Raising a project starts its pipeline: the API queues the first step (possess) for the worker.
-// The orchestrator that runs the rest (Prompt 39) lives in the worker.
-import { createBoss, enqueueStep, ensureQueues, type Db } from '@afterlife/db';
-import type { Pipeline } from './projects';
+// Raising a project starts its pipeline (Prompt 39): the API queues the first step, and the
+// worker's orchestrator runs the rest. The API also reads where the steps are and can run one
+// step again alone.
+import {
+  PIPELINE,
+  createBoss,
+  enqueueStep,
+  ensureQueues,
+  eq,
+  pipelineSteps,
+  startPipeline,
+  type Db,
+  type PipelineStep,
+} from '@afterlife/db';
+import type { Pipeline, StepState } from './projects';
 
 export class PgPipeline implements Pipeline {
   private constructor(
@@ -22,7 +33,32 @@ export class PgPipeline implements Pipeline {
   }
 
   async start(projectId: string): Promise<void> {
-    await enqueueStep(this.boss, this.db, 'possess', { projectId });
+    await startPipeline(this.boss, this.db, projectId);
+  }
+
+  async steps(projectId: string): Promise<StepState[]> {
+    const rows = await this.db
+      .select()
+      .from(pipelineSteps)
+      .where(eq(pipelineSteps.projectId, projectId));
+    return PIPELINE.map((step) => {
+      const r = rows.find((x) => x.step === step);
+      const output = (r?.output ?? null) as { reason?: unknown; recorded?: unknown } | null;
+      const reason = typeof output?.reason === 'string' ? output.reason : null;
+      return {
+        step,
+        status: r?.status ?? 'pending',
+        attempts: r?.attempts ?? 0,
+        error: r?.error ?? null,
+        reason,
+        recorded: !!output?.recorded || !!reason?.startsWith('Recorded run'),
+        finishedAt: r?.finishedAt?.toISOString() ?? null,
+      };
+    });
+  }
+
+  async rerun(projectId: string, step: PipelineStep): Promise<boolean> {
+    return (await enqueueStep(this.boss, this.db, step, { projectId, force: true })) !== null;
   }
 
   async close(): Promise<void> {

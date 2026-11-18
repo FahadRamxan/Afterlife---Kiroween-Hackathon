@@ -8,6 +8,7 @@ const project = {
   source: 'graveyard',
   sourceApp: 'shifa',
   status: 'created',
+  mode: 'live',
   createdAt: '2026-11-18T10:00:00.000Z',
 };
 const json = (status: number, body: unknown, headers: Record<string, string> = {}) =>

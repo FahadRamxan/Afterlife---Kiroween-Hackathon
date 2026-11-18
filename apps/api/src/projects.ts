@@ -1,6 +1,6 @@
 // Projects (Prompt 36): one raise of a dead app. Created from a Graveyard app (or, from Prompt 40,
 // an upload), read back with its timeline, deleted with everything it owns.
-import { SEED_PROJECTS, uuidv7 } from '@afterlife/db';
+import { PIPELINE, SEED_PROJECTS, uuidv7, type PipelineStep } from '@afterlife/db';
 import type { FastifyInstance } from 'fastify';
 import {
   hasZodFastifySchemaValidationErrors,
@@ -19,6 +19,8 @@ export const ProjectSchema = z
     source: z.enum(['graveyard', 'upload']),
     sourceApp: z.string(),
     status: z.enum(['created', 'queued', 'running', 'done', 'failed']),
+    /** `recorded`: demo mode, a replay of a real run's saved outputs (Prompt 39). */
+    mode: z.enum(['live', 'recorded']),
     createdAt: z.iso.datetime(),
   })
   .meta({ id: 'Project' });
@@ -47,6 +49,10 @@ export const CreateProjectSchema = z.discriminatedUnion('source', [
   z.strictObject({
     source: z.literal('graveyard'),
     app: z.enum(GRAVEYARD_APPS).describe('A Graveyard app id'),
+    mode: z
+      .enum(['live', 'recorded'])
+      .optional()
+      .describe('recorded: demo mode, replay a real run (fast). Default live'),
   }),
   z.strictObject({
     source: z.literal('upload'),
@@ -57,7 +63,9 @@ export const CreateProjectSchema = z.discriminatedUnion('source', [
 const ErrorSchema = z.object({ error: z.string(), message: z.string() }).meta({ id: 'Error' });
 const IdParams = z.object({ id: z.uuid() });
 
-export type NewProject = Pick<Project, 'name' | 'source' | 'sourceApp'>;
+export type NewProject = Pick<Project, 'name' | 'source' | 'sourceApp'> & {
+  mode?: Project['mode'];
+};
 
 export interface ProjectStore {
   create(p: NewProject): Promise<Project>;
@@ -77,6 +85,7 @@ export class MemoryProjectStore implements ProjectStore {
     const project: Project = {
       id: uuidv7(),
       ...p,
+      mode: p.mode ?? 'live',
       status: 'created',
       createdAt: new Date().toISOString(),
     };
@@ -117,7 +126,32 @@ function validationError(err: unknown) {
 /** Starts the rebirth of a new project (queues its first step). Absent without a database. */
 export interface Pipeline {
   start(projectId: string): Promise<void>;
+  /** The six steps, in order, with where each one is. */
+  steps(projectId: string): Promise<StepState[]>;
+  /** Runs one step again, alone. False when it is already queued. */
+  rerun(projectId: string, step: PipelineStep): Promise<boolean>;
 }
+
+export const StepStateSchema = z
+  .object({
+    step: z.enum(PIPELINE),
+    /** `pending`: not reached yet. `skipped`: its agent is not built yet (see `reason`). */
+    status: z.enum(['pending', 'queued', 'running', 'done', 'failed', 'skipped']),
+    attempts: z.number().int().nonnegative(),
+    error: z.string().nullable(),
+    reason: z.string().nullable(),
+    /** True when the step replayed a recorded run (demo mode). */
+    recorded: z.boolean(),
+    finishedAt: z.iso.datetime().nullable(),
+  })
+  .meta({ id: 'StepState' });
+export type StepState = z.infer<typeof StepStateSchema>;
+
+const StepParams = z.object({ id: z.uuid(), step: z.enum(PIPELINE) });
+const noDatabase = {
+  error: 'NO_DATABASE',
+  message: 'This API has no database, so it runs no pipeline',
+};
 
 export function projectRoutes(
   store: ProjectStore,
@@ -162,7 +196,12 @@ export function projectRoutes(
             message: 'Raising an uploaded app arrives with the upload flow (Prompt 40)',
           });
         const seed = SEED_PROJECTS.find((p) => p.sourceApp === body.app)!;
-        const p = await store.create({ name: seed.name, source: 'graveyard', sourceApp: body.app });
+        const p = await store.create({
+          name: seed.name,
+          source: 'graveyard',
+          sourceApp: body.app,
+          mode: body.mode ?? 'live',
+        });
         // The project exists either way; if the queue fails it stays "created" and says so in the log.
         await opts.pipeline
           ?.start(p.id)
@@ -205,6 +244,59 @@ export function projectRoutes(
       async (req, reply) => {
         const events = await store.timeline(req.params.id);
         return events ? { projectId: req.params.id, events } : reply.code(404).send(notFound);
+      },
+    );
+
+    app.get(
+      '/api/projects/:id/steps',
+      {
+        schema: {
+          summary: 'The six pipeline steps of a project, in order, and where each one is',
+          tags: ['projects'],
+          params: IdParams,
+          response: {
+            200: z.object({ projectId: z.uuid(), steps: z.array(StepStateSchema) }),
+            400: ErrorSchema,
+            404: ErrorSchema,
+            429: ErrorSchema,
+            503: ErrorSchema,
+          },
+        },
+      },
+      async (req, reply) => {
+        if (!opts.pipeline) return reply.code(503).send(noDatabase);
+        if (!(await store.get(req.params.id))) return reply.code(404).send(notFound);
+        return { projectId: req.params.id, steps: await opts.pipeline.steps(req.params.id) };
+      },
+    );
+
+    app.post(
+      '/api/projects/:id/steps/:step/run',
+      {
+        config: { rateLimit: { max: opts.createPerMinute, timeWindow: '1 minute' } },
+        schema: {
+          summary: 'Run one step again, alone (the steps after it are not run)',
+          tags: ['projects'],
+          params: StepParams,
+          response: {
+            202: z.object({ queued: z.literal(true) }),
+            400: ErrorSchema,
+            404: ErrorSchema,
+            409: ErrorSchema,
+            429: ErrorSchema,
+            503: ErrorSchema,
+          },
+        },
+      },
+      async (req, reply) => {
+        if (!opts.pipeline) return reply.code(503).send(noDatabase);
+        if (!(await store.get(req.params.id))) return reply.code(404).send(notFound);
+        if (!(await opts.pipeline.rerun(req.params.id, req.params.step)))
+          return reply.code(409).send({
+            error: 'ALREADY_QUEUED',
+            message: `${req.params.step} is already waiting to run`,
+          });
+        return reply.code(202).send({ queued: true });
       },
     );
 

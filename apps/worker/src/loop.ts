@@ -5,6 +5,8 @@ import {
   JOB_OPTIONS,
   JOB_TYPES,
   JobDataSchema,
+  enqueueStep,
+  nextStep,
   emitEvent,
   pipelineSteps,
   projects,
@@ -16,7 +18,8 @@ import {
   sql,
 } from '@afterlife/db';
 import type { Job, PgBoss } from 'pg-boss';
-import type { Registry, StepContext } from './registry';
+import { loadRecording, replayStep, type Recording } from './recording';
+import type { Registry, StepContext, StepHandler } from './registry';
 
 export type JobLoop = { stop(): Promise<void> };
 
@@ -28,6 +31,8 @@ type LoopOptions = {
   options?: Partial<Record<JobType, Partial<JobOptions>>>;
   pollingIntervalSeconds?: number;
   log?: (line: string) => void;
+  /** The recorded run of an app, for projects in demo mode (default: recorded/<app>.json). */
+  recordingFor?: (app: string) => Recording | null;
 };
 
 export class StepTimeout extends Error {
@@ -74,6 +79,35 @@ async function withTimeout<T>(
   }
 }
 
+/**
+ * The handler for this project: the registry's, or in demo mode the recorded run's (a project
+ * whose app has no recording says so and is skipped).
+ */
+function handlerFor(
+  o: LoopOptions,
+  registry: Registry,
+  type: JobType,
+  project: { mode: 'live' | 'recorded'; sourceApp: string },
+): StepHandler {
+  if (project.mode !== 'recorded') return registry[type];
+  const rec = (o.recordingFor ?? loadRecording)(project.sourceApp);
+  if (rec) return replayStep(rec, type);
+  return async () => ({
+    status: 'skipped',
+    reason: `There is no recorded run of ${project.sourceApp}`,
+  });
+}
+
+/** In a pipeline run, queue the step after this one. */
+async function chain(
+  o: LoopOptions,
+  type: JobType,
+  data: { projectId: string; pipeline?: boolean },
+) {
+  const next = data.pipeline ? nextStep(type) : null;
+  if (next) await enqueueStep(o.boss, o.db, next, { projectId: data.projectId, pipeline: true });
+}
+
 async function runJob(o: LoopOptions, type: JobType, job: Job<unknown>) {
   const { db, registry } = o;
   const opts = { ...JOB_OPTIONS[type], ...o.options?.[type] };
@@ -91,6 +125,8 @@ async function runJob(o: LoopOptions, type: JobType, job: Job<unknown>) {
   // Idempotent: a duplicate delivery of a finished step does nothing (unless forced).
   if (row?.status === 'done' && !data.force) {
     await log(`${type} is already done; not run again`);
+    // Resuming a pipeline: pass straight on to the next step.
+    await chain(o, type, data);
     return { alreadyDone: true };
   }
   const attempt = (row?.attempts ?? 0) + 1;
@@ -114,7 +150,12 @@ async function runJob(o: LoopOptions, type: JobType, job: Job<unknown>) {
 
   try {
     const result = await withTimeout(opts.timeoutSeconds, job.signal, (signal) =>
-      registry[type]({
+      handlerFor(
+        o,
+        registry,
+        type,
+        project,
+      )({
         projectId: data.projectId,
         project: { name: project.name, source: project.source, sourceApp: project.sourceApp },
         step: type,
@@ -141,6 +182,8 @@ async function runJob(o: LoopOptions, type: JobType, job: Job<unknown>) {
       attempt,
       ...(result.status === 'skipped' ? { message: result.reason } : {}),
     });
+    // Queue the next step before the status is worked out, so a running pipeline never looks idle.
+    await chain(o, type, data);
     await refreshProjectStatus(db, data.projectId);
     return output;
   } catch (e) {

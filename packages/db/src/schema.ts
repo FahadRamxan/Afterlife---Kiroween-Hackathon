@@ -48,6 +48,9 @@ export const projectStatus = pgEnum('project_status', [
   'failed',
 ]);
 
+/** A live run does the work; a recorded run (demo mode) replays one that did, and says so. */
+export const runMode = pgEnum('run_mode', ['live', 'recorded']);
+
 export const projects = pgTable(
   'projects',
   {
@@ -57,6 +60,8 @@ export const projects = pgTable(
     /** The Graveyard app id (`shifa`) or the uploaded file's name. */
     sourceApp: text('source_app').notNull(),
     status: projectStatus('status').notNull().default('created'),
+    /** `recorded`: demo mode, the steps replay a real run's saved outputs (Prompt 39). */
+    mode: runMode('mode').notNull().default('live'),
     createdAt: createdAt(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },

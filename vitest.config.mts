@@ -44,6 +44,8 @@ export default defineConfig({
             'apps/*/src/**/*.stdio.test.ts',
           ],
           setupFiles: [setup],
+          // The full pipeline test (Prompt 39) needs Postgres as well as js-dos.
+          globalSetup: [PG_GLOBAL_SETUP],
           testTimeout: TEST_TIMEOUT,
           fileParallelism: false,
           sequence: { groupOrder: 1 },

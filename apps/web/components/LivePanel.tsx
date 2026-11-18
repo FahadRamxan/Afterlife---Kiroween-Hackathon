@@ -4,15 +4,22 @@ import { CrtScreen } from '@afterlife/ui';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { latestScreen, type LiveEvent } from '../lib/live';
-import { useProjectLive, type LiveStatus } from '../lib/use-project-live';
+import type { LiveStatus } from '../lib/use-project-live';
 
 type StepPayload = { step: string; state: string; attempt: number; message?: string };
 type LogPayload = { level: string; message: string };
 
 /** What the worker is doing on this project, live: the old app's screen and the step log. */
-export function LivePanel({ projectId, name }: { projectId: string; name: string }) {
+export function LivePanel({
+  events,
+  status,
+  name,
+}: {
+  events: LiveEvent[];
+  status: LiveStatus;
+  name: string;
+}) {
   const t = useTranslations('raise.live');
-  const { events, status } = useProjectLive(projectId);
   const screen = latestScreen(events);
   const grid = useMemo(() => {
     const w = ScreenWireSchema.safeParse((screen?.payload as { grid?: unknown } | undefined)?.grid);

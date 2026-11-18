@@ -8,6 +8,7 @@ import {
   sessions,
   souls,
   eq,
+  uuidv7,
 } from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -25,6 +26,59 @@ beforeAll(async () => {
 afterAll(() => t.drop());
 
 projectStoreContract('postgres', () => new PgProjectStore(t.db));
+
+describe('the steps of a project', () => {
+  it('GET steps lists the six in order; POST run queues one alone, and not twice', async () => {
+    const pipeline = await PgPipeline.start(t.db, t.url, { warn: () => {} });
+    const app = buildApp(
+      parseEnv({}),
+      { logger: false },
+      { projects: new PgProjectStore(t.db), pipeline },
+    );
+    try {
+      const p = (
+        await app.inject({
+          method: 'POST',
+          url: '/api/projects',
+          payload: { source: 'graveyard', app: 'iqra' },
+        })
+      ).json();
+      // As the worker would leave it: possess skipped, with its reason.
+      await t.db
+        .update(pipelineSteps)
+        .set({ status: 'skipped', output: { reason: 'Exploration is not built yet (Prompt 48)' } })
+        .where(eq(pipelineSteps.projectId, p.id));
+      const steps = (await app.inject({ method: 'GET', url: `/api/projects/${p.id}/steps` })).json()
+        .steps;
+      expect(steps.map((s: { step: string; status: string }) => `${s.step}:${s.status}`)).toEqual([
+        'possess:skipped',
+        'archaeology:pending',
+        'rebirth:pending',
+        'undertake:pending',
+        'prove:pending',
+        'exorcise:pending',
+      ]);
+      expect(steps[0]).toMatchObject({
+        reason: 'Exploration is not built yet (Prompt 48)',
+        recorded: false,
+      });
+
+      const run = () =>
+        app.inject({ method: 'POST', url: `/api/projects/${p.id}/steps/rebirth/run` });
+      expect((await run()).statusCode).toBe(202);
+      expect((await run()).statusCode).toBe(409);
+      const after = (await app.inject({ method: 'GET', url: `/api/projects/${p.id}/steps` })).json()
+        .steps;
+      expect(after[2]).toMatchObject({ step: 'rebirth', status: 'queued' });
+      expect(
+        (await app.inject({ method: 'GET', url: `/api/projects/${uuidv7()}/steps` })).statusCode,
+      ).toBe(404);
+    } finally {
+      await app.close();
+      await pipeline.close();
+    }
+  });
+});
 
 describe('raising starts the pipeline', () => {
   it('POST /api/projects queues the first step (possess) for the worker', async () => {

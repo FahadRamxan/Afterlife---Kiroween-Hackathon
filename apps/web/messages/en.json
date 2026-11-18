@@ -55,7 +55,10 @@
       "not-found": "The API could not find that app.",
       "rate-limited": "Too many raises from your address.",
       "error": "The API could not save this raise:"
-    }
+    },
+    "recorded": "Recorded run",
+    "recordedApp": "Watch a recorded run of {name}",
+    "recordedHint": "Fast: replays a real run of this app, saved earlier. Labelled as recorded."
   },
   "raise": {
     "title": "Raising {name}",
@@ -97,7 +100,8 @@
         "certificate_issued": "Certificate issued",
         "exorcism_found": "Legacy bug found",
         "voice_change": "Voice change"
-      }
+      },
+      "recorded": "Recorded run: these steps replay a real run of this app saved earlier (pnpm pipeline:record), sped up. Nothing is run live."
     },
     "live": {
       "title": "Live from the worker",
@@ -109,6 +113,28 @@
         "reconnecting": "Connection lost, reconnecting…",
         "closed": "Not live",
         "unconfigured": "The API is not configured"
+      }
+    },
+    "steps": {
+      "title": "Rebirth steps",
+      "progress": "{settled} of {total} steps finished",
+      "attempts": "attempt {n}",
+      "again": "Run {step} again, alone",
+      "againShort": "Run again",
+      "status": {
+        "pending": "Not reached yet",
+        "queued": "Waiting",
+        "running": "Running",
+        "done": "Done",
+        "failed": "Failed",
+        "skipped": "Skipped"
+      },
+      "unavailable": {
+        "unconfigured": "The API is not configured, so the steps cannot be shown.",
+        "down": "The API did not answer, so the steps cannot be shown.",
+        "not-found": "There is no such project.",
+        "rate-limited": "Too many requests from your address.",
+        "error": "The steps cannot be shown."
       }
     }
   },

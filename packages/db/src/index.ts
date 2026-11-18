@@ -19,7 +19,11 @@ export { uuidv7 } from './uuid';
 export {
   JOB_OPTIONS,
   JobDataSchema,
+  PIPELINE,
   createBoss,
+  nextStep,
+  startPipeline,
+  type PipelineStep,
   enqueueStep,
   ensureQueues,
   stepKey,

@@ -7,6 +7,7 @@ const ProjectSchema = z.object({
   source: z.enum(['graveyard', 'upload']),
   sourceApp: z.string(),
   status: z.enum(['created', 'queued', 'running', 'done', 'failed']),
+  mode: z.enum(['live', 'recorded']),
   createdAt: z.iso.datetime(),
 });
 export type Project = z.infer<typeof ProjectSchema>;
@@ -45,6 +46,7 @@ export async function createProject(
   api: string | undefined,
   app: string,
   fetcher: typeof fetch = fetch,
+  mode: Project['mode'] = 'live',
 ): Promise<{ ok: true; project: Project } | Failure> {
   if (!api) return { ok: false, reason: 'unconfigured' };
   let res: Response;
@@ -52,7 +54,9 @@ export async function createProject(
     res = await fetcher(`${base(api)}/api/projects`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ source: 'graveyard', app }),
+      body: JSON.stringify(
+        mode === 'live' ? { source: 'graveyard', app } : { source: 'graveyard', app, mode },
+      ),
       signal: AbortSignal.timeout(15_000),
     });
   } catch {
