@@ -17,9 +17,11 @@
     "vitest": "^5.1.0"
   },
   "dependencies": {
+    "@afterlife/db": "workspace:^",
     "@afterlife/emulator": "workspace:^",
     "@afterlife/screen": "workspace:^",
     "js-dos": "8.5.4",
+    "pg-boss": "^12.38.2",
     "playwright": "^1.65.1",
     "tsx": "^4.23.15",
     "zod": "^4.6.7"

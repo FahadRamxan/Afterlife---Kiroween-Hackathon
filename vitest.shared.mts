@@ -27,6 +27,9 @@ export const PG_TESTS = ['src/**/*.pg.test.ts'];
 /** True for a repo-relative test path that the "postgres" project runs. */
 export const isPgTest = (file: string) => /\.pg\.test\.ts$/.test(file);
 
+/** Per-test time limit for *.pg.test.ts: each test does real database round trips. */
+export const PG_TEST_TIMEOUT = 30_000;
+
 /** Starts Postgres 16 in Docker (or uses TEST_DATABASE_URL) for the *.pg.test.ts files. */
 export const PG_GLOBAL_SETUP = fileURLToPath(
   new URL('./packages/db/src/testing/global-setup.ts', import.meta.url),
@@ -41,7 +44,13 @@ const FROM_ROOT = process.env.AFTERLIFE_EMULATOR_LAST === '1';
  * (`pnpm --filter <pkg> test`), a package runs all its tests; `postgres: true` then starts the
  * test database for its *.pg.test.ts files.
  */
-export function sharedConfig({ fromRoot, postgres = false }: { fromRoot: boolean; postgres?: boolean }) {
+export function sharedConfig({
+  fromRoot,
+  postgres = false,
+}: {
+  fromRoot: boolean;
+  postgres?: boolean;
+}) {
   return defineProject({
     test: {
       include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
@@ -49,7 +58,7 @@ export function sharedConfig({ fromRoot, postgres = false }: { fromRoot: boolean
       setupFiles: [fileURLToPath(new URL('./vitest.setup.ts', import.meta.url))],
       globalSetup: !fromRoot && postgres ? [PG_GLOBAL_SETUP] : [],
       // passWithNoTests is a root option: vitest.config.mts and each package's `test` script set it.
-      testTimeout: TEST_TIMEOUT,
+      testTimeout: !fromRoot && postgres ? Math.max(TEST_TIMEOUT, PG_TEST_TIMEOUT) : TEST_TIMEOUT,
     },
   });
 }

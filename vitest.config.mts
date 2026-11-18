@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 
 // Before the package configs load: they leave the real-emulator tests to the "emulator" project.
 process.env.AFTERLIFE_EMULATOR_LAST = '1';
-const { TEST_TIMEOUT, PG_GLOBAL_SETUP } = await import('./vitest.shared.mts');
+const { TEST_TIMEOUT, PG_GLOBAL_SETUP, PG_TEST_TIMEOUT } = await import('./vitest.shared.mts');
 
 const setup = fileURLToPath(new URL('./vitest.setup.ts', import.meta.url));
 export default defineConfig({
@@ -27,7 +27,9 @@ export default defineConfig({
           include: ['packages/*/src/**/*.pg.test.ts', 'apps/*/src/**/*.pg.test.ts'],
           setupFiles: [setup],
           globalSetup: [PG_GLOBAL_SETUP],
-          testTimeout: TEST_TIMEOUT,
+          // Real database round trips next to the rest of the suite: a migration up, down and up
+          // took over 5 s in the pre-commit run on a loaded machine.
+          testTimeout: Math.max(TEST_TIMEOUT, PG_TEST_TIMEOUT),
         },
       },
       {

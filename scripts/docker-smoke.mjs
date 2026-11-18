@@ -2,7 +2,9 @@
 // Builds nothing. Runs the locally built images and checks they behave:
 //   API: on a Postgres 16 container it migrates the database and says so on /health, answers
 //        /health with CORS for the allowed origin, runs as a non-root user, stops on SIGTERM.
-//   Worker: starts, logs, stops on SIGTERM with exit code 0.
+//   Worker: on the same Postgres it starts its pg-boss job loop, runs as a non-root user, and
+//           stops on SIGTERM with exit code 0. Inside the image it boots the real Shifa EXE in
+//           two headless js-dos emulators at once and reports the memory that takes.
 // Usage: docker build -f apps/api/Dockerfile -t afterlife-api:local . (same for worker), then
 //        node scripts/docker-smoke.mjs
 import { execFileSync } from 'node:child_process';
@@ -21,9 +23,23 @@ const fail = (msg) => {
   process.exitCode = 1;
 };
 
-quiet('rm', '-f', 'al-api', 'al-worker', 'al-pg');
+quiet('rm', '-f', 'al-api', 'al-worker', 'al-pg', 'al-boot');
 quiet('network', 'rm', 'al-net');
 sh('network', 'create', 'al-net');
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+/** Polls a container's output until it matches, or gives up. */
+async function waitForLog(name, re, ms) {
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    const out = execFileSync('docker', ['logs', name], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    if (re.test(out)) return out;
+    await sleep(500);
+  }
+  return null;
+}
 sh(
   'run',
   '-d',
@@ -61,7 +77,17 @@ sh(
   'DATABASE_URL=postgres://postgres:smoke@al-pg:5432/postgres',
   'afterlife-api:local',
 );
-sh('run', '-d', '--name', 'al-worker', 'afterlife-worker:local');
+sh(
+  'run',
+  '-d',
+  '--name',
+  'al-worker',
+  '--network',
+  'al-net',
+  '-e',
+  'DATABASE_URL=postgres://postgres:smoke@al-pg:5432/postgres',
+  'afterlife-worker:local',
+);
 
 try {
   let res;
@@ -99,6 +125,51 @@ try {
   console.log(`api user ${user}`);
   if (user !== 'node') fail('API runs as root');
 
+  if (!(await waitForLog('al-worker', /afterlife worker started/, 60_000)))
+    fail('worker never started its job loop');
+  const wUser = sh('exec', 'al-worker', 'whoami');
+  console.log(`worker user ${wUser}`);
+  if (wUser !== 'node') fail('worker runs as root');
+  const queues = sh(
+    'exec',
+    'al-pg',
+    'psql',
+    '-U',
+    'postgres',
+    '-tAc',
+    // Ours only: pg-boss keeps queues of its own there too.
+    "select count(*) from pgboss.queue where name in ('possess', 'archaeology', 'rebirth', 'undertake', 'prove', 'exorcise', 'twin-replay', 'voice-change')",
+  );
+  console.log(`pg-boss queues ${queues}`);
+  if (Number(queues) !== 8) fail('the worker did not make its 8 queues');
+
+  // Chromium in the image: two Shifa emulators at once, held 8 s while the memory is read.
+  sh(
+    'run',
+    '-d',
+    '--name',
+    'al-boot',
+    'afterlife-worker:local',
+    'node',
+    '--import',
+    'tsx',
+    'src/smoke-boot.ts',
+    '2',
+    '8000',
+  );
+  const booted = await waitForLog('al-boot', /BOOTED[^\n]*\n[^]*BOOTED/, 120_000);
+  if (!booted) fail('Shifa did not boot twice inside the worker image');
+  else {
+    const mem = sh('stats', '--no-stream', '--format', '{{.MemUsage}}', 'al-boot');
+    console.log(`worker image, 2 Shifa emulators: ${mem}`);
+  }
+  sh('wait', 'al-boot');
+  const bootLogs = sh('logs', 'al-boot');
+  console.log(`boot logs:\n${bootLogs}`);
+  if (!/SMOKE BOOT OK 2/.test(bootLogs)) fail('smoke boot did not finish');
+  if (sh('inspect', 'al-boot', '--format', '{{.State.ExitCode}}') !== '0')
+    fail('smoke boot exit code');
+
   sh('stop', '-t', '10', 'al-worker');
   console.log(`worker logs:\n${sh('logs', 'al-worker')}`);
   const wExit = sh('inspect', 'al-worker', '--format', '{{.State.ExitCode}}');
@@ -117,7 +188,7 @@ try {
       /* no API container */
     }
   }
-  quiet('rm', '-f', 'al-api', 'al-worker', 'al-pg');
+  quiet('rm', '-f', 'al-api', 'al-worker', 'al-pg', 'al-boot');
   quiet('network', 'rm', 'al-net');
 }
 console.log(process.exitCode ? 'docker smoke FAILED' : 'docker smoke PASSED');

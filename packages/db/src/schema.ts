@@ -12,6 +12,7 @@ import {
   jsonb,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
   uniqueIndex,
@@ -270,6 +271,78 @@ export const registryPatterns = pgTable('registry_patterns', {
   createdAt: createdAt(),
 });
 
+/** The job types the worker runs (Prompt 37): the six pipeline steps, then two on demand. */
+export const JOB_TYPES = [
+  'possess',
+  'archaeology',
+  'rebirth',
+  'undertake',
+  'prove',
+  'exorcise',
+  'twin-replay',
+  'voice-change',
+] as const;
+export type JobType = (typeof JOB_TYPES)[number];
+
+export const stepStatus = pgEnum('step_status', ['queued', 'running', 'done', 'failed', 'skipped']);
+
+/**
+ * One step of one project: its state and saved output, so the pipeline can resume and a step can
+ * be re-run alone (Prompt 39). (project, step) is the job's idempotency key.
+ */
+export const pipelineSteps = pgTable(
+  'pipeline_steps',
+  {
+    projectId: projectId(),
+    step: text('step').notNull(),
+    status: stepStatus('status').notNull().default('queued'),
+    attempts: integer('attempts').notNull().default(0),
+    jobId: text('job_id'),
+    output: jsonb('output'),
+    error: text('error'),
+    startedAt: timestamp('started_at', { withTimezone: true }),
+    finishedAt: timestamp('finished_at', { withTimezone: true }),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.projectId, t.step] }),
+    check('pipeline_steps_step', sql.raw(`step in (${JOB_TYPES.map((s) => `'${s}'`).join(', ')})`)),
+    check('pipeline_steps_attempts', sql`${t.attempts} >= 0`),
+  ],
+);
+
+/** What the Crew does, as it happens (crew.md), plus each step's start and end. */
+export const EVENT_TYPES = [
+  'step',
+  'screen',
+  'observation',
+  'rule_found',
+  'soul_updated',
+  'proof_case',
+  'exorcism',
+  'log',
+] as const;
+export type EventType = (typeof EVENT_TYPES)[number];
+
+/** Progress events. `seq` orders them per database, so a client can resume after the last one. */
+export const projectEvents = pgTable(
+  'project_events',
+  {
+    seq: bigint('seq', { mode: 'number' }).primaryKey().generatedAlwaysAsIdentity(),
+    projectId: projectId(),
+    type: text('type').notNull(),
+    payload: jsonb('payload').notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    index('project_events_project_seq_idx').on(t.projectId, t.seq),
+    check(
+      'project_events_type',
+      sql.raw(`type in (${EVENT_TYPES.map((s) => `'${s}'`).join(', ')})`),
+    ),
+  ],
+);
+
 /** Every table, in an order where each one's parents come first. */
 export const TABLES = {
   projects,
@@ -283,4 +356,6 @@ export const TABLES = {
   twin_events: twinEvents,
   voice_changes: voiceChanges,
   registry_patterns: registryPatterns,
+  pipeline_steps: pipelineSteps,
+  project_events: projectEvents,
 } as const;
