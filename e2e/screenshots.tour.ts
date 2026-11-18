@@ -109,3 +109,24 @@ test('live js-dos: Shifa stock screen', async ({ page }) => {
   await section.getByRole('button', { name: 'Read files' }).click();
   await section.screenshot({ path: `${OUT}/11-live-jsdos.png` });
 });
+
+test('recorded observation: saving a Shifa bill', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.setViewportSize({ width: 1100, height: 900 });
+  await ready(page, '/design');
+  const section = page.getByTestId('ds-live');
+  await section.getByRole('button', { name: 'Boot Shifa Medical Store in js-dos' }).click();
+  await expect(section.getByTestId('live-screen-name')).toHaveText('Screen: MAIN MENU', {
+    timeout: 60_000,
+  });
+  const keys = section.getByLabel('Keys to send');
+  const record = section.getByRole('button', { name: 'Record' });
+  const last = section.getByRole('region', { name: 'Last observation' });
+  await keys.fill('1{Enter}PAN500{Enter}4{Enter}BRU400{Enter}2{Enter}{Enter}');
+  await record.click();
+  await expect(last).toContainText('NEW BILL', { timeout: 20_000 });
+  await keys.fill('{F2}');
+  await record.click();
+  await expect(last).toContainText('+ 9807-0001', { timeout: 20_000 });
+  await section.screenshot({ path: `${OUT}/12-observation.png` });
+});

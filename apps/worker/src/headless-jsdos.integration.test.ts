@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { diffSnapshots, snapshot } from '@afterlife/dbf';
 import type { EmulatorController } from '@afterlife/emulator';
-import { buildBundle } from '@afterlife/emulator';
+import { buildBundle, recordAction } from '@afterlife/emulator';
 import { controllerContract } from '@afterlife/emulator/contract';
 import { decodeScreen, gridText } from '@afterlife/screen';
 import { chromium, type Browser } from 'playwright';
@@ -140,6 +140,64 @@ describe('HeadlessPool on the real Shifa', () => {
       expect(most).toBe(2);
       // A fresh boot each time: every run makes bill 9807-0001, the same diff.
       for (const d of results) expect(d).toEqual(results[0]);
+    } finally {
+      await pool.close();
+    }
+  });
+});
+
+describe('recordAction on the real Shifa (Prompt 29)', () => {
+  it('a key that does nothing (Esc on the main menu) gives an empty diff', async () => {
+    const pool = new HeadlessPool({ size: 1, cycles: 60000, keyDelayMs: 50 });
+    try {
+      const obs = await pool.use(
+        SHIFA,
+        async (emu) => {
+          await waitFor(emu, 'MAIN MENU');
+          return recordAction(emu, '{Esc}');
+        },
+        { dosTime: DOS_TIME },
+      );
+      expect(obs.stable).toBe(true);
+      expect(obs.dbfDiff.tables).toEqual({});
+      expect(obs.dbfDiff.unchanged).toEqual(DBFS);
+      expect(obs.screenAfter.model.title?.name).toBe('MAIN MENU');
+      expect(obs.screenAfter.fingerprint).toBe(obs.screenBefore.fingerprint);
+    } finally {
+      await pool.close();
+    }
+  });
+
+  it('saving a bill (F2) records the inserts and the saved screen', async () => {
+    const pool = new HeadlessPool({ size: 1, cycles: 60000, keyDelayMs: 50 });
+    try {
+      const [lines, save] = await pool.use(
+        SHIFA,
+        async (emu) => {
+          await waitFor(emu, 'MAIN MENU');
+          const a = await recordAction(
+            emu,
+            '1{Enter}PAN500{Enter}4{Enter}BRU400{Enter}2{Enter}{Enter}',
+          );
+          const b = await recordAction(emu, '{F2}');
+          return [a, b] as const;
+        },
+        { dosTime: DOS_TIME },
+      );
+      // Entering lines changes nothing on disk; the save does.
+      expect(lines.dbfDiff.tables).toEqual({});
+      expect(lines.screenAfter.text.join('\n')).toContain('F2=Save bill');
+      expect(save.dbfDiff.tables['BILLS.DBF']!.inserted.map((r) => r.values.BILL_NO)).toEqual([
+        '9807-0001',
+      ]);
+      expect(save.dbfDiff.tables['BILLITEM.DBF']!.inserted).toHaveLength(2);
+      expect(save.dbfDiff.tables['MEDICINE.DBF']!.updated.map((u) => u.key)).toEqual([
+        'PAN500',
+        'BRU400',
+      ]);
+      expect(save.screenAfter.text.join('\n')).toContain('BILL 9807-0001 SAVED');
+      expect(save.keys).toBe('{F2}');
+      expect(save.durationMs).toBeGreaterThanOrEqual(300);
     } finally {
       await pool.close();
     }
