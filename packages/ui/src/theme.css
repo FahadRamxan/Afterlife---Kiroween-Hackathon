@@ -20,6 +20,7 @@
   --animate-ghost-pulse: ghost-pulse 1.2s ease-in-out infinite;
   --animate-flame: flame 1.6s ease-in-out infinite;
   --animate-fog-drift: fog-drift 14s ease-in-out infinite alternate;
+  --animate-data-pulse: data-pulse 600ms ease-out 3;
 }
 
 @keyframes crt-flicker {
@@ -77,6 +78,17 @@
   }
 }
 
+@keyframes data-pulse {
+  from {
+    box-shadow: 0 0 10px 3px var(--color-candle);
+    background-color: rgb(245 181 68 / 0.35);
+  }
+  to {
+    box-shadow: 0 0 0 0 transparent;
+    background-color: transparent;
+  }
+}
+
 @layer components {
   /* The CRT effect means "this is the original legacy app running live". */
   .crt-scanlines {
@@ -97,6 +109,10 @@
       radial-gradient(ellipse at 75% 40%, rgb(237 230 214 / 0.16), transparent 55%);
     animation: var(--animate-fog-drift);
   }
+  /* Data that just changed in the old app: a short candle pulse. The outline stays after it. */
+  .data-pulse {
+    animation: var(--animate-data-pulse);
+  }
   .crt-glow {
     text-shadow: 0 0 4px rgb(51 255 102 / 0.55);
     animation: var(--animate-crt-flicker);
@@ -108,6 +124,7 @@
   .crt-glow,
   .ghost-cursor,
   .candle-flame,
+  .data-pulse,
   .graveyard-fog {
     animation: none !important;
   }

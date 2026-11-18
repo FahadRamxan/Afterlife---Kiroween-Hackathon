@@ -75,3 +75,40 @@ export async function shifaMenuDecoded() {
     fingerprint: await fingerprint(model),
   };
 }
+
+/**
+ * A recorded js-dos frame of a Shifa bill with two lines (packages/screen/fixtures), with the
+ * overlays the Possessor would show: the Code box it types into, and the line just added.
+ */
+export function shifaBillScreen() {
+  const png = readFileSync(
+    path.join(
+      process.cwd(),
+      '..',
+      '..',
+      'packages',
+      'screen',
+      'fixtures',
+      'shifa-bill-small-lines-640.png',
+    ),
+  );
+  const img = decodePng(new Uint8Array(png));
+  const grid = decodeScreen(img.rgba, img.width, img.height);
+  const model = analyzeScreen(grid);
+  const code = model.fields.find((f) => f.label === 'Code')!;
+  const table = model.tables[0]!;
+  const added = table.rows.at(-1)!;
+  const last = table.columns.at(-1)!;
+  return {
+    grid,
+    highlight: { row: code.row, col: code.col, length: code.length ?? 1, label: 'Code' },
+    ghost: { row: code.row, col: code.col },
+    changed: [
+      {
+        row: added.row,
+        col: table.columns[0]!.col,
+        length: last.col + last.length - table.columns[0]!.col,
+      },
+    ],
+  };
+}
