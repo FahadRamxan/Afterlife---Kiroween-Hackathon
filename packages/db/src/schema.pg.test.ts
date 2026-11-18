@@ -70,6 +70,29 @@ describe('migrations on a clean database', () => {
   });
 });
 
+describe('createDb', () => {
+  it('survives the server closing its idle connections (Neon suspends idle databases)', async () => {
+    const t = await freshDatabase();
+    const errors: Error[] = [];
+    const db = createDb(t.url, { onIdleError: (e) => errors.push(e) });
+    try {
+      await db.$client.query('SELECT 1');
+      // Another connection kills every other connection to this database, as a restart would.
+      await t.db.$client.query(
+        `SELECT pg_terminate_backend(pid) FROM pg_stat_activity
+         WHERE datname = current_database() AND pid <> pg_backend_pid() AND application_name = ''`,
+      );
+      await new Promise((r) => setTimeout(r, 200));
+      expect(errors.length).toBeGreaterThan(0);
+      // The process is still alive, and the next query opens a fresh connection.
+      expect((await db.$client.query('SELECT 1 AS one')).rows).toEqual([{ one: 1 }]);
+    } finally {
+      await db.$client.end();
+      await t.drop();
+    }
+  });
+});
+
 describe('the migrated database matches schema.ts', () => {
   let t: TestDatabase;
   beforeAll(async () => {

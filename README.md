@@ -18,24 +18,25 @@ See [plan.md](plan.md) for the plan and [prompt.md](prompt.md) for the build pro
 
 ## Commands
 
-| Command                 | What it does                                                                               |
-| ----------------------- | ------------------------------------------------------------------------------------------ |
-| `pnpm dev`              | Run all apps in dev mode                                                                   |
-| `pnpm build`            | Build everything                                                                           |
-| `pnpm test`             | Vitest across the workspace                                                                |
-| `pnpm e2e`              | Playwright end-to-end tests                                                                |
-| `pnpm lint`             | ESLint                                                                                     |
-| `pnpm typecheck`        | TypeScript strict checks                                                                   |
-| `pnpm verify`           | lint, typecheck, test and e2e, all of them                                                 |
-| `pnpm ci:local`         | Everything CI did: verify with 2000 property runs, production e2e, Docker builds and smoke |
-| `pnpm db:migrate`       | Apply the database migrations to `DATABASE_URL` (the API also does it when it starts)      |
-| `pnpm db:migrate:down`  | Undo the newest migration                                                                  |
-| `pnpm db:seed`          | Add the three Graveyard projects (safe to run again)                                       |
-| `pnpm db:generate`      | Write the next migration from `packages/db/src/schema.ts` (then write its `.down.sql`)     |
-| `pnpm screenshots`      | Retake the UI tour in `docs/screenshots`                                                   |
-| `pnpm mcp:gif`          | Record the MCP demo GIF from a real session (`apps/web/public/mcp/afterlife-mcp.gif`)      |
-| `pnpm screen:capture`   | Record the VGA fonts and real js-dos frames of the sample apps (screen decoder fixtures)   |
-| `pnpm smoke:prod <url>` | The `@smoke` Playwright tests against a deployed site                                      |
+| Command                 | What it does                                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------------- |
+| `pnpm dev`              | Run all apps in dev mode                                                                    |
+| `pnpm build`            | Build everything                                                                            |
+| `pnpm test`             | Vitest across the workspace                                                                 |
+| `pnpm e2e`              | Playwright end-to-end tests                                                                 |
+| `pnpm lint`             | ESLint                                                                                      |
+| `pnpm typecheck`        | TypeScript strict checks                                                                    |
+| `pnpm verify`           | lint, typecheck, test and e2e, all of them                                                  |
+| `pnpm ci:local`         | Everything CI did: verify with 2000 property runs, production e2e, Docker builds and smoke  |
+| API docs                | `http://localhost:4000/api/docs` (Swagger UI) and `/api/openapi.json` while `pnpm dev` runs |
+| `pnpm db:migrate`       | Apply the database migrations to `DATABASE_URL` (the API also does it when it starts)       |
+| `pnpm db:migrate:down`  | Undo the newest migration                                                                   |
+| `pnpm db:seed`          | Add the three Graveyard projects (safe to run again)                                        |
+| `pnpm db:generate`      | Write the next migration from `packages/db/src/schema.ts` (then write its `.down.sql`)      |
+| `pnpm screenshots`      | Retake the UI tour in `docs/screenshots`                                                    |
+| `pnpm mcp:gif`          | Record the MCP demo GIF from a real session (`apps/web/public/mcp/afterlife-mcp.gif`)       |
+| `pnpm screen:capture`   | Record the VGA fonts and real js-dos frames of the sample apps (screen decoder fixtures)    |
+| `pnpm smoke:prod <url>` | The `@smoke` Playwright tests against a deployed site                                       |
 
 ## How we test
 

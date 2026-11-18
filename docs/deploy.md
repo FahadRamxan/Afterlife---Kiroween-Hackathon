@@ -24,7 +24,8 @@ Secrets go in each host's dashboard only. Never commit `.env` files. Every app h
 2. Render asks for the `sync: false` values:
    - `afterlife-api`: `WEB_ORIGINS` = the Vercel URL (step 3), for example `https://afterlife.vercel.app`. Comma-separate several. `DATABASE_URL` = the Neon direct URL. Without it the API keeps séances in memory, and the footer of the web app says "in memory: lost on restart".
    - `afterlife-worker`: `DATABASE_URL` = the Neon direct URL.
-3. Render builds each Dockerfile from the repo root. The API health check is `GET /health`. A deploy only goes live once it returns 200.
+3. Render builds each Dockerfile from the repo root. The API health check is `GET /health`. A deploy only goes live once it returns 200. `render.yaml` sets `TRUST_PROXY=1` on the API, so the per-IP rate limits (300 requests a minute, 20 raises a minute) see the visitor's address and not Render's proxy.
+   - The API documents itself: `https://<api>/api/docs` (Swagger UI) and `https://<api>/api/openapi.json`.
 4. Note the API URL, for example `https://afterlife-api.onrender.com`.
 
 Plan notes:

@@ -1,7 +1,7 @@
-import { Button, CRTFrame, Tombstone } from '@afterlife/ui';
+import { CRTFrame, Tombstone } from '@afterlife/ui';
 import { useTranslations } from 'next-intl';
-import Link from 'next/link';
 import { storyLines, type GraveyardApp } from '../lib/graveyard';
+import { RaiseButton } from './RaiseButton';
 
 /** One dead app: its first screen from a real DOSBox run, idle under fog, and a Raise button. */
 export function GraveyardCard({ app }: { app: GraveyardApp }) {
@@ -14,13 +14,7 @@ export function GraveyardCard({ app }: { app: GraveyardApp }) {
       nameLang="en"
       born={app.born}
       died={app.died}
-      actions={
-        <Button asChild>
-          <Link href={`/raise/${app.id}`} aria-label={t('raiseApp', { name: app.name })}>
-            {t('raise')}
-          </Link>
-        </Button>
-      }
+      actions={<RaiseButton app={app.id} name={app.name} />}
     >
       <div className="relative mx-auto w-full max-w-[18rem]">
         <CRTFrame

@@ -30,14 +30,12 @@ test.describe('/graveyard', () => {
   });
 
   for (const app of apps) {
-    test(`Raise ${app.id} opens /raise/${app.id}`, async ({ page }) => {
+    test(`Raise ${app.id} creates a project and opens it`, async ({ page }) => {
       await page.goto('/graveyard');
-      const link = page.getByRole('link', { name: `Raise ${app.name}` });
-      await expect(link).toHaveAttribute('href', `/raise/${app.id}`);
-      await link.click();
+      await page.getByRole('button', { name: `Raise ${app.name}` }).click();
       // With 10 workers on a cold server, the first render of /raise/<id> can take more than the
       // 5 s default (ci:local flaked twice on this line, then passed on retry in 0.7 s).
-      await expect(page).toHaveURL(new RegExp(`/raise/${app.id}$`), { timeout: 15_000 });
+      await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
       await expect(
         page.getByRole('heading', { level: 1, name: `Raising ${app.name}` }),
       ).toBeVisible();
@@ -103,7 +101,7 @@ test.describe('/graveyard', () => {
     await page.goto('/graveyard');
     await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
     await expect(page.getByRole('heading', { level: 1, name: 'قبرستان' })).toBeVisible();
-    await expect(page.getByRole('link', { name: /زندہ کریں/ })).toHaveCount(3);
+    await expect(page.getByRole('button', { name: /زندہ کریں/ })).toHaveCount(3);
     // The era stories are English data, so they are marked as English for screen readers.
     await expect(page.getByTestId('story').first()).toHaveAttribute('lang', 'en');
   });

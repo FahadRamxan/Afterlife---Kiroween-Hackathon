@@ -1,0 +1,228 @@
+// Projects (Prompt 36): one raise of a dead app. Created from a Graveyard app (or, from Prompt 40,
+// an upload), read back with its timeline, deleted with everything it owns.
+import { SEED_PROJECTS, uuidv7 } from '@afterlife/db';
+import type { FastifyInstance } from 'fastify';
+import {
+  hasZodFastifySchemaValidationErrors,
+  type FastifyPluginAsyncZod,
+} from 'fastify-type-provider-zod';
+import { z } from 'zod';
+
+export const GRAVEYARD_APPS = SEED_PROJECTS.map((p) => p.sourceApp) as [string, ...string[]];
+/** The seeded Graveyard projects are shared by every visitor, so nobody may delete them. */
+const PROTECTED = new Set<string>(SEED_PROJECTS.map((p) => p.id));
+
+export const ProjectSchema = z
+  .object({
+    id: z.uuid(),
+    name: z.string(),
+    source: z.enum(['graveyard', 'upload']),
+    sourceApp: z.string(),
+    status: z.enum(['created', 'queued', 'running', 'done', 'failed']),
+    createdAt: z.iso.datetime(),
+  })
+  .meta({ id: 'Project' });
+export type Project = z.infer<typeof ProjectSchema>;
+
+export const TIMELINE_KINDS = [
+  'project_created',
+  'session_recorded',
+  'soul_version',
+  'proof_run',
+  'certificate_issued',
+  'exorcism_found',
+  'voice_change',
+] as const;
+export const TimelineEventSchema = z
+  .object({
+    at: z.iso.datetime(),
+    kind: z.enum(TIMELINE_KINDS),
+    id: z.uuid(),
+    summary: z.string(),
+  })
+  .meta({ id: 'TimelineEvent' });
+export type TimelineEvent = z.infer<typeof TimelineEventSchema>;
+
+export const CreateProjectSchema = z.discriminatedUnion('source', [
+  z.strictObject({
+    source: z.literal('graveyard'),
+    app: z.enum(GRAVEYARD_APPS).describe('A Graveyard app id'),
+  }),
+  z.strictObject({
+    source: z.literal('upload'),
+    uploadId: z.uuid().describe('An upload id (Prompt 40)'),
+  }),
+]);
+
+const ErrorSchema = z.object({ error: z.string(), message: z.string() }).meta({ id: 'Error' });
+const IdParams = z.object({ id: z.uuid() });
+
+export type NewProject = Pick<Project, 'name' | 'source' | 'sourceApp'>;
+
+export interface ProjectStore {
+  create(p: NewProject): Promise<Project>;
+  get(id: string): Promise<Project | null>;
+  /** Oldest first, starting with "project created". Null when there is no such project. */
+  timeline(id: string): Promise<TimelineEvent[] | null>;
+  /** True if it deleted something. */
+  delete(id: string): Promise<boolean>;
+}
+
+/** Keeps the newest `limit` projects in memory, for an API without a database. */
+export class MemoryProjectStore implements ProjectStore {
+  private readonly projects = new Map<string, Project>();
+  constructor(private readonly limit = 200) {}
+
+  async create(p: NewProject): Promise<Project> {
+    const project: Project = {
+      id: uuidv7(),
+      ...p,
+      status: 'created',
+      createdAt: new Date().toISOString(),
+    };
+    this.projects.set(project.id, project);
+    while (this.projects.size > this.limit)
+      this.projects.delete(this.projects.keys().next().value!);
+    return project;
+  }
+
+  async get(id: string): Promise<Project | null> {
+    return this.projects.get(id) ?? null;
+  }
+
+  async timeline(id: string): Promise<TimelineEvent[] | null> {
+    const p = this.projects.get(id);
+    return p ? [{ at: p.createdAt, kind: 'project_created', id: p.id, summary: p.name }] : null;
+  }
+
+  async delete(id: string): Promise<boolean> {
+    return this.projects.delete(id);
+  }
+}
+
+const notFound = { error: 'NOT_FOUND', message: 'No such project' };
+
+/** The validation error, as our usual `{error, message}`, without echoing the values sent. */
+function validationError(err: unknown) {
+  if (!hasZodFastifySchemaValidationErrors(err)) return null;
+  const message = err.validation
+    .slice(0, 5)
+    .map(
+      (v) => `${v.instancePath.replace(/^\//, '').replaceAll('/', '.') || '(body)'}: ${v.message}`,
+    )
+    .join('; ');
+  return { error: err.validationContext === 'params' ? 'BAD_ID' : 'BAD_PROJECT', message };
+}
+
+export function projectRoutes(store: ProjectStore, opts: { createPerMinute: number }) {
+  const plugin: FastifyPluginAsyncZod = async (app) => {
+    app.setErrorHandler((err, _req, reply) => {
+      const bad = validationError(err);
+      if (bad) {
+        if (bad.error === 'BAD_ID') bad.message = 'Not a project id';
+        return reply.code(400).send(bad);
+      }
+      const status = (err as { statusCode?: number }).statusCode ?? 500;
+      // The rate limiter's answer, already in our shape.
+      if (status === 429) return reply.code(429).send(err);
+      // Fastify's own client errors (a body that is not JSON, too big, ...) keep their status.
+      if (status >= 400 && status < 500)
+        return reply.code(status).send({
+          error: status === 415 ? 'UNSUPPORTED_MEDIA_TYPE' : 'BAD_REQUEST',
+          message: (err as Error).message,
+        });
+      reply.log.error(err);
+      return reply.code(500).send({ error: 'INTERNAL', message: 'Something went wrong' });
+    });
+
+    app.post(
+      '/api/projects',
+      {
+        config: { rateLimit: { max: opts.createPerMinute, timeWindow: '1 minute' } },
+        schema: {
+          summary: 'Raise a dead app: create a project from a Graveyard app or an upload',
+          tags: ['projects'],
+          body: CreateProjectSchema,
+          response: { 201: ProjectSchema, 400: ErrorSchema, 429: ErrorSchema, 501: ErrorSchema },
+        },
+      },
+      async (req, reply) => {
+        const body = req.body;
+        if (body.source === 'upload')
+          return reply.code(501).send({
+            error: 'NOT_YET',
+            message: 'Raising an uploaded app arrives with the upload flow (Prompt 40)',
+          });
+        const seed = SEED_PROJECTS.find((p) => p.sourceApp === body.app)!;
+        const p = await store.create({ name: seed.name, source: 'graveyard', sourceApp: body.app });
+        return reply.code(201).header('location', `/api/projects/${p.id}`).send(p);
+      },
+    );
+
+    app.get(
+      '/api/projects/:id',
+      {
+        schema: {
+          summary: 'A project',
+          tags: ['projects'],
+          params: IdParams,
+          response: { 200: ProjectSchema, 400: ErrorSchema, 404: ErrorSchema, 429: ErrorSchema },
+        },
+      },
+      async (req, reply) => {
+        const p = await store.get(req.params.id);
+        return p ? p : reply.code(404).send(notFound);
+      },
+    );
+
+    app.get(
+      '/api/projects/:id/timeline',
+      {
+        schema: {
+          summary: 'What has happened to a project so far, oldest first (at most 500 events)',
+          tags: ['projects'],
+          params: IdParams,
+          response: {
+            200: z.object({ projectId: z.uuid(), events: z.array(TimelineEventSchema) }),
+            400: ErrorSchema,
+            404: ErrorSchema,
+            429: ErrorSchema,
+          },
+        },
+      },
+      async (req, reply) => {
+        const events = await store.timeline(req.params.id);
+        return events ? { projectId: req.params.id, events } : reply.code(404).send(notFound);
+      },
+    );
+
+    app.delete(
+      '/api/projects/:id',
+      {
+        schema: {
+          summary: 'Delete a project and everything it owns (séances, Souls, proofs)',
+          tags: ['projects'],
+          params: IdParams,
+          response: {
+            204: z.null().describe('Deleted'),
+            400: ErrorSchema,
+            403: ErrorSchema,
+            404: ErrorSchema,
+            429: ErrorSchema,
+          },
+        },
+      },
+      async (req, reply) => {
+        if (PROTECTED.has(req.params.id))
+          return reply.code(403).send({
+            error: 'PROTECTED',
+            message: 'The Graveyard demo projects are shared by everyone and cannot be deleted',
+          });
+        return (await store.delete(req.params.id))
+          ? reply.code(204).send(null)
+          : reply.code(404).send(notFound);
+      },
+    );
+  };
+  return plugin as unknown as (app: FastifyInstance) => Promise<void>;
+}

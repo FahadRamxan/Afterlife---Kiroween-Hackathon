@@ -9,6 +9,8 @@ describe('parseEnv', () => {
       HOST: '0.0.0.0',
       WEB_ORIGINS: ['http://localhost:3000'],
       LOG_LEVEL: 'info',
+      // Off unless asked: trusting X-Forwarded-For without a proxy lets anyone pick their address.
+      TRUST_PROXY: false,
     });
   });
 

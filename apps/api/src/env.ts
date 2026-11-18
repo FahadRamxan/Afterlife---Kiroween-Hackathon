@@ -15,6 +15,11 @@ const schema = z.object({
     )
     .pipe(z.array(z.url())),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
+  /** 1 behind a proxy that sets X-Forwarded-For (Render), so rate limits see the real address. */
+  TRUST_PROXY: z
+    .enum(['0', '1', 'true', 'false'])
+    .default('0')
+    .transform((v) => v === '1' || v === 'true'),
   /**
    * Postgres (Neon in prod, Docker locally). Without it séances are kept in memory, and lost on a
    * restart; the server says so when it starts.

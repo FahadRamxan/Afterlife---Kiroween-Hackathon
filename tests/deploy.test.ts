@@ -39,6 +39,11 @@ describe('render.yaml (Prompt 10)', () => {
     expect(api.dockerfilePath).toBe('./apps/api/Dockerfile');
   });
 
+  it('trusts the Render proxy for the client address, so per-IP rate limits work (Prompt 36)', () => {
+    const api = services.find((s) => s.name === 'afterlife-api');
+    expect(api.envVars).toContainEqual({ key: 'TRUST_PROXY', value: '1' });
+  });
+
   it('defines the worker as a Docker background worker', () => {
     const w = services.find((s) => s.name === 'afterlife-worker');
     expect(w).toMatchObject({ type: 'worker', runtime: 'docker' });
@@ -58,6 +63,7 @@ describe('.env.example files (Prompt 10)', () => {
       'HOST',
       'LOG_LEVEL',
       'PORT',
+      'TRUST_PROXY',
       'WEB_ORIGINS',
     ]);
   });
