@@ -39,7 +39,14 @@ export interface EmulatorController {
   exit(): Promise<void>;
 }
 
-export type EmulatorErrorCode = 'NOT_BOOTED' | 'NO_FILE' | 'BAD_PATH' | 'BAD_SPEED' | 'BAD_BUNDLE';
+export type EmulatorErrorCode =
+  | 'NOT_BOOTED'
+  | 'NO_FILE'
+  | 'BAD_PATH'
+  | 'BAD_SPEED'
+  | 'BAD_BUNDLE'
+  /** The emulator did not answer in time. */
+  | 'TIMEOUT';
 
 export class EmulatorError extends Error {
   override name = 'EmulatorError';

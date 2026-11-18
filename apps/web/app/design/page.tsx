@@ -14,6 +14,7 @@ import {
 } from '@afterlife/ui';
 import type { ReactNode } from 'react';
 import { KeySequencePreview } from '../../components/KeySequencePreview';
+import { LiveEmulator } from '../../components/LiveEmulator';
 import {
   shifaBillScreen,
   shifaMedicine,
@@ -164,6 +165,15 @@ export default async function DesignPage() {
           ghost={bill.ghost}
           changed={bill.changed}
         />
+      </Section>
+
+      <Section
+        id="live"
+        title="Live js-dos"
+        meaning="The real old program, running now in DOSBox (WebAssembly) in this page. Its screen is read back from the pixels, keys go in through the same EmulatorController the Crew uses."
+      >
+        {/* The DOS clock of the Shifa manifest (samples/graveyard/shifa/manifest.json). */}
+        <LiveEmulator bundle={shifa.bundle} name={shifa.name} dosTime="1998-07-15 10:00:00" />
       </Section>
 
       <Section

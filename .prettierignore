@@ -6,3 +6,4 @@ pnpm-lock.yaml
 .turbo
 # Byte-exact test snapshots (JSON.stringify output).
 packages/screen/src/__screens__/
+apps/web/public/js-dos/
