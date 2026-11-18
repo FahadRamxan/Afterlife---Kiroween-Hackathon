@@ -175,13 +175,34 @@ importers:
 
   apps/worker:
     dependencies:
+      '@afterlife/emulator':
+        specifier: workspace:^
+        version: link:../../packages/emulator
+      '@afterlife/screen':
+        specifier: workspace:^
+        version: link:../../packages/screen
+      js-dos:
+        specifier: 8.5.4
+        version: 8.5.4(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(redux@4.2.1)
+      playwright:
+        specifier: ^1.65.1
+        version: 1.65.1
       tsx:
         specifier: ^4.23.15
         version: 4.23.15
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
+      '@afterlife/dbf':
+        specifier: workspace:^
+        version: link:../../packages/dbf
       '@types/node':
         specifier: ^22
         version: 22.20.5
+      fast-check:
+        specifier: ^4.10.2
+        version: 4.10.2
       vitest:
         specifier: ^5.1.0
         version: 5.1.0(@types/node@22.20.5)(@vitest/coverage-v8@5.1.0)(vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
@@ -3560,7 +3581,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@reduxjs/toolkit@1.9.7(react-redux@8.1.3(react@19.3.1)(redux@4.2.1))(react@19.3.1)':
+  '@reduxjs/toolkit@1.9.7(react-redux@8.1.3(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(redux@4.2.1))(react@19.3.1)':
     dependencies:
       immer: 9.0.21
       redux: 4.2.1
@@ -4385,7 +4406,7 @@ snapshots:
 
   js-dos@8.5.4(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(redux@4.2.1):
     dependencies:
-      '@reduxjs/toolkit': 1.9.7(react-redux@8.1.3(react@19.3.1)(redux@4.2.1))(react@19.3.1)
+      '@reduxjs/toolkit': 1.9.7(react-redux@8.1.3(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(redux@4.2.1))(react@19.3.1)
       nipplejs: 0.10.2
       preact: 10.29.8
       react-checkbox-tree: 1.8.0(react@19.3.1)

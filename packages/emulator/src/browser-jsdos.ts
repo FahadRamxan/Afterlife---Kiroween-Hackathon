@@ -124,9 +124,18 @@ export class BrowserJsDos implements EmulatorController {
     }
   }
 
+  /** Right after boot js-dos has no frame yet ("No frame received"): wait for the first one. */
   async screenshot(): Promise<Screenshot> {
-    const img = await this.call('screenshot', this.running().screenshot());
-    return { width: img.width, height: img.height, rgba: new Uint8Array(img.data) };
+    const end = Date.now() + this.callTimeoutMs;
+    for (;;) {
+      try {
+        const img = await this.call('screenshot', this.running().screenshot());
+        return { width: img.width, height: img.height, rgba: new Uint8Array(img.data) };
+      } catch (e) {
+        if (!/No frame received/.test((e as Error).message) || Date.now() >= end) throw e;
+        await sleep(50);
+      }
+    }
   }
 
   private async files() {

@@ -11,10 +11,17 @@
     "start": "tsx src/index.ts"
   },
   "devDependencies": {
+    "@afterlife/dbf": "workspace:^",
     "@types/node": "^22",
+    "fast-check": "^4.10.2",
     "vitest": "^5.1.0"
   },
   "dependencies": {
-    "tsx": "^4.23.15"
+    "@afterlife/emulator": "workspace:^",
+    "@afterlife/screen": "workspace:^",
+    "js-dos": "8.5.4",
+    "playwright": "^1.65.1",
+    "tsx": "^4.23.15",
+    "zod": "^4.6.7"
   }
 }
