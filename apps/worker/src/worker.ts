@@ -8,12 +8,16 @@ import {
   type JobOptions,
   type JobType,
 } from '@afterlife/db';
+import { HeadlessPool } from '@afterlife/emulator/headless';
 import { startJobLoop } from './loop';
 import { defaultRegistry, type Registry } from './registry';
 
 export type WorkerOptions = {
   databaseUrl: string | undefined;
+  /** The handlers; by default defaultRegistry() on a headless js-dos pool. */
   registry?: Registry;
+  /** Emulators at once (JSDOS_POOL_SIZE, default 1: two take 441 MiB, see docs/deploy.md). */
+  poolSize?: number;
   options?: Partial<Record<JobType, Partial<JobOptions>>>;
   pollingIntervalSeconds?: number;
   log?: (line: string) => void;
@@ -23,7 +27,8 @@ export type RunningWorker = { stop: () => Promise<void> };
 
 export async function startWorker({
   databaseUrl,
-  registry = defaultRegistry(),
+  registry,
+  poolSize = 1,
   options,
   pollingIntervalSeconds,
   log = console.log,
@@ -44,7 +49,16 @@ export async function startWorker({
     await db.$client.end();
     throw e;
   }
-  const loop = await startJobLoop({ db, boss, registry, options, pollingIntervalSeconds, log });
+  // Chromium starts on the first boot, not here.
+  const pool = new HeadlessPool({ size: poolSize, cycles: 60000 });
+  const loop = await startJobLoop({
+    db,
+    boss,
+    registry: registry ?? defaultRegistry({ pool }),
+    options,
+    pollingIntervalSeconds,
+    log,
+  });
   log('afterlife worker started');
   let stopping: Promise<void> | undefined;
   return {
@@ -53,6 +67,7 @@ export async function startWorker({
         // Let the running attempt finish (up to 30 s), then close.
         await loop.stop();
         await boss.stop({ graceful: true, timeout: 30_000 });
+        await pool.close();
         await db.$client.end();
         log('afterlife worker stopped');
       })();

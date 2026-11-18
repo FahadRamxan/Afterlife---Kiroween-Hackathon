@@ -227,6 +227,21 @@ export function canonicalCell(
   height: CellHeight,
   width: CellWidth = 8,
 ): ScreenCell {
+  // A screen built from cells (live events, Prompt 38) asks this 2,000 times, mostly for the
+  // same few cells, and each answer costs glyph comparisons: remember the answers.
+  const key = `${code},${fg},${bg},${height},${width}`;
+  let hit = CANONICAL.get(key);
+  if (!hit) CANONICAL.set(key, (hit = computeCanonicalCell(code, fg, bg, height, width)));
+  return { ...hit };
+}
+const CANONICAL = new Map<string, ScreenCell>();
+function computeCanonicalCell(
+  code: number,
+  fg: number,
+  bg: number,
+  height: CellHeight,
+  width: CellWidth,
+): ScreenCell {
   if (fg === bg) return cellOf(BLANK, fg, bg);
   const rows = glyph(code, height);
   const ninth = rows.map((r) => (ninthIsFg(code, r) ? fg : bg));

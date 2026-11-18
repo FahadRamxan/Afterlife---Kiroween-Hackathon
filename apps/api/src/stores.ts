@@ -3,6 +3,8 @@
 import { createDb, migrateUp, seed } from '@afterlife/db';
 import type { AppStores } from './app';
 import type { Env } from './env';
+import { PgLiveHub } from './live';
+import { PgPipeline } from './pipeline';
 import { MemoryProjectStore } from './projects';
 import { PgProjectStore } from './projects-pg';
 import { MemorySessionStore } from './sessions';
@@ -13,7 +15,10 @@ type Log = { info(o: object, msg: string): void; warn(msg: string): void };
 export async function openStores(
   env: Partial<Pick<Env, 'DATABASE_URL'>>,
   log: Log,
-): Promise<{ stores: Required<AppStores>; close(): Promise<void> }> {
+): Promise<{
+  stores: AppStores & Required<Pick<AppStores, 'sessions' | 'projects'>>;
+  close(): Promise<void>;
+}> {
   if (!env.DATABASE_URL) {
     log.warn('No DATABASE_URL: projects and séances are kept in memory and lost on a restart');
     return {
@@ -34,8 +39,14 @@ export async function openStores(
     await db.$client.end();
     throw e;
   }
+  const live = await PgLiveHub.start(db, env.DATABASE_URL, log);
+  const pipeline = await PgPipeline.start(db, env.DATABASE_URL, log);
   return {
-    stores: { sessions: new PgSessionStore(db), projects: new PgProjectStore(db) },
-    close: () => db.$client.end(),
+    stores: { sessions: new PgSessionStore(db), projects: new PgProjectStore(db), live, pipeline },
+    close: async () => {
+      await pipeline.close();
+      await live.close();
+      await db.$client.end();
+    },
   };
 }

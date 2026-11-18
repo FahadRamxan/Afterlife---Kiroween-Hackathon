@@ -114,7 +114,15 @@ function validationError(err: unknown) {
   return { error: err.validationContext === 'params' ? 'BAD_ID' : 'BAD_PROJECT', message };
 }
 
-export function projectRoutes(store: ProjectStore, opts: { createPerMinute: number }) {
+/** Starts the rebirth of a new project (queues its first step). Absent without a database. */
+export interface Pipeline {
+  start(projectId: string): Promise<void>;
+}
+
+export function projectRoutes(
+  store: ProjectStore,
+  opts: { createPerMinute: number; pipeline?: Pipeline },
+) {
   const plugin: FastifyPluginAsyncZod = async (app) => {
     app.setErrorHandler((err, _req, reply) => {
       const bad = validationError(err);
@@ -155,6 +163,10 @@ export function projectRoutes(store: ProjectStore, opts: { createPerMinute: numb
           });
         const seed = SEED_PROJECTS.find((p) => p.sourceApp === body.app)!;
         const p = await store.create({ name: seed.name, source: 'graveyard', sourceApp: body.app });
+        // The project exists either way; if the queue fails it stays "created" and says so in the log.
+        await opts.pipeline
+          ?.start(p.id)
+          .catch((e) => req.log.warn({ err: e }, 'could not start the pipeline'));
         return reply.code(201).header('location', `/api/projects/${p.id}`).send(p);
       },
     );

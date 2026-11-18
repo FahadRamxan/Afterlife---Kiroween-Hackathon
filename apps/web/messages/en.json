@@ -98,6 +98,18 @@
         "exorcism_found": "Legacy bug found",
         "voice_change": "Voice change"
       }
+    },
+    "live": {
+      "title": "Live from the worker",
+      "waiting": "Waiting for the first screen from the worker…",
+      "screenLabel": "{name}, live from the worker",
+      "status": {
+        "connecting": "Connecting…",
+        "open": "Live",
+        "reconnecting": "Connection lost, reconnecting…",
+        "closed": "Not live",
+        "unconfigured": "The API is not configured"
+      }
     }
   },
   "vessel": {

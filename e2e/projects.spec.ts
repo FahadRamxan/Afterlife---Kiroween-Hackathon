@@ -28,7 +28,12 @@ test.describe('projects', () => {
     // It really is in the API (and so in Postgres).
     const res = await page.request.get(`${API}/api/projects/${id}`);
     expect(res.status()).toBe(200);
-    expect(await res.json()).toMatchObject({ id, sourceApp: 'shifa', status: 'created' });
+    // Raise also queued possession (Prompt 38), so the worker may already be on it.
+    expect(await res.json()).toMatchObject({
+      id,
+      sourceApp: 'shifa',
+      status: expect.stringMatching(/^(created|running)$/),
+    });
 
     // Reloading the page reads it back.
     await page.reload();

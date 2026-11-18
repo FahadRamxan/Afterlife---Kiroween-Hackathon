@@ -15,6 +15,13 @@
       "when": 1795031379424,
       "tag": "0001_steps_events",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795036065503,
+      "tag": "0002_live_notify",
+      "breakpoints": true
     }
   ]
 }

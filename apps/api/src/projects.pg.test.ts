@@ -1,11 +1,20 @@
 // Prompt 36: projects in Postgres. The same contract as the memory store, plus what only a
 // database has: the timeline from the other tables, and deletes that cascade.
-import { observations, seed, SEED_PROJECTS, sessions, souls, eq } from '@afterlife/db';
+import {
+  observations,
+  pipelineSteps,
+  seed,
+  SEED_PROJECTS,
+  sessions,
+  souls,
+  eq,
+} from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildApp } from './app';
 import { parseEnv } from './env';
 import { projectStoreContract } from './projects-contract';
+import { PgPipeline } from './pipeline';
 import { PgProjectStore } from './projects-pg';
 
 let t: TestDatabase;
@@ -16,6 +25,37 @@ beforeAll(async () => {
 afterAll(() => t.drop());
 
 projectStoreContract('postgres', () => new PgProjectStore(t.db));
+
+describe('raising starts the pipeline', () => {
+  it('POST /api/projects queues the first step (possess) for the worker', async () => {
+    const pipeline = await PgPipeline.start(t.db, t.url, { warn: () => {} });
+    const app = buildApp(
+      parseEnv({}),
+      { logger: false },
+      { projects: new PgProjectStore(t.db), pipeline },
+    );
+    try {
+      const p = (
+        await app.inject({
+          method: 'POST',
+          url: '/api/projects',
+          payload: { source: 'graveyard', app: 'shifa' },
+        })
+      ).json();
+      const steps = await t.db
+        .select()
+        .from(pipelineSteps)
+        .where(eq(pipelineSteps.projectId, p.id));
+      expect(steps).toEqual([
+        expect.objectContaining({ step: 'possess', status: 'queued', attempts: 0 }),
+      ]);
+      expect(steps[0]!.jobId).toBeTruthy();
+    } finally {
+      await app.close();
+      await pipeline.close();
+    }
+  });
+});
 
 describe('PgProjectStore', () => {
   it('the timeline lists séances and Soul versions in time order after "project created"', async () => {

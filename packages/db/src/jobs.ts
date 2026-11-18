@@ -43,9 +43,19 @@ export const JOB_OPTIONS: Record<JobType, JobOptions> = {
 export const stepKey = (projectId: string, type: JobType) => `${projectId}:${type}`;
 
 /** A pg-boss instance on this database. Call `start()` before use and `stop()` at the end. */
-export function createBoss(url: string, opts: { onError?: (e: Error) => void } = {}): PgBoss {
-  // A small pool: the API and the worker share Neon's connection limit.
-  const boss = new PgBoss({ connectionString: url, max: 3, application_name: 'afterlife-jobs' });
+export function createBoss(
+  url: string,
+  opts: { onError?: (e: Error) => void; background?: boolean } = {},
+): PgBoss {
+  // A small pool: the API and the worker share Neon's connection limit. `background: false` is a
+  // sender only (the API): no maintenance, no schedules.
+  const quiet = opts.background === false ? { supervise: false, schedule: false } : {};
+  const boss = new PgBoss({
+    connectionString: url,
+    max: 3,
+    application_name: 'afterlife-jobs',
+    ...quiet,
+  });
   boss.on('error', (e: Error) => opts.onError?.(e));
   return boss;
 }

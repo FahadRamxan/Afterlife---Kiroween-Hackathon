@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { findApp } from '../lib/graveyard';
 import { getProject, type Failure, type Project, type TimelineEvent } from '../lib/projects';
 import type { RaiseTab } from '../lib/raise-tabs';
+import { LivePanel } from './LivePanel';
 import { PageShell } from './PageShell';
 import { RaiseTabs } from './RaiseTabs';
 import { SeanceRecorder } from './SeanceRecorder';
@@ -89,12 +90,15 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
           app
             ? {
                 possession: (
-                  <SeanceRecorder
-                    projectId={app.id}
-                    bundle={app.bundle}
-                    name={app.name}
-                    dosTime={app.dosTime}
-                  />
+                  <>
+                    <LivePanel projectId={project.id} name={app.name} />
+                    <SeanceRecorder
+                      projectId={app.id}
+                      bundle={app.bundle}
+                      name={app.name}
+                      dosTime={app.dosTime}
+                    />
+                  </>
                 ),
               }
             : {}
