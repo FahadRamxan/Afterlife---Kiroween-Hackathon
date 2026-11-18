@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@afterlife/dbf": "workspace:^",
+    "@afterlife/emulator": "workspace:^",
     "@fastify/cors": "^11.4.3",
     "@fastify/multipart": "^10.1.9",
     "fastify": "^5",
@@ -19,6 +20,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@afterlife/screen": "workspace:^",
     "@types/node": "^22",
     "fast-check": "^4.10.2",
     "vitest": "^5.1.0"

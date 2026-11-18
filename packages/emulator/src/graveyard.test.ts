@@ -61,6 +61,8 @@ describe('publicEntry', () => {
       place: 'Satellite Town, Rawalpindi',
       story: 'Two lines.\nOf story.',
       executable: 'SHIFA.EXE',
+      // The app's DOS clock, so the browser can start it at its own date (Prompt 31).
+      dosTime: '1998-07-15 10:00:00',
       bundle: '/graveyard/shifa.jsdos',
       preview: ['line 1', 'line 2'],
     });

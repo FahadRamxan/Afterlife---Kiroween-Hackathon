@@ -57,3 +57,10 @@ export {
   type RecordOptions,
 } from './recorder';
 export { seededDosTime, withFreshState, type FreshOptions } from './determinism';
+export {
+  MAX_AUDIO_BASE64,
+  MAX_SESSION_ACTIONS,
+  ObservationSchema,
+  SeanceSessionSchema,
+  type SeanceSession,
+} from './session';

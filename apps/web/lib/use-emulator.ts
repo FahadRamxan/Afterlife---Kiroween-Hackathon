@@ -1,6 +1,12 @@
 'use client';
 
-import { BrowserJsDos, type BootOptions, type JsDosEmulators } from '@afterlife/emulator';
+import {
+  BrowserJsDos,
+  type BootOptions,
+  type EmulatorController,
+  type JsDosEmulators,
+} from '@afterlife/emulator';
+import { ScreenDecodeError, decodeScreen, type ScreenGrid } from '@afterlife/screen';
 import { useEffect, useState } from 'react';
 
 /** Where apps/web serves js-dos (copied there by scripts/copy-jsdos.mjs). */
@@ -75,4 +81,34 @@ export function useEmulator(bundleUrl: string | null, options: BootOptions = {})
     };
   }, [bundleUrl, key]);
   return state;
+}
+
+/**
+ * The emulator's screen, read back with decodeScreen (no OCR) several times a second. A frame in
+ * another video mode (DOS starting up) is skipped; other errors go to `onError`.
+ */
+export function useScreenGrid(
+  controller: EmulatorController | null,
+  onError: (message: string) => void = () => {},
+): ScreenGrid | null {
+  const [grid, setGrid] = useState<ScreenGrid | null>(null);
+  useEffect(() => {
+    if (!controller) return;
+    let busy = false;
+    const timer = setInterval(async () => {
+      if (busy) return;
+      busy = true;
+      try {
+        const shot = await controller.screenshot();
+        setGrid(decodeScreen(shot.rgba, shot.width, shot.height));
+      } catch (e) {
+        if (!(e instanceof ScreenDecodeError)) onError((e as Error).message);
+      } finally {
+        busy = false;
+      }
+    }, 250);
+    return () => clearInterval(timer);
+    // onError is a callback for messages; a new one each render must not restart the polling.
+  }, [controller]);
+  return grid;
 }

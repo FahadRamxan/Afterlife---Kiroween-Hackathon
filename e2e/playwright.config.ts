@@ -4,6 +4,11 @@ import { defineConfig, devices } from '@playwright/test';
 const remote = process.env.BASE_URL;
 const baseURL = remote ?? 'http://localhost:3000';
 const apiURL = 'http://localhost:4000';
+// A fake microphone, so the séance's voice recording can be tested (Prompt 31).
+const chrome = {
+  ...devices['Desktop Chrome'],
+  launchOptions: { args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'] },
+};
 
 export default defineConfig({
   testDir: '.',
@@ -28,12 +33,12 @@ export default defineConfig({
   // Local runs open every route once first (warmup.setup.ts), so `next dev` does not compile them
   // all at once under 10 workers. A deployed site (BASE_URL) is already built.
   projects: remote
-    ? [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }]
+    ? [{ name: 'chromium', use: chrome }]
     : [
         { name: 'warmup', testMatch: 'warmup.setup.ts' },
         {
           name: 'chromium',
-          use: { ...devices['Desktop Chrome'] },
+          use: chrome,
           dependencies: ['warmup'],
         },
       ],

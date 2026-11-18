@@ -86,6 +86,9 @@ importers:
       '@afterlife/dbf':
         specifier: workspace:^
         version: link:../../packages/dbf
+      '@afterlife/emulator':
+        specifier: workspace:^
+        version: link:../../packages/emulator
       '@fastify/cors':
         specifier: ^11.4.3
         version: 11.4.3
@@ -102,6 +105,9 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
     devDependencies:
+      '@afterlife/screen':
+        specifier: workspace:^
+        version: link:../../packages/screen
       '@types/node':
         specifier: ^22
         version: 22.20.5
