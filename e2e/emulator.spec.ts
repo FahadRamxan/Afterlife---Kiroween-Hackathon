@@ -96,9 +96,17 @@ test.describe('live js-dos on /design', () => {
     await expect(replays.getByRole('status')).toHaveText('3 of 3 runs gave identical data files.', {
       timeout: 90_000,
     });
-    const runs = await replays.getByRole('listitem').allInnerTexts();
+    const runs = await replays.locator('ol > li').allInnerTexts();
     expect(runs).toHaveLength(3);
     expect(new Set(runs.map((r) => r.split(': ')[1])).size).toBe(1);
+    // Not vacuous: every run changed the data, and the bill was really saved.
+    for (const r of runs) expect(r).toMatch(/\(changed\)$/);
+    await expect(replays.getByTestId('replay-before')).toHaveText(
+      /^Before: data files [0-9a-f]{12}$/,
+    );
+    const changed = replays.getByRole('list', { name: 'What the keys changed' });
+    await expect(changed).toContainText('BILLS.DBF: 3 → 4 records');
+    await expect(changed).toContainText('BILLITEM.DBF: 4 → 5 records');
   });
 
   test('a bad key sequence is refused with the reason', async ({ page }) => {

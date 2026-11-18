@@ -46,7 +46,9 @@ const billScript = fc
     { keys: '{Enter}', until: /MAIN MENU/ },
   ]);
 
-const pool = new HeadlessPool({ size: 4, cycles: 60000, keyDelayMs: 50 });
+// Two emulators at once: with four, next to every other test project, ci:local starved them of
+// CPU and a step once never reached its screen.
+const pool = new HeadlessPool({ size: 2, cycles: 60000, keyDelayMs: 50 });
 afterAll(() => pool.close());
 
 const hex = (b: Uint8Array) => Buffer.from(b).toString('hex');
@@ -64,7 +66,11 @@ async function run(script: Step[], seed: number): Promise<Record<string, string>
       expect((await wait(/MAIN MENU/)).stable).toBe(true);
       for (const step of script) {
         await e.sendKeys(step.keys);
-        expect((await wait(step.until)).stable, `after ${step.keys}`).toBe(true);
+        const r = await wait(step.until);
+        // On failure, say what the screen showed instead.
+        expect(r.stable, `after ${step.keys}, the screen was:\n${r.screen.text.join('\n')}`).toBe(
+          true,
+        );
       }
       return Object.fromEntries(
         await Promise.all(DBFS.map(async (f) => [f, hex(await e.readFile(f))])),

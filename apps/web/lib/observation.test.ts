@@ -1,6 +1,6 @@
 import type { Observation } from '@afterlife/emulator';
 import { describe, expect, it } from 'vitest';
-import { replayVerdict, summarizeObservation } from './observation';
+import { recordCountChanges, replayVerdict, summarizeObservation } from './observation';
 
 const screen = (name: string | null) =>
   ({
@@ -122,5 +122,32 @@ describe('replayVerdict', () => {
       text: 'Only 2 of 3 runs finished.',
     });
     expect(replayVerdict([], 3).ok).toBe(false);
+  });
+
+  it('three runs that changed nothing prove nothing (every key could have been lost)', () => {
+    expect(replayVerdict(['a1', 'a1', 'a1'], 3, 'a1')).toEqual({
+      ok: false,
+      text: 'The keys changed no data, so the runs prove nothing.',
+    });
+    expect(replayVerdict(['b2', 'b2', 'b2'], 3, 'a1').ok).toBe(true);
+  });
+});
+
+describe('recordCountChanges', () => {
+  it('lists the tables whose record count changed, in name order', () => {
+    expect(
+      recordCountChanges(
+        { 'MEDICINE.DBF': 40, 'BILLS.DBF': 3, 'BILLITEM.DBF': 4 },
+        { 'MEDICINE.DBF': 40, 'BILLS.DBF': 4, 'BILLITEM.DBF': 5 },
+      ),
+    ).toEqual(['BILLITEM.DBF: 4 → 5 records', 'BILLS.DBF: 3 → 4 records']);
+  });
+
+  it('names a table that appeared or went away, and says one record in the singular', () => {
+    expect(recordCountChanges({ 'OLD.DBF': 1 }, { 'NEW.DBF': 0 })).toEqual([
+      'NEW.DBF: new, 0 records',
+      'OLD.DBF: gone (was 1 record)',
+    ]);
+    expect(recordCountChanges({ 'A.DBF': 0 }, { 'A.DBF': 1 })).toEqual(['A.DBF: 0 → 1 record']);
   });
 });

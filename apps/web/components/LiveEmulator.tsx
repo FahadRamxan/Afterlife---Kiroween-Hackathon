@@ -11,25 +11,37 @@ import {
 import { ScreenDecodeError, analyzeScreen, decodeScreen, type ScreenGrid } from '@afterlife/screen';
 import { Button, CrtScreen, DiffBadge } from '@afterlife/ui';
 import { useEffect, useId, useState } from 'react';
-import { replayVerdict, summarizeObservation, type ObservationSummary } from '../lib/observation';
+import {
+  recordCountChanges,
+  replayVerdict,
+  summarizeObservation,
+  type ObservationSummary,
+} from '../lib/observation';
 import { useEmulator } from '../lib/use-emulator';
 
 type Props = { bundle: string; name: string; dosTime: string };
 
 const REPLAYS = 3;
 
-/** A short id of every .DBF on drive C: (SHA-256 of each file, from the DBF snapshot). */
-async function dataHash(e: EmulatorController): Promise<string> {
+type DataState = { hash: string; counts: Record<string, number> };
+
+/**
+ * The .DBF files on drive C:: a short id of all of them (SHA-256 of each file, from the DBF
+ * snapshot), and each table's record count.
+ */
+async function dataState(e: EmulatorController): Promise<DataState> {
   const names = (await e.listFiles()).filter((f) => f.endsWith('.DBF'));
   const snap = await snapshot(
     Object.fromEntries(await Promise.all(names.map(async (n) => [n, await e.readFile(n)]))),
   );
   const all = names.map((n) => snap.tables[n]!.hash).join('');
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(all));
-  return [...new Uint8Array(digest)]
+  const hash = [...new Uint8Array(digest)]
     .slice(0, 6)
     .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
+  const counts = Object.fromEntries(names.map((n) => [n, snap.tables[n]!.table.records.length]));
+  return { hash, counts };
 }
 
 /**
@@ -46,7 +58,9 @@ export function LiveEmulator({ bundle, name, dosTime }: Props) {
   const [files, setFiles] = useState<{ name: string; size: number }[] | null>(null);
   const [observed, setObserved] = useState<ObservationSummary | null>(null);
   const [recording, setRecording] = useState(false);
-  const [replays, setReplays] = useState<string[] | null>(null);
+  const [replays, setReplays] = useState<{ before: DataState | null; runs: DataState[] } | null>(
+    null,
+  );
   const [replaying, setReplaying] = useState(false);
   const c = emu.controller;
 
@@ -165,17 +179,22 @@ export function LiveEmulator({ bundle, name, dosTime }: Props) {
             onClick={() =>
               void act(async () => {
                 setReplaying(true);
-                setReplays([]);
+                setReplays({ before: null, runs: [] });
                 try {
                   const bytes = new Uint8Array(await (await fetch(bundle)).arrayBuffer());
                   for (let i = 0; i < REPLAYS; i++) {
-                    const hash = await withFreshState(c, bytes, { dosTime }, async (e) => {
+                    const run = await withFreshState(c, bytes, { dosTime }, async (e) => {
+                      // The fresh state is the same every time: its data id is the "before".
+                      const before = await dataState(e);
                       await waitForStableScreen(e);
                       await e.sendKeys(keys);
                       await waitForStableScreen(e);
-                      return dataHash(e);
+                      return { before, after: await dataState(e) };
                     });
-                    setReplays((r) => [...(r ?? []), hash]);
+                    setReplays((r) => ({
+                      before: r?.before ?? run.before,
+                      runs: [...(r?.runs ?? []), run.after],
+                    }));
                   }
                 } finally {
                   setReplaying(false);
@@ -196,7 +215,9 @@ export function LiveEmulator({ bundle, name, dosTime }: Props) {
         </p>
       ) : null}
       {observed ? <ObservationView o={observed} /> : null}
-      {replays && replays.length > 0 ? <ReplayView hashes={replays} done={!replaying} /> : null}
+      {replays?.before ? (
+        <ReplayView before={replays.before} runs={replays.runs} done={!replaying} />
+      ) : null}
       {files ? (
         <table className="font-mono text-sm" aria-label="Files on drive C:">
           <thead>
@@ -258,21 +279,47 @@ function ObservationView({ o }: { o: ObservationSummary }) {
   );
 }
 
-/** The data files after each replay: the same id every time means a repeatable run. */
-function ReplayView({ hashes, done }: { hashes: string[]; done: boolean }) {
-  const verdict = replayVerdict(hashes, REPLAYS);
+/**
+ * The data files before the keys (the fresh state) and after each replay: a repeatable run gives
+ * the same id every time, and a different one from before (else the keys did nothing).
+ */
+function ReplayView({
+  before,
+  runs,
+  done,
+}: {
+  before: DataState;
+  runs: DataState[];
+  done: boolean;
+}) {
+  const verdict = replayVerdict(
+    runs.map((r) => r.hash),
+    REPLAYS,
+    before.hash,
+  );
+  const changes = runs[0] ? recordCountChanges(before.counts, runs[0].counts) : [];
   return (
     <section
       aria-label="Replays"
       className="space-y-2 rounded-lg border border-bone/15 p-4 text-sm"
     >
+      <p className="font-mono text-xs" data-testid="replay-before">
+        Before: data files {before.hash}
+      </p>
       <ol className="font-mono text-xs">
-        {hashes.map((h, i) => (
+        {runs.map((r, i) => (
           <li key={i}>
-            Run {i + 1}: data files {h}
+            Run {i + 1}: data files {r.hash} ({r.hash === before.hash ? 'unchanged' : 'changed'})
           </li>
         ))}
       </ol>
+      {changes.length > 0 ? (
+        <ul aria-label="What the keys changed" className="font-mono text-xs text-bone/75">
+          {changes.map((line) => (
+            <li key={line}>{line}</li>
+          ))}
+        </ul>
+      ) : null}
       {done ? (
         <p role="status" className={verdict.ok ? 'text-ectoplasm' : 'text-blood'}>
           {verdict.text}

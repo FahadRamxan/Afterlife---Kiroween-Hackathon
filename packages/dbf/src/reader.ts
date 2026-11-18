@@ -8,8 +8,10 @@ import {
   type FieldType,
 } from './types';
 
-const VERSIONS = new Set([0x03, 0x83, 0xf5]);
-const MEMO_VERSIONS = new Set([0x83, 0xf5]);
+// dBASE III and Clipper (0x03), with memo (0x83), dBASE IV with memo (0x8B), FoxPro 2.x with memo
+// (0xF5), FoxBASE+ (0xFB): all the dBASE III record layout.
+const VERSIONS = new Set([0x03, 0x83, 0x8b, 0xf5, 0xfb]);
+const MEMO_VERSIONS = new Set([0x83, 0x8b, 0xf5]);
 // Visual FoxPro: a 263-byte backlink after the fields and types (I, B, T, Y, 0) we do not read yet.
 const VISUAL_FOXPRO = new Set([0x30, 0x31, 0x32]);
 const TYPES = new Set<FieldType>(['C', 'N', 'F', 'D', 'L', 'M']);

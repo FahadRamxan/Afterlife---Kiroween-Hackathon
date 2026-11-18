@@ -38,7 +38,9 @@ const screen = fc
     return { cells, cursor };
   });
 
-describe('analyzeScreen properties', () => {
+// Each run decodes and analyses whole screens: at 2000 runs, with every project's tests running
+// at once, the 5 s default was too short (ci:local timed out).
+describe('analyzeScreen properties', { timeout: 120_000 }, () => {
   it(
     're-rendering a screen and decoding it again gives the same model',
     () => {

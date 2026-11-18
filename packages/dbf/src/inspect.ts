@@ -32,17 +32,59 @@ function headerDate({ year, month, day }: { year: number; month: number; day: nu
   return `${pad(year, 4)}-${pad(month, 2)}-${pad(day, 2)}`;
 }
 
+export type InspectOptions = {
+  /**
+   * The bytes were cut on purpose to the header and this many records (dbfPreviewBytes). The
+   * header's record count is then the real total, and the cut is not a TRUNCATED file. A file
+   * that holds fewer records than the cut should have is still reported.
+   */
+  cut?: number;
+};
+
 /** Reads a .DBF and keeps the first `maxRows` records. Throws DbfError if it is not a .DBF. */
-export function inspectDbf(bytes: Uint8Array, maxRows = INSPECT_ROWS): InspectedTable {
+export function inspectDbf(
+  bytes: Uint8Array,
+  maxRows = INSPECT_ROWS,
+  { cut }: InspectOptions = {},
+): InspectedTable {
   const dbf = readDbf(bytes);
+  const total = dbf.header.recordCount;
+  const deliberate =
+    cut !== undefined && total > dbf.records.length && dbf.records.length >= Math.min(total, cut);
+  const recordCount = deliberate ? total : dbf.records.length;
   const rows = dbf.records.slice(0, maxRows);
   return {
     version: dbf.header.version,
     lastUpdate: headerDate(dbf.header.lastUpdate),
-    recordCount: dbf.records.length,
+    recordCount,
     fields: dbf.fields,
     rows,
-    moreRows: dbf.records.length - rows.length,
-    warnings: dbf.warnings ?? [],
+    moreRows: recordCount - rows.length,
+    warnings: (dbf.warnings ?? []).filter((w) => !(deliberate && w.code === 'TRUNCATED')),
   };
+}
+
+/** Most bytes sent for a file whose header cannot be read: enough for the API to say why. */
+const UNREADABLE_PREFIX = 64 * 1024;
+
+/**
+ * The header and the first `rows` records of a .DBF, for a preview: a few years of bill lines
+ * are megabytes, and a preview shows 100 of them. The header keeps the real record count. A file
+ * whose header makes no sense is cut to 64 KB and left for the reader to report.
+ */
+export function dbfPreviewBytes(bytes: Uint8Array, rows = INSPECT_ROWS): Uint8Array {
+  if (bytes.length < 12) return bytes.slice(0, UNREADABLE_PREFIX);
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const headerLength = view.getUint16(8, true);
+  const recordLength = view.getUint16(10, true);
+  // The field list ends with 0x0D on a 32-byte boundary, as the reader expects.
+  let terminated = false;
+  for (let p = 32; p < Math.min(headerLength, bytes.length); p += 32)
+    if (bytes[p] === 0x0d) {
+      terminated = true;
+      break;
+    }
+  if (headerLength < 33 || recordLength < 1 || headerLength > bytes.length || !terminated)
+    return bytes.slice(0, UNREADABLE_PREFIX);
+  return bytes.slice(0, Math.min(bytes.length, headerLength + rows * recordLength));
 }
