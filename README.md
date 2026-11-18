@@ -11,7 +11,7 @@ Built for Kiroween 2026 (category: Resurrection) by Matrix AE.
 ## Layout
 
 - `apps/web`, `apps/api`, `apps/worker`: the Studio, the API and the job worker
-- `packages/*`: soul, vessel, dbf, screen, emulator, oracle, crew, certificate, mcp-emulator, ui
+- `packages/*`: soul, vessel, dbf, screen, emulator, oracle, crew, certificate, mcp-emulator, ui, db (Drizzle schema and migrations)
 - `powers/afterlife`, `samples/graveyard`, `e2e`, `docs`
 
 See [plan.md](plan.md) for the plan and [prompt.md](prompt.md) for the build prompts. Progress is tracked in [docs/progress.md](docs/progress.md). Deployment steps are in [docs/deploy.md](docs/deploy.md).
@@ -28,6 +28,10 @@ See [plan.md](plan.md) for the plan and [prompt.md](prompt.md) for the build pro
 | `pnpm typecheck`        | TypeScript strict checks                                                                   |
 | `pnpm verify`           | lint, typecheck, test and e2e, all of them                                                 |
 | `pnpm ci:local`         | Everything CI did: verify with 2000 property runs, production e2e, Docker builds and smoke |
+| `pnpm db:migrate`       | Apply the database migrations to `DATABASE_URL` (the API also does it when it starts)      |
+| `pnpm db:migrate:down`  | Undo the newest migration                                                                  |
+| `pnpm db:seed`          | Add the three Graveyard projects (safe to run again)                                       |
+| `pnpm db:generate`      | Write the next migration from `packages/db/src/schema.ts` (then write its `.down.sql`)     |
 | `pnpm screenshots`      | Retake the UI tour in `docs/screenshots`                                                   |
 | `pnpm mcp:gif`          | Record the MCP demo GIF from a real session (`apps/web/public/mcp/afterlife-mcp.gif`)      |
 | `pnpm screen:capture`   | Record the VGA fonts and real js-dos frames of the sample apps (screen decoder fixtures)   |
@@ -37,7 +41,7 @@ See [plan.md](plan.md) for the plan and [prompt.md](prompt.md) for the build pro
 
 GitHub Actions is off for this repo, so every check runs locally. The workflow files in `.github/workflows` stay as documentation.
 
-1. **pre-commit** (Husky): ESLint and Prettier on staged files, `pnpm typecheck`, then the whole Vitest suite.
+1. **pre-commit** (Husky): ESLint and Prettier on staged files, `pnpm typecheck`, then the whole Vitest suite. The `*.pg.test.ts` tests and the e2e API run on a throwaway Postgres 16 that they start in Docker, so Docker must be running (or set `TEST_DATABASE_URL` and `E2E_DATABASE_URL` to a Postgres you own).
 2. **commit-msg**: commitlint, Conventional Commits.
 3. **pre-push**: `pnpm verify` (lint, typecheck, unit and property tests, Playwright e2e). A red test means nothing is pushed.
 4. **Before merging a PR**: `pnpm ci:local`. It also runs every property test with `FC_NUM_RUNS=2000`, Playwright against the production build, and the API and worker Docker builds with a smoke test.

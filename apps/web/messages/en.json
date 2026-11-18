@@ -89,7 +89,11 @@
       "checking": "Checking API…",
       "healthy": "API healthy",
       "down": "API down",
-      "unconfigured": "API not configured"
+      "unconfigured": "API not configured",
+      "storage": {
+        "postgres": "saved in Postgres",
+        "memory": "in memory: lost on restart"
+      }
     }
   },
   "notFound": {

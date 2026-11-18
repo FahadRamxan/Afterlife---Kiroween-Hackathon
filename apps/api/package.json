@@ -11,11 +11,14 @@
     "start": "tsx src/server.ts"
   },
   "dependencies": {
+    "@afterlife/db": "workspace:^",
     "@afterlife/dbf": "workspace:^",
     "@afterlife/emulator": "workspace:^",
     "@fastify/cors": "^11.4.3",
     "@fastify/multipart": "^10.1.9",
+    "drizzle-orm": "^0.45.4",
     "fastify": "^5",
+    "pino": "^10.4.0",
     "tsx": "^4.23.15",
     "zod": "^4.6.7"
   },

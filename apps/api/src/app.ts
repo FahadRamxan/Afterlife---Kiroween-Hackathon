@@ -10,6 +10,7 @@ export type AppStores = { sessions?: SessionStore };
 
 export function buildApp(env: Env, opts: FastifyServerOptions = {}, stores: AppStores = {}) {
   const app = Fastify({ logger: { level: env.LOG_LEVEL }, ...opts });
+  const sessions = stores.sessions ?? new MemorySessionStore();
 
   app.register(cors, { origin: env.WEB_ORIGINS, methods: ['GET', 'POST', 'DELETE'] });
 
@@ -20,10 +21,11 @@ export function buildApp(env: Env, opts: FastifyServerOptions = {}, stores: AppS
       service: 'afterlife-api',
       version: pkg.version,
       uptimeSeconds: Math.round(process.uptime()),
+      storage: sessions.kind,
     };
   });
 
   app.register(dbfInspectRoutes);
-  app.register(sessionRoutes(stores.sessions ?? new MemorySessionStore()));
+  app.register(sessionRoutes(sessions));
   return app;
 }

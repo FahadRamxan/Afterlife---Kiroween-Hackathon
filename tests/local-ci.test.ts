@@ -122,6 +122,8 @@ describe('config fixes (review)', () => {
       'CI',
       'BASE_URL',
       'DATABASE_URL',
+      // A Postgres you own for the e2e API, instead of the Docker one (scripts/e2e-api.mjs).
+      'E2E_DATABASE_URL',
     ]);
   });
 

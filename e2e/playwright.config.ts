@@ -16,6 +16,7 @@ export default defineConfig({
   // Remote runs only execute tests tagged @smoke.
   grep: remote ? /@smoke/ : undefined,
   fullyParallel: true,
+  globalTeardown: remote ? undefined : './global-teardown.ts',
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: [['list']],
@@ -46,7 +47,8 @@ export default defineConfig({
     ? undefined
     : [
         {
-          command: 'pnpm --filter @afterlife/api start',
+          // The API on a throwaway Postgres 16 in Docker (scripts/e2e-api.mjs).
+          command: 'node ../scripts/e2e-api.mjs',
           url: `${apiURL}/health`,
           reuseExistingServer: !process.env.CI,
           timeout: 60_000,

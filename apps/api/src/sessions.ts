@@ -1,17 +1,20 @@
-// Séance sessions (Prompt 31). Stored behind SessionStore: in memory until the database
-// (Prompt 35) brings a Postgres store.
+// Séance sessions (Prompt 31). Stored behind SessionStore: in Postgres (sessions-pg.ts) when
+// DATABASE_URL is set, otherwise in memory.
 import { SeanceSessionSchema, type SeanceSession } from '@afterlife/emulator';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
-import { uuidv7 } from './uuid';
+import { uuidv7 } from '@afterlife/db';
 
 export interface SessionStore {
+  /** Where the séances live, shown on /health and in the web app's footer. */
+  readonly kind: 'memory' | 'postgres';
   create(session: SeanceSession): Promise<string>;
   get(id: string): Promise<SeanceSession | null>;
 }
 
 /** Keeps the newest `limit` sessions in memory (a demo server must not grow without bound). */
 export class MemorySessionStore implements SessionStore {
+  readonly kind = 'memory';
   private readonly sessions = new Map<string, SeanceSession>();
   constructor(private readonly limit = 200) {}
 

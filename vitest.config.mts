@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 
 // Before the package configs load: they leave the real-emulator tests to the "emulator" project.
 process.env.AFTERLIFE_EMULATOR_LAST = '1';
-const { TEST_TIMEOUT } = await import('./vitest.shared.mts');
+const { TEST_TIMEOUT, PG_GLOBAL_SETUP } = await import('./vitest.shared.mts');
 
 const setup = fileURLToPath(new URL('./vitest.setup.ts', import.meta.url));
 export default defineConfig({
@@ -16,6 +16,17 @@ export default defineConfig({
           name: 'repo',
           include: ['tests/**/*.test.ts'],
           setupFiles: [setup],
+          testTimeout: TEST_TIMEOUT,
+        },
+      },
+      {
+        // A real Postgres 16, started once (Docker, or TEST_DATABASE_URL). Each file gets its own
+        // database, so the files can run side by side.
+        test: {
+          name: 'postgres',
+          include: ['packages/*/src/**/*.pg.test.ts', 'apps/*/src/**/*.pg.test.ts'],
+          setupFiles: [setup],
+          globalSetup: [PG_GLOBAL_SETUP],
           testTimeout: TEST_TIMEOUT,
         },
       },

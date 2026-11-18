@@ -30,9 +30,14 @@
     "dbf:golden": "tsx scripts/dbf-golden.ts",
     "screenshots": "pnpm --filter @afterlife/e2e screenshots",
     "screen:capture": "tsx scripts/screen-capture.ts",
-    "mcp:gif": "tsx scripts/mcp-gif.ts"
+    "mcp:gif": "tsx scripts/mcp-gif.ts",
+    "db:migrate": "pnpm --filter @afterlife/db migrate",
+    "db:migrate:down": "pnpm --filter @afterlife/db migrate:down",
+    "db:seed": "pnpm --filter @afterlife/db seed",
+    "db:generate": "pnpm --filter @afterlife/db generate"
   },
   "devDependencies": {
+    "@afterlife/db": "workspace:^",
     "@afterlife/dbf": "workspace:^",
     "@afterlife/emulator": "workspace:^",
     "@afterlife/mcp-emulator": "workspace:^",

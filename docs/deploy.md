@@ -12,10 +12,9 @@ Secrets go in each host's dashboard only. Never commit `.env` files. Every app h
 ## 1. Neon (Postgres)
 
 1. Create a project named `afterlife` on neon.tech, Postgres 16, region **AWS Asia Pacific (Singapore)** (closest to Pakistan and to Render Singapore).
-2. Copy two connection strings from **Connection details**:
-   - the **pooled** one (host contains `-pooler`) for the API and worker
-   - the **direct** one for migrations (used from Prompt 35)
-3. Keep `?sslmode=require` on both.
+2. Copy the **direct** connection string from **Connection details** (the host has no `-pooler`). Keep `?sslmode=require`.
+   - Use the direct one, not the pooled one, for both services. The pooled URL goes through PgBouncer in transaction mode, which breaks session features the app uses: the advisory lock that lets the API and the worker migrate at the same time, pg-boss (Prompt 37), and `LISTEN/NOTIFY` (Prompt 38). Each service opens at most 5 connections, well inside Neon's limit.
+3. Nothing to run by hand: the API applies the migrations in `packages/db/migrations` when it starts (`pnpm db:migrate` does the same from a laptop). `pnpm db:seed` adds the three Graveyard projects. A migration can be undone with `pnpm db:migrate:down` (one step at a time).
 
 ## 2. Render (API and worker)
 
@@ -23,8 +22,8 @@ Secrets go in each host's dashboard only. Never commit `.env` files. Every app h
 
 1. On render.com: **New → Blueprint**, connect the GitHub repo, pick the `main` branch. Render reads `render.yaml`.
 2. Render asks for the `sync: false` values:
-   - `afterlife-api`: `WEB_ORIGINS` = the Vercel URL (step 3), for example `https://afterlife.vercel.app`. Comma-separate several. `DATABASE_URL` = the Neon pooled URL.
-   - `afterlife-worker`: `DATABASE_URL` = the Neon pooled URL.
+   - `afterlife-api`: `WEB_ORIGINS` = the Vercel URL (step 3), for example `https://afterlife.vercel.app`. Comma-separate several. `DATABASE_URL` = the Neon direct URL. Without it the API keeps séances in memory, and the footer of the web app says "in memory: lost on restart".
+   - `afterlife-worker`: `DATABASE_URL` = the Neon direct URL.
 3. Render builds each Dockerfile from the repo root. The API health check is `GET /health`. A deploy only goes live once it returns 200.
 4. Note the API URL, for example `https://afterlife-api.onrender.com`.
 

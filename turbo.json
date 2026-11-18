@@ -15,7 +15,13 @@
     "e2e": {
       "dependsOn": ["^build"],
       "cache": false,
-      "passThroughEnv": ["PLAYWRIGHT_BROWSERS_PATH", "CI", "BASE_URL", "DATABASE_URL"]
+      "passThroughEnv": [
+        "PLAYWRIGHT_BROWSERS_PATH",
+        "CI",
+        "BASE_URL",
+        "DATABASE_URL",
+        "E2E_DATABASE_URL"
+      ]
     },
     "typecheck": {
       "dependsOn": ["^build"]

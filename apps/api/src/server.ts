@@ -1,13 +1,20 @@
+import pino from 'pino';
 import { buildApp } from './app';
 import { parseEnv } from './env';
+import { openStores } from './stores';
 
 const env = parseEnv(process.env);
-const app = buildApp(env);
+// The stores are opened (and the database migrated) before the app exists, so log with pino.
+const { stores, close } = await openStores(env, pino({ level: env.LOG_LEVEL }));
+const app = buildApp(env, {}, stores);
 
 for (const signal of ['SIGINT', 'SIGTERM'] as const) {
   process.on(signal, () => {
     app.log.info({ signal }, 'shutting down');
-    app.close().then(() => process.exit(0));
+    app
+      .close()
+      .then(close)
+      .then(() => process.exit(0));
   });
 }
 

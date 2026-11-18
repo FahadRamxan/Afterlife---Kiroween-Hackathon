@@ -21,11 +21,26 @@ describe('checkApiHealth', () => {
     expect(await checkApiHealth('https://api.example.com', fetcher)).toEqual({
       state: 'healthy',
       version: '0.0.0',
+      storage: 'unknown',
     });
     expect(fetcher).toHaveBeenCalledWith(
       'https://api.example.com/health',
       expect.objectContaining({ cache: 'no-store' }),
     );
+  });
+
+  it('reads where the API keeps data; anything else (an older API) is "unknown"', async () => {
+    const answer = (storage: unknown) =>
+      vi.fn().mockResolvedValue(new Response(JSON.stringify({ ...ok, storage }), { status: 200 }));
+    expect(await checkApiHealth('https://a', answer('postgres'))).toMatchObject({
+      storage: 'postgres',
+    });
+    expect(await checkApiHealth('https://a', answer('memory'))).toMatchObject({
+      storage: 'memory',
+    });
+    expect(await checkApiHealth('https://a', answer('<b>x</b>'))).toMatchObject({
+      storage: 'unknown',
+    });
   });
 
   it('is down on a non-200, a wrong body, or a network error', async () => {
