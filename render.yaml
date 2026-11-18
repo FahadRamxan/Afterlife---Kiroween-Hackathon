@@ -14,6 +14,9 @@ services:
         sync: false
       - key: LOG_LEVEL
         value: info
+      # Render's proxy sets X-Forwarded-For: per-IP rate limits need the real address.
+      - key: TRUST_PROXY
+        value: '1'
       - key: DATABASE_URL
         sync: false
 

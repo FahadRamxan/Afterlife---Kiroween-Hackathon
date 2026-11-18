@@ -46,6 +46,15 @@
       "notStored": "Nothing is stored. Raising an uploaded app comes in a later build.",
       "unreadable": "This file could not be read:",
       "leftOut": "{count, plural, one {# more DBF file was} other {# more DBF files were}} not previewed: the first {shown} are shown."
+    },
+    "raising": "Raising…",
+    "openUnsaved": "Open it without saving",
+    "raiseFailed": {
+      "unconfigured": "The API is not configured, so this raise cannot be saved.",
+      "down": "The API did not answer, so this raise was not saved.",
+      "not-found": "The API could not find that app.",
+      "rate-limited": "Too many raises from your address.",
+      "error": "The API could not save this raise:"
     }
   },
   "raise": {
@@ -66,6 +75,29 @@
       "exorcism": "No ghosts found yet. Legacy bugs are listed here.",
       "ghost-twin": "Shadow mode has not started. Real shop days are replayed here.",
       "living-soul": "No voice changes yet. Speak to change a rule."
+    },
+    "project": {
+      "metaTitle": "Raising a project",
+      "loading": "Opening the project…",
+      "failedTitle": "Project not opened",
+      "label": "Project",
+      "timeline": "Timeline",
+      "failed": {
+        "unconfigured": "The API is not configured, so saved projects cannot be opened.",
+        "down": "The API did not answer, so the project cannot be opened. Try again in a minute.",
+        "not-found": "There is no such project. It may have been deleted.",
+        "rate-limited": "Too many requests from your address.",
+        "error": "The API could not open the project:"
+      },
+      "events": {
+        "project_created": "Project created",
+        "session_recorded": "Séance recorded",
+        "soul_version": "Soul written",
+        "proof_run": "Proof run",
+        "certificate_issued": "Certificate issued",
+        "exorcism_found": "Legacy bug found",
+        "voice_change": "Voice change"
+      }
     }
   },
   "vessel": {

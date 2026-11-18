@@ -1,8 +1,10 @@
-import { appliedMigrations, readMigrations } from '@afterlife/db';
+import { appliedMigrations, readMigrations, SEED_PROJECTS } from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildApp } from './app';
 import { parseEnv } from './env';
+import { MemoryProjectStore } from './projects';
+import { PgProjectStore } from './projects-pg';
 import { MemorySessionStore } from './sessions';
 import { PgSessionStore } from './sessions-pg';
 import { openStores } from './stores';
@@ -27,6 +29,7 @@ describe('openStores', () => {
     const log = logger();
     const { stores } = await openStores({}, log);
     expect(stores.sessions).toBeInstanceOf(MemorySessionStore);
+    expect(stores.projects).toBeInstanceOf(MemoryProjectStore);
     expect(log.lines.join('\n')).toMatch(/memory and lost on a restart/);
   });
 
@@ -35,6 +38,9 @@ describe('openStores', () => {
     const { stores, close } = await openStores({ DATABASE_URL: t.url }, log);
     try {
       expect(stores.sessions).toBeInstanceOf(PgSessionStore);
+      expect(stores.projects).toBeInstanceOf(PgProjectStore);
+      // Seeded: the Graveyard demo projects are there.
+      expect(await stores.projects.get(SEED_PROJECTS[0].id)).toMatchObject({ sourceApp: 'shifa' });
       expect(await appliedMigrations(t.db.$client)).toEqual(readMigrations().map((m) => m.id));
       expect(log.lines.join('\n')).toMatch(/database ready/);
       expect(log.lines.join('\n')).not.toContain(new URL(t.url).password);
