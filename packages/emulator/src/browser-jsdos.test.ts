@@ -124,6 +124,40 @@ describe('BrowserJsDos', () => {
     await expect(c.screenshot()).rejects.toMatchObject({ code: 'TIMEOUT' });
   });
 
+  it('a screenshot right after boot waits for the first frame (js-dos: "No frame received")', async () => {
+    const js = fakeJsDos();
+    let tries = 0;
+    const early: JsDosEmulators = {
+      ...js.emulators,
+      dosboxWorker: async (init) => {
+        const ci = await js.emulators.dosboxWorker(init);
+        return {
+          ...ci,
+          screenshot: () =>
+            ++tries < 3 ? Promise.reject(new Error('No frame received')) : ci.screenshot(),
+        };
+      },
+    };
+    const c = new BrowserJsDos({ emulators: early, keyDelayMs: 0, callTimeoutMs: 2000 });
+    await c.boot(bundle);
+    expect((await c.screenshot()).width).toBe(640);
+    expect(tries).toBe(3);
+  });
+
+  it('other screenshot errors are not retried', async () => {
+    const js = fakeJsDos();
+    const broken: JsDosEmulators = {
+      ...js.emulators,
+      dosboxWorker: async (init) => ({
+        ...(await js.emulators.dosboxWorker(init)),
+        screenshot: () => Promise.reject(new Error('canvas lost')),
+      }),
+    };
+    const c = new BrowserJsDos({ emulators: broken, keyDelayMs: 0 });
+    await c.boot(bundle);
+    await expect(c.screenshot()).rejects.toThrow('canvas lost');
+  });
+
   it('setSpeed applies at the next reset (js-dos cannot change cycles while running)', async () => {
     const js = fakeJsDos();
     const c = new BrowserJsDos({ emulators: js.emulators, keyDelayMs: 0 });
