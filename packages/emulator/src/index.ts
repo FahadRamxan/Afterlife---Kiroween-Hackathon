@@ -47,3 +47,11 @@ export {
   type JsDosEmulators,
   type JsDosFsNode,
 } from './browser-jsdos';
+export {
+  observeScreen,
+  recordAction,
+  waitForStableScreen,
+  type Observation,
+  type ObservedScreen,
+  type RecordOptions,
+} from './recorder';

@@ -45,6 +45,40 @@ test.describe('live js-dos on /design', () => {
     expect(failed).toEqual([]);
   });
 
+  test('Record shows what an action did: nothing for Esc, the new bill for F2', async ({
+    page,
+  }) => {
+    await page.goto('/design');
+    const section = page.getByTestId('ds-live');
+    await section.getByRole('button', { name: 'Boot Shifa Medical Store in js-dos' }).click();
+    await expect(section.getByTestId('live-screen-name')).toHaveText('Screen: MAIN MENU', {
+      timeout: 60_000,
+    });
+    const keys = section.getByLabel('Keys to send');
+    const record = section.getByRole('button', { name: 'Record' });
+    const last = section.getByRole('region', { name: 'Last observation' });
+
+    await keys.fill('{Esc}');
+    await record.click();
+    await expect(last).toContainText('{Esc}: MAIN MENU → MAIN MENU');
+    await expect(last).toContainText('No data changed.');
+
+    await keys.fill('1{Enter}PAN500{Enter}4{Enter}{Enter}');
+    await record.click();
+    await expect(last).toContainText('MAIN MENU → NEW BILL', { timeout: 20_000 });
+    await expect(last).toContainText('No data changed.');
+
+    await keys.fill('{F2}');
+    await record.click();
+    await expect(last).toContainText('{F2}: NEW BILL → NEW BILL', { timeout: 20_000 });
+    await expect(last).toContainText('BILLS.DBF');
+    await expect(last).toContainText('+ 9807-0001');
+    await expect(last).toContainText('PAN500 QTY 240 → 236 (-4)');
+    await expect(
+      section.getByRole('region', { name: 'Shifa Medical Store, running live' }),
+    ).toContainText('BILL 9807-0001 SAVED');
+  });
+
   test('a bad key sequence is refused with the reason', async ({ page }) => {
     await page.goto('/design');
     const section = page.getByTestId('ds-live');

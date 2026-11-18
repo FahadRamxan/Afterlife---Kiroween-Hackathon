@@ -1,9 +1,10 @@
 'use client';
 
-import { KeyParseError } from '@afterlife/emulator';
+import { KeyParseError, recordAction } from '@afterlife/emulator';
 import { ScreenDecodeError, analyzeScreen, decodeScreen, type ScreenGrid } from '@afterlife/screen';
-import { Button, CrtScreen } from '@afterlife/ui';
+import { Button, CrtScreen, DiffBadge } from '@afterlife/ui';
 import { useEffect, useId, useState } from 'react';
+import { summarizeObservation, type ObservationSummary } from '../lib/observation';
 import { useEmulator } from '../lib/use-emulator';
 
 type Props = { bundle: string; name: string; dosTime: string };
@@ -20,6 +21,8 @@ export function LiveEmulator({ bundle, name, dosTime }: Props) {
   const [keys, setKeys] = useState('2');
   const [message, setMessage] = useState<string | null>(null);
   const [files, setFiles] = useState<{ name: string; size: number }[] | null>(null);
+  const [observed, setObserved] = useState<ObservationSummary | null>(null);
+  const [recording, setRecording] = useState(false);
   const c = emu.controller;
 
   useEffect(() => {
@@ -98,6 +101,23 @@ export function LiveEmulator({ bundle, name, dosTime }: Props) {
               />
             </div>
             <Button type="submit">Send</Button>
+            <Button
+              type="button"
+              variant="secondary"
+              disabled={recording}
+              onClick={() =>
+                void act(async () => {
+                  setRecording(true);
+                  try {
+                    setObserved(summarizeObservation(await recordAction(c, keys)));
+                  } finally {
+                    setRecording(false);
+                  }
+                })
+              }
+            >
+              {recording ? 'Recording…' : 'Record'}
+            </Button>
           </form>
           <Button
             variant="secondary"
@@ -124,6 +144,7 @@ export function LiveEmulator({ bundle, name, dosTime }: Props) {
           {message}
         </p>
       ) : null}
+      {observed ? <ObservationView o={observed} /> : null}
       {files ? (
         <table className="font-mono text-sm" aria-label="Files on drive C:">
           <thead>
@@ -143,5 +164,44 @@ export function LiveEmulator({ bundle, name, dosTime }: Props) {
         </table>
       ) : null}
     </div>
+  );
+}
+
+/** One observation: the keys, the screens before and after, and what changed in the data. */
+function ObservationView({ o }: { o: ObservationSummary }) {
+  return (
+    <section
+      aria-label="Last observation"
+      className="space-y-2 rounded-lg border border-bone/15 p-4 text-sm"
+    >
+      <p>
+        <span className="font-mono">{o.keys}</span>: <span className="font-mono">{o.from}</span> →{' '}
+        <span className="font-mono">{o.to}</span>{' '}
+        <span className="text-bone/75">
+          in {o.durationMs.toLocaleString('en')} ms{o.stable ? '' : ', screen still changing'}
+        </span>
+      </p>
+      {o.tables.length === 0 ? (
+        <p className="text-bone/75">No data changed.</p>
+      ) : (
+        <ul className="space-y-2">
+          {o.tables.map((t) => (
+            <li key={t.name}>
+              <p className="flex flex-wrap items-center gap-2">
+                <span className="font-mono">{t.name}</span>
+                {t.inserted ? <DiffBadge kind="inserted" count={t.inserted} /> : null}
+                {t.deleted ? <DiffBadge kind="deleted" count={t.deleted} /> : null}
+                {t.changed ? <DiffBadge kind="changed" count={t.changed} /> : null}
+              </p>
+              <ul className="mt-1 font-mono text-xs text-bone/75">
+                {t.lines.map((l) => (
+                  <li key={l}>{l}</li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   );
 }

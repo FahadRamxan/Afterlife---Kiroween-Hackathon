@@ -258,6 +258,12 @@ importers:
 
   packages/emulator:
     dependencies:
+      '@afterlife/dbf':
+        specifier: workspace:^
+        version: link:../dbf
+      '@afterlife/screen':
+        specifier: workspace:^
+        version: link:../screen
       fflate:
         specifier: ^0.8.3
         version: 0.8.3
