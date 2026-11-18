@@ -1,8 +1,7 @@
 // Prompt 36: projects in Postgres. The same contract as the memory store, plus what only a
 // database has: the timeline from the other tables, and deletes that cascade.
-import { observations, seed, SEED_PROJECTS, sessions, souls } from '@afterlife/db';
+import { observations, seed, SEED_PROJECTS, sessions, souls, eq } from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
-import { eq } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildApp } from './app';
 import { parseEnv } from './env';

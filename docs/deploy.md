@@ -31,7 +31,9 @@ Secrets go in each host's dashboard only. Never commit `.env` files. Every app h
 Plan notes:
 
 - The API uses the **free** plan. Free services sleep after 15 minutes idle, and the first request then takes about 30 to 60 seconds. Upgrade to **starter** before judging starts.
-- Render has **no free plan for background workers**. The worker is set to **starter** (paid). It only logs a heartbeat until Prompt 37, so you can skip creating it until then.
+- Render has **no free plan for background workers**. The worker is set to **starter** (paid, 512 MB). Since Prompt 37 it runs the pg-boss job loop; the steps that drive the old app arrive from Prompt 48, so until then it only marks steps "skipped".
+- Worker memory, measured by `pnpm ci:local` (Docker smoke, `docker stats` while both are on the main menu): **2 Shifa emulators at once take 441 MiB** (Node, one Chromium headless shell, two js-dos pages; Docker Desktop on Windows, 19 Nov 2026). That leaves about 70 MB of the starter plan's 512 MB for the job loop and pg-boss, which is too little. Before possession runs in production (Prompt 48), either move the worker to **standard** (2 GB) or run one emulator at a time.
+- The worker image is about 1.25 GB: Node 22 slim plus Chromium's headless shell and its system libraries, installed by the lockfile's Playwright (`playwright install --with-deps --only-shell chromium`).
 
 ## 3. Vercel (web)
 

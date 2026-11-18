@@ -1,7 +1,6 @@
 // Séances in Postgres: one `sessions` row, and one `observations` row per action.
-import { observations, sessions, type Db } from '@afterlife/db';
+import { observations, sessions, type Db, asc, eq } from '@afterlife/db';
 import type { SeanceSession } from '@afterlife/emulator';
-import { asc, eq } from 'drizzle-orm';
 import type { SessionStore } from './sessions';
 
 type Action = SeanceSession['actions'][number];

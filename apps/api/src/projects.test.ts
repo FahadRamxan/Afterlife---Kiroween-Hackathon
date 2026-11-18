@@ -1,10 +1,14 @@
 // Prompt 36: the projects API, through app.inject() on the memory store.
 import { SEED_PROJECTS, uuidv7 } from '@afterlife/db';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildApp, type AppOptions } from './app';
 import { parseEnv } from './env';
 import { projectStoreContract } from './projects-contract';
 import { MemoryProjectStore } from './projects';
+
+// Each test builds a whole app (swagger, rate limiter); in the pre-commit run on a loaded machine
+// one took over 5 s.
+vi.setConfig({ testTimeout: 20_000 });
 
 projectStoreContract('memory', () => new MemoryProjectStore());
 

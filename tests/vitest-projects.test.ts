@@ -18,9 +18,9 @@ function testFiles(dir: string): string[] {
   });
 }
 
-/** A test that boots real js-dos: a HeadlessPool or HeadlessJsDos, or the MCP server process. */
+/** A test that boots real js-dos: a HeadlessPool or HeadlessJsDos, the worker's smoke boot, or the MCP server process. */
 const usesRealEmulator = (file: string) =>
-  /new HeadlessPool|new HeadlessJsDos|chromium\.launch|resolve\(__dirname, 'main\.ts'\)/.test(
+  /new HeadlessPool|new HeadlessJsDos|chromium\.launch|smokeBoot\(|resolve\(__dirname, 'main\.ts'\)/.test(
     readFileSync(join(ROOT, file), 'utf8'),
   );
 

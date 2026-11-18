@@ -38,21 +38,27 @@ async function read(cursor: ScreenGrid['cursor'], cellWidth: CellWidth = 8) {
 }
 
 describe('the blinking cursor on a "____" field', () => {
-  it('reads the same text and fingerprint with the cursor on any cell of the field, or off', async () => {
-    for (const width of [8, 9] as const) {
-      const off = await read(null, width);
-      for (const [row, from, length] of [
-        [5, 10, 20],
-        [7, 11, 11],
-      ] as const)
-        for (let col = from; col < from + length; col++) {
-          const on = await read({ row, col }, width);
-          expect(on.grid.cursor).toEqual({ row, col });
-          expect(on.text, `${width} px cells, cursor at ${row},${col}`).toEqual(off.text);
-          expect(on.fp, `${width} px cells, cursor at ${row},${col}`).toBe(off.fp);
-        }
-    }
-  });
+  // It decodes dozens of full screens (about 1.5 s alone); in the pre-commit run next to every
+  // other project it took 5.2 s, so it gets 20 s.
+  it(
+    'reads the same text and fingerprint with the cursor on any cell of the field, or off',
+    { timeout: 20_000 },
+    async () => {
+      for (const width of [8, 9] as const) {
+        const off = await read(null, width);
+        for (const [row, from, length] of [
+          [5, 10, 20],
+          [7, 11, 11],
+        ] as const)
+          for (let col = from; col < from + length; col++) {
+            const on = await read({ row, col }, width);
+            expect(on.grid.cursor).toEqual({ row, col });
+            expect(on.text, `${width} px cells, cursor at ${row},${col}`).toEqual(off.text);
+            expect(on.fp, `${width} px cells, cursor at ${row},${col}`).toBe(off.fp);
+          }
+      }
+    },
+  );
 
   it('a blank under the cursor with no "_" beside it stays a blank', async () => {
     const on = await read({ row: 9, col: 12 });

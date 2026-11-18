@@ -1,6 +1,5 @@
 // Projects in Postgres. The timeline is read from every table that belongs to a project.
-import { projects, type Db } from '@afterlife/db';
-import { eq } from 'drizzle-orm';
+import { projects, type Db, eq } from '@afterlife/db';
 import type { NewProject, Project, ProjectStore, TimelineEvent } from './projects';
 
 const toProject = (r: typeof projects.$inferSelect): Project => ({

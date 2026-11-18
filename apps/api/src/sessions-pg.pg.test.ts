@@ -2,11 +2,10 @@
 // restarts, with every action as a row in `observations`.
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { observations, sessions, uuidv7 } from '@afterlife/db';
+import { observations, sessions, uuidv7, eq } from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { FakeEmulator, buildBundle, recordAction, type SeanceSession } from '@afterlife/emulator';
 import { renderScreen, type CellInput } from '@afterlife/screen';
-import { eq } from 'drizzle-orm';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildApp } from './app';
 import { parseEnv } from './env';

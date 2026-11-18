@@ -56,6 +56,28 @@ describe('render.yaml (Prompt 10)', () => {
   });
 });
 
+describe('worker image (Prompt 37)', () => {
+  const dockerfile = read('apps/worker/Dockerfile');
+
+  it('stays on Node 22 and installs Chromium with its system libraries, from the lockfile Playwright', () => {
+    expect(dockerfile).toMatch(/^FROM node:22-/m);
+    expect(dockerfile).toMatch(/exec playwright install --with-deps --only-shell chromium/);
+    expect(dockerfile).toMatch(/PLAYWRIGHT_BROWSERS_PATH=\/ms-playwright/);
+    expect(dockerfile).toMatch(/^USER node$/m);
+  });
+
+  it('the Docker smoke test boots Shifa inside the image and the job loop on Postgres', () => {
+    const smoke = read('scripts/docker-smoke.mjs');
+    expect(smoke).toContain("'src/smoke-boot.ts'");
+    expect(smoke).toMatch(/SMOKE BOOT OK 2/);
+    expect(smoke).toMatch(/afterlife worker started/);
+  });
+
+  it('docs/deploy.md gives the measured memory of 2 emulators', () => {
+    expect(read('docs/deploy.md')).toMatch(/2 Shifa emulators[^\n]*\d+ MiB/);
+  });
+});
+
 describe('.env.example files (Prompt 10)', () => {
   it('API example lists every variable parseEnv reads, plus DATABASE_URL', () => {
     expect(envKeys('apps/api/.env.example').sort()).toEqual([
