@@ -3,6 +3,8 @@ export {
   buildBundle,
   dosboxConf,
   isDosFileName,
+  prepareBundle,
+  type PrepareOptions,
   type BundleInput,
   type DosboxOptions,
 } from './bundle';
@@ -37,3 +39,11 @@ export {
   type KeyStroke,
   type Modifier,
 } from './keys';
+export {
+  BrowserJsDos,
+  flattenTree,
+  type BrowserJsDosOptions,
+  type JsDosCi,
+  type JsDosEmulators,
+  type JsDosFsNode,
+} from './browser-jsdos';

@@ -11,6 +11,8 @@ export default tseslint.config(
       '**/coverage/**',
       '**/.turbo/**',
       '**/next-env.d.ts',
+      // js-dos, copied from node_modules by apps/web/scripts/copy-jsdos.mjs (third-party, minified).
+      'apps/web/public/js-dos/**',
     ],
   },
   js.configs.recommended,

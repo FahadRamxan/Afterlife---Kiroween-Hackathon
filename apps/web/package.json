@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "node scripts/copy-jsdos.mjs && next dev",
+    "build": "node scripts/copy-jsdos.mjs && next build",
     "start": "next start",
     "test": "vitest run --passWithNoTests",
     "typecheck": "tsc -p tsconfig.json"
@@ -17,6 +17,7 @@
     "@radix-ui/react-tabs": "^1.2.1",
     "@tailwindcss/postcss": "^4.3.5",
     "fflate": "^0.8.3",
+    "js-dos": "8.5.4",
     "next": "^15",
     "next-intl": "^4.15.1",
     "postcss": "^8.5.33",

@@ -1,4 +1,4 @@
-import { zipSync, type Zippable } from 'fflate';
+import { strFromU8, strToU8, unzipSync, zipSync, type Zippable } from 'fflate';
 
 /** A bad bundle request: unsafe file name, missing executable, or not a DOS program. */
 export class BundleError extends Error {
@@ -71,4 +71,66 @@ export function buildBundle({ executable, files }: BundleInput): Uint8Array {
   for (const name of Object.keys(files).sort())
     entries[name] = [files[name]!, { mtime: FIXED_MTIME }];
   return zipSync(entries, { level: 9 });
+}
+
+export type PrepareOptions = {
+  /** Fixed CPU speed in DOSBox cycles. */
+  cycles?: number;
+  /** The DOS clock when the program starts, "YYYY-MM-DD HH:MM:SS" (1980 to 2099). */
+  dosTime?: string;
+  /** Replaces every file on drive C: (DOS paths such as "DATA/X.DBF"), keeping the config. */
+  files?: Record<string, Uint8Array>;
+};
+
+const DOS_TIME = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/;
+
+function clockLines(dosTime: string): string {
+  const m = DOS_TIME.exec(dosTime);
+  const [y, mo, d, h, mi, sec] = (m ?? []).slice(1).map(Number) as number[];
+  const real = m && new Date(Date.UTC(y!, mo! - 1, d!));
+  if (
+    !m ||
+    y! < 1980 ||
+    y! > 2099 ||
+    real!.getUTCMonth() !== mo! - 1 ||
+    real!.getUTCDate() !== d ||
+    h! > 23 ||
+    mi! > 59 ||
+    sec! > 59
+  )
+    throw new BundleError(`Not a DOS date and time (YYYY-MM-DD HH:MM:SS, 1980-2099): ${dosTime}`);
+  // DOSBox's DATE takes MM-DD-YYYY (it ignores a two-digit year).
+  return `time ${m[4]}:${m[5]}:${m[6]}\ndate ${m[2]}-${m[3]}-${m[1]}\n`;
+}
+
+/**
+ * A bundle ready to boot with these options: the speed and the DOS clock go into
+ * .jsdos/dosbox.conf, and `files` (a saved state) replaces drive C:. Same input, same bytes.
+ */
+export function prepareBundle(bundle: Uint8Array, options: PrepareOptions = {}): Uint8Array {
+  let entries: Record<string, Uint8Array>;
+  try {
+    entries = unzipSync(bundle);
+  } catch {
+    throw new BundleError('Not a js-dos bundle: the file is not a zip');
+  }
+  const confBytes = entries['.jsdos/dosbox.conf'];
+  if (!confBytes) throw new BundleError('Not a js-dos bundle: no .jsdos/dosbox.conf');
+  let conf = strFromU8(confBytes);
+  if (options.cycles !== undefined)
+    conf = conf.replace(/^cycles=.*$/m, `cycles=fixed ${options.cycles}`);
+  if (options.dosTime !== undefined) {
+    const lines = clockLines(options.dosTime);
+    if (!conf.includes('mount c .\nc:\n'))
+      throw new BundleError('The bundle does not mount drive C:');
+    conf = conf.replace('mount c .\nc:\n', `mount c .\nc:\n${lines}`);
+  }
+  const drive = options.files
+    ? options.files
+    : Object.fromEntries(
+        Object.entries(entries).filter(([n]) => !n.startsWith('.jsdos/') && !n.endsWith('/')),
+      );
+  const out: Zippable = { '.jsdos/dosbox.conf': [strToU8(conf), { mtime: FIXED_MTIME }] };
+  for (const name of Object.keys(drive).sort()) out[name] = [drive[name]!, { mtime: FIXED_MTIME }];
+  return zipSync(out, { level: 9 });
 }

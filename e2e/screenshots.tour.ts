@@ -93,3 +93,19 @@ test('upload preview (DBF inspector)', async ({ page }) => {
   await expect(card.getByTestId('upload-preview')).toBeVisible();
   await card.screenshot({ path: `${OUT}/10-upload-preview.png` });
 });
+
+test('live js-dos: Shifa stock screen', async ({ page }) => {
+  test.setTimeout(120_000);
+  await page.setViewportSize({ width: 1100, height: 900 });
+  await ready(page, '/design');
+  const section = page.getByTestId('ds-live');
+  await section.getByRole('button', { name: 'Boot Shifa Medical Store in js-dos' }).click();
+  await expect(section.getByTestId('live-screen-name')).toHaveText('Screen: MAIN MENU', {
+    timeout: 60_000,
+  });
+  await section.getByLabel('Keys to send').fill('2');
+  await section.getByRole('button', { name: 'Send' }).click();
+  await expect(section.getByTestId('live-screen-name')).toHaveText('Screen: STOCK');
+  await section.getByRole('button', { name: 'Read files' }).click();
+  await section.screenshot({ path: `${OUT}/11-live-jsdos.png` });
+});
