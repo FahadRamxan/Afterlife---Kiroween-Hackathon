@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
+import { TEST_TIMEOUT } from './vitest.shared.mts';
 
 const setup = fileURLToPath(new URL('./vitest.setup.ts', import.meta.url));
 
@@ -8,7 +9,14 @@ export default defineConfig({
     projects: [
       'packages/*/vitest.config.mts',
       'apps/*/vitest.config.mts',
-      { test: { name: 'repo', include: ['tests/**/*.test.ts'], setupFiles: [setup] } },
+      {
+        test: {
+          name: 'repo',
+          include: ['tests/**/*.test.ts'],
+          setupFiles: [setup],
+          testTimeout: TEST_TIMEOUT,
+        },
+      },
     ],
     passWithNoTests: true,
     coverage: {
