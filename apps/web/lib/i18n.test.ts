@@ -1,4 +1,5 @@
 import fc from 'fast-check';
+import { createTranslator } from 'next-intl';
 import { describe, expect, it } from 'vitest';
 import en from '../messages/en.json';
 import ur from '../messages/ur.json';
@@ -74,5 +75,22 @@ describe('messages', () => {
     for (const v of [...values(en), ...values(ur)]) {
       expect(v as string).not.toMatch(/\?\?|\uFFFD/);
     }
+  });
+
+  it('upload counts read right for one and for many', () => {
+    // A real app often has a one-record settings table: "(1 records)" was wrong.
+    const enT = createTranslator({ locale: 'en', messages: en, namespace: 'graveyard.upload' });
+    const urT = createTranslator({ locale: 'ur', messages: ur, namespace: 'graveyard.upload' });
+    expect(enT('tableCaption', { file: 'SETTINGS.DBF', count: 1 })).toBe('SETTINGS.DBF (1 record)');
+    expect(enT('tableCaption', { file: 'MEDICINE.DBF', count: 40 })).toBe(
+      'MEDICINE.DBF (40 records)',
+    );
+    const found = (t: typeof enT, count: number) =>
+      t.markup('found', { name: 'SHIFA.EXE', count, program: (c) => c });
+    expect(found(enT, 1)).toBe('Found SHIFA.EXE and 1 DBF file.');
+    expect(found(enT, 4)).toBe('Found SHIFA.EXE and 4 DBF files.');
+    // Urdu has its own word for one file, so "1" is not just the plural sentence with a 1 in it.
+    expect(found(urT, 1)).toContain('1 DBF');
+    expect(found(urT, 1).replace('1 DBF', '4 DBF')).not.toBe(found(urT, 4));
   });
 });

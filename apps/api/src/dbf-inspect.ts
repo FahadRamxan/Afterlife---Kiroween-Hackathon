@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 /** The whole upload, all files together. The browser checks the same limit first. */
 export const MAX_INSPECT_BYTES = 20 * 1024 * 1024;
-const MAX_FILES = 50;
+export const MAX_FILES = 50;
 
 const DbfValue = z.union([z.string(), z.boolean(), z.number(), z.null()]);
 
@@ -15,7 +15,11 @@ export const InspectResponse = z.object({
     z.object({
       file: z.string(),
       version: z.number().int(),
-      lastUpdate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      // null when the header's date bytes are not a real date (inspectDbf checks).
+      lastUpdate: z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/)
+        .nullable(),
       recordCount: z.number().int().nonnegative(),
       fields: z.array(
         z.object({
@@ -40,6 +44,8 @@ export type InspectError =
   | { error: 'NOT_DBF'; file: string; message: string }
   | { error: 'BAD_DBF'; file: string; code: string; message: string }
   | { error: 'TOO_LARGE'; message: string }
+  | { error: 'TOO_MANY_FILES'; message: string }
+  | { error: 'NOT_A_FILE'; message: string }
   | { error: 'NOT_MULTIPART'; message: string };
 
 const tooLarge = (): InspectError => ({
@@ -76,8 +82,20 @@ export async function dbfInspectRoutes(app: FastifyInstance) {
         files.push({ name: baseName(part.filename), bytes });
       }
     } catch (err) {
-      if ((err as { code?: string }).code === 'FST_REQ_FILE_TOO_LARGE')
-        return reply.code(413).send(tooLarge());
+      const code = (err as { code?: string }).code;
+      if (code === 'FST_REQ_FILE_TOO_LARGE') return reply.code(413).send(tooLarge());
+      // Busboy's own limits. Without these the answer was Fastify's untyped
+      // { statusCode, code: 'FST_FILES_LIMIT', message: 'reach files limit' }.
+      if (code === 'FST_FILES_LIMIT')
+        return reply.code(413).send({
+          error: 'TOO_MANY_FILES',
+          message: `Send at most ${MAX_FILES} .DBF files at once`,
+        } satisfies InspectError);
+      if (code === 'FST_FIELDS_LIMIT')
+        return reply.code(400).send({
+          error: 'NOT_A_FILE',
+          message: 'Send only .DBF files, as the "files" field',
+        } satisfies InspectError);
       // An empty form ends before its first part; anything else is a broken upload.
       if (files.length > 0) throw err;
     }

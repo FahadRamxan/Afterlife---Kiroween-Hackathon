@@ -61,6 +61,37 @@ describe('inspectDbf (what POST /api/dbf/inspect returns per file)', () => {
     expect(inspectDbf(table(1)).lastUpdate).toBe('1998-07-15');
   });
 
+  it('gives null, not a broken date, when the header date bytes are not a real date', () => {
+    // Real files hold anything here: 0 from a tool that never set it, or junk. A month of 200
+    // used to come out as "1998-200-15", which the API refused with a 500.
+    for (const [month, day] of [
+      [200, 15],
+      [0, 0],
+      [13, 1],
+      [2, 30],
+      [7, 0],
+    ]) {
+      const bytes = table(1).slice();
+      bytes[2] = month!;
+      bytes[3] = day!;
+      expect(inspectDbf(bytes).lastUpdate, `month ${month}, day ${day}`).toBeNull();
+    }
+  });
+
+  it('property: lastUpdate is always null or a real YYYY-MM-DD date', () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 0, max: 255 }), fc.integer({ min: 0, max: 255 }), (m, d) => {
+        const bytes = table(1).slice();
+        bytes[2] = m;
+        bytes[3] = d;
+        const at = inspectDbf(bytes).lastUpdate;
+        if (at === null) return;
+        expect(at).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+        expect(new Date(`${at}T00:00:00Z`).toISOString().slice(0, 10)).toBe(at);
+      }),
+    );
+  });
+
   it('passes on reader warnings (a file cut short)', () => {
     const buf = table(3);
     const cut = buf.subarray(0, buf.length - 5); // drops the EOF byte and most of record 3

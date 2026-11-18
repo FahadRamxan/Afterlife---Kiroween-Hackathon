@@ -1,7 +1,7 @@
 // Text-mode screen decoder (Prompt 22): turns a DOS VGA screenshot back into characters and
 // colours by matching each cell's pixels against the VGA ROM font. No OCR: a cell either is
 // exactly a glyph in two colours, or it is unknown.
-import { cp437ToUnicode } from './cp437';
+import { CP437, cp437ToUnicode } from './cp437';
 import { FONT_8X16, FONT_8X8 } from './vga-font';
 
 /** The 16 DOS text colours as DOSBox draws them (index = attribute nibble). */
@@ -174,6 +174,45 @@ export function decodeCell(
   return { cell: UNKNOWN, cursor: false };
 }
 
+const UNDERSCORE = 0x5f;
+
+/**
+ * The cursor covers the only rows where "_" differs from a blank, so under the cursor the two
+ * draw the same pixels. A blank read under the cursor is "_" when the cell beside it is "_" in the
+ * same colours: an empty "____" input field then reads the same whether the blinking cursor is on
+ * or off, and keeps its length (and the screen its fingerprint).
+ */
+function resolveCursorCell(grid: ScreenGrid): ScreenGrid {
+  const at = grid.cursor;
+  const line = at ? grid.cells[at.row] : undefined;
+  const c = at && line?.[at.col];
+  if (!at || !line || !c || c.code !== BLANK) return grid;
+  const { cellWidth: w, cellHeight: h } = grid;
+  const same = renderCell(UNDERSCORE, c.fg, c.bg, w, h, true).every(
+    (v, i) => v === renderCell(BLANK, c.fg, c.bg, w, h, true)[i],
+  );
+  const beside = [line[at.col - 1], line[at.col + 1]];
+  if (same && beside.some((n) => n?.code === UNDERSCORE && n.fg === c.fg && n.bg === c.bg))
+    line[at.col] = cellOf(UNDERSCORE, c.fg, c.bg);
+  return grid;
+}
+
+/**
+ * True when two characters cannot be told apart in a cell the cursor is drawn on, because the
+ * cursor covers their only difference: "_" and a space, "q" and "g". Two frames of a blinking
+ * cursor can read such a cell differently, and that is not a change on the screen.
+ */
+export function lookAlikeUnderCursor(a: string, b: string, height: CellHeight = 16): boolean {
+  if (a === b) return true;
+  const ca = a === ' ' ? BLANK : CP437.indexOf(a);
+  const cb = b === ' ' ? BLANK : CP437.indexOf(b);
+  if (ca < 0 || cb < 0) return false;
+  // Width 9 also compares the 9th column, so a pair that matches here matches in 8-pixel cells.
+  const pa = renderCell(ca, 15, 0, 9, height, true);
+  const pb = renderCell(cb, 15, 0, 9, height, true);
+  return pa.every((v, i) => v === pb[i]);
+}
+
 /**
  * What a cell looks like, which is all a screenshot can tell, so what decodeScreen returns for a
  * cell drawn with this code and these colours: a blank glyph or text in its own background colour
@@ -248,7 +287,8 @@ function decodeAs(
     }
     cells.push(line);
   }
-  return { grid: { cols: 80, rows, cellWidth, cellHeight, cells, cursor }, unknown };
+  const grid = resolveCursorCell({ cols: 80, rows, cellWidth, cellHeight, cells, cursor });
+  return { grid, unknown };
 }
 
 /**
@@ -328,7 +368,7 @@ export function gridFromCells(
   if (rows !== 25 && rows !== 50)
     throw new ScreenDecodeError(`A text screen has 25 or 50 rows, not ${rows}`);
   const cellHeight: CellHeight = rows === 25 ? 16 : 8;
-  return {
+  return resolveCursorCell({
     cols: 80,
     rows,
     cellWidth,
@@ -345,5 +385,5 @@ export function gridFromCells(
       ),
     ),
     cursor,
-  };
+  });
 }

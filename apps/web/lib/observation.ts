@@ -21,6 +21,18 @@ export type ObservationSummary = {
 
 const show = (v: unknown) => (v === null || v === '' ? '(blank)' : String(v));
 
+/**
+ * What a finished "replay N times" says. Only when every run finished can it call them identical:
+ * if one failed, the runs that did finish prove nothing.
+ */
+export function replayVerdict(hashes: string[], total: number): { ok: boolean; text: string } {
+  if (hashes.length < total)
+    return { ok: false, text: `Only ${hashes.length} of ${total} runs finished.` };
+  return hashes.every((h) => h === hashes[0])
+    ? { ok: true, text: `${total} of ${total} runs gave identical data files.` }
+    : { ok: false, text: 'The runs gave different data files: not repeatable.' };
+}
+
 /** An observation in words, for the live emulator panel. Tables in name order. */
 export function summarizeObservation(o: Observation): ObservationSummary {
   const id = (key: string | null, recno: number) => key ?? `record ${recno + 1}`;

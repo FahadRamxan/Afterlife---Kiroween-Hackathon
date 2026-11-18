@@ -35,7 +35,7 @@
         "no-program": "زِپ میں ڈاس پروگرام (EXE یا COM) نہیں ہے۔",
         "no-dbf": "زِپ میں کوئی DBF ڈیٹا فائل نہیں ہے۔"
       },
-      "found": "<program>{name}</program> اور {count} DBF فائلیں ملیں۔",
+      "found": "<program>{name}</program> اور {count, plural, one {# DBF فائل} other {# DBF فائلیں}} ملیں۔",
       "entries": "زِپ کی فائلیں",
       "reading": "ٹیبل پڑھے جا رہے ہیں…",
       "apiDown": "ٹیبل نہیں پڑھے جا سکے: API تک رسائی نہیں ہو سکی۔",

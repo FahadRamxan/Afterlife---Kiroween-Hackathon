@@ -41,7 +41,7 @@
       "apiDown": "The tables could not be read: the API is not reachable.",
       "apiError": "The tables could not be read:",
       "unconfigured": "The API is not configured, so the tables cannot be previewed.",
-      "tableCaption": "{file} ({count} records)",
+      "tableCaption": "{file} ({count, plural, one {# record} other {# records}})",
       "moreRows": "Showing the first {shown} of {total} records.",
       "notStored": "Nothing is stored. Raising an uploaded app comes in a later build."
     }

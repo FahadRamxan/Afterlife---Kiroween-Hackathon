@@ -11,7 +11,7 @@ import {
 import { ScreenDecodeError, analyzeScreen, decodeScreen, type ScreenGrid } from '@afterlife/screen';
 import { Button, CrtScreen, DiffBadge } from '@afterlife/ui';
 import { useEffect, useId, useState } from 'react';
-import { summarizeObservation, type ObservationSummary } from '../lib/observation';
+import { replayVerdict, summarizeObservation, type ObservationSummary } from '../lib/observation';
 import { useEmulator } from '../lib/use-emulator';
 
 type Props = { bundle: string; name: string; dosTime: string };
@@ -260,7 +260,7 @@ function ObservationView({ o }: { o: ObservationSummary }) {
 
 /** The data files after each replay: the same id every time means a repeatable run. */
 function ReplayView({ hashes, done }: { hashes: string[]; done: boolean }) {
-  const same = hashes.every((h) => h === hashes[0]);
+  const verdict = replayVerdict(hashes, REPLAYS);
   return (
     <section
       aria-label="Replays"
@@ -274,10 +274,8 @@ function ReplayView({ hashes, done }: { hashes: string[]; done: boolean }) {
         ))}
       </ol>
       {done ? (
-        <p role="status" className={same ? 'text-ectoplasm' : 'text-blood'}>
-          {same
-            ? `${hashes.length} of ${hashes.length} runs gave identical data files.`
-            : `The runs gave different data files: not repeatable.`}
+        <p role="status" className={verdict.ok ? 'text-ectoplasm' : 'text-blood'}>
+          {verdict.text}
         </p>
       ) : null}
     </section>

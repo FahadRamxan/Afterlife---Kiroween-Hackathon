@@ -120,6 +120,29 @@ describe('postInspect (with a fake fetch, no network)', () => {
     expect((sent!.get('files') as File).name).toBe('MEDICINE.DBF');
   });
 
+  it('labels each table with its path in the zip, so two MEDICINE.DBF in folders stay apart', async () => {
+    // The API keeps only the base name and answers in the order the files were sent.
+    const fake = (async () =>
+      Response.json({
+        tables: [
+          { file: 'MEDICINE.DBF', recordCount: 40 },
+          { file: 'MEDICINE.DBF', recordCount: 38 },
+        ],
+      })) as typeof fetch;
+    const r = await postInspect(
+      'http://api',
+      [
+        { name: 'DATA/MEDICINE.DBF', bytes: file('MEDICINE.DBF') },
+        { name: 'BACKUP/MEDICINE.DBF', bytes: file('MEDICINE.DBF') },
+      ],
+      fake,
+    );
+    expect(r.ok && r.tables.map((t) => [t.file, t.recordCount])).toEqual([
+      ['DATA/MEDICINE.DBF', 40],
+      ['BACKUP/MEDICINE.DBF', 38],
+    ]);
+  });
+
   it("returns the API's error message for a 400", async () => {
     const fake = (async () =>
       Response.json(

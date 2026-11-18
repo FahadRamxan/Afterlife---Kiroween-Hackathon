@@ -8,6 +8,7 @@ export {
   glyph,
   gridFromCells,
   gridText,
+  lookAlikeUnderCursor,
   renderCell,
   renderScreen,
   type CellHeight,

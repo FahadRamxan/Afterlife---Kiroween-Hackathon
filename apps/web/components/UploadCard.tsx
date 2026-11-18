@@ -131,8 +131,9 @@ function Preview({ inspect }: { inspect: InspectResult | 'reading' | 'unconfigur
     );
   return (
     <div className="space-y-4" data-testid="upload-preview" data-upload-preview>
-      {inspect.tables.map((table) => (
-        <section key={table.file} className="min-w-0 space-y-1">
+      {inspect.tables.map((table, i) => (
+        // The index too: a zip can hold the same path twice.
+        <section key={`${i}:${table.file}`} className="min-w-0 space-y-1">
           <h3 dir="ltr" className="font-mono text-sm text-bone">
             {t('tableCaption', { file: table.file, count: table.recordCount })}
           </h3>
