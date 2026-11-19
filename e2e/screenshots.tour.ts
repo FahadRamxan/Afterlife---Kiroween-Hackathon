@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 import { zipSync } from 'fflate';
+import { SHIFA_REFERENCE_SOUL } from '../packages/soul/src/examples/shifa';
 
 const OUT = '../docs/screenshots';
 
@@ -180,4 +181,47 @@ test('upload your own dead app: the DOS clock and Raise this app', async ({ page
   });
   await expect(card.getByRole('button', { name: 'Raise this app' })).toBeVisible();
   await card.screenshot({ path: `${OUT}/15-upload-raise.png` });
+});
+
+test('the Soul tab in Urdu: rules in Urdu first, with their DSL and evidence', async ({
+  page,
+  context,
+}) => {
+  await page.setViewportSize({ width: 1280, height: 1400 });
+  await ready(page, '/graveyard');
+  await page.getByRole('button', { name: 'Raise Shifa Medical Store' }).click();
+  await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
+  const id = page.url().split('/').at(-1)!;
+  // Urdu written by our team for the tour (no model credentials on this machine).
+  const URDU: Record<string, string> = {
+    'discount-over-5000':
+      'جس بل کا ذیلی ٹوٹل 5,000 روپے سے زیادہ ہو اسے 10% رعایت ملتی ہے، پیسے تک کاٹ کر۔ پورے 5,000 روپے پر کوئی رعایت نہیں۔',
+    'gst-17-truncated': 'رعایت کے بعد بل پر 17% جی ایس ٹی لگتا ہے، پیسے تک کاٹ کر (گول کیے بغیر)۔',
+  };
+  const soul = {
+    ...SHIFA_REFERENCE_SOUL,
+    rules: SHIFA_REFERENCE_SOUL.rules.map((r) => ({ ...r, ur: URDU[r.id] ?? '' })),
+  };
+  await page.request.post(`http://localhost:4000/api/projects/${id}/souls`, { data: soul });
+  await context.addCookies([
+    { name: 'afterlife-locale', value: 'ur', url: 'http://localhost:3000' },
+  ]);
+  await ready(page, `/raise/${id}?tab=soul`);
+  await expect(page.getByTestId('rule-discount-over-5000').getByTestId('rule-ur')).toBeVisible({
+    timeout: 30_000,
+  });
+  await page.getByTestId('soul').screenshot({ path: `${OUT}/16-soul-urdu.png` });
+});
+
+test('possession: what the Possessor found, and what the old app refused', async ({ page }) => {
+  test.setTimeout(150_000);
+  await page.setViewportSize({ width: 1280, height: 1600 });
+  await ready(page, '/graveyard');
+  await page.getByRole('button', { name: 'Watch a recorded run of Shifa Medical Store' }).click();
+  await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
+  await expect(page.getByTestId('possession-refused')).toContainText('MEDICINE NOT FOUND', {
+    timeout: 120_000,
+  });
+  await page.evaluate(() => document.fonts.ready);
+  await page.getByTestId('live-panel').screenshot({ path: `${OUT}/17-possession.png` });
 });

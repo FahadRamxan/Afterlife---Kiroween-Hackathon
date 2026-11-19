@@ -18,7 +18,7 @@ export function TopBar() {
           aria-label={t('home')}
           className="flex items-center gap-2 font-mono font-semibold text-bone"
         >
-          <LogoMark className="h-8 w-7" />
+          <LogoMark className="h-8 w-8" />
           <span>Afterlife</span>
         </Link>
         <nav aria-label={t('main')} className="flex flex-1 gap-4 text-sm">

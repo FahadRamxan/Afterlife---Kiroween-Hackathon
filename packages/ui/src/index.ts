@@ -29,3 +29,4 @@ export { ProgressCandle, candlePercent, type ProgressCandleProps } from './Progr
 export { Tombstone, type TombstoneProps } from './Tombstone';
 export { cn } from './cn';
 export { colors, contrastRatio, motion, type ColorName } from './tokens';
+export { BRAND_FILES, MARK, bannerSvg, iconSvg, markShapes, markSvg } from './brand';
