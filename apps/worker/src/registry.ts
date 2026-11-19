@@ -57,6 +57,8 @@ export function defaultRegistry(
     budgetTokens?: number;
     /** At most this many key sequences per possession (POSSESS_MAX_ACTIONS). */
     maxActions?: number;
+    /** Values typed into each field (POSSESS_PROBES). */
+    probesPerField?: number;
   } = {},
 ): Registry {
   const { db } = deps;
@@ -68,6 +70,7 @@ export function defaultRegistry(
           llm: deps.llm ?? null,
           budgetTokens: deps.budgetTokens ?? DEFAULT_TOKEN_BUDGET,
           ...(deps.maxActions ? { maxActions: deps.maxActions } : {}),
+          ...(deps.probesPerField ? { probesPerField: deps.probesPerField } : {}),
           // A Graveyard app's bundle is a file; an upload's is in the database once it is clean.
           bundleFor: async (p, projectId) =>
             p.source === 'upload' ? (db ? uploadBundle(db, projectId) : null) : graveyardBundle(p),

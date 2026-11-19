@@ -53,6 +53,17 @@ describe('screenActions on real Shifa screens', () => {
     ).toBe(false);
   });
 
+  it('a Y/N question (Barkat): only Yes then No, as the app waits for nothing else', () => {
+    const m = analyzeScreen(gridFromCells(scrCells('barkat/sale-ok/CONFIRM')));
+    expect(screenActions(m).map((a) => a.kind === 'hint' && [a.keys, a.save])).toEqual([
+      ['Y', true],
+      ['N', false],
+    ]);
+    expect(screenActions(m)[0]).toMatchObject({
+      label: 'Y: SAVE SALE OF RS 450.00 FOR P003? (Y/N)',
+    });
+  });
+
   it('a bill with its totals: Save first; Esc is never an exploring action', () => {
     const acts = screenActions(shifa('bill-small/TOTALS'));
     expect(acts).toEqual([

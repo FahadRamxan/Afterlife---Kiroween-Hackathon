@@ -76,6 +76,9 @@ export async function startWorker({
         ...(Number(process.env.POSSESS_MAX_ACTIONS) > 0
           ? { maxActions: Number(process.env.POSSESS_MAX_ACTIONS) }
           : {}),
+        ...(Number(process.env.POSSESS_PROBES) > 0
+          ? { probesPerField: Number(process.env.POSSESS_PROBES) }
+          : {}),
       }),
     options,
     pollingIntervalSeconds,

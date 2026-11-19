@@ -22,6 +22,8 @@ export type PossessionStats = {
   changes: number;
   /** The newest few steps, newest last. */
   recent: ObservationEvent[];
+  /** Each error line the app showed, once, with the step and the value that caused it. */
+  refused: { text: string; label: string; step: number }[];
 };
 
 /** Null until the first observation of the newest possession. */
@@ -42,5 +44,8 @@ export function possessionStats(events: LiveEvent[], recent = 5): PossessionStat
     actions: last.step,
     changes: last.saves,
     recent: obs.slice(-recent),
+    refused: obs
+      .flatMap((o) => o.errors.map((text) => ({ text, label: o.label, step: o.step })))
+      .filter((x, i, all) => all.findIndex((y) => y.text === x.text) === i),
   };
 }

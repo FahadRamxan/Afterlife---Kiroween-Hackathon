@@ -34,7 +34,7 @@ test.describe('upload your own dead app', () => {
   test('a sample zip is scanned, bundled, and its program boots in the emulator', async ({
     page,
   }) => {
-    test.setTimeout(120_000);
+    test.setTimeout(210_000);
     const card = await choose(page, 'my-shop.zip', SHIFA);
     // The DOS clock: suggested from the DBF headers (the newest is 1998), and the owner's choice.
     const day = card.getByLabel('DOS date');
@@ -53,10 +53,14 @@ test.describe('upload your own dead app', () => {
     });
     await expect(log).toContainText('No virus found');
     // The uploaded EXE, booted from the bundle the server built, inside headless js-dos.
+    // The worker runs one possession at a time, and other tests raise apps too.
     await expect(page.getByTestId('live-screen')).toContainText('SHIFA MEDICAL STORE', {
-      timeout: 90_000,
+      timeout: 150_000,
     });
-    await expect(page.getByTestId('live-screen')).toContainText('MAIN MENU');
+    // Explored from there (Prompt 48): the screen moves on from the menu, its title bar stays.
+    await expect(page.getByTestId('stat-actions')).toContainText('actions tried', {
+      timeout: 30_000,
+    });
     // Booted at the chosen clock: the title bar shows its date.
     await expect(page.getByTestId('live-screen')).toContainText('15/07/98');
     await page.request.delete(`${API}/api/projects/${id}`);

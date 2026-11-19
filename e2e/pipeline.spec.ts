@@ -65,6 +65,10 @@ test.describe('pipeline', () => {
       { timeout: 60_000 },
     );
     await expect(page.getByTestId('step-archaeology')).toContainText('Recorded run:');
+    // Prompt 49: the boundary values the Possessor tried, and what the old app refused.
+    const refused = page.getByTestId('possession-refused');
+    await expect(refused).toContainText('MEDICINE NOT FOUND ← Code = ZZZ999 (new-key)');
+    await expect(page.getByTestId('possession-stats')).toContainText('What the app refused');
     await page.request.delete(`${API}/api/projects/${id}`);
   });
 });

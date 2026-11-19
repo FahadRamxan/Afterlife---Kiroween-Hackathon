@@ -6,6 +6,7 @@ import type { EmulatorController } from '@afterlife/emulator';
 import { z } from 'zod';
 import type { CrewLlm } from '../llm/runtime';
 import type { FieldInfo } from './actions';
+import { probes, screenDate, typeField, typicalValue } from './inputs';
 
 /** A few records of each data file, so a value can name a real code, id or name. */
 export type DataSample = {
@@ -28,7 +29,8 @@ export type ValueContext = {
 export interface ValueChooser {
   /** `model`: an LLM proposed it; `data`: taken from the data files without a model. */
   readonly source: 'model' | 'data';
-  choose(ctx: ValueContext): Promise<string>;
+  /** The value, and why it was chosen ("typical", "zero", "new-key"...) when known. */
+  choose(ctx: ValueContext): Promise<string | { value: string; why?: string }>;
 }
 
 const text = (v: DbfValue): string =>
@@ -60,37 +62,39 @@ export async function readSamples(emu: EmulatorController, n = 5): Promise<DataS
 export const fitWidth = (value: string, length: number | null): string =>
   length === null ? value : value.slice(0, length);
 
-const words = (s: string): string[] => s.toUpperCase().match(/[A-Z0-9]+/g) ?? [];
-
 /**
- * A value from the data files: a field named like the label gives a real value ("Code" gives a
- * medicine CODE), a quantity is 1, a name or phone is clearly a test entry, and "blank" in the
- * label means blank is allowed. Deterministic.
+ * A typical value from the input strategy (inputs.ts): a field named like a data file field gives
+ * a real value ("Code" gives a medicine CODE), a quantity is 1, an amount is 100.00, a date is the
+ * app's own date, and "blank" in the label means blank. Deterministic.
  */
 export function dataValue(ctx: ValueContext): string {
-  const label = ctx.field.label;
-  const w = words(label);
-  let v: string;
-  if (/\bblank\b/i.test(label)) v = '';
-  else if (w.some((x) => ['QTY', 'QUANTITY', 'QNTY', 'NOS', 'UNITS'].includes(x))) v = '1';
-  else if (w.includes('PHONE') || w.includes('MOBILE') || w.includes('TEL')) v = '051-0000000';
-  else {
-    const match = ctx.samples
-      .flatMap((s) => s.fields.map((f) => ({ s, f })))
-      .find(({ f }) =>
-        w.some((x) => f.name === x || f.name.endsWith(`_${x}`) || f.name.startsWith(`${x}_`)),
-      );
-    const sample = match?.s.records.find((r) => (r[match.f.name] ?? '') !== '')?.[match!.f.name];
-    if (w.includes('NAME') && !match?.f.name.includes('CODE')) v = 'AFTERLIFE TEST';
-    else v = sample ?? 'TEST';
-  }
-  return fitWidth(v, ctx.field.length);
+  return typicalValue(typeField(ctx.field, ctx.samples), screenDate(ctx.screen));
 }
 
-export const dataValueChooser: ValueChooser = {
-  source: 'data',
-  choose: async (ctx) => dataValue(ctx),
-};
+/**
+ * The next value for a field (Prompt 49): the first time, `first` (the model) or a typical value;
+ * each time after, the next boundary value not yet typed there (0, the full width, a negative, a
+ * date before or after 2000, a key that does not exist). Every value fits the field.
+ */
+export function strategyChooser(first?: ValueChooser): ValueChooser {
+  return {
+    source: first?.source ?? 'data',
+    async choose(ctx) {
+      const t = typeField(ctx.field, ctx.samples);
+      const today = screenDate(ctx.screen);
+      if (ctx.tried.length === 0) {
+        const v = first
+          ? await first.choose(ctx)
+          : { value: typicalValue(t, today), why: 'typical' };
+        return typeof v === 'string' ? { value: v, why: 'typical' } : v;
+      }
+      const next = probes(t, today).find((p) => !ctx.tried.includes(p.value));
+      return next ?? { value: typicalValue(t, today), why: 'typical' };
+    },
+  };
+}
+
+export const dataValueChooser: ValueChooser = strategyChooser();
 
 /** The model's instructions: what the field is for, and how to answer. */
 export function valuePrompt(ctx: ValueContext): string {

@@ -134,7 +134,8 @@
         "changes": "{n, plural, one {# ڈیٹا تبدیلی} other {# ڈیٹا تبدیلیاں}} دیکھی گئیں",
         "recent": "تازہ ترین قدم",
         "newScreen": "نئی اسکرین",
-        "changed": "{files} بدلی"
+        "changed": "{files} بدلی",
+        "refused": "ایپ نے کیا رد کیا (یہ حد کی قدروں سے ملا)"
       }
     },
     "steps": {

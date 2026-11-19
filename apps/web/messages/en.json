@@ -134,7 +134,8 @@
         "changes": "{n, plural, one {# data change} other {# data changes}} seen",
         "recent": "Latest steps",
         "newScreen": "new screen",
-        "changed": "changed {files}"
+        "changed": "changed {files}",
+        "refused": "What the app refused (the boundary values found these)"
       }
     },
     "steps": {

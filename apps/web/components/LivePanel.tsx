@@ -79,6 +79,19 @@ export function LivePanel({
               </li>
             ))}
           </ol>
+          {stats.refused.length ? (
+            <>
+              <h4 className="mt-2 font-semibold">{t('possession.refused')}</h4>
+              <ul data-testid="possession-refused" className="mt-1 space-y-0.5 font-mono text-xs">
+                {stats.refused.map((x) => (
+                  <li key={x.text} lang="en" dir="ltr">
+                    <span className="text-phosphor">{x.text}</span>
+                    <span className="text-bone/70"> ← {x.label}</span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
         </div>
       ) : null}
       {lines.length ? (

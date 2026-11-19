@@ -94,3 +94,19 @@ export {
   type ValueChooser,
   type ValueContext,
 } from './possessor/values';
+
+// The input strategy (Prompt 49).
+export { strategyChooser } from './possessor/values';
+export {
+  fitsType,
+  probes,
+  screenDate,
+  typeField,
+  typicalValue,
+  type DateFormat,
+  type FieldType,
+  type MonthFormat,
+  type Probe,
+  type ProbeReason,
+  type TypedField,
+} from './possessor/inputs';

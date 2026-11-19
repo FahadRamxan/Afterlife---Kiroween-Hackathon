@@ -80,6 +80,32 @@ describe('possess on the mini shop', () => {
     expect(refused.errors).toEqual(['ITEM NOT FOUND']);
   });
 
+  it('boundary values (Prompt 49): a code that does not exist and a quantity of 0 are refused', async () => {
+    const { r, seen } = await run({ probesPerField: 4, maxActions: 150 });
+    const refused = Object.fromEntries(r.refused.map((x) => [x.text, x.label]));
+    expect(refused['ITEM NOT FOUND']).toBe('Code = ZZZ999 (new-key)');
+    expect(refused['BAD QUANTITY']).toBeDefined();
+    expect(seen.find((o) => o.label === 'Qty = 0 (zero)')?.errors).toEqual(['BAD QUANTITY']);
+    // Each refusal is an observation of its own, with the error on the status line.
+    const step = r.refused.find((x) => x.text === 'ITEM NOT FOUND')!.step;
+    expect(seen[step - 1]!.errors).toEqual(['ITEM NOT FOUND']);
+    // Probing came after a sale got through: the first value of each field is the typical one.
+    expect(r.firstChange['SALES.DBF:inserted']).toBeLessThan(step);
+  });
+
+  it('gives up a walk that no longer leads where it did (found recording Shifa)', async () => {
+    // A code entered twice in one sale is refused, so the walk "TEA100{Enter}" to the quantity
+    // box stops working once the sale has that line. Shifa's real run walked it 40 times.
+    const { seen, r } = await run({ probesPerField: 4, maxActions: 150, idleLimit: 1000 });
+    let repeats = 0;
+    for (let i = 1; i < seen.length; i++) {
+      const same = seen[i]!.kind === 'walk' && seen[i]!.keys === seen[i - 1]!.keys;
+      repeats = same ? repeats + 1 : 0;
+      expect(repeats, `step ${seen[i]!.step}: ${seen[i]!.label}`).toBeLessThan(3);
+    }
+    expect(r.stoppedBecause).toBe('explored');
+  });
+
   it('stops at the action budget, and after N steps with nothing new', async () => {
     expect((await run({ maxActions: 3 })).r).toMatchObject({ steps: 3, stoppedBecause: 'budget' });
     const idle = await run({ idleLimit: 1 });

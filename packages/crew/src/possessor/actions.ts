@@ -107,6 +107,16 @@ export function activeField(m: ScreenModel, text?: string[]): FieldInfo | null {
  * app waits on, then keys that may save, then menu items, then the other keys. Each sequence once.
  */
 export function screenActions(m: ScreenModel, text?: string[]): PossessAction[] {
+  // A question on the screen ("SAVE SALE OF RS 100.00 FOR P001? (Y/N)"): the app waits for Yes or
+  // No and nothing else. Yes may save, so it goes first.
+  const question = m.messages.find((x) => /[([]\s*Y\s*\/\s*N\s*[)\]]|\bY\/N\b/i.test(x.text));
+  if (question) {
+    const q = question.text.trim();
+    return [
+      { kind: 'hint', id: 'answer:Y', keys: 'Y', label: `Y: ${q}`, save: true },
+      { kind: 'hint', id: 'answer:N', keys: 'N', label: `N: ${q}`, save: false },
+    ];
+  }
   const out: PossessAction[] = [];
   const seen = new Set<string>();
   const field = activeField(m, text);
