@@ -7,6 +7,8 @@ test.describe('rule tryout', () => {
   }) => {
     await page.goto('/playground');
     const card = page.getByTestId('rule-tryout');
+    // Typing before the page is hydrated would be overwritten (seen in dev mode under load).
+    await expect(card).toHaveAttribute('data-ready', 'true', { timeout: 30_000 });
     await expect(card.getByTestId('rule-value')).toHaveText('600');
 
     const rule = card.getByLabel('Rule');

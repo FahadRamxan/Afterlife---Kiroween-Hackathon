@@ -2,7 +2,7 @@
 import { tryRule } from '@afterlife/soul';
 import { Card } from '@afterlife/ui';
 import { useTranslations } from 'next-intl';
-import { useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 
 const EXAMPLE = 'if bill.subtotal > 5000 then trunc(bill.subtotal * 0.10, 2) else 0';
 const EXAMPLE_VALUES = '{\n  "bill": { "subtotal": "6000.00" }\n}';
@@ -18,9 +18,12 @@ export function RuleTryout() {
   const [expression, setExpression] = useState(EXAMPLE);
   const [values, setValues] = useState(EXAMPLE_VALUES);
   const result = useMemo(() => tryRule(expression, values), [expression, values]);
+  // Set once React runs in the page: typing before that would be lost when it takes over.
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
 
   return (
-    <Card data-testid="rule-tryout" className="mt-6 flex flex-col gap-3">
+    <Card data-testid="rule-tryout" data-ready={ready} className="mt-6 flex flex-col gap-3">
       <h2 className="text-lg font-semibold">{t('title')}</h2>
       <p className="text-sm text-bone/75">{t('body')}</p>
       <label htmlFor={exprId} className="text-sm font-medium">
