@@ -1,0 +1,42 @@
+{
+  "about": "Real results of the afterlife-emulator MCP tools, from the Kiro chat of Prompt 33 (docs/kiro-usage.md, \"MCP: Kiro driving a 1998 app\"). Each result is copied as the tool returned it. Only the stock screen is cut down to its title and the PAN500 row (the full screen is in the doc).",
+  "app": "shifa",
+  "dosTime": "1998-07-15 10:00:00",
+  "calls": [
+    {
+      "tool": "send_keys",
+      "args": { "keys": "2" },
+      "result": "Screen: STOCK\n SHIFA MEDICAL STORE  v2.3           STOCK                             15/07/98\n[trimmed: 2 lines]\n CODE   NAME                 BATCH    EXPIRY       PRICE    QTY\n PAN500 PANADOL 500MG STRIP  B98031   31/12/99     12.50    240\n[trimmed: the other 16 rows, the page line and the status bar]\n\nNo data changed."
+    },
+    {
+      "tool": "snapshot_data",
+      "args": {},
+      "result": "BILLITEM.DBF: 4 records\nBILLS.DBF: 3 records\nCUSTOMER.DBF: 8 records\nMEDICINE.DBF: 40 records"
+    },
+    {
+      "tool": "send_keys",
+      "args": { "keys": "{F2}" },
+      "result": "[trimmed: the screen above the totals]\n                                         SUBTOTAL              25.00\n                                         DISCOUNT 10%           0.00\n                                         GST 17%                4.25\n                                         TOTAL                 29.25\n  BILL 9807-0001 SAVED - PRESS ANY KEY\n F2=Save bill  Esc=Cancel\n\nData changed: BILLITEM.DBF, BILLS.DBF, MEDICINE.DBF"
+    },
+    {
+      "tool": "diff_data",
+      "args": {},
+      "result": "BILLITEM.DBF: 1 inserted, 0 deleted, 0 changed\nBILLS.DBF: 1 inserted, 0 deleted, 0 changed\nMEDICINE.DBF: 0 inserted, 0 deleted, 1 changed"
+    },
+    {
+      "tool": "read_table",
+      "args": { "file": "BILLS.DBF" },
+      "result": "BILLS.DBF: 4 records\nBILL_NO | BILL_DATE | CUST_ID | SUBTOTAL | DISCOUNT | GST | TOTAL\n9806-0001 | 19980610 | C0001 | 250.00 | 0.00 | 42.50 | 292.50\n9806-0002 | 19980622 |  | 5600.00 | 560.00 | 856.80 | 5896.80\n9806-0003 | 19980630 | C0006 | 98.00 | 0.00 | 16.66 | 114.66\n9807-0001 | 19980715 |  | 25.00 | 0.00 | 4.25 | 29.25"
+    },
+    {
+      "tool": "read_table",
+      "args": { "file": "BILLITEM.DBF" },
+      "result": "BILLITEM.DBF: 5 records\nBILL_NO | LINE | CODE | QTY | PRICE | AMOUNT\n9806-0001 | 1 | PAN500 | 20 | 12.50 | 250.00\n9806-0002 | 1 | INS100 | 8 | 650.00 | 5200.00\n9806-0002 | 2 | FOL005 | 100 | 4.00 | 400.00\n9806-0003 | 1 | DUP001 | 1 | 98.00 | 98.00\n9807-0001 | 1 | PAN500 | 2 | 12.50 | 25.00"
+    },
+    {
+      "tool": "read_table",
+      "args": { "file": "MEDICINE.DBF", "limit": 3 },
+      "result": "MEDICINE.DBF: 40 records\nCODE | NAME | BATCH | EXPIRY | PRICE | QTY\nPAN500 | PANADOL 500MG STRIP | B98031 | 19991231 | 12.50 | 238\nBRU400 | BRUFEN 400MG STRIP | B97112 | 19990630 | 18.75 | 180\nAUG625 | AUGMENTIN 625MG | A98020 | 19990331 | 165.00 | 60"
+    }
+  ]
+}
