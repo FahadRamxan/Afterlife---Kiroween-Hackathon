@@ -35,7 +35,8 @@
     "db:migrate:down": "pnpm --filter @afterlife/db migrate:down",
     "db:seed": "pnpm --filter @afterlife/db seed",
     "db:generate": "pnpm --filter @afterlife/db generate",
-    "pipeline:record": "pnpm --filter @afterlife/worker record"
+    "pipeline:record": "pnpm --filter @afterlife/worker record",
+    "soul:spec": "pnpm --filter @afterlife/soul spec"
   },
   "devDependencies": {
     "@afterlife/db": "workspace:^",
@@ -43,6 +44,7 @@
     "@afterlife/emulator": "workspace:^",
     "@afterlife/mcp-emulator": "workspace:^",
     "@afterlife/screen": "workspace:^",
+    "@afterlife/soul": "workspace:^",
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@commitlint/lint": "^21.2.4",

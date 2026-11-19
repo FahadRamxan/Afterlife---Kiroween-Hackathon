@@ -28,3 +28,4 @@ export {
   type Expr,
 } from './dsl';
 export { tryRule, type TryResult } from './tryout';
+export { describeCondition, earsFor, writeKiroSpec, type SpecFiles } from './spec-writer';

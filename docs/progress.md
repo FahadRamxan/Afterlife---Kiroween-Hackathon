@@ -84,7 +84,9 @@ Status:
 
 | 42 | Rule expression DSL | S (done by F's session) | merged | `parseExpr`, `printExpr` and `evaluate` in `@afterlife/soul`: a hand-written precedence-climbing parser (arithmetic, comparisons that do not chain, `and`/`or`/`not`, `if then else`, field references like `item.qty`, calls, and `x => ...` only inside `sum`, `count`, `any`, `all`); `round`, `trunc`, `floor`, `ceil`, `min`, `max`, `abs`, `addDays`, `daysBetween`, `weeksBetween`. The evaluator works in decimal.js (its own 40-digit, half-up clone): number-like strings from DBF fields are decimals, ten 0.1s are exactly 1. Safe: no eval or Function; names resolve only to the caller's own values (not `constructor`, `__proto__`, globals); at most 2,000 characters, nesting 64 deep, 100,000 steps. Errors say where (column) or which value. Properties: parse(print(ast)) is the AST (generated ASTs; a broken printer was caught by it), evaluation is deterministic, and it agrees with decimal.js on money sums and products. A Soul's rules must now parse. Screen: "Try a rule" on `/playground`, the same evaluator in the browser (e2e: Shifa's discount, 0.1 + 0.2 = 0.3, GST truncated, the errors). EN and UR |
 
-Prompts 43 to 100 are all `todo`.
+| 43 | Soul to Kiro spec writer | S (done by F's session) | partial | `writeKiroSpec(soul)` writes `.kiro/specs/<app>-rebirth/requirements.md` (one requirement per rule: user story, the rule in English and Urdu, evidence, confidence, EARS criteria), `design.md` (entities with fields, keys, foreign keys and counters; screens with fields and navigation; actions; the rule table with evidence), `tasks.md` (Kiro checkboxes, each rule task naming its requirements) and `.kiro/steering/legacy-behaviour.md` (`inclusion: always`). EARS from the rule's expression: a compute rule's `if` becomes one WHEN per branch ("WHEN the bill subtotal is over 5000 THE SYSTEM SHALL set the bill discount to …", "WHEN … is at most 5000 …"), a validate rule becomes "IF <its opposite> THEN THE SYSTEM SHALL refuse the entry" (negation with De Morgan, dates read as before/after), an effect rule names the action that changes it. Golden tests for Shifa (`__golden__`, `UPDATE_GOLDEN=1`); property: any valid Soul gives the same spec every time with every rule in it. `pnpm soul:spec <soul.json \| --example> <dir>`; the Shifa example is in `docs/examples/shifa-kiro-spec` (a test keeps it current). Open step: open that folder in Kiro once and check the spec reads correctly. The download button is on the Soul tab (Prompt 44) |
+
+Prompts 44 to 100 are all `todo`.
 
 README updated at Prompt 20 and at Prompt 30 (counts, coverage, screenshots). Update this file in the same commit as each prompt.
 
@@ -92,6 +94,7 @@ README updated at Prompt 20 and at Prompt 30 (counts, coverage, screenshots). Up
 
 - [ ] Prompt 33: create `.kiro/settings/mcp.json` with the `afterlife-emulator` server (text in the README MCP section), then explore Shifa from Kiro chat and paste the transcript into `docs/kiro-usage.md`.
 
+- [ ] Prompt 43: open `docs/examples/shifa-kiro-spec` as a folder in Kiro and check the spec (requirements, design, tasks) and the steering file show correctly.
 - [ ] Prompt 4: ask Kiro to finish a task without tests, and record that it refuses (`docs/kiro-usage.md`).
 - [ ] Prompt 5: screenshot of a blocked commit, saved as `docs/git-hooks-proof.png`.
 - [ ] Prompt 7: hooks fire in the IDE (confirmed). Still to do: a screenshot of the Hooks panel, and the timeout it shows, in `docs/kiro-usage.md`.
