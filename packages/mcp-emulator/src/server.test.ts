@@ -229,3 +229,41 @@ describe('afterlife-emulator MCP server', () => {
     await expect(made[0]!.screenshot()).rejects.toMatchObject({ code: 'NOT_BOOTED' });
   });
 });
+
+describe('a boot that fails (found in the Prompts 31 to 40 review)', () => {
+  it('gives its emulator back, so a pool of one can still boot the next app', async () => {
+    // main.ts runs one emulator at a time (a pool of size 1). A boot that failed kept its
+    // emulator, and the next boot_app waited for it for ever.
+    let live = 0;
+    const broken: AppSource = {
+      name: 'Broken',
+      dosTime: '1998-07-15 10:00:00',
+      bundle: async () => new Uint8Array([1, 2, 3]),
+    };
+    const server = createEmulatorServer({
+      apps: { broken, shifa },
+      createController: async () => {
+        live++;
+        return fakeShifa();
+      },
+      destroyController: async (c) => {
+        live--;
+        await c.exit();
+      },
+      record: { stableMs: 10, pollMs: 2 },
+    });
+    const [a, b] = InMemoryTransport.createLinkedPair();
+    const client = new Client({ name: 'test', version: '1.0.0' });
+    await Promise.all([server.connect(a), client.connect(b)]);
+    closers.push(
+      () => client.close(),
+      () => server.close(),
+    );
+    const bad = await client.callTool({ name: 'boot_app', arguments: { name: 'broken' } });
+    expect(bad.isError).toBe(true);
+    expect(live).toBe(0);
+    const good = await client.callTool({ name: 'boot_app', arguments: { name: 'shifa' } });
+    expect(good.isError).toBeFalsy();
+    expect(live).toBe(1);
+  });
+});

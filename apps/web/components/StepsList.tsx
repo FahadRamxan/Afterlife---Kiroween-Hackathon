@@ -45,6 +45,9 @@ export function StepsList({ projectId, events }: { projectId: string; events: Li
       </p>
     ) : null;
   const settled = steps.filter((s) => SETTLED.has(s.status)).length;
+  // Said in the headline too: "6 of 6 steps finished" read as finished work when every step was a
+  // placeholder that skipped itself.
+  const skipped = steps.filter((s) => s.status === 'skipped').length;
   return (
     <section aria-labelledby="steps-heading" data-testid="steps" className="mt-6">
       <h2 id="steps-heading" className="text-lg font-semibold">
@@ -53,7 +56,7 @@ export function StepsList({ projectId, events }: { projectId: string; events: Li
       <ProgressCandle
         value={settled}
         max={steps.length}
-        label={t('progress', { settled, total: steps.length })}
+        label={t('progress', { settled, total: steps.length, skipped })}
         className="mt-2 max-w-sm"
       />
       <ol className="mt-3 space-y-2">

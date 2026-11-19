@@ -9,7 +9,7 @@ import {
 import { analyzeScreen } from '@afterlife/screen';
 import { Button, CrtScreen } from '@afterlife/ui';
 import { useTranslations } from 'next-intl';
-import { useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { summarizeObservation } from '../lib/observation';
 import { keyFromEvent, thumbnailSize } from '../lib/seance';
 import { useEmulator, useScreenGrid } from '../lib/use-emulator';
@@ -67,6 +67,19 @@ export function SeanceRecorder({ projectId, bundle, name, dosTime }: Props) {
   const busy = useRef(false);
   const [pending, setPending] = useState(0);
   const mic = useRef<{ recorder: MediaRecorder; chunks: Blob[] } | null>(null);
+
+  // Leaving the tab or the page unmounts the recorder: the microphone must go off with it, or the
+  // browser keeps recording (its mic light on) with nothing left on the page to stop it.
+  useEffect(
+    () => () => {
+      const m = mic.current;
+      if (!m) return;
+      mic.current = null;
+      if (m.recorder.state !== 'inactive') m.recorder.stop();
+      m.recorder.stream.getTracks().forEach((tr) => tr.stop());
+    },
+    [],
+  );
 
   async function pump() {
     if (busy.current || !c) return;

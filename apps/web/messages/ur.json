@@ -117,7 +117,7 @@
     },
     "steps": {
       "title": "نئی زندگی کے مراحل",
-      "progress": "{total} میں سے {settled} مراحل مکمل",
+      "progress": "{total} میں سے {settled} مراحل چلائے گئے{skipped, plural, =0 {} other {، ان میں سے # چھوڑ دیے گئے}}",
       "attempts": "کوشش {n}",
       "again": "{step} کو اکیلے دوبارہ چلائیں",
       "againShort": "دوبارہ چلائیں",

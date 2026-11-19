@@ -104,7 +104,14 @@ export function createEmulatorServer(opts: ServerOptions): McpServer {
     baseline = null;
     const bundle = await app.bundle();
     const emu = await opts.createController();
-    await withFreshState(emu, bundle, { dosTime: app.dosTime }, async () => {});
+    try {
+      await withFreshState(emu, bundle, { dosTime: app.dosTime }, async () => {});
+    } catch (e) {
+      // Not kept, so give it back: main.ts has a pool of one, and the next boot_app would wait
+      // for this emulator for ever.
+      await destroy(emu).catch(() => {});
+      throw e;
+    }
     current = { id, app, emu, bundle };
     const { screen } = await waitForStableScreen(emu, opts.record);
     return ok(screenText(screen), { app: id, name: app.name, screen: screenSummary(screen) });
