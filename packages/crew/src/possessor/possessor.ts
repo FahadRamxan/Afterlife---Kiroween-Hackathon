@@ -17,7 +17,7 @@ import {
   type ObservedScreen,
   type RecordOptions,
 } from '@afterlife/emulator';
-import { EXIT_WORDS, screenActions, type PossessAction } from './actions';
+import { EXIT_WORDS, quitBy, screenActions, type PossessAction } from './actions';
 import { ScreenGraph, type ScreenGraphJson } from './graph';
 import { readSamples, type DataSample, type ValueChooser } from './values';
 
@@ -129,7 +129,7 @@ export async function possess(
   };
   const mark = (fp: string, id: string) => tried.set(fp, (tried.get(fp) ?? new Set()).add(id));
 
-  /** Presses keys and records it. False when the budget is used up or the run was stopped. */
+  /** Presses keys and records them: the observation, also sent to `onObservation`. */
   const act = async (
     keys: string,
     kind: StepKind,
@@ -216,10 +216,15 @@ export async function possess(
         if (!(await back())) break;
       continue;
     }
-    // The owner may have left by the menu at the end; the Possessor never does.
+    // The owner may have left at the end, by the menu, by an exit key or by Esc on the first
+    // screen; the Possessor never does.
     const item = screen.model.menu?.items.find((i) => i.key === g.keys);
-    if (item && EXIT_WORDS.test(item.label)) {
-      await log(`Skipped the owner's "${g.keys} ${item.label}": it leaves the program`);
+    const quits =
+      item && EXIT_WORDS.test(item.label)
+        ? `${g.keys} ${item.label}`
+        : quitBy(screen.model, g.keys, screen.fingerprint === graph.root);
+    if (quits) {
+      await log(`Skipped the owner's "${quits}": it leaves the program`);
       continue;
     }
     await act(g.keys, 'guide', g.label ?? g.keys, g.hint);
@@ -245,9 +250,10 @@ export async function possess(
         const { value, why } =
           typeof chosen === 'string' ? { value: chosen, why: undefined } : chosen;
         typed.set(key, [...(typed.get(key) ?? []), value]);
+        // "Name = (blank)": a blank probe's reason would only say "(blank)" again.
         const label =
           `${next.field.label || 'field'} = ${value === '' ? '(blank)' : value}` +
-          (why && why !== 'typical' ? ` (${why})` : '');
+          (why && why !== 'typical' && !(value === '' && why === 'blank') ? ` (${why})` : '');
         await act(value.replaceAll('{', '{{}') + '{Enter}', 'explore', label);
       } else
         await act(

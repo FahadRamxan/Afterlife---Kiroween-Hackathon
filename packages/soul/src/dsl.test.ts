@@ -92,6 +92,29 @@ describe('evaluate', () => {
     expect(ev("customer.name != ''", { customer: { name: 'ASLAM' } })).toBe(true);
   });
 
+  it('digits with a leading zero stay text: codes and phone numbers are not numbers', () => {
+    const phone = { c: { phone: '03001234567' } };
+    expect(ev("c.phone = '03001234567'", phone)).toBe(true);
+    expect(ev("c.phone + '-1'", phone)).toBe('03001234567-1');
+    expect(ev("m.code = '0012'", { m: { code: '0012' } })).toBe(true);
+    // "0012" is not the code "12": never equal, and never quietly compared as numbers.
+    expect(() => ev('a.code = b.code', { a: { code: '0012' }, b: { code: '12' } })).toThrow(
+      DslError,
+    );
+    // Numbers written as text still are numbers, zero and fractions under 1 included.
+    expect(num('x * 2', { x: '0.10' })).toBe('0.2');
+    expect(num('x + 1', { x: '0' })).toBe('1');
+    expect(num('x - 1', { x: '-0.5' })).toBe('-1.5');
+  });
+
+  it('addDays past the year 9999 is a rule error, not a crash', () => {
+    const d = { d: dslDate('1998-07-15') };
+    expect(() => ev('addDays(d, 1000000000)', d)).toThrow(DslError);
+    expect(() => ev('addDays(d, 3000000)', d)).toThrow(DslError);
+    expect(() => ev('addDays(d, -800000)', d)).toThrow(DslError);
+    expect((ev('addDays(d, 2900000)', d) as { iso: string }).iso).toMatch(/^9\d{3}-/);
+  });
+
   it('money never goes through a float: ten 0.1s are exactly 1', () => {
     const items = Array.from({ length: 10 }, () => ({ price: 0.1 }));
     expect(num('sum(items, x => x.price)', { items })).toBe('1');

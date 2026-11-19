@@ -97,22 +97,23 @@ function DiffView({ diff }: { diff: SoulDiff }) {
   const r = diff.rules;
   const nothing = !r.added.length && !r.removed.length && !r.changed.length;
   return (
-    <div data-testid="soul-diff" className="mt-3 space-y-2 text-sm" lang="en" dir="ltr">
+    // The headings are in the page's language; rule ids, English texts and values are data.
+    <div data-testid="soul-diff" className="mt-3 space-y-2 text-sm">
       <p className="font-semibold">{t('between', { from: diff.from, to: diff.to })}</p>
       {nothing ? <p className="text-bone/70">{t('sameRules')}</p> : null}
       <ul className="space-y-2">
         {r.added.map((x) => (
-          <li key={`a-${x.id}`} data-kind="added">
+          <li key={`a-${x.id}`} data-kind="added" lang="en" dir="ltr">
             <DiffBadge kind="inserted" /> <code className="font-mono">{x.id}</code>: {x.en}
           </li>
         ))}
         {r.removed.map((id) => (
-          <li key={`r-${id}`} data-kind="removed">
+          <li key={`r-${id}`} data-kind="removed" lang="en" dir="ltr">
             <DiffBadge kind="deleted" /> <code className="font-mono">{id}</code>
           </li>
         ))}
         {r.changed.map((c) => (
-          <li key={`c-${c.id}`} data-kind="changed">
+          <li key={`c-${c.id}`} data-kind="changed" lang="en" dir="ltr">
             <DiffBadge kind="changed" /> <code className="font-mono">{c.id}</code>
             <ul className="ml-6 mt-1 space-y-1 font-mono text-xs">
               {c.fields.map((f) => (
