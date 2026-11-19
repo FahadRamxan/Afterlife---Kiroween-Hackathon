@@ -19,6 +19,9 @@ services:
         value: '1'
       - key: DATABASE_URL
         sync: false
+      # Shown on "Show your work"; the same number as the worker's.
+      - key: LLM_TOKEN_BUDGET
+        value: '200000'
 
   - type: worker
     name: afterlife-worker
@@ -31,3 +34,14 @@ services:
     envVars:
       - key: DATABASE_URL
         sync: false
+      # The language model (Prompt 47): `bedrock`, or `none` to run without one.
+      - key: LLM_PROVIDER
+        sync: false
+      - key: AWS_REGION
+        value: us-east-1
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: LLM_TOKEN_BUDGET
+        value: '200000'

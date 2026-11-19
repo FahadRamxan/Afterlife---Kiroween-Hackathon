@@ -37,3 +37,4 @@ export {
   type FieldChange,
   type SoulDiff,
 } from './diff';
+export { numberSoul, specRequirements } from './stored';

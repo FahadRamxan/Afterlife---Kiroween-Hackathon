@@ -241,6 +241,9 @@ importers:
 
   apps/worker:
     dependencies:
+      '@afterlife/crew':
+        specifier: workspace:^
+        version: link:../../packages/crew
       '@afterlife/db':
         specifier: workspace:^
         version: link:../../packages/db
@@ -250,6 +253,9 @@ importers:
       '@afterlife/screen':
         specifier: workspace:^
         version: link:../../packages/screen
+      '@afterlife/soul':
+        specifier: workspace:^
+        version: link:../../packages/soul
       fflate:
         specifier: ^0.8.3
         version: 0.8.3
@@ -314,6 +320,9 @@ importers:
       '@afterlife/db':
         specifier: workspace:^
         version: link:../db
+      '@afterlife/soul':
+        specifier: workspace:^
+        version: link:../soul
       '@aws-sdk/client-bedrock-runtime':
         specifier: ^3.1172.0
         version: 3.1172.0

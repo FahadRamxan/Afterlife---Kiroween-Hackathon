@@ -5,6 +5,8 @@ import type { Db } from '@afterlife/db';
 import { graveyardBundle, possessFirstLook, type EmulatorPool } from './possess';
 import { scanUpload, uploadBundle } from './scan-upload';
 import type { VirusScanner } from './scanner';
+import { translateSoulStep } from './translate-soul';
+import { DEFAULT_TOKEN_BUDGET, type LlmClient } from '@afterlife/crew';
 
 export type StepContext = {
   projectId: string;
@@ -46,7 +48,14 @@ export const notBuiltYet =
  * first screen (the Possessor's exploration is Prompt 48).
  */
 export function defaultRegistry(
-  deps: { pool?: EmulatorPool; db?: Db; scanner?: VirusScanner } = {},
+  deps: {
+    pool?: EmulatorPool;
+    db?: Db;
+    scanner?: VirusScanner;
+    /** The model (LLM_PROVIDER); null when none is set up. */
+    llm?: LlmClient | null;
+    budgetTokens?: number;
+  } = {},
 ): Registry {
   const { db } = deps;
   return {
@@ -69,5 +78,12 @@ export function defaultRegistry(
       db && deps.scanner
         ? scanUpload({ db, scanner: deps.scanner })
         : async () => ({ status: 'failed', reason: 'This worker has no virus scanner' }),
+    'translate-soul': db
+      ? translateSoulStep({
+          db,
+          llm: deps.llm ?? null,
+          budgetTokens: deps.budgetTokens ?? DEFAULT_TOKEN_BUDGET,
+        })
+      : async () => ({ status: 'failed', reason: 'This worker has no database' }),
   };
 }

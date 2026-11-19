@@ -110,6 +110,10 @@ export class CrewLlm {
     return this.opts.client.provider;
   }
 
+  get model(): string {
+    return this.opts.client.model;
+  }
+
   /** Tokens the project has left. */
   async remaining(): Promise<number> {
     return this.opts.budgetTokens - (await this.opts.log.tokensUsed(this.opts.projectId));

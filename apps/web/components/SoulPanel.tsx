@@ -1,10 +1,12 @@
 'use client';
 import { Button, Card, CrtScreen, DiffBadge } from '@afterlife/ui';
 import type { Rule, Soul } from '@afterlife/soul';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { EmptyState } from './EmptyState';
 import { SoulVersions } from './SoulVersions';
+import type { LiveEvent } from '../lib/live';
+import { UrduRules } from './UrduRules';
 import {
   diffRows,
   getObservation,
@@ -18,10 +20,18 @@ import {
 const API = process.env.NEXT_PUBLIC_API_URL;
 
 /** The Soul tab: the entities, the rules (English, Urdu, the expression, confidence, evidence). */
-export function SoulPanel({ projectId }: { projectId: string }) {
+export function SoulPanel({
+  projectId,
+  events = [],
+}: {
+  projectId: string;
+  /** Live events: a new Soul version (the Urdu translation) reloads the tab. */
+  events?: LiveEvent[];
+}) {
   const t = useTranslations('raise.soul');
   const empty = useTranslations('raise');
   const [answer, setAnswer] = useState<SoulAnswer | null>(null);
+  const updates = events.filter((e) => e.type === 'soul_updated').length;
 
   useEffect(() => {
     let alive = true;
@@ -29,7 +39,7 @@ export function SoulPanel({ projectId }: { projectId: string }) {
     return () => {
       alive = false;
     };
-  }, [projectId]);
+  }, [projectId, updates]);
 
   if (!answer) return <p className="mt-4 text-sm text-bone/70">{t('loading')}</p>;
   if (!answer.ok)
@@ -61,7 +71,7 @@ export function SoulPanel({ projectId }: { projectId: string }) {
           {t('reference')}
         </p>
       ) : null}
-      <SoulVersions projectId={projectId} />
+      <SoulVersions key={version} projectId={projectId} />
       <section aria-labelledby="entities-heading">
         <h2 id="entities-heading" className="text-lg font-semibold">
           {t('entities')}
@@ -89,6 +99,7 @@ export function SoulPanel({ projectId }: { projectId: string }) {
         <h2 id="rules-heading" className="text-lg font-semibold">
           {t('rules', { count: soul.rules.length })}
         </h2>
+        <UrduRules projectId={projectId} soul={soul} events={events} />
         <ol className="mt-2 space-y-3">
           {soul.rules.map((r) => (
             <RuleCard key={r.id} rule={r} />
@@ -101,18 +112,31 @@ export function SoulPanel({ projectId }: { projectId: string }) {
 
 function RuleCard({ rule }: { rule: Rule }) {
   const t = useTranslations('raise.soul');
+  const urdu = useLocale() === 'ur';
   const [open, setOpen] = useState<string | null>(null);
+  const ur = rule.ur.trim() ? (
+    <p data-testid="rule-ur" lang="ur" dir="rtl" className="font-urdu text-lg leading-[2]">
+      {rule.ur}
+    </p>
+  ) : urdu ? (
+    <p data-testid="rule-ur-missing" className="text-sm text-bone/70">
+      {t('urdu.notYet')}
+    </p>
+  ) : null;
   return (
     <li data-testid={`rule-${rule.id}`}>
       <Card className="space-y-2">
-        <p lang="en" dir="ltr">
+        {/* In Urdu the owner reads the Urdu first; the English stays, for the developer. */}
+        {urdu ? ur : null}
+        <p
+          data-testid="rule-en"
+          lang="en"
+          dir="ltr"
+          className={urdu ? 'text-sm text-bone/75' : undefined}
+        >
           {rule.en}
         </p>
-        {rule.ur ? (
-          <p lang="ur" dir="rtl" className="font-urdu leading-loose">
-            {rule.ur}
-          </p>
-        ) : null}
+        {urdu ? null : ur}
         <pre className="overflow-x-auto rounded-md bg-graveyard p-2 text-xs" lang="en" dir="ltr">
           <code>{rule.expression}</code>
         </pre>

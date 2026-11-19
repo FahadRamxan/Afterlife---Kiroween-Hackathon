@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@afterlife/db": "workspace:^",
+    "@afterlife/soul": "workspace:^",
     "@aws-sdk/client-bedrock-runtime": "^3.1172.0",
     "zod": "^4.6.7"
   }

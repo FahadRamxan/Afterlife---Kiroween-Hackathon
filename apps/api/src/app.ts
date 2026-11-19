@@ -120,6 +120,9 @@ export function buildApp(
     soulRoutes(stores.souls, {
       projectExists: async (id) => (await projects.get(id)) !== null,
       createPerMinute: limits.createPerMinute,
+      ...(stores.pipeline?.translate
+        ? { translate: (id: string) => stores.pipeline!.translate!(id) }
+        : {}),
     }),
   );
   app.register(
