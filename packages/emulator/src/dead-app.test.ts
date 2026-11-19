@@ -10,6 +10,7 @@ const DIST = resolve(__dirname, '../../../samples/graveyard/dist/shifa');
 const SHIFA_EXE = new Uint8Array(readFileSync(resolve(DIST, 'SHIFA.EXE')));
 const MEDICINE = new Uint8Array(readFileSync(resolve(DIST, 'MEDICINE.DBF')));
 const zip = (files: Zippable) => zipSync(files);
+const TINY_EXE = new Uint8Array([0x4d, 0x5a, 0x90, 0, 3, 0, 0, 0]);
 
 /** A minimal Windows PE: an MZ stub whose e_lfanew points at "PE\0\0". */
 function windowsExe(): Uint8Array {
@@ -218,31 +219,27 @@ describe('unpackDeadApp', () => {
     });
   });
 
-  // Each case zips and unzips up to six files twice: about 1 s per 100 cases alone, and over 5 s
-  // under coverage, so it gets 30 s.
-  it(
-    'round-trip: what it accepts unpacks to exactly the bytes that went in',
-    { timeout: 30_000 },
-    () => {
-      fc.assert(
-        fc.property(
-          fc.uniqueArray(
-            fc
-              .stringMatching(/^[A-Z][A-Z0-9]{0,7}$/)
-              .filter((n) => !/^(CON|PRN|AUX|NUL|COM[1-4]|LPT[1-3])$/.test(n)),
-            { minLength: 1, maxLength: 5 },
-          ),
-          fc.uint8Array({ maxLength: 64 }),
-          (names, extra) => {
-            const files: Record<string, Uint8Array> = { 'SHIFA.EXE': SHIFA_EXE };
-            for (const n of names)
-              files[`${n}.DBF`] = new Uint8Array([...MEDICINE.slice(0, 32), ...extra]);
-            const r = unpackDeadApp(zip(files));
-            expect(r.ok).toBe(true);
-            if (r.ok) expect(unzipSync(zip(r.files))).toEqual(unzipSync(zip(files)));
-          },
+  // A tiny MZ program, not the 60 kB SHIFA.EXE: zipping that twice per case took over 30 s at 2,000
+  // cases. The program bytes do not matter to the round trip.
+  it('round-trip: what it accepts unpacks to exactly the bytes that went in', () => {
+    fc.assert(
+      fc.property(
+        fc.uniqueArray(
+          fc
+            .stringMatching(/^[A-Z][A-Z0-9]{0,7}$/)
+            .filter((n) => !/^(CON|PRN|AUX|NUL|COM[1-4]|LPT[1-3])$/.test(n)),
+          { minLength: 1, maxLength: 5 },
         ),
-      );
-    },
-  );
+        fc.uint8Array({ maxLength: 64 }),
+        (names, extra) => {
+          const files: Record<string, Uint8Array> = { 'APP.EXE': TINY_EXE };
+          for (const n of names)
+            files[`${n}.DBF`] = new Uint8Array([...MEDICINE.slice(0, 32), ...extra]);
+          const r = unpackDeadApp(zip(files));
+          expect(r.ok).toBe(true);
+          if (r.ok) expect(unzipSync(zip(r.files))).toEqual(unzipSync(zip(files)));
+        },
+      ),
+    );
+  });
 });
