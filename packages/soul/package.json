@@ -14,10 +14,12 @@
     "vitest": "^5.1.0"
   },
   "dependencies": {
+    "decimal.js": "^10.6.0",
     "zod": "^4.6.7"
   },
   "exports": {
     ".": "./src/index.ts",
-    "./arbitrary": "./src/arbitrary.ts"
+    "./arbitrary": "./src/arbitrary.ts",
+    "./dsl-arbitrary": "./src/dsl-arbitrary.ts"
   }
 }

@@ -2,6 +2,7 @@
 // runs it, the Kiro spec is written from it, and the Oracle proves it against the old app.
 // Deterministic code builds and checks it; an LLM may only propose values for it (crew.md).
 import { z } from 'zod';
+import { parseExpr } from './dsl';
 
 /** A dBASE field name: up to 10 characters, upper case. */
 const FieldName = z.string().regex(/^[A-Z_][A-Z0-9_]{0,9}$/);
@@ -185,6 +186,12 @@ export const SoulSchema = SoulObject.superRefine((s, ctx) => {
   s.rules.forEach((r, i) => {
     if (r.kind !== 'validate' && !r.target)
       issue(['rules', i, 'target'], `A ${r.kind} rule needs a target`);
+    // The expression must be one the Vessel can run (Prompt 42).
+    try {
+      parseExpr(r.expression);
+    } catch (e) {
+      issue(['rules', i, 'expression'], (e as Error).message);
+    }
   });
 });
 

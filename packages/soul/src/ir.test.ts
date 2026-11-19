@@ -77,6 +77,11 @@ describe('the Soul IR', () => {
       ],
       ['a confidence over 1', (s) => (s.rules[0]!.confidence = 1.5), /confidence/],
       [
+        'a rule the expression language cannot read',
+        (s) => (s.rules[0]!.expression = 'bill.subtotal >'),
+        /rules.0.expression: The expression ends too early/,
+      ],
+      [
         'a field name that is not a dBASE name',
         (s) => (s.entities[0]!.fields[0]!.name = 'name with space'),
         /fields/,
