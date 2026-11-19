@@ -149,6 +149,31 @@
         "rate-limited": "Too many requests from your address.",
         "error": "The steps cannot be shown."
       }
+    },
+    "soul": {
+      "loading": "Opening the Soul…",
+      "version": "Soul version {version}, by {by}, from {count, plural, one {# observation} other {# observations}}.",
+      "reference": "Reference Soul: written by the Afterlife team from this sample app's source code, as the answer key. The Archaeologist infers a Soul itself from Prompt 55.",
+      "entities": "Entities",
+      "key": "key",
+      "rules": "{count, plural, one {# rule} other {# rules}}",
+      "confidence": "Confidence",
+      "evidence": "Evidence {n}",
+      "noEvidence": "No evidence yet",
+      "evidenceTitle": "Evidence: what the old app did",
+      "evidenceMissing": "This observation could not be found.",
+      "keys": "Keys pressed:",
+      "textOnly": "The screens as the decoder read them (their colours are not kept).",
+      "before": "Before",
+      "after": "After",
+      "dataChanged": "What changed in the data",
+      "noChange": "No data changed.",
+      "close": "Close",
+      "download": "Download Kiro spec",
+      "unavailable": {
+        "unconfigured": "The API is not configured, so the Soul cannot be shown.",
+        "down": "The API did not answer, so the Soul cannot be shown."
+      }
     }
   },
   "vessel": {

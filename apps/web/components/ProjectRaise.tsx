@@ -9,6 +9,7 @@ import { LivePanel } from './LivePanel';
 import { PageShell } from './PageShell';
 import { RaiseTabs } from './RaiseTabs';
 import { SeanceRecorder } from './SeanceRecorder';
+import { SoulPanel } from './SoulPanel';
 import { StepsList } from './StepsList';
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -112,9 +113,11 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
       </section>
       <RaiseTabs
         initial={initial}
+        ownEmpty={['soul']}
         panels={
           app
             ? {
+                soul: <SoulPanel projectId={project.id} />,
                 possession: (
                   <>
                     <LivePanel events={live.events} status={live.status} name={app.name} />
@@ -131,6 +134,7 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
               }
             : project.source === 'upload'
               ? {
+                  soul: <SoulPanel projectId={project.id} />,
                   // An uploaded app: the virus scan, then possession, live. (Séances on uploads later.)
                   possession: (
                     <LivePanel events={live.events} status={live.status} name={project.name} />

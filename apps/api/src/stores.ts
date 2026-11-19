@@ -5,6 +5,7 @@ import type { AppStores } from './app';
 import type { Env } from './env';
 import { PgLiveHub } from './live';
 import { PgPipeline } from './pipeline';
+import { PgSoulStore } from './souls';
 import { PgUploadStore } from './uploads';
 import { MemoryProjectStore } from './projects';
 import { PgProjectStore } from './projects-pg';
@@ -47,6 +48,7 @@ export async function openStores(
       sessions: new PgSessionStore(db),
       projects: new PgProjectStore(db),
       uploads: new PgUploadStore(db),
+      souls: new PgSoulStore(db),
       live,
       pipeline,
     },
