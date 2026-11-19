@@ -219,6 +219,7 @@ test('possession: what the Possessor found, and what the old app refused', async
   await ready(page, '/graveyard');
   await page.getByRole('button', { name: 'Watch a recorded run of Shifa Medical Store' }).click();
   await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
+  await expect(page.getByTestId('data-change')).toContainText('BILLS.DBF', { timeout: 120_000 });
   await expect(page.getByTestId('possession-refused')).toContainText('MEDICINE NOT FOUND', {
     timeout: 120_000,
   });

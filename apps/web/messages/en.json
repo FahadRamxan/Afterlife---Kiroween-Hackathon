@@ -146,6 +146,12 @@
         "done": "done",
         "failed": "failed",
         "skipped": "skipped"
+      },
+      "theater": {
+        "graph": "Screens found, and the keys between them",
+        "thinking": "What the Possessor is doing",
+        "changed": "Data changed at step {step}:",
+        "onlyChanged": "Only the records that changed, from the old app’s own data files."
       }
     },
     "steps": {

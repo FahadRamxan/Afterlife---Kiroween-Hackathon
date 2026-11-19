@@ -172,21 +172,28 @@ export function possessApp(deps: {
         );
         let last = r.screen.text.join('\n');
         const onObservation = async (o: PossessorObservation) => {
+          // The stored row's id goes with the live event: the page fetches its data diff (Prompt 51).
+          let id: string | undefined;
           if (db)
-            await db.insert(observations).values({
-              projectId: ctx.projectId,
-              seq: seq++,
-              keys: o.keys,
-              screenBeforeFp: o.screenBefore.fingerprint,
-              screenAfterFp: o.screenAfter.fingerprint,
-              screenBefore: o.screenBefore,
-              screenAfter: o.screenAfter,
-              dbfDiff: o.dbfDiff,
-              durationMs: Math.max(0, Math.round(o.durationMs)),
-              stable: o.stable,
-              ...(o.hint ? { hint: { text: o.hint, from: 'seance' } } : {}),
-            });
+            [{ id }] = (await db
+              .insert(observations)
+              .values({
+                projectId: ctx.projectId,
+                seq: seq++,
+                keys: o.keys,
+                screenBeforeFp: o.screenBefore.fingerprint,
+                screenAfterFp: o.screenAfter.fingerprint,
+                screenBefore: o.screenBefore,
+                screenAfter: o.screenAfter,
+                dbfDiff: o.dbfDiff,
+                durationMs: Math.max(0, Math.round(o.durationMs)),
+                stable: o.stable,
+                ...(o.hint ? { hint: { text: o.hint, from: 'seance' } } : {}),
+              })
+              .returning({ id: observations.id })) as [{ id: string }];
           await ctx.emit('observation', {
+            ...(id ? { id } : {}),
+            fromFingerprint: o.screenBefore.fingerprint,
             step: o.step,
             kind: o.kind,
             label: o.label,
@@ -197,6 +204,19 @@ export function possessApp(deps: {
             newScreen: o.newScreen,
             changed: o.changed,
             errors: o.errors,
+            // What changed, only for an action that changed data: a few records (Prompt 51).
+            ...(o.changed.length
+              ? {
+                  diff: {
+                    tables: Object.fromEntries(
+                      o.changed.map((f) => [f, o.dbfDiff.tables[f]!]).filter(([, t]) => t),
+                    ),
+                    unchanged: [],
+                    addedTables: o.dbfDiff.addedTables,
+                    removedTables: o.dbfDiff.removedTables,
+                  },
+                }
+              : {}),
             ...(o.hint ? { hint: o.hint } : {}),
             screens: o.totals.screens,
             saves: o.totals.saves,

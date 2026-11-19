@@ -1,6 +1,6 @@
 {
   "app": "barkat",
-  "recordedAt": "2026-11-19T19:16:54.690Z",
+  "recordedAt": "2026-11-19T20:44:29.541Z",
   "source": "pnpm pipeline:record",
   "steps": [
     {
@@ -193,18 +193,6 @@
             {
               "to": "fp_0976e3f7a144790c",
               "from": "fp_0976e3f7a144790c",
-              "keys": "P002{Enter}",
-              "count": 1
-            },
-            {
-              "to": "fp_0976e3f7a144790c",
-              "from": "fp_0976e3f7a144790c",
-              "keys": "P001{Enter}",
-              "count": 4
-            },
-            {
-              "to": "fp_0976e3f7a144790c",
-              "from": "fp_0976e3f7a144790c",
               "keys": "0.00{Enter}",
               "count": 1
             },
@@ -213,6 +201,18 @@
               "from": "fp_0976e3f7a144790c",
               "keys": "-1.00{Enter}",
               "count": 1
+            },
+            {
+              "to": "fp_0976e3f7a144790c",
+              "from": "fp_0976e3f7a144790c",
+              "keys": "P002{Enter}",
+              "count": 1
+            },
+            {
+              "to": "fp_0976e3f7a144790c",
+              "from": "fp_0976e3f7a144790c",
+              "keys": "P001{Enter}",
+              "count": 4
             },
             {
               "to": "fp_bd61968c80f19a0d",
@@ -324,7 +324,7 @@
             "level": "info",
             "message": "Booting Barkat Kiryana Ledger in headless js-dos"
           },
-          "afterMs": 16
+          "afterMs": 5
         },
         {
           "type": "screen",
@@ -417,7 +417,7 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 628
+          "afterMs": 693
         },
         {
           "type": "log",
@@ -425,7 +425,7 @@
             "level": "info",
             "message": "First screen: BARKAT KIRYANA LEDGER             MAIN MENU                           20/11/96"
           },
-          "afterMs": 629
+          "afterMs": 695
         },
         {
           "type": "log",
@@ -433,11 +433,12 @@
             "level": "info",
             "message": "Exploring. No language model is set up, so field values come from the data files."
           },
-          "afterMs": 630
+          "afterMs": 695
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-3ef8-7f5e-93f8-9d18b83e10b2",
             "to": "SALE ON CREDIT",
             "from": "MAIN MENU",
             "keys": "S",
@@ -446,12 +447,15 @@
             "label": "S Sale on credit (udhaar)",
             "saves": 0,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 2,
             "newScreen": true,
-            "fingerprint": "fp_0976e3f7a144790c"
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 1262
+          "afterMs": 1232
         },
         {
           "type": "screen",
@@ -544,7 +548,7 @@
             ],
             "fingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 1306
+          "afterMs": 1273
         },
         {
           "type": "log",
@@ -552,11 +556,12 @@
             "level": "info",
             "message": "New screen: SALE ON CREDIT"
           },
-          "afterMs": 1308
+          "afterMs": 1275
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-4317-7462-9388-3b79336b9227",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "P001{Enter}",
@@ -565,12 +570,15 @@
             "label": "Party ID = P001",
             "saves": 0,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 3,
             "newScreen": true,
-            "fingerprint": "fp_5b3ff173a2018705"
+            "fingerprint": "fp_5b3ff173a2018705",
+            "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 2225
+          "afterMs": 2246
         },
         {
           "type": "screen",
@@ -663,7 +671,7 @@
             ],
             "fingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 2270
+          "afterMs": 2288
         },
         {
           "type": "log",
@@ -671,11 +679,12 @@
             "level": "info",
             "message": "New screen: SALE ON CREDIT"
           },
-          "afterMs": 2271
+          "afterMs": 2289
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-480d-78ca-a104-f33c079a7165",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "100.00{Enter}",
@@ -684,12 +693,15 @@
             "label": "Amount Rs = 100.00",
             "saves": 0,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 3,
             "newScreen": false,
-            "fingerprint": "fp_5b3ff173a2018705"
+            "fingerprint": "fp_5b3ff173a2018705",
+            "fromFingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 3437
+          "afterMs": 3462
         },
         {
           "type": "screen",
@@ -706,7 +718,7 @@
                 "11f1f1f1f1f1f1f1111111f1111111f1f1f1f1f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "11f1f1f1f1f1f111f1f111f11107070707070777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1111111111111f11107777777777777777777777777777777777777771111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1111111111111f11177777777777777777777777777777777777777771111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -750,10 +762,7 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e65787420204573633d4261636b20746f206d656e75202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020"
               ],
-              "cursor": {
-                "col": 13,
-                "row": 9
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -785,11 +794,12 @@
             ],
             "fingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 3485
+          "afterMs": 3504
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-4c30-7538-bb37-43aed6aa2de5",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "TEST{Enter}",
@@ -798,12 +808,15 @@
             "label": "Note = TEST",
             "saves": 0,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 3,
             "newScreen": false,
-            "fingerprint": "fp_5b3ff173a2018705"
+            "fingerprint": "fp_5b3ff173a2018705",
+            "fromFingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 4473
+          "afterMs": 4480
         },
         {
           "type": "screen",
@@ -896,12 +909,68 @@
             ],
             "fingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 4519
+          "afterMs": 4523
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-4ea9-72e0-9c91-4ea79cc1c93c",
             "to": "SALE ON CREDIT",
+            "diff": {
+              "tables": {
+                "PARTY.DBF": {
+                  "key": "PARTY_ID",
+                  "schema": {
+                    "added": [],
+                    "removed": []
+                  },
+                  "deleted": [],
+                  "updated": [
+                    {
+                      "key": "P001",
+                      "changes": [
+                        {
+                          "after": "98600.00",
+                          "delta": "100.00",
+                          "field": "BALANCE",
+                          "before": "98500.00"
+                        }
+                      ],
+                      "afterRecno": 0,
+                      "beforeRecno": 0
+                    }
+                  ],
+                  "inserted": []
+                },
+                "LEDGER.DBF": {
+                  "key": "ENTRY",
+                  "schema": {
+                    "added": [],
+                    "removed": []
+                  },
+                  "deleted": [],
+                  "updated": [],
+                  "inserted": [
+                    {
+                      "key": "81",
+                      "recno": 80,
+                      "values": {
+                        "KIND": "S",
+                        "NOTE": "TEST",
+                        "ENTRY": "81",
+                        "AMOUNT": "100.00",
+                        "BALANCE": "98600.00",
+                        "TX_DATE": "19961120",
+                        "PARTY_ID": "P001"
+                      }
+                    }
+                  ]
+                }
+              },
+              "unchanged": [],
+              "addedTables": [],
+              "removedTables": []
+            },
             "from": "SALE ON CREDIT",
             "keys": "Y",
             "kind": "explore",
@@ -909,12 +978,15 @@
             "label": "Y: SAVE SALE OF RS 100.00 FOR P001? (Y/N)",
             "saves": 1,
             "errors": [],
+            "guided": 0,
             "changed": ["LEDGER.DBF", "PARTY.DBF"],
+            "refused": [],
             "screens": 3,
             "newScreen": false,
-            "fingerprint": "fp_5b3ff173a2018705"
+            "fingerprint": "fp_5b3ff173a2018705",
+            "fromFingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 5013
+          "afterMs": 5086
         },
         {
           "type": "screen",
@@ -1007,7 +1079,7 @@
             ],
             "fingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 5060
+          "afterMs": 5129
         },
         {
           "type": "log",
@@ -1015,11 +1087,12 @@
             "level": "info",
             "message": "Y: SAVE SALE OF RS 100.00 FOR P001? (Y/N) changed LEDGER.DBF, PARTY.DBF"
           },
-          "afterMs": 5062
+          "afterMs": 5131
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-511c-77f2-9142-ee79fc8a2de9",
             "to": "MAIN MENU",
             "from": "SALE ON CREDIT",
             "keys": "{Enter}",
@@ -1028,12 +1101,15 @@
             "label": "Enter=Next",
             "saves": 1,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 3,
             "newScreen": false,
-            "fingerprint": "fp_bd61968c80f19a0d"
+            "fingerprint": "fp_bd61968c80f19a0d",
+            "fromFingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 5630
+          "afterMs": 5687
         },
         {
           "type": "screen",
@@ -1126,11 +1202,12 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 5673
+          "afterMs": 5730
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-5388-77ab-9d6f-4925bd91d1bc",
             "to": "PAYMENT RECEIVED",
             "from": "MAIN MENU",
             "keys": "P",
@@ -1139,12 +1216,15 @@
             "label": "P Payment received",
             "saves": 1,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 4,
             "newScreen": true,
-            "fingerprint": "fp_17a0efac43955524"
+            "fingerprint": "fp_17a0efac43955524",
+            "fromFingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 6245
+          "afterMs": 6282
         },
         {
           "type": "screen",
@@ -1154,7 +1234,7 @@
               "attrs": [
                 "33f3f3f3f3f3f333f3f3f3f3f3f3f333f3f3f3f3f3f333333333333333333333f3f3f3f3f3f3f333f3f3f3f3f3f3f3f33333333333333333333333333333333333333333333333f3f3f3f3f3f3f3f333",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f111f1f11111f11107777777111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f111f1f11111f11177777777111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -1205,10 +1285,7 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e65787420204573633d4261636b20746f206d656e75202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020"
               ],
-              "cursor": {
-                "col": 13,
-                "row": 2
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -1240,7 +1317,7 @@
             ],
             "fingerprint": "fp_17a0efac43955524"
           },
-          "afterMs": 6290
+          "afterMs": 6323
         },
         {
           "type": "log",
@@ -1248,11 +1325,12 @@
             "level": "info",
             "message": "New screen: PAYMENT RECEIVED"
           },
-          "afterMs": 6292
+          "afterMs": 6325
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-57a1-702d-aa5e-a8b81a86758f",
             "to": "PAYMENT RECEIVED",
             "from": "PAYMENT RECEIVED",
             "keys": "P001{Enter}",
@@ -1261,12 +1339,15 @@
             "label": "Party ID = P001",
             "saves": 1,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 5,
             "newScreen": true,
-            "fingerprint": "fp_a306c692e7fc1878"
+            "fingerprint": "fp_a306c692e7fc1878",
+            "fromFingerprint": "fp_17a0efac43955524"
           },
-          "afterMs": 7262
+          "afterMs": 7289
         },
         {
           "type": "screen",
@@ -1282,7 +1363,7 @@
                 "11f1f1f1f1f11111111111f11111f1f1f1f1f1f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "11f1f1f1f1f1f1f1111111f1111111f1f1f1f1f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f1f111f1f111f11107777777777777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f1f111f1f111f11177777777777777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "11f1f1f1f1111111111111f11177777777777777777777777777777777777777771111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -1327,10 +1408,7 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e65787420204573633d4261636b20746f206d656e75202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020"
               ],
-              "cursor": {
-                "col": 13,
-                "row": 8
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -1362,7 +1440,7 @@
             ],
             "fingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 7305
+          "afterMs": 7332
         },
         {
           "type": "log",
@@ -1370,11 +1448,12 @@
             "level": "info",
             "message": "New screen: PAYMENT RECEIVED"
           },
-          "afterMs": 7307
+          "afterMs": 7334
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-5c8f-7ee3-8568-88b6597c1ad1",
             "to": "PAYMENT RECEIVED",
             "from": "PAYMENT RECEIVED",
             "keys": "100.00{Enter}",
@@ -1383,12 +1462,15 @@
             "label": "Amount Rs = 100.00",
             "saves": 1,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 5,
             "newScreen": false,
-            "fingerprint": "fp_a306c692e7fc1878"
+            "fingerprint": "fp_a306c692e7fc1878",
+            "fromFingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 8489
+          "afterMs": 8499
         },
         {
           "type": "screen",
@@ -1484,11 +1566,12 @@
             ],
             "fingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 8534
+          "afterMs": 8540
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-60a6-76fa-9375-f1b5b0ffb648",
             "to": "PAYMENT RECEIVED",
             "from": "PAYMENT RECEIVED",
             "keys": "TEST{Enter}",
@@ -1497,12 +1580,15 @@
             "label": "Note = TEST",
             "saves": 1,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 5,
             "newScreen": false,
-            "fingerprint": "fp_a306c692e7fc1878"
+            "fingerprint": "fp_a306c692e7fc1878",
+            "fromFingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 9422
+          "afterMs": 9503
         },
         {
           "type": "screen",
@@ -1595,12 +1681,73 @@
             ],
             "fingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 9468
+          "afterMs": 9551
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-631d-71b9-9b26-14b4ab8e0a40",
             "to": "PAYMENT RECEIVED",
+            "diff": {
+              "tables": {
+                "PARTY.DBF": {
+                  "key": "PARTY_ID",
+                  "schema": {
+                    "added": [],
+                    "removed": []
+                  },
+                  "deleted": [],
+                  "updated": [
+                    {
+                      "key": "P001",
+                      "changes": [
+                        {
+                          "after": "98500.00",
+                          "delta": "-100.00",
+                          "field": "BALANCE",
+                          "before": "98600.00"
+                        },
+                        {
+                          "after": "19961120",
+                          "field": "LAST_PAY",
+                          "before": "19961112"
+                        }
+                      ],
+                      "afterRecno": 0,
+                      "beforeRecno": 0
+                    }
+                  ],
+                  "inserted": []
+                },
+                "LEDGER.DBF": {
+                  "key": "ENTRY",
+                  "schema": {
+                    "added": [],
+                    "removed": []
+                  },
+                  "deleted": [],
+                  "updated": [],
+                  "inserted": [
+                    {
+                      "key": "82",
+                      "recno": 81,
+                      "values": {
+                        "KIND": "P",
+                        "NOTE": "TEST",
+                        "ENTRY": "82",
+                        "AMOUNT": "100.00",
+                        "BALANCE": "98500.00",
+                        "TX_DATE": "19961120",
+                        "PARTY_ID": "P001"
+                      }
+                    }
+                  ]
+                }
+              },
+              "unchanged": [],
+              "addedTables": [],
+              "removedTables": []
+            },
             "from": "PAYMENT RECEIVED",
             "keys": "Y",
             "kind": "explore",
@@ -1608,12 +1755,15 @@
             "label": "Y: SAVE PAYMENT OF RS 100.00 FOR P001? (Y/N)",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": ["LEDGER.DBF", "PARTY.DBF"],
+            "refused": [],
             "screens": 5,
             "newScreen": false,
-            "fingerprint": "fp_a306c692e7fc1878"
+            "fingerprint": "fp_a306c692e7fc1878",
+            "fromFingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 10046
+          "afterMs": 10108
         },
         {
           "type": "screen",
@@ -1706,7 +1856,7 @@
             ],
             "fingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 10088
+          "afterMs": 10149
         },
         {
           "type": "log",
@@ -1714,11 +1864,12 @@
             "level": "info",
             "message": "Y: SAVE PAYMENT OF RS 100.00 FOR P001? (Y/N) changed LEDGER.DBF, PARTY.DBF"
           },
-          "afterMs": 10090
+          "afterMs": 10152
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-658d-76f6-91e8-b258b2766d96",
             "to": "MAIN MENU",
             "from": "PAYMENT RECEIVED",
             "keys": "{Enter}",
@@ -1727,12 +1878,15 @@
             "label": "Enter=Next",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 5,
             "newScreen": false,
-            "fingerprint": "fp_bd61968c80f19a0d"
+            "fingerprint": "fp_bd61968c80f19a0d",
+            "fromFingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 10686
+          "afterMs": 10707
         },
         {
           "type": "screen",
@@ -1825,11 +1979,12 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 10731
+          "afterMs": 10754
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-67fe-7a2f-8cee-4528384824ba",
             "to": "PARTY LEDGER",
             "from": "MAIN MENU",
             "keys": "L",
@@ -1838,12 +1993,15 @@
             "label": "L Ledger of a party",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 6,
             "newScreen": true,
-            "fingerprint": "fp_43490b7437005d7e"
+            "fingerprint": "fp_43490b7437005d7e",
+            "fromFingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 11299
+          "afterMs": 11306
         },
         {
           "type": "screen",
@@ -1939,7 +2097,7 @@
             ],
             "fingerprint": "fp_43490b7437005d7e"
           },
-          "afterMs": 11341
+          "afterMs": 11348
         },
         {
           "type": "log",
@@ -1947,11 +2105,12 @@
             "level": "info",
             "message": "New screen: PARTY LEDGER"
           },
-          "afterMs": 11342
+          "afterMs": 11350
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-6c0c-7c26-9584-02f08644ae03",
             "to": "PARTY LEDGER",
             "from": "PARTY LEDGER",
             "keys": "P001{Enter}",
@@ -1960,12 +2119,15 @@
             "label": "Party ID = P001",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 7,
             "newScreen": true,
-            "fingerprint": "fp_c9eeceee7f1768fe"
+            "fingerprint": "fp_c9eeceee7f1768fe",
+            "fromFingerprint": "fp_43490b7437005d7e"
           },
-          "afterMs": 12325
+          "afterMs": 12303
         },
         {
           "type": "screen",
@@ -2058,7 +2220,7 @@
             ],
             "fingerprint": "fp_c9eeceee7f1768fe"
           },
-          "afterMs": 12371
+          "afterMs": 12347
         },
         {
           "type": "log",
@@ -2066,11 +2228,12 @@
             "level": "info",
             "message": "New screen: PARTY LEDGER"
           },
-          "afterMs": 12373
+          "afterMs": 12349
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-6e83-7636-88aa-ab802b30e358",
             "to": "MAIN MENU",
             "from": "PARTY LEDGER",
             "keys": "{Esc}",
@@ -2079,12 +2242,15 @@
             "label": "Esc",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 7,
             "newScreen": false,
-            "fingerprint": "fp_bd61968c80f19a0d"
+            "fingerprint": "fp_bd61968c80f19a0d",
+            "fromFingerprint": "fp_c9eeceee7f1768fe"
           },
-          "afterMs": 12945
+          "afterMs": 12908
         },
         {
           "type": "screen",
@@ -2177,11 +2343,12 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 12991
+          "afterMs": 12952
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-70bd-7384-a3e9-29b81125ac67",
             "to": "BALANCES",
             "from": "MAIN MENU",
             "keys": "B",
@@ -2190,12 +2357,15 @@
             "label": "B Balances of all parties",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 8,
             "newScreen": true,
-            "fingerprint": "fp_c71623c39d41fe7c"
+            "fingerprint": "fp_c71623c39d41fe7c",
+            "fromFingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 13482
+          "afterMs": 13454
         },
         {
           "type": "screen",
@@ -2288,7 +2458,7 @@
             ],
             "fingerprint": "fp_c71623c39d41fe7c"
           },
-          "afterMs": 13531
+          "afterMs": 13502
         },
         {
           "type": "log",
@@ -2296,11 +2466,12 @@
             "level": "info",
             "message": "New screen: BALANCES"
           },
-          "afterMs": 13533
+          "afterMs": 13505
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-7342-7c61-81bd-e3b18326f307",
             "to": "BALANCES",
             "from": "BALANCES",
             "keys": "{PgDn}",
@@ -2309,12 +2480,15 @@
             "label": "PgDn=Next page",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 9,
             "newScreen": true,
-            "fingerprint": "fp_9657f1420023aa75"
+            "fingerprint": "fp_9657f1420023aa75",
+            "fromFingerprint": "fp_c71623c39d41fe7c"
           },
-          "afterMs": 14105
+          "afterMs": 15334
         },
         {
           "type": "screen",
@@ -2407,7 +2581,7 @@
             ],
             "fingerprint": "fp_9657f1420023aa75"
           },
-          "afterMs": 14151
+          "afterMs": 15379
         },
         {
           "type": "log",
@@ -2415,11 +2589,12 @@
             "level": "info",
             "message": "New screen: BALANCES"
           },
-          "afterMs": 14153
+          "afterMs": 15380
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-75d2-7292-823e-844d724242ee",
             "to": "BALANCES",
             "from": "BALANCES",
             "keys": "{PgDn}",
@@ -2428,16 +2603,20 @@
             "label": "PgDn=Next page",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 9,
             "newScreen": false,
-            "fingerprint": "fp_9657f1420023aa75"
+            "fingerprint": "fp_9657f1420023aa75",
+            "fromFingerprint": "fp_9657f1420023aa75"
           },
-          "afterMs": 14734
+          "afterMs": 15964
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-77ec-7ecf-be0c-dcf8a0bd4b95",
             "to": "BALANCES",
             "from": "BALANCES",
             "keys": "{PgUp}",
@@ -2446,12 +2625,15 @@
             "label": "PgUp=Previous page",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 9,
             "newScreen": false,
-            "fingerprint": "fp_c71623c39d41fe7c"
+            "fingerprint": "fp_c71623c39d41fe7c",
+            "fromFingerprint": "fp_9657f1420023aa75"
           },
-          "afterMs": 15236
+          "afterMs": 16480
         },
         {
           "type": "screen",
@@ -2544,11 +2726,12 @@
             ],
             "fingerprint": "fp_c71623c39d41fe7c"
           },
-          "afterMs": 15283
+          "afterMs": 16526
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-7a2a-7e55-966e-24d8ac3963bf",
             "to": "BALANCES",
             "from": "BALANCES",
             "keys": "{PgUp}",
@@ -2557,16 +2740,20 @@
             "label": "PgUp=Previous page",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 9,
             "newScreen": false,
-            "fingerprint": "fp_c71623c39d41fe7c"
+            "fingerprint": "fp_c71623c39d41fe7c",
+            "fromFingerprint": "fp_c71623c39d41fe7c"
           },
-          "afterMs": 15880
+          "afterMs": 17030
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-7c86-7a06-85fc-e294eb41b093",
             "to": "MAIN MENU",
             "from": "BALANCES",
             "keys": "{Esc}",
@@ -2575,12 +2762,15 @@
             "label": "Esc",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 9,
             "newScreen": false,
-            "fingerprint": "fp_bd61968c80f19a0d"
+            "fingerprint": "fp_bd61968c80f19a0d",
+            "fromFingerprint": "fp_c71623c39d41fe7c"
           },
-          "afterMs": 16452
+          "afterMs": 17611
         },
         {
           "type": "screen",
@@ -2673,11 +2863,12 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 16495
+          "afterMs": 17658
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-7ebd-75e1-b0d6-3a3b47816062",
             "to": "REMINDERS",
             "from": "MAIN MENU",
             "keys": "R",
@@ -2686,12 +2877,15 @@
             "label": "R Reminders (no interest)",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 10,
             "newScreen": true,
-            "fingerprint": "fp_c696bca7c4790f5e"
+            "fingerprint": "fp_c696bca7c4790f5e",
+            "fromFingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 16988
+          "afterMs": 18158
         },
         {
           "type": "screen",
@@ -2784,7 +2978,7 @@
             ],
             "fingerprint": "fp_c696bca7c4790f5e"
           },
-          "afterMs": 17037
+          "afterMs": 18206
         },
         {
           "type": "log",
@@ -2792,11 +2986,12 @@
             "level": "info",
             "message": "New screen: REMINDERS"
           },
-          "afterMs": 17039
+          "afterMs": 18207
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-8149-762d-8632-569e6801dbdb",
             "to": "REMINDERS",
             "from": "REMINDERS",
             "keys": "{PgDn}",
@@ -2805,12 +3000,15 @@
             "label": "PgDn=Next page",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 11,
             "newScreen": true,
-            "fingerprint": "fp_16f40975009cbcc0"
+            "fingerprint": "fp_16f40975009cbcc0",
+            "fromFingerprint": "fp_c696bca7c4790f5e"
           },
-          "afterMs": 17626
+          "afterMs": 18783
         },
         {
           "type": "screen",
@@ -2903,7 +3101,7 @@
             ],
             "fingerprint": "fp_16f40975009cbcc0"
           },
-          "afterMs": 17670
+          "afterMs": 18828
         },
         {
           "type": "log",
@@ -2911,11 +3109,12 @@
             "level": "info",
             "message": "New screen: REMINDERS"
           },
-          "afterMs": 17672
+          "afterMs": 18830
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-83cd-754b-bcf1-ec1774ceed4c",
             "to": "REMINDERS",
             "from": "REMINDERS",
             "keys": "{PgDn}",
@@ -2924,16 +3123,20 @@
             "label": "PgDn=Next page",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_16f40975009cbcc0"
+            "fingerprint": "fp_16f40975009cbcc0",
+            "fromFingerprint": "fp_16f40975009cbcc0"
           },
-          "afterMs": 18254
+          "afterMs": 19397
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-85c6-7cd5-8869-1e7bb50268c6",
             "to": "REMINDERS",
             "from": "REMINDERS",
             "keys": "{PgUp}",
@@ -2942,12 +3145,15 @@
             "label": "PgUp=Previous page",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_c696bca7c4790f5e"
+            "fingerprint": "fp_c696bca7c4790f5e",
+            "fromFingerprint": "fp_16f40975009cbcc0"
           },
-          "afterMs": 18847
+          "afterMs": 19885
         },
         {
           "type": "screen",
@@ -3040,11 +3246,12 @@
             ],
             "fingerprint": "fp_c696bca7c4790f5e"
           },
-          "afterMs": 18894
+          "afterMs": 19930
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-87f5-7dc2-9f55-86b3c2249be5",
             "to": "REMINDERS",
             "from": "REMINDERS",
             "keys": "{PgUp}",
@@ -3053,16 +3260,20 @@
             "label": "PgUp=Previous page",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_c696bca7c4790f5e"
+            "fingerprint": "fp_c696bca7c4790f5e",
+            "fromFingerprint": "fp_c696bca7c4790f5e"
           },
-          "afterMs": 19391
+          "afterMs": 20419
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-8a44-7590-8486-0f65fc5e2b87",
             "to": "MAIN MENU",
             "from": "REMINDERS",
             "keys": "{Esc}",
@@ -3071,12 +3282,15 @@
             "label": "Esc",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_bd61968c80f19a0d"
+            "fingerprint": "fp_bd61968c80f19a0d",
+            "fromFingerprint": "fp_c696bca7c4790f5e"
           },
-          "afterMs": 19882
+          "afterMs": 20987
         },
         {
           "type": "screen",
@@ -3169,11 +3383,12 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 19925
+          "afterMs": 21029
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-8cc6-70ab-a21a-d798b277be43",
             "to": "SALE ON CREDIT",
             "from": "MAIN MENU",
             "keys": "S",
@@ -3182,12 +3397,15 @@
             "label": "walk: S",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c"
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 20501
+          "afterMs": 21602
         },
         {
           "type": "screen",
@@ -3283,11 +3501,12 @@
             ],
             "fingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 20545
+          "afterMs": 21642
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-8f31-722e-9265-98dcc4d59a06",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "{Enter}",
@@ -3296,12 +3515,21 @@
             "label": "Enter=Next",
             "saves": 2,
             "errors": ["PARTY NOT FOUND"],
+            "guided": 0,
             "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c"
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 21100
+          "afterMs": 22197
         },
         {
           "type": "screen",
@@ -3394,7 +3622,7 @@
             ],
             "fingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 21142
+          "afterMs": 22240
         },
         {
           "type": "log",
@@ -3402,11 +3630,12 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 21144
+          "afterMs": 22242
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-9347-7419-abe0-687a18e04218",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "Z999{Enter}",
@@ -3415,12 +3644,21 @@
             "label": "Party ID = Z999 (new-key)",
             "saves": 2,
             "errors": ["PARTY NOT FOUND"],
+            "guided": 0,
             "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c"
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 22104
+          "afterMs": 23198
         },
         {
           "type": "screen",
@@ -3513,7 +3751,7 @@
             ],
             "fingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 22149
+          "afterMs": 23240
         },
         {
           "type": "log",
@@ -3521,11 +3759,12 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 22151
+          "afterMs": 23242
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-9830-7083-bdb1-3db156f845a6",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "100.00{Enter}",
@@ -3534,12 +3773,21 @@
             "label": "Amount Rs = 100.00",
             "saves": 2,
             "errors": ["PARTY NOT FOUND"],
+            "guided": 0,
             "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c"
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 23313
+          "afterMs": 24407
         },
         {
           "type": "log",
@@ -3547,77 +3795,35 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 23314
+          "afterMs": 24409
         },
         {
           "type": "observation",
           "payload": {
-            "to": "SALE ON CREDIT",
-            "from": "SALE ON CREDIT",
-            "keys": "P002{Enter}",
-            "kind": "explore",
-            "step": 32,
-            "label": "Party ID = P002 (existing-key)",
-            "saves": 2,
-            "errors": ["PARTY NOT FOUND"],
-            "changed": [],
-            "screens": 11,
-            "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c"
-          },
-          "afterMs": 24303
-        },
-        {
-          "type": "log",
-          "payload": {
-            "level": "info",
-            "message": "The app said: PARTY NOT FOUND"
-          },
-          "afterMs": 24305
-        },
-        {
-          "type": "observation",
-          "payload": {
-            "to": "SALE ON CREDIT",
-            "from": "SALE ON CREDIT",
-            "keys": "P001{Enter}",
-            "kind": "walk",
-            "step": 33,
-            "label": "walk: P001{Enter}",
-            "saves": 2,
-            "errors": ["PARTY NOT FOUND"],
-            "changed": [],
-            "screens": 11,
-            "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c"
-          },
-          "afterMs": 25279
-        },
-        {
-          "type": "log",
-          "payload": {
-            "level": "info",
-            "message": "The app said: PARTY NOT FOUND"
-          },
-          "afterMs": 25280
-        },
-        {
-          "type": "observation",
-          "payload": {
+            "id": "01a1f58d-9c32-7933-8808-6b94cb2811b0",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "0.00{Enter}",
             "kind": "explore",
-            "step": 34,
+            "step": 32,
             "label": "Amount Rs = 0.00 (zero)",
             "saves": 2,
             "errors": ["PARTY NOT FOUND"],
+            "guided": 0,
             "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c"
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 26242
+          "afterMs": 25390
         },
         {
           "type": "log",
@@ -3625,25 +3831,35 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 26243
+          "afterMs": 25391
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-a07f-78cd-81d1-240aa838bdfb",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "-1.00{Enter}",
             "kind": "explore",
-            "step": 35,
+            "step": 33,
             "label": "Amount Rs = -1.00 (negative)",
             "saves": 2,
             "errors": ["PARTY NOT FOUND"],
+            "guided": 0,
             "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c"
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 28357
+          "afterMs": 26448
         },
         {
           "type": "log",
@@ -3651,11 +3867,84 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 28358
+          "afterMs": 26453
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-a446-7007-b0c6-2236bfea8b78",
+            "to": "SALE ON CREDIT",
+            "from": "SALE ON CREDIT",
+            "keys": "P002{Enter}",
+            "kind": "explore",
+            "step": 34,
+            "label": "Party ID = P002 (existing-key)",
+            "saves": 2,
+            "errors": ["PARTY NOT FOUND"],
+            "guided": 0,
+            "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
+            "screens": 11,
+            "newScreen": false,
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_0976e3f7a144790c"
+          },
+          "afterMs": 27373
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "info",
+            "message": "The app said: PARTY NOT FOUND"
+          },
+          "afterMs": 27374
+        },
+        {
+          "type": "observation",
+          "payload": {
+            "id": "01a1f58d-a82f-7ce6-a26e-19be6f56be1d",
+            "to": "SALE ON CREDIT",
+            "from": "SALE ON CREDIT",
+            "keys": "P001{Enter}",
+            "kind": "walk",
+            "step": 35,
+            "label": "walk: P001{Enter}",
+            "saves": 2,
+            "errors": ["PARTY NOT FOUND"],
+            "guided": 0,
+            "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
+            "screens": 11,
+            "newScreen": false,
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_0976e3f7a144790c"
+          },
+          "afterMs": 28334
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "info",
+            "message": "The app said: PARTY NOT FOUND"
+          },
+          "afterMs": 28335
+        },
+        {
+          "type": "observation",
+          "payload": {
+            "id": "01a1f58d-ac02-7b80-bedf-d3efe1c0dbe1",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "P001{Enter}",
@@ -3664,12 +3953,21 @@
             "label": "walk: P001{Enter}",
             "saves": 2,
             "errors": ["PARTY NOT FOUND"],
+            "guided": 0,
             "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c"
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 29333
+          "afterMs": 29273
         },
         {
           "type": "log",
@@ -3677,11 +3975,12 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 29334
+          "afterMs": 29274
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-afe9-7797-9107-bcf742758532",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "P001{Enter}",
@@ -3690,12 +3989,21 @@
             "label": "walk: P001{Enter}",
             "saves": 2,
             "errors": ["PARTY NOT FOUND"],
+            "guided": 0,
             "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c"
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 30302
+          "afterMs": 30232
         },
         {
           "type": "log",
@@ -3703,11 +4011,12 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 30303
+          "afterMs": 30233
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-b377-70c7-8803-637ced6ddb90",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "P001{Enter}",
@@ -3716,12 +4025,21 @@
             "label": "walk: P001{Enter}",
             "saves": 2,
             "errors": ["PARTY NOT FOUND"],
+            "guided": 0,
             "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c"
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 31289
+          "afterMs": 31105
         },
         {
           "type": "log",
@@ -3729,11 +4047,12 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 31290
+          "afterMs": 31106
         },
         {
           "type": "observation",
           "payload": {
+            "id": "01a1f58d-b5bc-76ab-841c-5e446c01b219",
             "to": "MAIN MENU",
             "from": "SALE ON CREDIT",
             "keys": "{Esc}",
@@ -3742,12 +4061,21 @@
             "label": "Esc",
             "saves": 2,
             "errors": [],
+            "guided": 0,
             "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
             "screens": 11,
             "newScreen": false,
-            "fingerprint": "fp_bd61968c80f19a0d"
+            "fingerprint": "fp_bd61968c80f19a0d",
+            "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 31851
+          "afterMs": 31662
         },
         {
           "type": "screen",
@@ -3840,7 +4168,7 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 31892
+          "afterMs": 31703
         },
         {
           "type": "log",
@@ -3848,7 +4176,7 @@
             "level": "info",
             "message": "Possession ended (explored): 11 screens, 39 actions, 2 that changed data"
           },
-          "afterMs": 31901
+          "afterMs": 31711
         }
       ]
     },
