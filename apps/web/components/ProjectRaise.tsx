@@ -9,6 +9,7 @@ import { LivePanel } from './LivePanel';
 import { PageShell } from './PageShell';
 import { RaiseTabs } from './RaiseTabs';
 import { SeanceRecorder } from './SeanceRecorder';
+import { ShowYourWork } from './ShowYourWork';
 import { SoulPanel } from './SoulPanel';
 import { StepsList } from './StepsList';
 
@@ -143,6 +144,7 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
               : {}
         }
       />
+      <ShowYourWork projectId={project.id} events={live.events} />
     </PageShell>
   );
 }

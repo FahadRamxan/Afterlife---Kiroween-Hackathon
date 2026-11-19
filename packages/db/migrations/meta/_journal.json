@@ -50,6 +50,13 @@
       "when": 1795065440161,
       "tag": "0006_souls_immutable",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1795066752560,
+      "tag": "0007_llm_calls",
+      "breakpoints": true
     }
   ]
 }

@@ -12,6 +12,7 @@ describe('parseEnv', () => {
       // Off unless asked: trusting X-Forwarded-For without a proxy lets anyone pick their address.
       TRUST_PROXY: false,
       SEANCE_STORAGE_MB: 200,
+      LLM_TOKEN_BUDGET: 200_000,
     });
   });
 

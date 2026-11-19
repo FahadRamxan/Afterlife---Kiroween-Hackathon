@@ -383,6 +383,50 @@ export const projectEvents = pgTable(
   ],
 );
 
+/**
+ * Model tokens (input plus output) one project may use unless LLM_TOKEN_BUDGET says otherwise.
+ * Here so the worker, which spends them, and the API, which shows them, agree.
+ */
+export const DEFAULT_LLM_TOKEN_BUDGET = 200_000;
+
+export const llmCallStatus = pgEnum('llm_call_status', ['ok', 'error', 'invalid', 'over_budget']);
+
+/**
+ * Every call a Crew agent made to the model (Prompt 47), for the "Show your work" panel and the
+ * per-project token budget: what was asked, what came back, and what it cost in tokens. `invalid`
+ * is an answer that failed its zod schema; `over_budget` a call refused before it was sent.
+ */
+export const llmCalls = pgTable(
+  'llm_calls',
+  {
+    id: id(),
+    projectId: projectId(),
+    /** Which agent asked (`possessor`, `archaeologist`, ...) and what for, in a few words. */
+    agent: text('agent').notNull(),
+    purpose: text('purpose').notNull(),
+    /** `bedrock` or `fake` (the scripted model the tests and the no-credentials demo use). */
+    provider: text('provider').notNull(),
+    model: text('model').notNull(),
+    /** 1 for the first try of a request; a retry or a re-ask after a bad answer counts up. */
+    attempt: integer('attempt').notNull(),
+    status: llmCallStatus('status').notNull(),
+    request: jsonb('request').notNull(),
+    response: jsonb('response'),
+    error: text('error'),
+    inputTokens: integer('input_tokens').notNull().default(0),
+    outputTokens: integer('output_tokens').notNull().default(0),
+    durationMs: integer('duration_ms').notNull().default(0),
+    createdAt: createdAt(),
+  },
+  (t) => [
+    index('llm_calls_project_created_idx').on(t.projectId, t.createdAt),
+    check(
+      'llm_calls_counts',
+      sql`${t.attempt} >= 1 and ${t.inputTokens} >= 0 and ${t.outputTokens} >= 0 and ${t.durationMs} >= 0`,
+    ),
+  ],
+);
+
 /** Every table, in an order where each one's parents come first. */
 export const TABLES = {
   projects,
@@ -399,4 +443,5 @@ export const TABLES = {
   pipeline_steps: pipelineSteps,
   project_events: projectEvents,
   uploads,
+  llm_calls: llmCalls,
 } as const;
