@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/brand/afterlife-banner.svg" width="520" alt="Afterlife: software that outlives its source code. The logo is a tombstone with a DOS cursor inside it.">
+</p>
+
 # Afterlife
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -13,6 +17,7 @@ Built for Kiroween 2026 (category: Resurrection) by Matrix AE.
 - `apps/web`, `apps/api`, `apps/worker`: the Studio, the API and the job worker
 - `packages/*`: soul, vessel, dbf, screen, emulator, oracle, crew, certificate, mcp-emulator, ui, db (Drizzle schema and migrations)
 - `powers/afterlife`, `samples/graveyard`, `e2e`, `docs`
+- `docs/brand`: the logo (a tombstone with a DOS cursor inside it: the dead app, running again), as a mark, an app icon and this banner. All three are made from `packages/ui/src/brand.ts` and the design tokens, and a test keeps them current.
 
 See [plan.md](plan.md) for the plan and [prompt.md](prompt.md) for the build prompts. Progress is tracked in [docs/progress.md](docs/progress.md). Deployment steps are in [docs/deploy.md](docs/deploy.md).
 
@@ -38,6 +43,8 @@ See [plan.md](plan.md) for the plan and [prompt.md](prompt.md) for the build pro
 | `pnpm mcp:gif`          | Record the MCP demo GIF from a real session (`apps/web/public/mcp/afterlife-mcp.gif`)          |
 | `pnpm screen:capture`   | Record the VGA fonts and real js-dos frames of the sample apps (screen decoder fixtures)       |
 | `pnpm smoke:prod <url>` | The `@smoke` Playwright tests against a deployed site                                          |
+| `pnpm test:coverage`    | Vitest with coverage (the table below; HTML report in `coverage/`)                             |
+| `pnpm soul:spec`        | Write the Kiro spec of a Soul: `pnpm soul:spec <soul.json \| --example> <dir>`                 |
 
 ## How we test
 
@@ -50,7 +57,7 @@ GitHub Actions is off for this repo, so every check runs locally. The workflow f
 5. **Nightly**: a Kiro Crew scheduled job runs `pnpm ci:local` on `main` and sends the result.
 6. **After a deploy**: `pnpm smoke:prod <url>`.
 
-Current counts: 1537 unit and property tests in 139 files (integration and Postgres tests included), and 120 Playwright tests (Prompt 50, after the review fixes). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
+Current counts: 1542 unit and property tests in 140 files (integration and Postgres tests included), and 120 Playwright tests (Prompt 50, after the review fixes). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
 
 ## Coverage
 
@@ -58,16 +65,16 @@ Package code coverage from `pnpm test:coverage` (HTML report in `coverage/`). Th
 
 | Metric     | %   | Covered   |
 | ---------- | --- | --------- |
-| Lines      | 86% | 2417/2820 |
-| Statements | 85% | 2851/3336 |
-| Functions  | 87% | 713/817   |
-| Branches   | 86% | 1540/1781 |
+| Lines      | 90% | 4050/4516 |
+| Statements | 89% | 4754/5352 |
+| Functions  | 91% | 1161/1276 |
+| Branches   | 86% | 2757/3206 |
 
-As of Prompt 40. The code covered grew by 70% since Prompt 30 (the API, the worker and the database); the percentage fell a little because the Postgres and real-emulator tests are not all run under coverage. Property tests run with `FC_NUM_RUNS=100` in the git hooks and 2000 in `pnpm ci:local`.
+As of Prompt 50, after the review fixes. The code covered grew by 60% since Prompt 40 (the Soul, the rule DSL, the LLM runtime and the Possessor), and line coverage rose from 86% to 90%. Property tests run with `FC_NUM_RUNS=100` in the git hooks and 2000 in `pnpm ci:local`.
 
 ## Status
 
-Prompts 1 to 47 are merged. For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
+Prompts 1 to 50 are merged, with a review round after every ten. For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
 
 - **1 to 10, foundation:** the monorepo, steering and hooks, the Haunted Ledger design system, the app shell (English and Urdu), the deploy skeleton.
 - **11 to 21, the Graveyard and data:** the DOS toolchain, three sample dead apps (Shifa Medical Store, Iqra School Fees, Barkat Kiryana Ledger) with their legacy bugs, the Graveyard page, the `.DBF` reader, writer, snapshot, diff and viewer, and the DBF inspector API behind the upload card.
@@ -77,7 +84,10 @@ Prompts 1 to 47 are merged. For Prompt 33, Kiro drove Shifa through MCP in a rea
 - **31 to 34, the séance and MCP:** the owner records a séance on the live old app (keys, screens, data changes, an optional voice note); an MCP server that lets Kiro boot and drive the sample apps, with its guide at `/docs/mcp`.
 - **35 to 40, API, worker and data:** Postgres with Drizzle (migrations up and down), the projects API with OpenAPI docs and per-visitor rate limits, a pg-boss job loop in the worker, live progress over WebSocket (Postgres `LISTEN/NOTIFY`), the pipeline that runs the six Crew steps in order with resume and "Run again", a labelled "Recorded run" demo mode, and uploading your own dead app (zip checks, a ClamAV virus scan, a server-built js-dos bundle, its own DOS clock).
 
-The six Crew steps all run today, but only possession does work yet (it boots the app and reads its first screen). The others say "not built yet (Prompt N)" and are marked skipped, never done.
+- **41 to 46, the Soul:** the Soul IR in zod with a reference Soul of Shifa written by our team as the answer key, a rule expression language (our own parser and decimal evaluator, no `eval`) with a "Try a rule" playground, a Kiro spec writer (requirements in EARS, design, tasks and a steering file, checked by Kiro's own spec checker), the Soul tab with evidence and a spec download, immutable Soul versions with a diff view, and rules in Urdu (a shop-word glossary, cached per rule).
+- **47 to 50, the Possessor:** an LLM runtime behind `LlmClient` (Amazon Bedrock Converse and a fake for tests, retries, a token budget per project, zod-checked answers, every call on the "Show your work" panel); the Possessor, which explores the old app by itself (a screen graph, the LLM only for field values, Esc to go back, never a key that quits); an input strategy that types boundary values and records what the app refuses; and guided possession, which walks the owner's séance first and attaches their voice notes as hints.
+
+Possession now explores for real: on Shifa it finds 11 screens in about 50 actions, saves bills and customers, and finds what the app refuses (an unknown medicine code, a blank name). The other five Crew steps still say "not built yet (Prompt N)" and are marked skipped, never done. Without model credentials the Possessor takes its values from the app's own data files, and the Urdu translation says it needs a model.
 
 `/design` boots the real Shifa EXE in js-dos: you can press keys, record what an action changed in the data files, and replay it from a fresh state. Details are in [docs/progress.md](docs/progress.md).
 
@@ -96,6 +106,10 @@ Taken by `pnpm screenshots` from the real app.
 | A raised project: the worker's live screen and the six steps | Upload your own dead app                                   |
 | ------------------------------------------------------------ | ---------------------------------------------------------- |
 | ![Raised project](docs/screenshots/14-raised-project.png)    | ![Upload a dead app](docs/screenshots/15-upload-raise.png) |
+
+| Possession: what the Possessor found, and what the old app refused | The Soul tab in Urdu: each rule in Urdu, English and the DSL |
+| ------------------------------------------------------------------ | ------------------------------------------------------------ |
+| ![Possession](docs/screenshots/17-possession.png)                  | ![The Soul tab in Urdu](docs/screenshots/16-soul-urdu.png)   |
 
 All shots are in [docs/screenshots](docs/screenshots).
 
