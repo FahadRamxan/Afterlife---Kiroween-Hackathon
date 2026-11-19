@@ -8,6 +8,7 @@ import { z } from 'zod';
 import type { AgentName, LlmCallLog, LlmCallStatus } from './log';
 import {
   LlmRetryableError,
+  fitRequest,
   textOf,
   toolUsesOf,
   type ContentBlock,
@@ -135,6 +136,14 @@ export class CrewLlm {
     tag: CallTag & { repairs?: number },
   ): Promise<z.infer<S>> {
     const { describe, ...base } = req;
+    // A model that cannot be made to call the tool (Sonnet 5.5) is told to; an answer in words
+    // is then refused and asked again, like any answer that does not fit.
+    const forced = this.opts.client.capabilities.forcedToolChoice;
+    const system = forced
+      ? base.system
+      : [base.system, `Answer only by calling the ${ANSWER} tool, once.`]
+          .filter(Boolean)
+          .join('\n\n');
     const tool: LlmToolSpec = {
       name: ANSWER,
       description: describe ?? 'Give your answer.',
@@ -147,7 +156,13 @@ export class CrewLlm {
     for (let round = 0; round <= repairs; round++) {
       const got: { value?: z.infer<S> } = {};
       const r = await this.call(
-        { ...base, messages, tools: [tool], toolChoice: { tool: ANSWER } },
+        {
+          ...base,
+          ...(system ? { system } : {}),
+          messages,
+          tools: [tool],
+          toolChoice: forced ? { tool: ANSWER } : 'auto',
+        },
         tag,
         attempt,
         (res) => {
@@ -277,7 +292,11 @@ export class CrewLlm {
         throw err;
       }
       // Never ask for more output than the budget has left.
-      const sent = { ...req, maxTokens: Math.min(req.maxTokens, budgetTokens - used) };
+      // Only what this model accepts, and never more output than the budget has left.
+      const sent = fitRequest(
+        { ...req, maxTokens: Math.min(req.maxTokens, budgetTokens - used) },
+        client.capabilities,
+      );
       const start = this.now();
       const elapsed = () => Math.max(0, Math.round(this.now() - start));
       let response: LlmResponse;

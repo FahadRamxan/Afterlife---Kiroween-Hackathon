@@ -88,7 +88,15 @@ export const LLM_CALLS_PAGE = 200;
 
 export function llmCallRoutes(
   store: LlmCallStore | undefined,
-  opts: { projectExists: (id: string) => Promise<boolean>; budgetTokens: number },
+  opts: {
+    projectExists: (id: string) => Promise<boolean>;
+    budgetTokens: number;
+    /**
+     * True for a real shop's app (an upload): its calls are listed, but what was sent and answered
+     * is not shown to anyone with the link (review 41-50). Graveyard samples are our own data.
+     */
+    isRealShop?: (id: string) => Promise<boolean>;
+  },
 ) {
   return async (app: FastifyInstance) => {
     type Reply = { code(n: number): { send(b: unknown): unknown } };
@@ -117,6 +125,7 @@ export function llmCallRoutes(
       return {
         projectId: req.params.id,
         budget: { tokens: opts.budgetTokens, used: tokensUsed },
+        bodies: (await opts.isRealShop?.(req.params.id)) ? 'hidden' : 'shown',
         total,
         calls,
       };
@@ -129,7 +138,10 @@ export function llmCallRoutes(
           return reply.code(400).send({ error: 'BAD_ID', message: 'Not an id' });
         if (!(await project(req.params.id, reply))) return reply;
         const call = await store!.get(req.params.id, req.params.callId);
-        return call ?? reply.code(404).send({ error: 'NOT_FOUND', message: 'No such call' });
+        if (!call) return reply.code(404).send({ error: 'NOT_FOUND', message: 'No such call' });
+        return (await opts.isRealShop?.(req.params.id))
+          ? { ...call, request: null, response: null, hidden: true }
+          : call;
       },
     );
   };

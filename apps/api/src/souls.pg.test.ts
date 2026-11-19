@@ -1,7 +1,7 @@
 // Prompt 44: a project's Soul and the observations its rules point at.
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { souls as soulsTable, eq } from '@afterlife/db';
+import { observations as observationsTable, souls as soulsTable, eq } from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { FakeEmulator, buildBundle, recordAction, type SeanceSession } from '@afterlife/emulator';
 import { renderScreen, type CellInput } from '@afterlife/screen';
@@ -219,6 +219,38 @@ describe('souls and observations', () => {
     expect((await app.inject({ method: 'GET', url: `/api/projects/${id}/soul` })).statusCode).toBe(
       404,
     );
+  });
+
+  it('a long possession lists its newest 500 observations, oldest first, and says how many in all', async () => {
+    const id = (
+      await new PgProjectStore(t.db).create({
+        name: 'Long',
+        source: 'graveyard',
+        sourceApp: 'shifa',
+      })
+    ).id;
+    const screen = { text: [], model: { title: { name: 'MENU' } } };
+    await t.db.insert(observationsTable).values(
+      Array.from({ length: 510 }, (_, seq) => ({
+        projectId: id,
+        seq,
+        keys: String(seq),
+        screenBeforeFp: 'fp_0000000000000000',
+        screenAfterFp: 'fp_0000000000000000',
+        screenBefore: screen,
+        screenAfter: screen,
+        dbfDiff: { tables: {} },
+        durationMs: 1,
+        stable: true,
+      })),
+    );
+    const body = (
+      await app.inject({ method: 'GET', url: `/api/projects/${id}/observations` })
+    ).json();
+    expect(body.total).toBe(510);
+    expect(body.observations).toHaveLength(500);
+    expect(body.observations[0].seq).toBe(10);
+    expect(body.observations.at(-1).seq).toBe(509);
   });
 
   it('an observation of another project, or none, is a 404', async () => {

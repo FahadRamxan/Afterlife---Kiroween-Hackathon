@@ -165,6 +165,35 @@ describe('BedrockLlmClient', () => {
     expect(s.sent[0]!.input.modelId).toBe(DEFAULT_BEDROCK_MODEL);
   });
 
+  it('defaults to Claude Sonnet 5.5 (Sonnet 4.5 retires): no forced tool choice or temperature', async () => {
+    expect(DEFAULT_BEDROCK_MODEL).toBe('us.anthropic.claude-sonnet-5-5');
+    const c = new BedrockLlmClient({ client: sender(() => ({ $metadata: {} })) });
+    expect(c.capabilities).toEqual({ forcedToolChoice: false, temperature: false });
+    // Even if asked for, they are not sent: Sonnet 5.5 answers 400 to both.
+    const input = toBedrockInput(c.model, REQ, c.capabilities);
+    expect(input.toolConfig).not.toHaveProperty('toolChoice');
+    expect(input.inferenceConfig).toEqual({ maxTokens: 300 });
+  });
+
+  it('knows which models take forced tool use and temperature', () => {
+    const caps = (model: string) =>
+      new BedrockLlmClient({ model, client: sender(() => ({})) }).capabilities;
+    expect(caps('us.anthropic.claude-sonnet-4-5-20250929-v1:0')).toEqual({
+      forcedToolChoice: true,
+      temperature: true,
+    });
+    expect(caps('eu.anthropic.claude-sonnet-5')).toEqual({
+      forcedToolChoice: true,
+      temperature: true,
+    });
+    for (const m of [
+      'global.anthropic.claude-sonnet-5-5',
+      'anthropic.claude-sonnet-5-6',
+      'us.anthropic.claude-opus-6',
+    ])
+      expect(caps(m), m).toEqual({ forcedToolChoice: false, temperature: false });
+  });
+
   it('marks throttling and 5xx as retryable, and leaves other errors final', async () => {
     const fail = (name: string, status: number) => () => {
       throw Object.assign(new Error(`${name}!`), { name, $metadata: { httpStatusCode: status } });

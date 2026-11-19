@@ -63,6 +63,20 @@ describe('possessionStats', () => {
     expect(possessionStats([obs(1)])!).toMatchObject({ guided: 0, hints: [] });
   });
 
+  it('a long run past the 200 events kept keeps its counts: the totals come with each step (review 41-50)', () => {
+    // Steps 1 to 250 happened; only the newest few are still in the live view.
+    const refused = [
+      { text: 'NAME REQUIRED', label: 'Name = (blank)', step: 12 },
+      { text: 'MEDICINE NOT FOUND', label: 'Code = ZZZ999 (new-key)', step: 40 },
+    ];
+    const s = possessionStats([
+      obs(249, { screens: 11, saves: 6, guided: 4, refused }),
+      obs(250, { screens: 11, saves: 6, guided: 4, refused }),
+    ])!;
+    expect(s).toMatchObject({ actions: 250, screens: 11, changes: 6, guided: 4 });
+    expect(s.refused).toEqual(refused);
+  });
+
   it('a re-run starts counting again, and a malformed event is ignored', () => {
     const s = possessionStats([
       obs(1),

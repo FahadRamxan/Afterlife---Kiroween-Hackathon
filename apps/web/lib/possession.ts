@@ -17,6 +17,11 @@ const ObservationEvent = z.object({
   kind: z.enum(['explore', 'walk', 'back', 'guide']).optional(),
   /** What the owner said over it. */
   hint: z.string().optional(),
+  /** The run's totals so far (review 41-50): they outlast the 200 events the live view keeps. */
+  guided: z.number().int().nonnegative().optional(),
+  refused: z
+    .array(z.object({ text: z.string(), label: z.string(), step: z.number().int() }))
+    .optional(),
 });
 export type ObservationEvent = z.infer<typeof ObservationEvent>;
 
@@ -51,10 +56,13 @@ export function possessionStats(events: LiveEvent[], recent = 5): PossessionStat
     actions: last.step,
     changes: last.saves,
     recent: obs.slice(-recent),
-    guided: obs.filter((o) => o.kind === 'guide').length,
+    // The worker's totals when it sends them; counted from the kept events for older runs.
+    guided: last.guided ?? obs.filter((o) => o.kind === 'guide').length,
     hints: obs.flatMap((o) => (o.hint ? [{ step: o.step, label: o.label, hint: o.hint }] : [])),
-    refused: obs
-      .flatMap((o) => o.errors.map((text) => ({ text, label: o.label, step: o.step })))
-      .filter((x, i, all) => all.findIndex((y) => y.text === x.text) === i),
+    refused:
+      last.refused ??
+      obs
+        .flatMap((o) => o.errors.map((text) => ({ text, label: o.label, step: o.step })))
+        .filter((x, i, all) => all.findIndex((y) => y.text === x.text) === i),
   };
 }

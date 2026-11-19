@@ -22,6 +22,12 @@ function CallBody({ projectId, callId }: { projectId: string; callId: string }) 
   }, [projectId, callId, t]);
   if (detail === null) return <p className="mt-2 text-bone/70">{t('opening')}</p>;
   if (typeof detail === 'string') return <p role="alert">{detail}</p>;
+  if (detail.hidden)
+    return (
+      <p data-testid="llm-call-hidden" className="mt-2 text-sm text-bone/70">
+        {t('hidden')}
+      </p>
+    );
   return (
     <div className="mt-2 grid gap-2 md:grid-cols-2" lang="en" dir="ltr">
       <div>
@@ -118,6 +124,11 @@ export function ShowYourWork({ projectId, events }: { projectId: string; events:
             label={t('budgetLabel')}
             className="mt-3 max-w-sm"
           />
+          {list.bodies === 'hidden' ? (
+            <p data-testid="llm-bodies-hidden" className="mt-2 max-w-prose text-sm">
+              {t('hiddenNote')}
+            </p>
+          ) : null}
           <p data-testid="llm-budget" className="mt-1 text-sm">
             {t('budget', { used: n(list.budget.used), tokens: n(list.budget.tokens) })}
           </p>

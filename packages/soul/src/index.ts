@@ -19,7 +19,9 @@ export {
 export {
   DslDate,
   DslError,
+  DslText,
   dslDate,
+  dslText,
   evaluate,
   parseExpr,
   printExpr,
@@ -38,3 +40,4 @@ export {
   type SoulDiff,
 } from './diff';
 export { numberSoul, specRequirements } from './stored';
+export { recordEnv, type RecordEnv } from './record-env';

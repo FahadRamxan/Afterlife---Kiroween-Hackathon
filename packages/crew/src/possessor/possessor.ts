@@ -39,8 +39,17 @@ export type PossessorObservation = Observation & {
   /** What the owner said while doing this, in a séance (guided steps only, Prompt 50). */
   hint?: string;
   /** So far, this step included: screens found, and actions that changed data. */
-  totals: { screens: number; saves: number };
+  totals: {
+    screens: number;
+    saves: number;
+    /** Guided steps so far (Prompt 50), and each refusal so far, once (Prompt 49). */
+    guided: number;
+    refused: { text: string; step: number; label: string }[];
+  };
 };
+
+/** At most this many refusals are sent with each live observation. */
+const MAX_REFUSED = 20;
 
 export type StopReason = 'explored' | 'idle' | 'budget' | 'stuck' | 'aborted';
 
@@ -97,6 +106,7 @@ export async function possess(
   const idleLimit = opts.idleLimit ?? 20;
   const probesPerField = Math.max(1, opts.probesPerField ?? 1);
   const refused: PossessResult['refused'] = [];
+  let guided = 0;
   const log = async (m: string) => {
     await opts.onLog?.(m);
   };
@@ -170,7 +180,12 @@ export async function possess(
       newScreen,
       changed,
       errors,
-      totals: { screens: graph.nodes.size, saves },
+      totals: {
+        screens: graph.nodes.size,
+        saves,
+        guided: (guided += kind === 'guide' ? 1 : 0),
+        refused: refused.slice(0, MAX_REFUSED),
+      },
       ...(hint ? { hint } : {}),
     };
     await opts.onObservation?.(o);

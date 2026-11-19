@@ -194,6 +194,28 @@ describe('CrewLlm.json', () => {
     });
   });
 
+  it('a model that refuses forced tool use (Sonnet 5.5) is asked, not forced, and still answers in shape', async () => {
+    const client = new FakeLlmClient(
+      [fakeText('PANADOL, two'), fakeToolUse('answer', { name: 'PANADOL', quantity: 2 })],
+      'fake-strict',
+      { forcedToolChoice: false, temperature: false },
+    );
+    const llm = new CrewLlm({
+      client,
+      log: new MemoryLlmCallLog(),
+      projectId: PROJECT,
+      budgetTokens: 1e6,
+    });
+    await expect(
+      llm.json(Medicine, { ...ask('A medicine and a quantity'), temperature: 0 }, TAG),
+    ).resolves.toEqual({ name: 'PANADOL', quantity: 2 });
+    for (const r of client.requests) {
+      expect(r.toolChoice ?? 'auto').toBe('auto');
+      expect(r).not.toHaveProperty('temperature');
+    }
+    expect(client.requests[0]!.system).toMatch(/Answer only by calling the answer tool/);
+  });
+
   it('only accepts object schemas (a tool input is a JSON object)', () => {
     expect(() => toolInputSchema(z.string())).toThrow(/object/);
     expect(toolInputSchema(Medicine)).toMatchObject({ type: 'object' });

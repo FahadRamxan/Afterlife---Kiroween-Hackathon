@@ -306,6 +306,18 @@ export class DslDate {
 }
 
 /** A date from `YYYY-MM-DD` or a DBF's `YYYYMMDD`. */
+/**
+ * Text that stays text, however it looks: a C field "12" is the code "12", not the number 12
+ * (review 41-50). Plain strings that look like numbers are still read as numbers.
+ */
+export class DslText {
+  constructor(readonly text: string) {}
+  toJSON() {
+    return this.text;
+  }
+}
+export const dslText = (s: string): DslText => new DslText(s);
+
 export function dslDate(s: string): DslDate {
   const m = /^(\d{4})-?(\d{2})-?(\d{2})$/.exec(s);
   const iso = m ? `${m[1]}-${m[2]}-${m[3]}` : '';
@@ -333,6 +345,7 @@ function lift(v: unknown): Val {
     return new D(String(v));
   }
   if (typeof v === 'string') return NUMERIC.test(v) ? new D(v) : v;
+  if (v instanceof DslText) return v.text;
   if (typeof v === 'boolean' || v instanceof DslDate) return v;
   if (v instanceof DecimalBase) return new D(v.toString());
   if (Array.isArray(v)) return v;

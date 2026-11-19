@@ -20,12 +20,18 @@ export type LlmCall = z.infer<typeof CallSchema>;
 
 const ListSchema = z.object({
   budget: z.object({ tokens: z.number(), used: z.number() }),
+  /** hidden: an uploaded app, a real shop's: what was sent and answered is not shown. */
+  bodies: z.enum(['shown', 'hidden']).default('shown'),
   total: z.number(),
   calls: z.array(CallSchema),
 });
 export type LlmCallList = z.infer<typeof ListSchema>;
 
-const DetailSchema = CallSchema.extend({ request: z.unknown(), response: z.unknown() });
+const DetailSchema = CallSchema.extend({
+  request: z.unknown(),
+  response: z.unknown(),
+  hidden: z.boolean().optional(),
+});
 export type LlmCallDetail = z.infer<typeof DetailSchema>;
 
 const base = (api: string) => api.replace(/\/+$/, '');

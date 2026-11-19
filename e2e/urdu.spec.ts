@@ -50,6 +50,8 @@ test('with the language toggle on Urdu, the rules are shown in Urdu first', asyn
     'جی ایس ٹی',
   );
   await expect(ur).toContainText('بل');
+  // Who wrote the Soul is said in Urdu too, not as the API's English word (review 41-50).
+  await expect(page.getByTestId('soul')).toContainText('ہماری ٹیم (حوالہ)');
   // The English stays, smaller, for the developer.
   await expect(discount.getByTestId('rule-en')).toContainText('gets 10% off');
   // A rule with no Urdu says so.

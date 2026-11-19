@@ -200,6 +200,8 @@ export function possessApp(deps: {
             ...(o.hint ? { hint: o.hint } : {}),
             screens: o.totals.screens,
             saves: o.totals.saves,
+            guided: o.totals.guided,
+            refused: o.totals.refused,
           });
           // The live view gets the screen whenever it looks different.
           const now = o.screenAfter.text.join('\n');

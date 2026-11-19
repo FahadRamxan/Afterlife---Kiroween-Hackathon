@@ -42,6 +42,9 @@ export type VersionRow = {
   changes: ReturnType<typeof summarizeDiff> | null;
 };
 
+/** Observations listed at most at once (the newest). */
+export const OBSERVATIONS_PAGE = 500;
+
 export interface SoulStore {
   latest(projectId: string): Promise<{ version: number; soul: Soul } | null>;
   version(projectId: string, version: number): Promise<{ version: number; soul: Soul } | null>;
@@ -49,7 +52,8 @@ export interface SoulStore {
   versions(projectId: string): Promise<VersionRow[]>;
   /** Stores the Soul as the next version. Returns that version. */
   add(projectId: string, soul: Soul): Promise<number>;
-  listObservations(projectId: string): Promise<ObservationRow[]>;
+  /** The newest 500, oldest first, and how many there are in all. */
+  listObservations(projectId: string): Promise<{ rows: ObservationRow[]; total: number }>;
   observation(id: string): Promise<Record<string, unknown> | null>;
 }
 
@@ -103,7 +107,7 @@ export class PgSoulStore implements SoulStore {
     });
   }
 
-  async listObservations(projectId: string): Promise<ObservationRow[]> {
+  async listObservations(projectId: string): Promise<{ rows: ObservationRow[]; total: number }> {
     // A project's observations: its own, and those of the séances recorded on it.
     const rows = await this.db
       .select({
@@ -118,9 +122,15 @@ export class PgSoulStore implements SoulStore {
       .from(observations)
       .leftJoin(sessions, eq(sessions.id, observations.sessionId))
       .where(sql`${observations.projectId} = ${projectId} OR ${sessions.projectId} = ${projectId}`)
-      .orderBy(asc(observations.createdAt), asc(observations.seq))
-      .limit(500);
-    return rows.map((r) => ({
+      // The newest: on a long possession the evidence a rule needs is the latest (review 41-50).
+      .orderBy(desc(observations.createdAt), desc(observations.seq))
+      .limit(OBSERVATIONS_PAGE);
+    const [count] = await this.db
+      .select({ n: sql<string>`count(*)` })
+      .from(observations)
+      .leftJoin(sessions, eq(sessions.id, observations.sessionId))
+      .where(sql`${observations.projectId} = ${projectId} OR ${sessions.projectId} = ${projectId}`);
+    const list = rows.reverse().map((r) => ({
       id: r.id,
       seq: r.seq,
       sessionId: r.sessionId,
@@ -129,6 +139,7 @@ export class PgSoulStore implements SoulStore {
       after: title(r.screenAfter),
       changed: Object.keys((r.dbfDiff as { tables?: object })?.tables ?? {}).sort(),
     }));
+    return { rows: list, total: Number(count?.n ?? 0) };
   }
 
   async observation(id: string) {
@@ -269,7 +280,10 @@ export function soulRoutes(
       if (!(await project(req.params.id, reply))) return reply;
       return {
         projectId: req.params.id,
-        observations: await store!.listObservations(req.params.id),
+        ...(await store!.listObservations(req.params.id).then((r) => ({
+          observations: r.rows,
+          total: r.total,
+        }))),
       };
     });
 

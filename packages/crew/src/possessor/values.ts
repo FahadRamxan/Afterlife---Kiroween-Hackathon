@@ -7,13 +7,22 @@ import { z } from 'zod';
 import type { CrewLlm } from '../llm/runtime';
 import type { FieldInfo } from './actions';
 import { probes, screenDate, typeField, typicalValue } from './inputs';
+import { isPersonalField, maskFor, redactor } from './privacy';
 
 /** A few records of each data file, so a value can name a real code, id or name. */
 export type DataSample = {
   file: string;
   fields: { name: string; type: string; length: number }[];
   records: Record<string, string>[];
+  /** Its fields about a person (privacy.ts): never shown to the model. */
+  personalFields?: string[];
+  /** Their values in every record, not only the first few, so a screen can be masked too. */
+  personalValues?: string[];
+  personalByField?: Record<string, string[]>;
 };
+
+/** At most this many records of a file are read for personal values. */
+const MAX_PERSONAL_RECORDS = 20_000;
 
 export type ValueContext = {
   field: FieldInfo;
@@ -43,13 +52,32 @@ export async function readSamples(emu: EmulatorController, n = 5): Promise<DataS
   for (const file of files) {
     try {
       const dbf = readDbf(await emu.readFile(file));
+      const live = dbf.records.filter((r) => !r.deleted);
+      const personalFields = dbf.fields
+        .map((f) => f.name)
+        .filter((name) => isPersonalField(file, name));
+      const personalByField = Object.fromEntries(
+        personalFields.map((name) => [
+          name,
+          [
+            ...new Set(
+              live
+                .slice(0, MAX_PERSONAL_RECORDS)
+                .map((r) => text(r.values[name] ?? null).trim())
+                .filter(Boolean),
+            ),
+          ],
+        ]),
+      );
       out.push({
         file,
         fields: dbf.fields.map((f) => ({ name: f.name, type: f.type, length: f.length })),
-        records: dbf.records
-          .filter((r) => !r.deleted)
+        records: live
           .slice(0, n)
           .map((r) => Object.fromEntries(Object.entries(r.values).map(([k, v]) => [k, text(v)]))),
+        personalFields,
+        personalValues: Object.values(personalByField).flat(),
+        personalByField,
       });
     } catch {
       // A file the reader cannot read is left out; the Possessor still explores.
@@ -98,21 +126,32 @@ export const dataValueChooser: ValueChooser = strategyChooser();
 
 /** The model's instructions: what the field is for, and how to answer. */
 export function valuePrompt(ctx: ValueContext): string {
+  // Nothing about a person goes to the model (review 41-50): masked in the records and the screen.
+  const redact = redactor(ctx.samples);
   const sample = ctx.samples
     .map(
       (s) =>
         `${s.file} (${s.fields.map((f) => `${f.name} ${f.type}(${f.length})`).join(', ')}):\n` +
-        s.records.map((r) => `  ${Object.values(r).join(' | ')}`).join('\n'),
+        s.records
+          .map(
+            (r) =>
+              `  ${Object.entries(r)
+                .map(([k, v]) =>
+                  (s.personalFields ?? []).includes(k) && v ? maskFor(k) : redact(v),
+                )
+                .join(' | ')}`,
+          )
+          .join('\n'),
     )
     .join('\n');
   return [
     `Screen: ${ctx.title}`,
-    ...ctx.screen.map((l) => `| ${l}`),
+    ...ctx.screen.map((l) => `| ${redact(l)}`),
     '',
     `Field: ${ctx.field.label || '(no label)'}`,
     `Width: ${ctx.field.length ?? 'not shown'}`,
     ctx.tried.length
-      ? `Already tried here: ${ctx.tried.map((t) => JSON.stringify(t)).join(', ')}`
+      ? `Already tried here: ${ctx.tried.map((t) => JSON.stringify(redact(t))).join(', ')}`
       : '',
     '',
     'Data files (first records):',

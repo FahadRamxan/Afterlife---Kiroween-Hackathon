@@ -495,6 +495,9 @@ importers:
         specifier: ^4.6.7
         version: 4.6.7
     devDependencies:
+      '@afterlife/dbf':
+        specifier: workspace:^
+        version: link:../dbf
       fast-check:
         specifier: ^4.10.2
         version: 4.10.2

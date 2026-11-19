@@ -99,6 +99,34 @@ describe('GET /api/projects/:id/llm-calls', () => {
     expect((await app.inject(`/api/projects/${other}/llm-calls/${id}`)).statusCode).toBe(404);
   });
 
+  it("an uploaded app is a real shop's: its calls are listed, but not what was sent or answered", async () => {
+    const shop = await new PgProjectStore(t.db).create({
+      name: 'My shop',
+      source: 'upload',
+      sourceApp: 'my-shop.zip',
+    });
+    await t.db.insert(llmCalls).values({
+      projectId: shop.id,
+      agent: 'possessor',
+      purpose: 'a value for Code on NEW BILL',
+      provider: 'fake',
+      model: 'fake-model',
+      attempt: 1,
+      status: 'ok',
+      request: { messages: [{ role: 'user', content: [{ type: 'text', text: 'secret screen' }] }] },
+      response: { content: [{ type: 'text', text: 'PAN500' }] },
+    });
+    const list = (await app.inject(`/api/projects/${shop.id}/llm-calls`)).json();
+    expect(list.calls).toHaveLength(1);
+    expect(list.bodies).toBe('hidden');
+    const one = await app.inject(`/api/projects/${shop.id}/llm-calls/${list.calls[0].id}`);
+    expect(one.statusCode).toBe(200);
+    expect(one.json()).toMatchObject({ request: null, response: null, hidden: true });
+    expect(one.body).not.toContain('secret screen');
+    // A Graveyard sample's calls show their bodies: the data is our own.
+    expect((await app.inject(`/api/projects/${projectId}/llm-calls`)).json().bodies).toBe('shown');
+  });
+
   it('refuses bad ids and unknown projects; a project with no calls has an empty list', async () => {
     expect((await app.inject('/api/projects/nope/llm-calls')).statusCode).toBe(400);
     expect((await app.inject(`/api/projects/${projectId}/llm-calls/nope`)).statusCode).toBe(400);

@@ -12,8 +12,11 @@ import {
   type ToolUseBlock as BedrockToolUse,
 } from '@aws-sdk/client-bedrock-runtime';
 import {
+  FULL_CAPABILITIES,
   LlmRetryableError,
+  fitRequest,
   type ContentBlock,
+  type LlmCapabilities,
   type Json,
   type LlmClient,
   type LlmMessage,
@@ -26,10 +29,11 @@ import {
 type DocumentType = NonNullable<BedrockToolUse['input']>;
 
 /**
- * Claude Sonnet 4.5 through the US cross-region inference profile. Set BEDROCK_MODEL_ID for
- * another profile (`eu.`, `apac.`, `global.`) or a newer Sonnet.
+ * Claude Sonnet 5.5 through the US geo inference profile (Bedrock serves it only through
+ * inference profiles; Sonnet 4.5 retires). Set BEDROCK_MODEL_ID for another profile
+ * (`global.anthropic.claude-sonnet-5-5`, `eu.`, `au.`) or another model.
  */
-export const DEFAULT_BEDROCK_MODEL = 'us.anthropic.claude-sonnet-4-5-20250929-v1:0';
+export const DEFAULT_BEDROCK_MODEL = 'us.anthropic.claude-sonnet-5-5';
 
 /** The errors Bedrock documents as worth trying again. */
 const RETRYABLE = new Set([
@@ -73,7 +77,27 @@ export function toBedrockMessages(messages: LlmMessage[]): BedrockMessage[] {
   }));
 }
 
-export function toBedrockInput(model: string, req: LlmRequest): ConverseCommandInput {
+/**
+ * What a Claude model on Bedrock accepts. Sonnet 5.5, and the Claude models after it, answer 400
+ * to a forced tool choice and to any temperature (Anthropic's Sonnet 5.5 migration guide); Sonnet
+ * 4.5 and Sonnet 5 take both.
+ */
+export function bedrockCapabilities(model: string): LlmCapabilities {
+  const m = /claude-[a-z]+-(\d+)(?:-(\d{1,2}))?(?=[-:.]|$)/.exec(model);
+  if (!m) return FULL_CAPABILITIES;
+  const major = Number(m[1]);
+  // "4-5-20250929": the minor is 5; a date after it is not a version.
+  const minor = m[2] ? Number(m[2]) : 0;
+  const strict = major > 5 || (major === 5 && minor >= 5);
+  return strict ? { forcedToolChoice: false, temperature: false } : FULL_CAPABILITIES;
+}
+
+export function toBedrockInput(
+  model: string,
+  request: LlmRequest,
+  capabilities: LlmCapabilities = bedrockCapabilities(model),
+): ConverseCommandInput {
+  const req = fitRequest(request, capabilities);
   const choice: ToolChoice | undefined =
     req.toolChoice === undefined || req.toolChoice === 'auto'
       ? undefined
@@ -139,10 +163,12 @@ export function fromBedrockOutput(out: ConverseCommandOutput): LlmResponse {
 export class BedrockLlmClient implements LlmClient {
   readonly provider = 'bedrock';
   readonly model: string;
+  readonly capabilities: LlmCapabilities;
   private readonly client: Sender;
 
   constructor(opts: { model?: string; region?: string; client?: Sender } = {}) {
     this.model = opts.model ?? DEFAULT_BEDROCK_MODEL;
+    this.capabilities = bedrockCapabilities(this.model);
     // Credentials come from the usual AWS chain (env, profile, role); never from code.
     this.client =
       opts.client ??
@@ -152,9 +178,12 @@ export class BedrockLlmClient implements LlmClient {
   async converse(req: LlmRequest, opts: { signal?: AbortSignal } = {}): Promise<LlmResponse> {
     let out: unknown;
     try {
-      out = await this.client.send(new ConverseCommand(toBedrockInput(this.model, req)), {
-        ...(opts.signal ? { abortSignal: opts.signal } : {}),
-      });
+      out = await this.client.send(
+        new ConverseCommand(toBedrockInput(this.model, req, this.capabilities)),
+        {
+          ...(opts.signal ? { abortSignal: opts.signal } : {}),
+        },
+      );
     } catch (e) {
       const err = e as { name?: string; message?: string; $metadata?: { httpStatusCode?: number } };
       const status = err.$metadata?.httpStatusCode ?? 0;
