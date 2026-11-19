@@ -134,6 +134,8 @@ export interface Pipeline {
   steps(projectId: string): Promise<StepState[]>;
   /** Runs one step again, alone. False when it is already queued. */
   rerun(projectId: string, step: PipelineStep): Promise<boolean>;
+  /** Queues the Urdu translation of the project's newest Soul. False when it is already queued. */
+  translate?(projectId: string): Promise<boolean>;
 }
 
 export const StepStateSchema = z

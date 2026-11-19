@@ -8,6 +8,7 @@ import {
   type JobOptions,
   type JobType,
 } from '@afterlife/db';
+import { llmClientFrom, tokenBudgetFrom, type LlmClient } from '@afterlife/crew';
 import { HeadlessPool } from '@afterlife/emulator/headless';
 import { startJobLoop } from './loop';
 import { defaultRegistry, type Registry } from './registry';
@@ -21,6 +22,10 @@ export type WorkerOptions = {
   poolSize?: number;
   /** The virus scanner for uploads (VIRUS_SCANNER: ClamAV by default). */
   scanner?: VirusScanner;
+  /** The model (LLM_PROVIDER, BEDROCK_MODEL_ID, AWS_REGION); null for none. */
+  llm?: LlmClient | null;
+  /** Model tokens per project (LLM_TOKEN_BUDGET). */
+  budgetTokens?: number;
   options?: Partial<Record<JobType, Partial<JobOptions>>>;
   pollingIntervalSeconds?: number;
   log?: (line: string) => void;
@@ -33,6 +38,8 @@ export async function startWorker({
   registry,
   poolSize = 1,
   scanner,
+  llm,
+  budgetTokens,
   options,
   pollingIntervalSeconds,
   log = console.log,
@@ -59,7 +66,14 @@ export async function startWorker({
     db,
     boss,
     registry:
-      registry ?? defaultRegistry({ pool, db, scanner: scanner ?? scannerFromEnv(process.env) }),
+      registry ??
+      defaultRegistry({
+        pool,
+        db,
+        scanner: scanner ?? scannerFromEnv(process.env),
+        llm: llm === undefined ? llmClientFrom(process.env) : llm,
+        budgetTokens: budgetTokens ?? tokenBudgetFrom(process.env),
+      }),
     options,
     pollingIntervalSeconds,
     log,

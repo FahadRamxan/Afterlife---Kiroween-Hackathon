@@ -295,6 +295,8 @@ export const JOB_TYPES = [
   'voice-change',
   // An uploaded app is virus-scanned and bundled before its pipeline starts (Prompt 40).
   'scan-upload',
+  // Translates a Soul's rules into Urdu with the model, as a new version (Prompt 46).
+  'translate-soul',
 ] as const;
 export type JobType = (typeof JOB_TYPES)[number];
 
@@ -427,6 +429,20 @@ export const llmCalls = pgTable(
   ],
 );
 
+/**
+ * Urdu translations of rule texts (Prompt 46), by the hash of the English text and the glossary
+ * version: the same rule is never sent to the model twice, in any project.
+ */
+export const translations = pgTable('translations', {
+  hash: text('hash').primaryKey(),
+  /** The English the hash was made from, so a row can be checked against it. */
+  en: text('en').notNull(),
+  ur: text('ur').notNull(),
+  /** Which model wrote it (`bedrock/<model id>`). */
+  model: text('model').notNull(),
+  createdAt: createdAt(),
+});
+
 /** Every table, in an order where each one's parents come first. */
 export const TABLES = {
   projects,
@@ -444,4 +460,5 @@ export const TABLES = {
   project_events: projectEvents,
   uploads,
   llm_calls: llmCalls,
+  translations,
 } as const;

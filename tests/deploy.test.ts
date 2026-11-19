@@ -106,6 +106,12 @@ describe('.env.example files (Prompt 10)', () => {
   it('worker example sets DATABASE_URL', () => {
     expect(envKeys('apps/worker/.env.example')).toContain('DATABASE_URL');
   });
+  it('worker example names the model settings, with no credentials in it (Prompt 47)', () => {
+    expect(envKeys('apps/worker/.env.example')).toEqual(
+      expect.arrayContaining(['LLM_PROVIDER', 'AWS_REGION', 'LLM_TOKEN_BUDGET']),
+    );
+    expect(read('apps/worker/.env.example')).not.toMatch(/^AWS_(ACCESS|SECRET)/m);
+  });
   it('.gitignore ignores real .env files but not the examples', () => {
     const gi = read('.gitignore');
     expect(gi).toMatch(/^\.env$/m);

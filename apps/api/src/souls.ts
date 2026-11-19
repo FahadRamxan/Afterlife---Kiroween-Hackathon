@@ -1,7 +1,25 @@
 // A project's Soul (Prompt 44) and the observations its rules point at as evidence.
 // POST /api/projects/:id/souls stores a new version; versions are never changed (Prompt 45).
-import { observations, sessions, souls, and, asc, desc, eq, sql, type Db } from '@afterlife/db';
-import { SoulSchema, diffSouls, summarizeDiff, writeKiroSpec, type Soul } from '@afterlife/soul';
+import {
+  observations,
+  sessions,
+  souls,
+  and,
+  asc,
+  desc,
+  eq,
+  insertSoulVersion,
+  sql,
+  type Db,
+} from '@afterlife/db';
+import {
+  SoulSchema,
+  diffSouls,
+  numberSoul,
+  specRequirements,
+  summarizeDiff,
+  type Soul,
+} from '@afterlife/soul';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
@@ -78,29 +96,10 @@ export class PgSoulStore implements SoulStore {
   }
 
   async add(projectId: string, soul: Soul): Promise<number> {
-    return this.db.transaction(async (tx) => {
-      // One writer at a time per project, so two versions never get the same number.
-      await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${projectId}))`);
-      const [last] = await tx
-        .select({ v: souls.version })
-        .from(souls)
-        .where(eq(souls.projectId, projectId))
-        .orderBy(desc(souls.version))
-        .limit(1);
-      const version = (last?.v ?? 0) + 1;
-      const stored: Soul = {
-        ...soul,
-        version,
-        provenance: {
-          ...soul.provenance,
-          projectId,
-          ...(last ? { parentVersion: last.v } : {}),
-        },
-      };
-      const spec = writeKiroSpec(stored);
-      const requirements = Object.entries(spec).find(([k]) => k.endsWith('requirements.md'))![1];
-      await tx.insert(souls).values({ projectId, version, ir: stored, specMarkdown: requirements });
-      return version;
+    // One writer at a time per project, so two versions never get the same number.
+    return insertSoulVersion(this.db, projectId, (version, parent) => {
+      const stored = numberSoul(soul, projectId, version, parent);
+      return { ir: stored, specMarkdown: specRequirements(stored) };
     });
   }
 
@@ -157,7 +156,12 @@ const noDatabase = {
 
 export function soulRoutes(
   store: SoulStore | undefined,
-  opts: { projectExists: (id: string) => Promise<boolean>; createPerMinute: number },
+  opts: {
+    projectExists: (id: string) => Promise<boolean>;
+    createPerMinute: number;
+    /** Queues the Urdu translation job (Prompt 46). */
+    translate?: (projectId: string) => Promise<boolean>;
+  },
 ) {
   return async (app: FastifyInstance) => {
     const bad = (reply: { code(n: number): { send(b: unknown): unknown } }) =>
@@ -198,6 +202,28 @@ export function soulRoutes(
               .join('; '),
           });
         return reply.code(201).send({ version: await store!.add(req.params.id, parsed.data) });
+      },
+    );
+
+    // The worker translates the newest Soul's rules into Urdu and stores the next version.
+    app.post<{ Params: { id: string } }>(
+      '/api/projects/:id/soul/translate',
+      { config: { rateLimit: { max: opts.createPerMinute, timeWindow: '1 minute' } } },
+      async (req, reply) => {
+        if (!(await project(req.params.id, reply))) return reply;
+        if (!(await store!.latest(req.params.id)))
+          return reply
+            .code(404)
+            .send({ error: 'NO_SOUL', message: 'No Soul has been written for this project yet' });
+        if (!opts.translate)
+          return reply
+            .code(503)
+            .send({ error: 'NO_WORKER', message: 'This API cannot queue work for the worker' });
+        if (!(await opts.translate(req.params.id)))
+          return reply
+            .code(409)
+            .send({ error: 'ALREADY_QUEUED', message: 'A translation is already waiting to run' });
+        return reply.code(202).send({ queued: true });
       },
     );
 

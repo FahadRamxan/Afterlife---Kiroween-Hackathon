@@ -185,6 +185,20 @@
         "compare": "Compare",
         "between": "From version {from} to version {to}",
         "sameRules": "The rules are the same."
+      },
+      "urdu": {
+        "title": "Rules in Urdu",
+        "missing": "{count, plural, one {# rule has} other {# rules have}} no Urdu yet.",
+        "all": "Every rule is in Urdu.",
+        "how": "The worker asks the language model for each translation and keeps it only if it uses the shop words (bill: بل, stock: اسٹاک, GST: جی ایس ٹی, udhaar: ادھار). A rule translated before comes from the cache. The result is stored as a new Soul version.",
+        "translate": "Translate rules into Urdu",
+        "queued": "Queued for the worker…",
+        "running": "The worker is translating the rules…",
+        "retrying": "Trying again: {message}",
+        "failed": "The rules were not translated:",
+        "done": "Translated. The Soul now shows the rules in Urdu.",
+        "notYet": "Not in Urdu yet.",
+        "english": "In English"
       }
     },
     "work": {

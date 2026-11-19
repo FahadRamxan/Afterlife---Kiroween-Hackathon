@@ -81,6 +81,7 @@ export const JOB_OPTIONS: Record<JobType, JobOptions> = {
   'voice-change': { retryLimit: 3, retryDelay: 10, retryBackoff: true, timeoutSeconds: 5 * MIN },
   // ClamAV loads its signatures on each scan (about 30 s); a missing scanner fails closed.
   'scan-upload': { retryLimit: 2, retryDelay: 20, retryBackoff: true, timeoutSeconds: 5 * MIN },
+  'translate-soul': { retryLimit: 2, retryDelay: 15, retryBackoff: true, timeoutSeconds: 10 * MIN },
 };
 
 /** The idempotency key of a project step. */

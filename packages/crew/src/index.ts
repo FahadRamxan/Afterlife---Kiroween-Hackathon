@@ -36,3 +36,23 @@ export {
   type ToolRun,
 } from './llm/runtime';
 export { DEFAULT_TOKEN_BUDGET, llmClientFrom, tokenBudgetFrom, type LlmEnv } from './llm/config';
+
+// Rules in Urdu (Prompt 46).
+export {
+  GLOSSARY_VERSION,
+  SHOP_GLOSSARY,
+  glossaryIssues,
+  hasUrduScript,
+  termsIn,
+  type GlossaryEntry,
+} from './urdu/glossary';
+export {
+  MemoryTranslationCache,
+  ruleHash,
+  translateSoul,
+  translateText,
+  type SoulTranslation,
+  type TranslateDeps,
+  type TranslationCache,
+} from './urdu/translate';
+export { PgTranslationCache } from './urdu/pg-cache';
