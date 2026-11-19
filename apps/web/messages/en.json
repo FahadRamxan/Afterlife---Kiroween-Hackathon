@@ -173,6 +173,18 @@
       "unavailable": {
         "unconfigured": "The API is not configured, so the Soul cannot be shown.",
         "down": "The API did not answer, so the Soul cannot be shown."
+      },
+      "versions": {
+        "title": "Versions",
+        "by": "by {by}",
+        "rules": "{count, plural, one {# rule} other {# rules}}",
+        "first": "the first version",
+        "noChange": "no rule changed",
+        "from": "Compare version",
+        "to": "with version",
+        "compare": "Compare",
+        "between": "From version {from} to version {to}",
+        "sameRules": "The rules are the same."
       }
     }
   },

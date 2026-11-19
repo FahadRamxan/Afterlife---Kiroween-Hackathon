@@ -1,7 +1,7 @@
 // A project's Soul (Prompt 44) and the observations its rules point at as evidence.
 // POST /api/projects/:id/souls stores a new version; versions are never changed (Prompt 45).
-import { observations, sessions, souls, asc, desc, eq, sql, type Db } from '@afterlife/db';
-import { SoulSchema, writeKiroSpec, type Soul } from '@afterlife/soul';
+import { observations, sessions, souls, and, asc, desc, eq, sql, type Db } from '@afterlife/db';
+import { SoulSchema, diffSouls, summarizeDiff, writeKiroSpec, type Soul } from '@afterlife/soul';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
@@ -15,8 +15,20 @@ export type ObservationRow = {
   changed: string[];
 };
 
+export type VersionRow = {
+  version: number;
+  createdAt: string;
+  createdBy: string;
+  rules: number;
+  /** Against the version before; null for the first. */
+  changes: ReturnType<typeof summarizeDiff> | null;
+};
+
 export interface SoulStore {
   latest(projectId: string): Promise<{ version: number; soul: Soul } | null>;
+  version(projectId: string, version: number): Promise<{ version: number; soul: Soul } | null>;
+  /** Newest first, each with what changed since the version before it. */
+  versions(projectId: string): Promise<VersionRow[]>;
   /** Stores the Soul as the next version. Returns that version. */
   add(projectId: string, soul: Soul): Promise<number>;
   listObservations(projectId: string): Promise<ObservationRow[]>;
@@ -37,6 +49,32 @@ export class PgSoulStore implements SoulStore {
       .orderBy(desc(souls.version))
       .limit(1);
     return row ? { version: row.version, soul: SoulSchema.parse(row.ir) } : null;
+  }
+
+  async version(projectId: string, version: number) {
+    const [row] = await this.db
+      .select()
+      .from(souls)
+      .where(and(eq(souls.projectId, projectId), eq(souls.version, version)));
+    return row ? { version: row.version, soul: SoulSchema.parse(row.ir) } : null;
+  }
+
+  async versions(projectId: string): Promise<VersionRow[]> {
+    const rows = await this.db
+      .select()
+      .from(souls)
+      .where(eq(souls.projectId, projectId))
+      .orderBy(asc(souls.version));
+    const parsed = rows.map((r) => ({ row: r, soul: SoulSchema.parse(r.ir) }));
+    return parsed
+      .map(({ row, soul }, i) => ({
+        version: row.version,
+        createdAt: row.createdAt.toISOString(),
+        createdBy: soul.provenance.createdBy,
+        rules: soul.rules.length,
+        changes: i === 0 ? null : summarizeDiff(diffSouls(parsed[i - 1]!.soul, soul)),
+      }))
+      .reverse();
   }
 
   async add(projectId: string, soul: Soul): Promise<number> {
@@ -111,6 +149,7 @@ export class PgSoulStore implements SoulStore {
 }
 
 const Id = z.uuid();
+const Version = z.coerce.number().int().min(1).max(1_000_000);
 const noDatabase = {
   error: 'NO_DATABASE',
   message: 'This API has no database, so it keeps no Souls',
@@ -159,6 +198,44 @@ export function soulRoutes(
               .join('; '),
           });
         return reply.code(201).send({ version: await store!.add(req.params.id, parsed.data) });
+      },
+    );
+
+    app.get<{ Params: { id: string } }>('/api/projects/:id/souls', async (req, reply) => {
+      if (!(await project(req.params.id, reply))) return reply;
+      return { projectId: req.params.id, versions: await store!.versions(req.params.id) };
+    });
+
+    // Before /souls/:version, so `compare` is not read as a version number.
+    app.get<{ Params: { id: string }; Querystring: { from?: string; to?: string } }>(
+      '/api/projects/:id/souls/compare',
+      async (req, reply) => {
+        if (!(await project(req.params.id, reply))) return reply;
+        const from = Version.safeParse(req.query.from);
+        const to = Version.safeParse(req.query.to);
+        if (!from.success || !to.success)
+          return reply
+            .code(400)
+            .send({ error: 'BAD_VERSION', message: 'Give ?from= and ?to= as version numbers' });
+        const [a, b] = await Promise.all([
+          store!.version(req.params.id, from.data),
+          store!.version(req.params.id, to.data),
+        ]);
+        if (!a || !b)
+          return reply.code(404).send({ error: 'NO_VERSION', message: 'No such version' });
+        return { projectId: req.params.id, diff: diffSouls(a.soul, b.soul) };
+      },
+    );
+
+    app.get<{ Params: { id: string; version: string } }>(
+      '/api/projects/:id/souls/:version',
+      async (req, reply) => {
+        if (!(await project(req.params.id, reply))) return reply;
+        const v = Version.safeParse(req.params.version);
+        if (!v.success)
+          return reply.code(400).send({ error: 'BAD_VERSION', message: 'Not a version number' });
+        const s = await store!.version(req.params.id, v.data);
+        return s ?? reply.code(404).send({ error: 'NO_VERSION', message: 'No such version' });
       },
     );
 

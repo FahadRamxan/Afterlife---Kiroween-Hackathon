@@ -111,6 +111,96 @@ describe('souls and observations', () => {
     expect(one.dbfDiff).toBeDefined();
   });
 
+  it('every change is a new version: listed with what changed, each readable, and comparable', async () => {
+    const id = await project();
+    await app.inject({
+      method: 'POST',
+      url: `/api/projects/${id}/souls`,
+      payload: SHIFA_REFERENCE_SOUL,
+    });
+    const changed = {
+      ...SHIFA_REFERENCE_SOUL,
+      provenance: { ...SHIFA_REFERENCE_SOUL.provenance, createdBy: 'owner' as const },
+      rules: [
+        {
+          ...SHIFA_REFERENCE_SOUL.rules[0]!,
+          expression: 'if bill.subtotal > 10000 then trunc(bill.subtotal * 0.10, 2) else 0',
+        },
+        ...SHIFA_REFERENCE_SOUL.rules.slice(2),
+      ],
+    };
+    expect(
+      (
+        await app.inject({ method: 'POST', url: `/api/projects/${id}/souls`, payload: changed })
+      ).json(),
+    ).toEqual({
+      version: 2,
+    });
+
+    const list = (await app.inject({ method: 'GET', url: `/api/projects/${id}/souls` })).json()
+      .versions;
+    expect(
+      list.map((v: { version: number; createdBy: string }) => [v.version, v.createdBy]),
+    ).toEqual([
+      [2, 'owner'],
+      [1, 'reference'],
+    ]);
+    expect(list[0].changes).toEqual({
+      added: 0,
+      removed: 1,
+      changed: 1,
+      entities: 0,
+      screens: 0,
+      actions: 0,
+    });
+    expect(list[1].changes).toBeNull();
+
+    const one = (await app.inject({ method: 'GET', url: `/api/projects/${id}/souls/1` })).json();
+    expect(one.soul.rules).toHaveLength(SHIFA_REFERENCE_SOUL.rules.length);
+    const two = (await app.inject({ method: 'GET', url: `/api/projects/${id}/souls/2` })).json();
+    expect(two.soul.provenance.parentVersion).toBe(1);
+
+    const cmp = (
+      await app.inject({ method: 'GET', url: `/api/projects/${id}/souls/compare?from=1&to=2` })
+    ).json();
+    expect(cmp.diff.rules.removed).toEqual(['gst-17-truncated']);
+    expect(cmp.diff.rules.changed.map((c: { id: string }) => c.id)).toEqual(['discount-over-5000']);
+    expect(
+      (await app.inject({ method: 'GET', url: `/api/projects/${id}/souls/compare?from=1&to=9` }))
+        .statusCode,
+    ).toBe(404);
+  });
+
+  it('versions are immutable: the database refuses an edit, and an old version reads the same later', async () => {
+    const id = await project();
+    await app.inject({
+      method: 'POST',
+      url: `/api/projects/${id}/souls`,
+      payload: SHIFA_REFERENCE_SOUL,
+    });
+    const before = (await app.inject({ method: 'GET', url: `/api/projects/${id}/souls/1` })).json();
+    const edit = await t.db
+      .update(soulsTable)
+      .set({ specMarkdown: 'edited' })
+      .where(eq(soulsTable.projectId, id))
+      .then(
+        () => null,
+        (e: Error & { cause?: Error }) => e.cause?.message ?? e.message,
+      );
+    expect(edit).toMatch(/Soul versions are immutable/);
+    await app.inject({
+      method: 'POST',
+      url: `/api/projects/${id}/souls`,
+      payload: SHIFA_REFERENCE_SOUL,
+    });
+    expect(
+      (await app.inject({ method: 'GET', url: `/api/projects/${id}/souls/1` })).json(),
+    ).toEqual(before);
+    // Deleting the project still deletes its versions.
+    await app.inject({ method: 'DELETE', url: `/api/projects/${id}` });
+    expect(await t.db.select().from(soulsTable).where(eq(soulsTable.projectId, id))).toEqual([]);
+  });
+
   it('refuses a Soul that is not valid, saying why, and stores nothing', async () => {
     const id = await project();
     const res = await app.inject({
