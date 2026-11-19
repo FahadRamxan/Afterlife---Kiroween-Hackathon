@@ -21,6 +21,8 @@ export const ProjectSchema = z
     status: z.enum(['created', 'queued', 'running', 'done', 'failed']),
     /** `recorded`: demo mode, a replay of a real run's saved outputs (Prompt 39). */
     mode: z.enum(['live', 'recorded']),
+    /** An uploaded app's DOS clock (`YYYY-MM-DD HH:MM:SS`); null for Graveyard apps (they use their own). */
+    dosTime: z.string().nullable(),
     createdAt: z.iso.datetime(),
   })
   .meta({ id: 'Project' });
@@ -86,6 +88,7 @@ export class MemoryProjectStore implements ProjectStore {
       id: uuidv7(),
       ...p,
       mode: p.mode ?? 'live',
+      dosTime: null,
       status: 'created',
       createdAt: new Date().toISOString(),
     };

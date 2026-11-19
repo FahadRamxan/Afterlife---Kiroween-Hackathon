@@ -149,3 +149,35 @@ test('séance recording on the Raise page', async ({ page }) => {
   await page.mouse.click(5, 5);
   await section.screenshot({ path: `${OUT}/13-seance.png` });
 });
+
+test('a raised project: live screen from the worker, and the six steps', async ({ page }) => {
+  test.setTimeout(150_000);
+  await page.setViewportSize({ width: 1280, height: 1600 });
+  await ready(page, '/graveyard');
+  await page.getByRole('button', { name: 'Raise Iqra School Fees' }).click();
+  await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
+  await expect(page.getByTestId('live-screen')).toContainText('MAIN MENU', { timeout: 90_000 });
+  await expect(page.getByTestId('steps').getByRole('progressbar')).toHaveAccessibleName(
+    /^6 of 6 steps run/,
+    { timeout: 60_000 },
+  );
+  await page.evaluate(() => document.fonts.ready);
+  await page.screenshot({ path: `${OUT}/14-raised-project.png`, fullPage: true });
+});
+
+test('upload your own dead app: the DOS clock and Raise this app', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 1500 });
+  await ready(page, '/graveyard');
+  const dist = (n: string) =>
+    new Uint8Array(readFileSync(resolve(__dirname, '../samples/graveyard/dist/shifa', n)));
+  const card = page.getByTestId('upload-card');
+  await card.getByLabel('Choose a zip with the EXE and DBF files').setInputFiles({
+    name: 'my-shop.zip',
+    mimeType: 'application/zip',
+    buffer: Buffer.from(
+      zipSync({ 'SHIFA.EXE': dist('SHIFA.EXE'), 'MEDICINE.DBF': dist('MEDICINE.DBF') }),
+    ),
+  });
+  await expect(card.getByRole('button', { name: 'Raise this app' })).toBeVisible();
+  await card.screenshot({ path: `${OUT}/15-upload-raise.png` });
+});

@@ -101,7 +101,13 @@ export function buildApp(
   });
 
   app.register(dbfInspectRoutes);
-  app.register(sessionRoutes(sessions, { createPerMinute: limits.createPerMinute }));
+  app.register(
+    sessionRoutes(sessions, {
+      createPerMinute: limits.createPerMinute,
+      storageLimitBytes: env.SEANCE_STORAGE_MB * 1024 * 1024,
+      projectExists: async (id) => (await projects.get(id)) !== null,
+    }),
+  );
   app.register(
     projectRoutes(projects, { createPerMinute: limits.createPerMinute, pipeline: stores.pipeline }),
   );

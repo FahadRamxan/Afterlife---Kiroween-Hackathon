@@ -60,7 +60,9 @@ export function possessFirstLook(deps: {
         reason: `There is no js-dos bundle for ${ctx.project.sourceApp} yet`,
       };
     // Without it js-dos keeps a clock of its own (Iqra, a 2001 app, showed 25-06-1998).
-    const dosTime = await (deps.dosTimeFor ?? graveyardDosTime)(ctx.project, ctx.projectId);
+    const dosTime =
+      ctx.project.dosTime ??
+      (await (deps.dosTimeFor ?? graveyardDosTime)(ctx.project, ctx.projectId));
     await ctx.log(`Booting ${ctx.project.name} in headless js-dos`);
     const text = await deps.pool.use(
       bundle,

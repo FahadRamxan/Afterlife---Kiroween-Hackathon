@@ -14,7 +14,15 @@ import { summarizeObservation } from '../lib/observation';
 import { keyFromEvent, thumbnailSize } from '../lib/seance';
 import { useEmulator, useScreenGrid } from '../lib/use-emulator';
 
-type Props = { projectId: string; bundle: string; name: string; dosTime: string };
+type Props = {
+  projectId: string;
+  bundle: string;
+  name: string;
+  dosTime: string;
+  /** The raised project this séance belongs to (on /raise/<project id>). */
+  raisedProjectId?: string;
+  onSaved?: (sessionId: string) => void;
+};
 type Action = { observation: Observation; thumb: string; changed: string[] };
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -51,7 +59,14 @@ const toBase64 = (blob: Blob) =>
  * "Record a séance": the owner works the real old app in the page. Every key becomes an
  * observation (Prompt 29) on a timeline, optionally with their voice, and is saved as a session.
  */
-export function SeanceRecorder({ projectId, bundle, name, dosTime }: Props) {
+export function SeanceRecorder({
+  projectId,
+  bundle,
+  name,
+  dosTime,
+  raisedProjectId,
+  onSaved,
+}: Props) {
   const t = useTranslations('seance');
   const [url, setUrl] = useState<string | null>(null);
   const emu = useEmulator(url, { dosTime });
@@ -61,6 +76,9 @@ export function SeanceRecorder({ projectId, bundle, name, dosTime }: Props) {
   const [actions, setActions] = useState<Action[]>([]);
   const [startedAt, setStartedAt] = useState<string | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
+  // How many actions the last save held: Save stays off until there are new ones, so a second
+  // click does not store the same séance twice.
+  const [savedCount, setSavedCount] = useState(0);
   const [saving, setSaving] = useState(false);
   const [voice, setVoice] = useState<'off' | 'on' | 'denied'>('off');
   const queue = useRef<KeyStroke[]>([]);
@@ -150,6 +168,7 @@ export function SeanceRecorder({ projectId, bundle, name, dosTime }: Props) {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
           projectId,
+          ...(raisedProjectId ? { raisedProjectId } : {}),
           startedAt,
           actions: actions.map((a) => a.observation),
           audio,
@@ -158,6 +177,8 @@ export function SeanceRecorder({ projectId, bundle, name, dosTime }: Props) {
       const body = (await res.json()) as { id?: string; message?: string };
       if (!res.ok || !body.id) throw new Error(body.message ?? `The API answered ${res.status}`);
       setSaved(body.id);
+      setSavedCount(actions.length);
+      onSaved?.(body.id);
     } catch (e) {
       setMessage(t('saveFailed', { reason: (e as Error).message }));
     } finally {
@@ -218,7 +239,9 @@ export function SeanceRecorder({ projectId, bundle, name, dosTime }: Props) {
               </Button>
             )}
             <Button
-              disabled={actions.length === 0 || saving || pending > 0}
+              disabled={
+                actions.length === 0 || actions.length === savedCount || saving || pending > 0
+              }
               onClick={() => void save()}
             >
               {saving ? t('saving') : t('save', { count: actions.length })}

@@ -94,6 +94,7 @@ describe('.env.example files (Prompt 10)', () => {
       'HOST',
       'LOG_LEVEL',
       'PORT',
+      'SEANCE_STORAGE_MB',
       'TRUST_PROXY',
       'WEB_ORIGINS',
     ]);

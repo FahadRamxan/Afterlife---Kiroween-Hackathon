@@ -22,7 +22,7 @@ test.describe('séance recording', () => {
   test('records 5 actions, shows them on the timeline, and saves them as a session', async ({
     page,
   }) => {
-    const { section } = await start(page);
+    const { section, keyboard } = await start(page);
     const timeline = section.getByRole('list', { name: 'Séance timeline' });
     // Stock, next page, back to the menu, customers, back again.
     for (const key of ['2', 'PageDown', 'Escape', '3', 'Escape']) {
@@ -61,6 +61,60 @@ test.describe('séance recording', () => {
     ]);
     expect(body.actions[0].screenAfter.model.title.name).toBe('STOCK');
     expect(body.audio).toBeUndefined();
+    // Saved once: Save stays off until there is a new action (no duplicate séance).
+    await expect(section.getByRole('button', { name: /^Save the séance/ })).toBeDisabled();
+    await keyboard.click();
+    await page.keyboard.press('2');
+    await expect(section.getByRole('button', { name: 'Save the séance (6 actions)' })).toBeEnabled({
+      timeout: 30_000,
+    });
+  });
+
+  test('on a raised project the séance belongs to it: in its timeline, and gone with it', async ({
+    page,
+  }) => {
+    await page.goto('/graveyard');
+    await page.getByRole('button', { name: 'Raise Shifa Medical Store' }).click();
+    await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
+    const projectId = page.url().split('/').at(-1)!;
+    const section = page.getByRole('region', { name: 'Record a séance' });
+    await section.getByRole('button', { name: 'Record a séance' }).click();
+    await expect(section.getByTestId('seance-screen')).toHaveText('MAIN MENU', { timeout: 60_000 });
+    await section
+      .getByRole('application', { name: 'Shifa Medical Store keyboard: type here' })
+      .click();
+    await page.keyboard.press('2');
+    await section
+      .getByRole('button', { name: 'Save the séance (1 action)' })
+      .click({ timeout: 30_000 });
+    const id = (await section.getByTestId('seance-saved').innerText()).match(/[0-9a-f-]{36}/)![0];
+    await expect(
+      page.getByTestId('timeline').locator('li[data-kind="session_recorded"]'),
+    ).toContainText('Séance recorded');
+    expect(
+      (await (await page.request.get(`${API}/api/sessions/${id}`)).json()).raisedProjectId,
+    ).toBe(projectId);
+    expect((await page.request.delete(`${API}/api/projects/${projectId}`)).status()).toBe(204);
+    expect((await page.request.get(`${API}/api/sessions/${id}`)).status()).toBe(404);
+  });
+
+  test('a full séance store says so when saving', async ({ page }) => {
+    await page.route('**/api/sessions', (route) =>
+      route.fulfill({
+        status: 507,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          error: 'STORAGE_FULL',
+          message: 'The séance storage is full (200 MB). Ask the owner of this site to make room.',
+        }),
+      }),
+    );
+    const { section } = await start(page);
+    await page.keyboard.press('2');
+    await section
+      .getByRole('button', { name: 'Save the séance (1 action)' })
+      .click({ timeout: 30_000 });
+    await expect(section).toContainText('The séance storage is full (200 MB)');
   });
 
   test('leaving the Possession tab turns the microphone off', async ({ page, context }) => {

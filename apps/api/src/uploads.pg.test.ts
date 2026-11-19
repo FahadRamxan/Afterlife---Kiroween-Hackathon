@@ -69,6 +69,8 @@ describe('POST /api/uploads', () => {
       status: 'scanning',
       executable: 'SHIFA.EXE',
       files: ['MEDICINE.DBF', 'SHIFA.EXE'],
+      // From MEDICINE.DBF's header: last updated 1 July 1998.
+      dosTime: '1998-07-01 09:00:00',
     });
     const [u] = await t.db.select().from(uploads).where(eq(uploads.projectId, body.project.id));
     expect(u).toMatchObject({ status: 'scanning', executable: 'SHIFA.EXE', bundle: null });
@@ -128,6 +130,23 @@ describe('POST /api/uploads', () => {
     });
     const ok = await send(two, { executable: 'SHIFA.EXE' });
     expect(ok.statusCode).toBe(201);
+  });
+
+  it('gives the project a DOS clock: its DBF dates by default, or the one the owner chose', async () => {
+    const dated = SHIFA['MEDICINE.DBF'].slice();
+    dated.set([101, 3, 12], 1); // 2001-03-12
+    const zip = zipSync({ 'SHIFA.EXE': SHIFA['SHIFA.EXE'], 'MEDICINE.DBF': dated });
+    const auto = (await send(zip)).json();
+    expect(auto.project.dosTime).toBe('2001-03-12 09:00:00');
+    expect(auto.upload.dosTime).toBe('2001-03-12 09:00:00');
+    const got = await app.inject({ method: 'GET', url: `/api/projects/${auto.project.id}` });
+    expect(got.json().dosTime).toBe('2001-03-12 09:00:00');
+
+    const chosen = (await send(zip, { dosTime: '1999-12-31 18:30:00' })).json();
+    expect(chosen.project.dosTime).toBe('1999-12-31 18:30:00');
+    const bad = await send(zip, { dosTime: '1999-02-30 10:00:00' });
+    expect(bad.statusCode).toBe(400);
+    expect(bad.json().error).toBe('BAD_DOS_TIME');
   });
 
   it('keeps only a safe name from the uploaded file name', async () => {

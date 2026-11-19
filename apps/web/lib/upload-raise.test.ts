@@ -37,6 +37,14 @@ describe('postUpload', () => {
     );
   });
 
+  it('sends the DOS clock the owner chose', async () => {
+    const f = json(201, { project, upload: { status: 'scanning' } });
+    await postUpload('https://a', zip, 'x.zip', undefined, f, '1999-12-31 18:30:00');
+    expect(((f.mock.calls[0]![1] as RequestInit).body as FormData).get('dosTime')).toBe(
+      '1999-12-31 18:30:00',
+    );
+  });
+
   it('says when the API is not there or not configured', async () => {
     expect(await postUpload(undefined, zip, 'x.zip')).toEqual({
       ok: false,

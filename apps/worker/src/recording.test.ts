@@ -13,7 +13,12 @@ const TITLES: Record<string, RegExp> = {
 function ctx(events: [string, unknown][]): StepContext {
   return {
     projectId: '0192f5a0-0000-7000-8000-000000000001',
-    project: { name: 'Shifa Medical Store', source: 'graveyard', sourceApp: 'shifa' },
+    project: {
+      name: 'Shifa Medical Store',
+      source: 'graveyard',
+      sourceApp: 'shifa',
+      dosTime: null,
+    },
     step: 'possess',
     attempt: 1,
     force: false,

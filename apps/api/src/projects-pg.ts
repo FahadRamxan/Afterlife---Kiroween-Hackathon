@@ -9,6 +9,7 @@ const toProject = (r: typeof projects.$inferSelect): Project => ({
   sourceApp: r.sourceApp,
   status: r.status,
   mode: r.mode,
+  dosTime: r.dosTime,
   createdAt: r.createdAt.toISOString(),
 });
 

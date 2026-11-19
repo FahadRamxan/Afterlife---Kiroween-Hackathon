@@ -9,7 +9,13 @@ import type { VirusScanner } from './scanner';
 export type StepContext = {
   projectId: string;
   /** The project's app: where it came from and its id (`shifa`, or an upload's file name). */
-  project: { name: string; source: 'graveyard' | 'upload'; sourceApp: string };
+  project: {
+    name: string;
+    source: 'graveyard' | 'upload';
+    sourceApp: string;
+    /** An uploaded app's DOS clock; null for Graveyard apps (their manifest has it). */
+    dosTime: string | null;
+  };
   step: JobType;
   /** 1 for the first try. */
   attempt: number;

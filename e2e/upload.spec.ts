@@ -36,10 +36,16 @@ test.describe('upload your own dead app', () => {
   }) => {
     test.setTimeout(120_000);
     const card = await choose(page, 'my-shop.zip', SHIFA);
+    // The DOS clock: suggested from the DBF headers (the newest is 1998), and the owner's choice.
+    const day = card.getByLabel('DOS date');
+    await expect(day).toHaveValue(/^1998-/);
+    await day.fill('1998-07-15');
+    await card.getByLabel('DOS time').fill('10:00');
     await card.getByRole('button', { name: 'Raise this app' }).click();
     await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
     const id = page.url().split('/').at(-1)!;
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('Raising SHIFA (uploaded)');
+    await expect(page.getByTestId('dos-clock')).toContainText('1998-07-15 10:00:00');
 
     const log = page.getByTestId('live-log');
     await expect(log).toContainText('Scanning my-shop.zip with test scanner (EICAR only', {
@@ -51,6 +57,8 @@ test.describe('upload your own dead app', () => {
       timeout: 90_000,
     });
     await expect(page.getByTestId('live-screen')).toContainText('MAIN MENU');
+    // Booted at the chosen clock: the title bar shows its date.
+    await expect(page.getByTestId('live-screen')).toContainText('15/07/98');
     await page.request.delete(`${API}/api/projects/${id}`);
   });
 

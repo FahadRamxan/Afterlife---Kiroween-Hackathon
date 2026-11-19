@@ -45,7 +45,7 @@ const fakePool = {
 function ctx(sourceApp: string, events: [string, unknown][]): StepContext {
   return {
     projectId: '0192f5a0-0000-7000-8000-000000000001',
-    project: { name: 'Shifa Medical Store', source: 'graveyard', sourceApp },
+    project: { name: 'Shifa Medical Store', source: 'graveyard', sourceApp, dosTime: null },
     step: 'possess',
     attempt: 1,
     force: false,
@@ -87,7 +87,14 @@ describe('possess (first look, until the Possessor in Prompt 48)', () => {
     expect(fakePool.boots.at(-1)).toEqual({ dosTime: '2001-03-12 10:00:00' });
   });
 
-  it('an app with no bundle (an upload, until Prompt 40) is skipped without booting anything', async () => {
+  it("an uploaded app boots at the project's own DOS clock (review 31-40, finding 3)", async () => {
+    const c = ctx('my-shop.zip', []);
+    c.project = { ...c.project, source: 'upload', dosTime: '1999-12-31 18:30:00' };
+    await possessFirstLook({ pool: fakePool, bundleFor: () => new Uint8Array([1]) })(c);
+    expect(fakePool.boots.at(-1)).toEqual({ dosTime: '1999-12-31 18:30:00' });
+  });
+
+  it('an app with no bundle is skipped without booting anything', async () => {
     const events: [string, unknown][] = [];
     const before = fakePool.booted;
     const r = await possessFirstLook({ pool: fakePool, bundleFor: () => null })(

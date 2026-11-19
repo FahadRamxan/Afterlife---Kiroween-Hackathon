@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import fc from 'fast-check';
 import { strToU8, unzipSync, zipSync, type Zippable } from 'fflate';
 import { describe, expect, it } from 'vitest';
-import { LIMITS, isDosProgram, unpackDeadApp } from './dead-app';
+import { LIMITS, isDosProgram, isDosTime, unpackDeadApp } from './dead-app';
 
 const DIST = resolve(__dirname, '../../../samples/graveyard/dist/shifa');
 const SHIFA_EXE = new Uint8Array(readFileSync(resolve(DIST, 'SHIFA.EXE')));
@@ -164,6 +164,53 @@ describe('unpackDeadApp', () => {
     });
   });
 
+  it('suggests a DOS clock: the newest last-update date in its DBF headers, at 09:00', () => {
+    const at = (bytes: Uint8Array, y: number, m: number, d: number) => {
+      const b = bytes.slice();
+      b[1] = y - 1900;
+      b[2] = m;
+      b[3] = d;
+      return b;
+    };
+    const r = unpackDeadApp(
+      zip({
+        'SHIFA.EXE': SHIFA_EXE,
+        'A.DBF': at(MEDICINE, 1998, 7, 15),
+        'B.DBF': at(MEDICINE, 2001, 3, 12),
+        'C.DBF': at(MEDICINE, 1999, 13, 40), // not a date: ignored
+      }),
+    );
+    expect(r).toMatchObject({ ok: true, dosTime: '2001-03-12 09:00:00' });
+    const none = new Uint8Array(MEDICINE);
+    none[2] = 0;
+    expect(unpackDeadApp(zip({ 'SHIFA.EXE': SHIFA_EXE, 'A.DBF': none }))).toMatchObject({
+      ok: true,
+      dosTime: null,
+    });
+  });
+
+  it('isDosTime takes a real date and time DOS can keep (1980 to 2099), and nothing else', () => {
+    expect(isDosTime('2001-03-12 10:00:00')).toBe(true);
+    for (const s of [
+      '2001-02-30 10:00:00',
+      '1979-12-31 10:00:00',
+      '2001-03-12',
+      '2001-03-12 25:00:00',
+      "x'; drop",
+    ])
+      expect(isDosTime(s), s).toBe(false);
+    fc.assert(
+      fc.property(
+        fc.date({ min: new Date(1980, 0, 1), max: new Date(2099, 11, 31), noInvalidDate: true }),
+        (d) => {
+          const p = (n: number) => String(n).padStart(2, '0');
+          const s = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
+          expect(isDosTime(s)).toBe(true);
+        },
+      ),
+    );
+  });
+
   it('refuses bytes that are not a zip', () => {
     expect(unpackDeadApp(strToU8('PK\x03\x04 not really'))).toMatchObject({
       ok: false,
@@ -171,25 +218,31 @@ describe('unpackDeadApp', () => {
     });
   });
 
-  it('round-trip: what it accepts unpacks to exactly the bytes that went in', () => {
-    fc.assert(
-      fc.property(
-        fc.uniqueArray(
-          fc
-            .stringMatching(/^[A-Z][A-Z0-9]{0,7}$/)
-            .filter((n) => !/^(CON|PRN|AUX|NUL|COM[1-4]|LPT[1-3])$/.test(n)),
-          { minLength: 1, maxLength: 5 },
+  // Each case zips and unzips up to six files twice: about 1 s per 100 cases alone, and over 5 s
+  // under coverage, so it gets 30 s.
+  it(
+    'round-trip: what it accepts unpacks to exactly the bytes that went in',
+    { timeout: 30_000 },
+    () => {
+      fc.assert(
+        fc.property(
+          fc.uniqueArray(
+            fc
+              .stringMatching(/^[A-Z][A-Z0-9]{0,7}$/)
+              .filter((n) => !/^(CON|PRN|AUX|NUL|COM[1-4]|LPT[1-3])$/.test(n)),
+            { minLength: 1, maxLength: 5 },
+          ),
+          fc.uint8Array({ maxLength: 64 }),
+          (names, extra) => {
+            const files: Record<string, Uint8Array> = { 'SHIFA.EXE': SHIFA_EXE };
+            for (const n of names)
+              files[`${n}.DBF`] = new Uint8Array([...MEDICINE.slice(0, 32), ...extra]);
+            const r = unpackDeadApp(zip(files));
+            expect(r.ok).toBe(true);
+            if (r.ok) expect(unzipSync(zip(r.files))).toEqual(unzipSync(zip(files)));
+          },
         ),
-        fc.uint8Array({ maxLength: 64 }),
-        (names, extra) => {
-          const files: Record<string, Uint8Array> = { 'SHIFA.EXE': SHIFA_EXE };
-          for (const n of names)
-            files[`${n}.DBF`] = new Uint8Array([...MEDICINE.slice(0, 32), ...extra]);
-          const r = unpackDeadApp(zip(files));
-          expect(r.ok).toBe(true);
-          if (r.ok) expect(unzipSync(zip(r.files))).toEqual(unzipSync(zip(files)));
-        },
-      ),
-    );
-  });
+      );
+    },
+  );
 });

@@ -68,6 +68,8 @@ export {
   ALLOWED_EXTENSIONS,
   LIMITS as DEAD_APP_LIMITS,
   isDosProgram,
+  isDosTime,
+  suggestDosTime,
   unpackDeadApp,
   type DeadApp,
   type DeadAppError,

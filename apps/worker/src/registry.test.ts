@@ -22,7 +22,12 @@ describe('the handler registry', () => {
       'Prompt 61',
     )({
       projectId: '0192f5a0-0000-7000-8000-000000000001',
-      project: { name: 'Shifa Medical Store', source: 'graveyard', sourceApp: 'shifa' },
+      project: {
+        name: 'Shifa Medical Store',
+        source: 'graveyard',
+        sourceApp: 'shifa',
+        dosTime: null,
+      },
       step: 'prove',
       attempt: 1,
       force: false,

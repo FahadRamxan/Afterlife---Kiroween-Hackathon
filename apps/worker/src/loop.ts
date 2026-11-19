@@ -157,7 +157,12 @@ async function runJob(o: LoopOptions, type: JobType, job: Job<unknown>) {
         project,
       )({
         projectId: data.projectId,
-        project: { name: project.name, source: project.source, sourceApp: project.sourceApp },
+        project: {
+          name: project.name,
+          source: project.source,
+          sourceApp: project.sourceApp,
+          dosTime: project.dosTime,
+        },
         step: type,
         attempt,
         force: !!data.force,

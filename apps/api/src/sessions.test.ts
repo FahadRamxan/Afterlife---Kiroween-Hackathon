@@ -51,7 +51,58 @@ describe('MemorySessionStore', () => {
   });
 });
 
+describe('the séance storage cap (memory)', () => {
+  it('counts what is kept, and forgets the sizes of séances it drops', async () => {
+    const store = new MemorySessionStore(2);
+    const s = await session(1);
+    await store.create(s, 100);
+    await store.create(s, 200);
+    expect(await store.usedBytes()).toBe(300);
+    await store.create(s, 50);
+    expect(await store.usedBytes()).toBe(250);
+  });
+
+  it('a full store answers 507 and says so; one that fits is saved', async () => {
+    const a = buildApp(parseEnv({ SEANCE_STORAGE_MB: '1' }), { logger: false });
+    try {
+      const s = await session(1);
+      expect(
+        (await a.inject({ method: 'POST', url: '/api/sessions', payload: s })).statusCode,
+      ).toBe(201);
+      const res = await a.inject({
+        method: 'POST',
+        url: '/api/sessions',
+        payload: { ...s, audio: { mime: 'audio/webm', base64: 'A'.repeat(1_100_000) } },
+      });
+      expect(res.statusCode).toBe(507);
+      expect(res.json()).toEqual({
+        error: 'STORAGE_FULL',
+        message: 'The séance storage is full (1 MB). Ask the owner of this site to make room.',
+      });
+    } finally {
+      await a.close();
+    }
+  });
+});
+
 describe('POST /api/sessions and GET /api/sessions/:id', () => {
+  it('refuses a raised project id that is not a project (404) or not an id (400)', async () => {
+    const s = await session(1);
+    const missing = await app.inject({
+      method: 'POST',
+      url: '/api/sessions',
+      payload: { ...s, raisedProjectId: uuidv7() },
+    });
+    expect(missing.statusCode).toBe(404);
+    expect(missing.json().error).toBe('NO_PROJECT');
+    const bad = await app.inject({
+      method: 'POST',
+      url: '/api/sessions',
+      payload: { ...s, raisedProjectId: 'shifa' },
+    });
+    expect(bad.statusCode).toBe(400);
+  });
+
   it('saves a séance and gives it back by its id', async () => {
     const s = await session(5);
     const res = await app.inject({ method: 'POST', url: '/api/sessions', payload: s });

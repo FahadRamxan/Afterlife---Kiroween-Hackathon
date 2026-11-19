@@ -12,10 +12,13 @@ export async function postUpload(
   fileName: string,
   executable?: string,
   fetcher: typeof fetch = fetch,
+  /** The DOS clock the owner chose (`YYYY-MM-DD HH:MM:SS`); the server's suggestion if not given. */
+  dosTime?: string,
 ): Promise<UploadAnswer> {
   if (!api) return { ok: false, code: 'UNCONFIGURED', message: '' };
   const form = new FormData();
   if (executable) form.append('executable', executable);
+  if (dosTime) form.append('dosTime', dosTime);
   form.append('zip', new Blob([zip as BlobPart], { type: 'application/zip' }), fileName);
   let res: Response;
   try {

@@ -50,7 +50,7 @@ GitHub Actions is off for this repo, so every check runs locally. The workflow f
 5. **Nightly**: a Kiro Crew scheduled job runs `pnpm ci:local` on `main` and sends the result.
 6. **After a deploy**: `pnpm smoke:prod <url>`.
 
-Current counts: 1283 unit and property tests in 98 files (integration and Postgres tests included), and 106 Playwright tests (Prompt 39, after the review fixes). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
+Current counts: 1335 unit and property tests in 105 files (integration and Postgres tests included), and 111 Playwright tests (Prompt 40). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
 
 ## Coverage
 
@@ -58,21 +58,26 @@ Package code coverage from `pnpm test:coverage` (HTML report in `coverage/`). Th
 
 | Metric     | %   | Covered   |
 | ---------- | --- | --------- |
-| Lines      | 87% | 1411/1623 |
-| Statements | 87% | 1717/1966 |
-| Functions  | 92% | 402/437   |
-| Branches   | 88% | 948/1072  |
+| Lines      | 86% | 2417/2820 |
+| Statements | 85% | 2851/3336 |
+| Functions  | 87% | 713/817   |
+| Branches   | 86% | 1540/1781 |
 
-As of Prompt 30 (it covers ten times more code than at Prompt 20). Property tests run with `FC_NUM_RUNS=100` in the git hooks and 2000 in `pnpm ci:local`.
+As of Prompt 40. The code covered grew by 70% since Prompt 30 (the API, the worker and the database); the percentage fell a little because the Postgres and real-emulator tests are not all run under coverage. Property tests run with `FC_NUM_RUNS=100` in the git hooks and 2000 in `pnpm ci:local`.
 
 ## Status
 
-Prompts 1 to 30 are merged.
+Prompts 1 to 32 and 34 to 40 are merged. Prompt 33 (Kiro driving Shifa through MCP) needs a person in a Kiro chat; its `.kiro/settings/mcp.json` is in the repo.
 
 - **1 to 10, foundation:** the monorepo, steering and hooks, the Haunted Ledger design system, the app shell (English and Urdu), the deploy skeleton.
 - **11 to 21, the Graveyard and data:** the DOS toolchain, three sample dead apps (Shifa Medical Store, Iqra School Fees, Barkat Kiryana Ledger) with their legacy bugs, the Graveyard page, the `.DBF` reader, writer, snapshot, diff and viewer, and the DBF inspector API behind the upload card.
 - **22 to 25, reading the screen:** a text-mode decoder that reads DOS screens back from emulator pixels by VGA glyph matching (no OCR), screen semantics (menus, fields, tables, messages), a layout fingerprint, and the live `CrtScreen` component.
 - **26 to 30, driving the old app:** the `EmulatorController` interface and key language, js-dos v8 in the browser and in a headless worker pool, the action recorder that turns a key press into an observation (screens before and after, and the data diff), and repeatable runs from a fresh state.
+
+- **31 to 34, the séance and MCP:** the owner records a séance on the live old app (keys, screens, data changes, an optional voice note); an MCP server that lets Kiro boot and drive the sample apps, with its guide at `/docs/mcp`.
+- **35 to 40, API, worker and data:** Postgres with Drizzle (migrations up and down), the projects API with OpenAPI docs and per-visitor rate limits, a pg-boss job loop in the worker, live progress over WebSocket (Postgres `LISTEN/NOTIFY`), the pipeline that runs the six Crew steps in order with resume and "Run again", a labelled "Recorded run" demo mode, and uploading your own dead app (zip checks, a ClamAV virus scan, a server-built js-dos bundle, its own DOS clock).
+
+The six Crew steps all run today, but only possession does work yet (it boots the app and reads its first screen). The others say "not built yet (Prompt N)" and are marked skipped, never done.
 
 `/design` boots the real Shifa EXE in js-dos: you can press keys, record what an action changed in the data files, and replay it from a fresh state. Details are in [docs/progress.md](docs/progress.md).
 
@@ -87,6 +92,10 @@ Taken by `pnpm screenshots` from the real app.
 | The real Shifa running in js-dos, read back by the decoder | An observation: saving a bill                       |
 | ---------------------------------------------------------- | --------------------------------------------------- |
 | ![Live js-dos](docs/screenshots/11-live-jsdos.png)         | ![Observation](docs/screenshots/12-observation.png) |
+
+| A raised project: the worker's live screen and the six steps | Upload your own dead app                                   |
+| ------------------------------------------------------------ | ---------------------------------------------------------- |
+| ![Raised project](docs/screenshots/14-raised-project.png)    | ![Upload a dead app](docs/screenshots/15-upload-raise.png) |
 
 All shots are in [docs/screenshots](docs/screenshots).
 

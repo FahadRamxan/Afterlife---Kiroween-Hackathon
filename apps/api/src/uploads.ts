@@ -5,7 +5,7 @@
 import { createHash } from 'node:crypto';
 import multipart from '@fastify/multipart';
 import { projects, uploads as uploadsTable, type Db } from '@afterlife/db';
-import { DEAD_APP_LIMITS, unpackDeadApp } from '@afterlife/emulator';
+import { DEAD_APP_LIMITS, isDosTime, unpackDeadApp } from '@afterlife/emulator';
 import type { FastifyInstance } from 'fastify';
 import type { Pipeline, Project } from './projects';
 
@@ -14,6 +14,7 @@ export type NewUpload = {
   zip: Uint8Array;
   executable: string;
   name: string;
+  dosTime: string | null;
 };
 
 export interface UploadStore {
@@ -28,7 +29,7 @@ export class PgUploadStore implements UploadStore {
     return this.db.transaction(async (tx) => {
       const [p] = await tx
         .insert(projects)
-        .values({ name: u.name, source: 'upload', sourceApp: u.fileName })
+        .values({ name: u.name, source: 'upload', sourceApp: u.fileName, dosTime: u.dosTime })
         .returning();
       await tx.insert(uploadsTable).values({
         projectId: p!.id,
@@ -45,6 +46,7 @@ export class PgUploadStore implements UploadStore {
         sourceApp: p!.sourceApp,
         status: p!.status,
         mode: p!.mode,
+        dosTime: p!.dosTime,
         createdAt: p!.createdAt.toISOString(),
       };
     });
@@ -72,7 +74,7 @@ export function uploadRoutes(
   return async (app: FastifyInstance) => {
     await app.register(multipart, {
       // The zip and, at most, which program starts the app.
-      limits: { fileSize: DEAD_APP_LIMITS.maxZipBytes, files: 1, fields: 1 },
+      limits: { fileSize: DEAD_APP_LIMITS.maxZipBytes, files: 1, fields: 2 },
     });
 
     app.post(
@@ -96,13 +98,19 @@ export function uploadRoutes(
         let zip: Uint8Array | undefined;
         let fileName = 'upload.zip';
         let executable: string | undefined;
+        let dosTime: string | undefined;
         try {
           for await (const part of req.parts()) {
             if (part.type === 'field') {
+              if (part.fieldname === 'dosTime' && typeof part.value === 'string') {
+                dosTime = part.value;
+                continue;
+              }
               if (part.fieldname !== 'executable' || typeof part.value !== 'string')
-                return reply
-                  .code(400)
-                  .send({ error: 'BAD_FIELD', message: 'Only "zip" and "executable" are taken' });
+                return reply.code(400).send({
+                  error: 'BAD_FIELD',
+                  message: 'Only "zip", "executable" and "dosTime" are taken',
+                });
               executable = part.value;
             } else if (part.fieldname === 'zip') {
               zip = new Uint8Array(await part.toBuffer());
@@ -133,8 +141,19 @@ export function uploadRoutes(
             ...(app_.programs ? { programs: app_.programs } : {}),
           } satisfies UploadError);
 
+        if (dosTime !== undefined && !isDosTime(dosTime))
+          return reply.code(400).send({
+            error: 'BAD_DOS_TIME',
+            message: 'The DOS clock is a date and time from 1980 to 2099, as YYYY-MM-DD HH:MM:SS',
+          } satisfies UploadError);
         const name = `${app_.executable.replace(/\.(EXE|COM)$/, '')} (uploaded)`;
-        const project = await store.create({ fileName, zip, executable: app_.executable, name });
+        const project = await store.create({
+          fileName,
+          zip,
+          executable: app_.executable,
+          name,
+          dosTime: dosTime ?? app_.dosTime,
+        });
         await pipeline.start(project.id, 'scan-upload');
         return reply.code(201).send({
           project,
@@ -142,6 +161,7 @@ export function uploadRoutes(
             status: 'scanning',
             executable: app_.executable,
             files: Object.keys(app_.files).sort(),
+            dosTime: project.dosTime,
           },
         });
       },

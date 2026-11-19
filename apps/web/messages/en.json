@@ -52,7 +52,12 @@
       "refused": "The server refused this zip:",
       "raiseDown": "The API did not answer, so the app was not uploaded.",
       "raiseUnconfigured": "The API is not configured, so the app cannot be uploaded.",
-      "scanNote": "The server checks the zip again (file names, sizes, a real DOS program), scans it for viruses, and only ever runs the program inside the emulator."
+      "scanNote": "The server checks the zip again (file names, sizes, a real DOS program), scans it for viruses, and only ever runs the program inside the emulator.",
+      "dosClock": "The DOS clock it runs at",
+      "dosDay": "DOS date",
+      "dosTime": "DOS time",
+      "dosClockFrom": "From its data files: the day the shop last used it. Change it if you like.",
+      "dosClockNone": "Its data files have no date: choose the day the shop last used it."
     },
     "raising": "Raising…",
     "openUnsaved": "Open it without saving",
@@ -108,7 +113,8 @@
         "exorcism_found": "Legacy bug found",
         "voice_change": "Voice change"
       },
-      "recorded": "Recorded run: these steps replay a real run of this app saved earlier (pnpm pipeline:record), sped up. Nothing is run live."
+      "recorded": "Recorded run: these steps replay a real run of this app saved earlier (pnpm pipeline:record), sped up. Nothing is run live.",
+      "dosClock": "Runs at DOS clock"
     },
     "live": {
       "title": "Live from the worker",

@@ -4,6 +4,7 @@ import { Button, Card, DbfTable } from '@afterlife/ui';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useId, useRef, useState } from 'react';
+import { suggestDosTime } from '@afterlife/emulator';
 import { postUpload, type UploadAnswer } from '../lib/upload-raise';
 import {
   checkUpload,
@@ -105,7 +106,12 @@ export function UploadCard() {
       ) : null}
 
       {state.phase === 'checked' ? <Preview inspect={state.inspect} /> : null}
-      {state.phase === 'checked' ? <RaiseUpload file={state.file} /> : null}
+      {state.phase === 'checked' ? (
+        <RaiseUpload
+          file={state.file}
+          suggested={suggestDosTime(state.zip.dbfs.map((d) => d.bytes))}
+        />
+      ) : null}
     </Card>
   );
 }
@@ -190,16 +196,27 @@ function Preview({ inspect }: { inspect: InspectResult | 'reading' | 'unconfigur
  * Sends the zip to the server, which checks it again, virus-scans it and builds its bundle, then
  * opens the new project. With several programs in the zip, asks which one starts the app.
  */
-function RaiseUpload({ file }: { file: { name: string; bytes: Uint8Array } }) {
+function RaiseUpload({
+  file,
+  suggested,
+}: {
+  file: { name: string; bytes: Uint8Array };
+  /** From its DBF headers: the day the shop last used it. */
+  suggested: string | null;
+}) {
   const t = useTranslations('graveyard.upload');
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [answer, setAnswer] = useState<Extract<UploadAnswer, { ok: false }> | null>(null);
   const [program, setProgram] = useState<string>('');
+  // The DOS clock it boots at, as the date and time inputs show it (YYYY-MM-DD and HH:MM).
+  const [day, setDay] = useState(suggested?.slice(0, 10) ?? '');
+  const [time, setTime] = useState(suggested?.slice(11, 16) ?? '09:00');
 
   async function send() {
     setBusy(true);
-    const r = await postUpload(API, file.bytes, file.name, program || undefined);
+    const dosTime = day ? `${day} ${time || '09:00'}:00` : undefined;
+    const r = await postUpload(API, file.bytes, file.name, program || undefined, fetch, dosTime);
     if (r.ok) return router.push(`/raise/${r.projectId}`);
     setAnswer(r);
     if (r.programs?.length && !program) setProgram(r.programs[0]!);
@@ -224,6 +241,28 @@ function RaiseUpload({ file }: { file: { name: string; bytes: Uint8Array } }) {
           </select>
         </label>
       ) : null}
+      <fieldset className="flex flex-wrap items-center gap-2 text-sm">
+        <legend className="mb-1">{t('dosClock')}</legend>
+        <input
+          type="date"
+          aria-label={t('dosDay')}
+          min="1980-01-01"
+          max="2099-12-31"
+          value={day}
+          onChange={(e) => setDay(e.target.value)}
+          className="rounded-md bg-graveyard px-2 py-1 font-mono"
+        />
+        <input
+          type="time"
+          aria-label={t('dosTime')}
+          value={time}
+          onChange={(e) => setTime(e.target.value)}
+          className="rounded-md bg-graveyard px-2 py-1 font-mono"
+        />
+        <span className="text-xs text-bone/75">
+          {suggested ? t('dosClockFrom') : t('dosClockNone')}
+        </span>
+      </fieldset>
       <Button type="button" onClick={send} disabled={busy} className="self-start">
         {busy ? t('raising') : t('raiseUpload')}
       </Button>

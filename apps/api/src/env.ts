@@ -39,6 +39,11 @@ const schema = z.object({
           : v,
     ),
   /**
+   * The most séance data kept in all, in MB (voice notes and screens). Neon's free plan holds
+   * 0.5 GB for everything, so the default leaves room for projects, events and uploads.
+   */
+  SEANCE_STORAGE_MB: z.coerce.number().int().min(1).max(100_000).default(200),
+  /**
    * Postgres (Neon in prod, Docker locally). Without it séances are kept in memory, and lost on a
    * restart; the server says so when it starts.
    */

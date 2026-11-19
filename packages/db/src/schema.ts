@@ -62,6 +62,11 @@ export const projects = pgTable(
     status: projectStatus('status').notNull().default('created'),
     /** `recorded`: demo mode, the steps replay a real run's saved outputs (Prompt 39). */
     mode: runMode('mode').notNull().default('live'),
+    /**
+     * The DOS clock the app boots at (`YYYY-MM-DD HH:MM:SS`). Set for uploads (by default the
+     * newest last-update date in its DBF headers); Graveyard apps use their manifest's.
+     */
+    dosTime: text('dos_time'),
     createdAt: createdAt(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
@@ -83,6 +88,8 @@ export const sessions = pgTable(
     startedAt: timestamp('started_at', { withTimezone: true }).notNull(),
     audioMime: text('audio_mime'),
     audio: bytea('audio'),
+    /** The séance's size as sent, for the storage cap (Neon's free plan holds 0.5 GB). */
+    sizeBytes: integer('size_bytes').notNull().default(0),
     createdAt: createdAt(),
   },
   (t) => [

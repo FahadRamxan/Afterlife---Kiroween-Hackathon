@@ -79,7 +79,54 @@ export type DeadAppError = {
   /** For WHICH_PROGRAM: the programs to choose from. */
   programs?: string[];
 };
-export type DeadApp = { ok: true; executable: string; files: Record<string, Uint8Array> };
+export type DeadApp = {
+  ok: true;
+  executable: string;
+  files: Record<string, Uint8Array>;
+  /**
+   * A DOS clock to boot it at: the newest last-update date in its DBF headers, at 09:00 (the day
+   * the shop last used it). Null when no header has a real date. The owner may change it.
+   */
+  dosTime: string | null;
+};
+
+const pad = (n: number) => String(n).padStart(2, '0');
+
+/** A real date and time DOS can keep (1980 to 2099), as `YYYY-MM-DD HH:MM:SS`. */
+export function isDosTime(s: string): boolean {
+  const m = /^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/.exec(s);
+  if (!m) return false;
+  const [y, mo, d, h, mi, se] = m.slice(1).map(Number) as [
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+  ];
+  if (y < 1980 || y > 2099 || h > 23 || mi > 59 || se > 59) return false;
+  const date = new Date(Date.UTC(y, mo - 1, d));
+  return date.getUTCMonth() === mo - 1 && date.getUTCDate() === d;
+}
+
+/**
+ * A DOS clock for an app with these DBF files: the newest last-update date in their headers, at
+ * 09:00 (the day the shop last used it), or null when none has a real date.
+ */
+export function suggestDosTime(dbfs: Uint8Array[]): string | null {
+  const dates = dbfs
+    .map(dbfDate)
+    .filter((d): d is string => d !== null)
+    .sort();
+  return dates.at(-1) ?? null;
+}
+
+/** The last-update date in a DBF header (bytes 1 to 3: years since 1900, month, day), or null. */
+function dbfDate(b: Uint8Array): string | null {
+  if (b.length < 4) return null;
+  const s = `${1900 + b[1]!}-${pad(b[2]!)}-${pad(b[3]!)} 09:00:00`;
+  return isDosTime(s) ? s : null;
+}
 
 const fail = (code: DeadAppError['code'], message: string, programs?: string[]): DeadAppError => ({
   ok: false,
@@ -226,5 +273,6 @@ export function unpackDeadApp(
     const check = isDosProgram(p, files[p]!);
     if (!check.ok) return fail('NOT_DOS', `${p} is ${check.why}, not a DOS program`);
   }
-  return { ok: true, executable, files };
+  const dbfs = Object.entries(files).filter(([n]) => extension(n) === 'DBF');
+  return { ok: true, executable, files, dosTime: suggestDosTime(dbfs.map(([, b]) => b)) };
 }

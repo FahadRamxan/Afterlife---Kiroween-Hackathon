@@ -80,6 +80,8 @@ export const SeanceSessionSchema = z.object({
   /** The Graveyard app (or, from Prompt 40, the uploaded project) the séance was recorded on. */
   projectId: z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/),
   startedAt: z.iso.datetime(),
+  /** The raised project (its UUID) the séance was recorded on, so it belongs to that project. */
+  raisedProjectId: z.uuid().optional(),
   actions: z.array(ObservationSchema).min(1).max(MAX_SESSION_ACTIONS),
   /** The owner's voice, explaining what they do (optional). */
   audio: z
