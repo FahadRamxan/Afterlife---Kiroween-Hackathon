@@ -1,8 +1,8 @@
 // Prompt 39 "done when": the full pipeline on Shifa in under 10 minutes. The real worker, real
 // pg-boss on Postgres 16, the real Shifa EXE in headless js-dos. Steps whose agent is not built
-// yet end "skipped" and say so; the case counts are the reduced ones (the proof is Prompt 68).
+// yet end "skipped" and say so; possess explores Shifa (Prompt 48); the case counts are the reduced ones (the proof is Prompt 68).
 // real-jsdos: startWorker boots Shifa in its HeadlessPool.
-import { createBoss, listEvents, PIPELINE, projects } from '@afterlife/db';
+import { createBoss, eq, listEvents, observations, PIPELINE, projects } from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { ScreenWireSchema, fromWire, gridText } from '@afterlife/screen';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
@@ -39,9 +39,13 @@ describe('the pipeline on the real Shifa', () => {
       expect(s.status).toBe('done');
       expect(s.steps.map((x) => x.step)).toEqual([...PIPELINE]);
       for (const step of s.steps) expect(['done', 'skipped']).toContain(step.status);
-      expect(s.steps[0]!.output).toMatchObject({
-        reason: expect.stringMatching(/Exploration is not built yet \(Prompt 48\)/),
-      });
+      // Possession explored Shifa (Prompt 48), and kept every action as an observation.
+      expect(s.steps[0]!.status).toBe('done');
+      const out = s.steps[0]!.output as { screens: number; steps: number; saves: number };
+      expect(out.screens).toBeGreaterThanOrEqual(5);
+      expect(out.saves).toBeGreaterThan(0);
+      const kept = await t.db.select().from(observations).where(eq(observations.projectId, p!.id));
+      expect(kept).toHaveLength(out.steps);
 
       // The steps ran in order, and possess read the real main menu.
       const events = await listEvents(t.db, p!.id, { limit: 500 });

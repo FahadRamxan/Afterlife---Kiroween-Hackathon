@@ -2,7 +2,7 @@
 // says it is not built yet and is marked "skipped" (never "done").
 import type { EventType, JobType } from '@afterlife/db';
 import type { Db } from '@afterlife/db';
-import { graveyardBundle, possessFirstLook, type EmulatorPool } from './possess';
+import { graveyardBundle, possessApp, type EmulatorPool } from './possess';
 import { scanUpload, uploadBundle } from './scan-upload';
 import type { VirusScanner } from './scanner';
 import { translateSoulStep } from './translate-soul';
@@ -45,7 +45,7 @@ export const notBuiltYet =
 
 /**
  * The handlers the worker runs today. With an emulator pool, possess boots the app and sends its
- * first screen (the Possessor's exploration is Prompt 48).
+ * first screen, then the Possessor explores it (Prompt 48).
  */
 export function defaultRegistry(
   deps: {
@@ -55,18 +55,27 @@ export function defaultRegistry(
     /** The model (LLM_PROVIDER); null when none is set up. */
     llm?: LlmClient | null;
     budgetTokens?: number;
+    /** At most this many key sequences per possession (POSSESS_MAX_ACTIONS). */
+    maxActions?: number;
   } = {},
 ): Registry {
   const { db } = deps;
   return {
     possess: deps.pool
-      ? possessFirstLook({
+      ? possessApp({
           pool: deps.pool,
+          ...(db ? { db } : {}),
+          llm: deps.llm ?? null,
+          budgetTokens: deps.budgetTokens ?? DEFAULT_TOKEN_BUDGET,
+          ...(deps.maxActions ? { maxActions: deps.maxActions } : {}),
           // A Graveyard app's bundle is a file; an upload's is in the database once it is clean.
           bundleFor: async (p, projectId) =>
             p.source === 'upload' ? (db ? uploadBundle(db, projectId) : null) : graveyardBundle(p),
         })
-      : notBuiltYet('possess', 'Prompt 48'),
+      : async () => ({
+          status: 'skipped',
+          reason: 'This worker has no emulator to run the app in',
+        }),
     archaeology: notBuiltYet('archaeology', 'Prompt 55'),
     rebirth: notBuiltYet('rebirth', 'Prompt 63'),
     undertake: notBuiltYet('undertake', 'Prompt 64'),

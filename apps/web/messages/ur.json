@@ -126,6 +126,15 @@
         "reconnecting": "رابطہ ٹوٹ گیا، دوبارہ جڑ رہا ہے…",
         "closed": "براہِ راست نہیں",
         "unconfigured": "اے پی آئی سیٹ نہیں"
+      },
+      "possession": {
+        "title": "قابض نے کیا پایا",
+        "screens": "{n, plural, one {# اسکرین} other {# اسکرینیں}} ملیں",
+        "actions": "{n, plural, one {# عمل} other {# اعمال}} آزمائے",
+        "changes": "{n, plural, one {# ڈیٹا تبدیلی} other {# ڈیٹا تبدیلیاں}} دیکھی گئیں",
+        "recent": "تازہ ترین قدم",
+        "newScreen": "نئی اسکرین",
+        "changed": "{files} بدلی"
       }
     },
     "steps": {

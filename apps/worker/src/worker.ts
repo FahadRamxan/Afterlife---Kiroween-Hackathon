@@ -73,6 +73,9 @@ export async function startWorker({
         scanner: scanner ?? scannerFromEnv(process.env),
         llm: llm === undefined ? llmClientFrom(process.env) : llm,
         budgetTokens: budgetTokens ?? tokenBudgetFrom(process.env),
+        ...(Number(process.env.POSSESS_MAX_ACTIONS) > 0
+          ? { maxActions: Number(process.env.POSSESS_MAX_ACTIONS) }
+          : {}),
       }),
     options,
     pollingIntervalSeconds,

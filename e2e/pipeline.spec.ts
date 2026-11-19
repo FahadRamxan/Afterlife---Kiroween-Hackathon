@@ -14,23 +14,21 @@ async function raise(page: Page, button: string) {
 }
 
 test.describe('pipeline', () => {
-  test('a live raise runs the six steps in order and says which are not built yet', async ({
+  test('a live raise runs the six steps in order: possess explores, the rest say they are not built yet', async ({
     page,
   }) => {
     test.setTimeout(120_000);
     const id = await raise(page, 'Raise Shifa Medical Store');
     const steps = page.getByTestId('steps');
     await expect(steps.getByRole('progressbar')).toHaveAccessibleName(
-      '6 of 6 steps run, 6 of them skipped',
+      '6 of 6 steps run, 5 of them skipped',
       {
         timeout: 90_000,
       },
     );
-    for (const s of STEPS)
+    await expect(page.getByTestId('step-possess')).toHaveAttribute('data-status', 'done');
+    for (const s of STEPS.slice(1))
       await expect(page.getByTestId(`step-${s}`)).toHaveAttribute('data-status', 'skipped');
-    await expect(page.getByTestId('step-possess')).toContainText(
-      'Exploration is not built yet (Prompt 48)',
-    );
     await expect(page.getByTestId('step-prove')).toContainText(
       'The prove step is not built yet (Prompt 68)',
     );
@@ -54,10 +52,16 @@ test.describe('pipeline', () => {
     test.setTimeout(120_000);
     const id = await raise(page, 'Watch a recorded run of Shifa Medical Store');
     await expect(page.getByTestId('run-mode')).toContainText('Recorded run');
-    await expect(page.getByTestId('live-screen')).toContainText('MAIN MENU', { timeout: 60_000 });
+    await expect(page.getByTestId('live-screen')).toContainText('SHIFA MEDICAL STORE', {
+      timeout: 60_000,
+    });
     await expect(page.getByTestId('live-log')).toContainText('Recorded run from');
+    // The recorded possession replays its steps, and the counters follow them.
+    await expect(page.getByTestId('stat-actions')).toContainText('actions tried', {
+      timeout: 60_000,
+    });
     await expect(page.getByTestId('steps').getByRole('progressbar')).toHaveAccessibleName(
-      '6 of 6 steps run, 6 of them skipped',
+      '6 of 6 steps run, 5 of them skipped',
       { timeout: 60_000 },
     );
     await expect(page.getByTestId('step-archaeology')).toContainText('Recorded run:');

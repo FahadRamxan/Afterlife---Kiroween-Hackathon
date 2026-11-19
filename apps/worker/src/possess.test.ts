@@ -9,7 +9,8 @@ import {
   type CellInput,
 } from '@afterlife/screen';
 import { describe, expect, it } from 'vitest';
-import { graveyardBundle, graveyardDosTime, possessFirstLook } from './possess';
+import { bootMiniShop } from '../../../packages/crew/src/possessor/testing/mini-shop';
+import { graveyardBundle, graveyardDosTime, possessApp } from './possess';
 import type { StepContext } from './registry';
 
 function menu(title: string) {
@@ -59,14 +60,15 @@ function ctx(sourceApp: string, events: [string, unknown][]): StepContext {
   };
 }
 
-describe('possess (first look, until the Possessor in Prompt 48)', () => {
-  it('boots the app, sends its first screen as a decoded grid, and is skipped (not done)', async () => {
+describe('possess (the Possessor, Prompt 48)', () => {
+  it('boots the app, sends its first screen as a decoded grid, then explores it', async () => {
     const events: [string, unknown][] = [];
-    const handler = possessFirstLook({ pool: fakePool, bundleFor: () => new Uint8Array([1]) });
+    const handler = possessApp({ pool: fakePool, bundleFor: () => new Uint8Array([1]) });
     const r = await handler(ctx('shifa', events));
-    expect(r).toEqual({
-      status: 'skipped',
-      reason: expect.stringMatching(/Exploration is not built yet \(Prompt 48\)/),
+    // A screen with nothing to press: explored at once, with the graph of that one screen.
+    expect(r).toMatchObject({
+      status: 'done',
+      output: { screens: 1, steps: 0, saves: 0, stoppedBecause: 'explored', values: 'data' },
     });
     const screen = events.find(([t]) => t === 'screen')![1] as {
       fingerprint: string;
@@ -77,9 +79,52 @@ describe('possess (first look, until the Possessor in Prompt 48)', () => {
     expect(gridText(grid)[0]).toContain('SHIFA MAIN MENU');
   });
 
+  it('explores the app: each action is an observation event, a new screen is sent live', async () => {
+    const shop = {
+      async use<R>(_b: Uint8Array, work: (emu: EmulatorController) => Promise<R>) {
+        return work((await bootMiniShop()).emu);
+      },
+    };
+    const events: [string, unknown][] = [];
+    const r = await possessApp({
+      pool: shop,
+      bundleFor: () => new Uint8Array([1]),
+      maxActions: 40,
+      // The scripted shop redraws at once: no need to wait 300 ms for each screen to settle.
+      record: { stableMs: 1, pollMs: 1, maxWaitMs: 50 },
+    })(ctx('shifa', events));
+    expect(r).toMatchObject({
+      status: 'done',
+      output: { stoppedBecause: 'explored', values: 'data' },
+    });
+    const output = (
+      r as { output: { steps: number; saves: number; graph: { nodes: { title: string }[] } } }
+    ).output;
+    expect(output.saves).toBeGreaterThan(0);
+    expect(output.graph.nodes.map((n) => n.title)).toEqual(
+      expect.arrayContaining(['MAIN MENU', 'NEW SALE', 'ITEMS']),
+    );
+    const obs = events
+      .filter(([t]) => t === 'observation')
+      .map(([, p]) => p as { step: number; changed: string[]; label: string });
+    expect(obs.map((o) => o.step)).toEqual(Array.from({ length: output.steps }, (_, i) => i + 1));
+    expect(obs.find((o) => o.changed.includes('SALES.DBF'))!.label).toBe('F2=Save sale');
+    // The first screen, then one for each screen that looked different.
+    expect(events.filter(([t]) => t === 'screen').length).toBeGreaterThan(3);
+    const logs = events
+      .filter(([t]) => t === 'log')
+      .map(([, p]) => (p as { message: string }).message);
+    expect(logs).toContain(
+      'Exploring. No language model is set up, so field values come from the data files.',
+    );
+    expect(logs.at(-1)).toMatch(
+      /^Possession ended \(explored\): \d+ screens, \d+ actions, \d+ that changed data$/,
+    );
+  });
+
   it("boots at the app's own DOS clock (found in the Prompts 31 to 40 review)", async () => {
     // Without it js-dos kept a clock of its own: Iqra, a 2001 app, showed 25-06-1998.
-    await possessFirstLook({
+    await possessApp({
       pool: fakePool,
       bundleFor: () => new Uint8Array([1]),
       dosTimeFor: () => '2001-03-12 10:00:00',
@@ -90,14 +135,14 @@ describe('possess (first look, until the Possessor in Prompt 48)', () => {
   it("an uploaded app boots at the project's own DOS clock (review 31-40, finding 3)", async () => {
     const c = ctx('my-shop.zip', []);
     c.project = { ...c.project, source: 'upload', dosTime: '1999-12-31 18:30:00' };
-    await possessFirstLook({ pool: fakePool, bundleFor: () => new Uint8Array([1]) })(c);
+    await possessApp({ pool: fakePool, bundleFor: () => new Uint8Array([1]) })(c);
     expect(fakePool.boots.at(-1)).toEqual({ dosTime: '1999-12-31 18:30:00' });
   });
 
   it('an app with no bundle is skipped without booting anything', async () => {
     const events: [string, unknown][] = [];
     const before = fakePool.booted;
-    const r = await possessFirstLook({ pool: fakePool, bundleFor: () => null })(
+    const r = await possessApp({ pool: fakePool, bundleFor: () => null })(
       ctx('upload.zip', events),
     );
     expect(r).toMatchObject({

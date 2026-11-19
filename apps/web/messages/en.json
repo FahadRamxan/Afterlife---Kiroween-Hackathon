@@ -126,6 +126,15 @@
         "reconnecting": "Connection lost, reconnecting…",
         "closed": "Not live",
         "unconfigured": "The API is not configured"
+      },
+      "possession": {
+        "title": "What the Possessor has found",
+        "screens": "{n, plural, one {# screen} other {# screens}} found",
+        "actions": "{n, plural, one {# action} other {# actions}} tried",
+        "changes": "{n, plural, one {# data change} other {# data changes}} seen",
+        "recent": "Latest steps",
+        "newScreen": "new screen",
+        "changed": "changed {files}"
       }
     },
     "steps": {

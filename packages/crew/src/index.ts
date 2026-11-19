@@ -56,3 +56,41 @@ export {
   type TranslationCache,
 } from './urdu/translate';
 export { PgTranslationCache } from './urdu/pg-cache';
+
+// The Possessor (Prompt 48).
+export {
+  EXIT_WORDS,
+  SAVE_WORDS,
+  activeField,
+  fieldLabel,
+  hintKeys,
+  screenActions,
+  type FieldInfo,
+  type PossessAction,
+} from './possessor/actions';
+export {
+  ScreenGraph,
+  type GraphEdge,
+  type GraphNode,
+  type ScreenGraphJson,
+} from './possessor/graph';
+export {
+  possess,
+  type PossessOptions,
+  type PossessResult,
+  type PossessorObservation,
+  type StepKind,
+  type StopReason,
+} from './possessor/possessor';
+export {
+  VALUE_SYSTEM,
+  dataValue,
+  dataValueChooser,
+  fitWidth,
+  llmValueChooser,
+  readSamples,
+  valuePrompt,
+  type DataSample,
+  type ValueChooser,
+  type ValueContext,
+} from './possessor/values';
