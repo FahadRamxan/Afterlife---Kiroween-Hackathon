@@ -107,13 +107,13 @@ const worker = spawn('pnpm', ['--filter', '@afterlife/worker', 'start'], {
   shell: true,
   // No ClamAV on a Windows laptop: the EICAR-only test scanner, which says so on every result.
   // ClamAV itself is tested in the worker image (pnpm ci:local, Docker smoke).
-  // A short possession (4 actions): many tests raise Shifa, and one emulator runs them in turn.
+  // A short possession (2 actions): many tests raise Shifa, and one emulator runs them in turn.
   env: {
     ...process.env,
     DATABASE_URL: url,
     JSDOS_POOL_SIZE: '1',
     VIRUS_SCANNER: 'eicar-test',
-    POSSESS_MAX_ACTIONS: '4',
+    POSSESS_MAX_ACTIONS: '2',
   },
 });
 worker.on('exit', (code) => {

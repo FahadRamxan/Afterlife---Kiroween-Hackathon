@@ -39,6 +39,19 @@ describe('possessionStats', () => {
     expect(s.recent.map((r) => r.label)).toEqual(['step 1', 'step 2', 'F2=Save bill']);
   });
 
+  it('lists what the app refused, each error once, with the value that caused it (Prompt 49)', () => {
+    const s = possessionStats([
+      obs(1),
+      obs(2, { label: 'Code = ZZZ999 (new-key)', errors: ['MEDICINE NOT FOUND'] }),
+      obs(3, { label: 'Code = ZZZ999 (new-key)', errors: ['MEDICINE NOT FOUND'] }),
+      obs(4, { label: 'Qty = 9999 (max-width)', errors: ['NOT ENOUGH STOCK'] }),
+    ])!;
+    expect(s.refused).toEqual([
+      { text: 'MEDICINE NOT FOUND', label: 'Code = ZZZ999 (new-key)', step: 2 },
+      { text: 'NOT ENOUGH STOCK', label: 'Qty = 9999 (max-width)', step: 4 },
+    ]);
+  });
+
   it('a re-run starts counting again, and a malformed event is ignored', () => {
     const s = possessionStats([
       obs(1),

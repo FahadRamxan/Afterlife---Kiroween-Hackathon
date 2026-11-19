@@ -209,6 +209,8 @@ export function miniShopApp(): FakeApp & { state: () => State } {
             s = s.lines.length ? { at: 'totals', lines: s.lines, saved: '' } : { at: 'menu' };
           else if (!ITEMS.some((i) => i.CODE === code))
             s = { ...s, typing: '', error: 'ITEM NOT FOUND' };
+          else if (s.lines.some((l) => l.code === code))
+            s = { ...s, typing: '', error: 'ALREADY IN SALE' };
           else s = { at: 'qty', lines: s.lines, code, typing: '' };
         } else if (key === 'Backspace') s = { ...s, typing: s.typing.slice(0, -1) };
         else s = { ...s, typing: (s.typing + chars.join('')).slice(0, 6), error: '' };

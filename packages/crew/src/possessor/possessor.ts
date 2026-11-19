@@ -51,6 +51,8 @@ export type PossessResult = {
   stoppedBecause: StopReason;
   /** The step at which each kind of data change was first seen ("BILLS.DBF:inserted": 9). */
   firstChange: Record<string, number>;
+  /** Each error the app showed, once, with the step and the action that caused it. */
+  refused: { text: string; step: number; label: string }[];
 };
 
 export type PossessOptions = {
@@ -68,6 +70,11 @@ export type PossessOptions = {
    * 50). A sequence that would leave the program is skipped.
    */
   guide?: { keys: string; label?: string }[];
+  /**
+   * How many values to type into each field (Prompt 49): the first to get through, then
+   * boundary values once the screen has nothing else left to try. Default 1.
+   */
+  probesPerField?: number;
 };
 
 const tableChanges = (o: Observation): string[] =>
@@ -86,6 +93,8 @@ export async function possess(
 ): Promise<PossessResult> {
   const maxActions = opts.maxActions ?? 80;
   const idleLimit = opts.idleLimit ?? 20;
+  const probesPerField = Math.max(1, opts.probesPerField ?? 1);
+  const refused: PossessResult['refused'] = [];
   const log = async (m: string) => {
     await opts.onLog?.(m);
   };
@@ -106,7 +115,15 @@ export async function possess(
     const m = models.get(fp);
     if (!m) return [];
     const done = tried.get(fp) ?? new Set();
-    return screenActions(m.model, m.text).filter((a) => !done.has(a.id));
+    const all = screenActions(m.model, m.text);
+    const left = all.filter((a) => !done.has(a.id));
+    if (left.length) return left;
+    // Everything else here is tried: the field again, with the next boundary value (Prompt 49).
+    const fill = all.find((a) => a.kind === 'fill');
+    const n = fill ? (typed.get(`${fp}:${fill.id}`)?.length ?? 0) : 0;
+    const probeId = fill ? `${fill.id}#${n}` : '';
+    // A probe can be given up like any other action (a walk to its screen that no longer works).
+    return fill && n < probesPerField && !done.has(probeId) ? [{ ...fill, id: probeId }] : [];
   };
   const mark = (fp: string, id: string) => tried.set(fp, (tried.get(fp) ?? new Set()).add(id));
 
@@ -137,6 +154,7 @@ export async function possess(
     for (const e of errors)
       if (!seenErrors.has(e)) {
         seenErrors.add(e);
+        refused.push({ text: e, step: steps, label });
         found = true;
       }
     if (changed.length) saves++;
@@ -181,6 +199,7 @@ export async function possess(
     saves,
     stoppedBecause,
     firstChange: Object.fromEntries(seenChanges),
+    refused,
   });
 
   // A séance's path first (Prompt 50): the owner knows the way to the screens that matter.
@@ -199,16 +218,20 @@ export async function possess(
       mark(screen.fingerprint, next.id);
       if (next.kind === 'fill') {
         samples ??= await readSamples(emu);
-        const key = `${screen.fingerprint}:${next.id}`;
-        const value = await opts.values.choose({
+        const key = `${screen.fingerprint}:${next.id.split('#')[0]}`;
+        const chosen = await opts.values.choose({
           field: next.field,
           title: title(screen),
           screen: lines(screen),
           samples,
           tried: typed.get(key) ?? [],
         });
+        const { value, why } =
+          typeof chosen === 'string' ? { value: chosen, why: undefined } : chosen;
         typed.set(key, [...(typed.get(key) ?? []), value]);
-        const label = `${next.field.label || 'field'} = ${value === '' ? '(blank)' : value}`;
+        const label =
+          `${next.field.label || 'field'} = ${value === '' ? '(blank)' : value}` +
+          (why && why !== 'typical' ? ` (${why})` : '');
         await act(value.replaceAll('{', '{{}') + '{Enter}', 'explore', label);
       } else
         await act(

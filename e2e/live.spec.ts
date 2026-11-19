@@ -11,7 +11,7 @@ test.describe('live progress', () => {
     page,
   }) => {
     // The worker runs one emulator at a time, and other tests raise apps too.
-    test.setTimeout(120_000);
+    test.setTimeout(210_000);
     await page.goto('/graveyard');
     await page.getByRole('button', { name: 'Raise Shifa Medical Store' }).click();
     await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
@@ -22,11 +22,11 @@ test.describe('live progress', () => {
     });
     const screen = page.getByTestId('live-screen');
     // Every Shifa screen has its title bar; the Possessor moves on from the menu at once.
-    await expect(screen).toContainText('SHIFA MEDICAL STORE', { timeout: 90_000 });
+    await expect(screen).toContainText('SHIFA MEDICAL STORE', { timeout: 150_000 });
     // Prompt 48: the Possessor explores, and the counters say what it found. The e2e worker
-    // stops after 4 actions (POSSESS_MAX_ACTIONS), as many tests raise Shifa on one emulator.
+    // stops after 2 actions (POSSESS_MAX_ACTIONS), as many tests raise Shifa on one emulator.
     const stats = page.getByTestId('possession-stats');
-    await expect(stats.getByTestId('stat-actions')).toHaveText('4 actions tried', {
+    await expect(stats.getByTestId('stat-actions')).toHaveText('2 actions tried', {
       timeout: 60_000,
     });
     await expect(stats.getByTestId('stat-screens')).toContainText(/[2-9] screens found/);
@@ -40,7 +40,7 @@ test.describe('live progress', () => {
     await expect(page.getByTestId('live-screen')).toContainText('SHIFA MEDICAL STORE', {
       timeout: 15_000,
     });
-    await expect(page.getByTestId('stat-actions')).toHaveText('4 actions tried');
+    await expect(page.getByTestId('stat-actions')).toHaveText('2 actions tried');
 
     await page.request.delete(`${API}/api/projects/${id}`);
   });

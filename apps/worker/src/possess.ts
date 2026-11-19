@@ -9,6 +9,7 @@ import {
   dataValueChooser,
   llmValueChooser,
   possess,
+  strategyChooser,
   type LlmClient,
   type PossessorObservation,
   type ValueChooser,
@@ -56,6 +57,8 @@ export function graveyardDosTime(p: { source: string; sourceApp: string }): stri
 
 /** At most this many key sequences per possession (POSSESS_MAX_ACTIONS). */
 export const DEFAULT_MAX_ACTIONS = 120;
+/** Values typed into each field: the first, then boundary values (POSSESS_PROBES, Prompt 49). */
+export const DEFAULT_PROBES = 3;
 
 export function possessApp(deps: {
   pool: EmulatorPool;
@@ -74,6 +77,7 @@ export function possessApp(deps: {
   llm?: LlmClient | null;
   budgetTokens?: number;
   maxActions?: number;
+  probesPerField?: number;
   /** A fixed value chooser (tests). */
   values?: ValueChooser;
   /** How long a screen must be still before it counts (tests use a fake app that is instant). */
@@ -93,14 +97,16 @@ export function possessApp(deps: {
     const values =
       deps.values ??
       (deps.llm && deps.db
-        ? llmValueChooser(
-            new CrewLlm({
-              client: deps.llm,
-              log: new PgLlmCallLog(deps.db),
-              projectId: ctx.projectId,
-              budgetTokens: deps.budgetTokens ?? 200_000,
-              signal: ctx.signal,
-            }),
+        ? strategyChooser(
+            llmValueChooser(
+              new CrewLlm({
+                client: deps.llm,
+                log: new PgLlmCallLog(deps.db),
+                projectId: ctx.projectId,
+                budgetTokens: deps.budgetTokens ?? 200_000,
+                signal: ctx.signal,
+              }),
+            ),
           )
         : dataValueChooser);
     const db = deps.db;
@@ -184,6 +190,9 @@ export function possessApp(deps: {
         return possess(emu, {
           values,
           maxActions: deps.maxActions ?? DEFAULT_MAX_ACTIONS,
+          probesPerField: deps.probesPerField ?? DEFAULT_PROBES,
+          // Probing a field often finds nothing new a few times in a row before it finds a rule.
+          idleLimit: 40,
           ...(deps.record ? { record: deps.record } : {}),
           signal: ctx.signal,
           onObservation,
@@ -204,6 +213,7 @@ export function possessApp(deps: {
         saves: result.saves,
         stoppedBecause: result.stoppedBecause,
         firstChange: result.firstChange,
+        refused: result.refused,
         values: values.source,
         graph: result.graph,
       },
