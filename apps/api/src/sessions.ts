@@ -8,26 +8,38 @@ import { uuidv7 } from '@afterlife/db';
 export interface SessionStore {
   /** Where the séances live, shown on /health and in the web app's footer. */
   readonly kind: 'memory' | 'postgres';
-  create(session: SeanceSession): Promise<string>;
+  /** `sizeBytes`: the séance as sent (default: its JSON), counted against the storage cap. */
+  create(session: SeanceSession, sizeBytes?: number): Promise<string>;
   get(id: string): Promise<SeanceSession | null>;
+  /** Bytes of all séances kept, for the storage cap. */
+  usedBytes(): Promise<number>;
 }
+
+/** The size of a séance as the API counts it. */
+export const seanceBytes = (s: SeanceSession) => Buffer.byteLength(JSON.stringify(s));
 
 /** Keeps the newest `limit` sessions in memory (a demo server must not grow without bound). */
 export class MemorySessionStore implements SessionStore {
   readonly kind = 'memory';
-  private readonly sessions = new Map<string, SeanceSession>();
+  private readonly sessions = new Map<string, { s: SeanceSession; bytes: number }>();
   constructor(private readonly limit = 200) {}
 
-  async create(session: SeanceSession): Promise<string> {
+  async create(session: SeanceSession, sizeBytes = seanceBytes(session)): Promise<string> {
     const id = uuidv7();
-    this.sessions.set(id, session);
+    this.sessions.set(id, { s: session, bytes: sizeBytes });
     while (this.sessions.size > this.limit)
       this.sessions.delete(this.sessions.keys().next().value!);
     return id;
   }
 
+  async usedBytes(): Promise<number> {
+    let n = 0;
+    for (const v of this.sessions.values()) n += v.bytes;
+    return n;
+  }
+
   async get(id: string): Promise<SeanceSession | null> {
-    return this.sessions.get(id) ?? null;
+    return this.sessions.get(id)?.s ?? null;
   }
 }
 
@@ -35,7 +47,16 @@ export class MemorySessionStore implements SessionStore {
 export const MAX_SESSION_BYTES = 8 * 1024 * 1024;
 const Id = z.uuid();
 
-export function sessionRoutes(store: SessionStore, opts: { createPerMinute: number }) {
+export function sessionRoutes(
+  store: SessionStore,
+  opts: {
+    createPerMinute: number;
+    /** The most bytes of séances kept in all (SEANCE_STORAGE_MB). */
+    storageLimitBytes: number;
+    /** True when a raised project with this id exists. */
+    projectExists: (id: string) => Promise<boolean>;
+  },
+) {
   return async (app: FastifyInstance) => {
     // Each séance can be 8 MB, so it gets the same lower per-address limit as a raise: the
     // global 300 a minute would let one visitor write gigabytes a minute.
@@ -51,7 +72,16 @@ export function sessionRoutes(store: SessionStore, opts: { createPerMinute: numb
             .map((i) => `${i.path.join('.')}: ${i.message}`)
             .join('; '),
         });
-      const id = await store.create(parsed.data);
+      const s = parsed.data;
+      if (s.raisedProjectId && !(await opts.projectExists(s.raisedProjectId)))
+        return reply.code(404).send({ error: 'NO_PROJECT', message: 'No such project' });
+      const size = seanceBytes(s);
+      if ((await store.usedBytes()) + size > opts.storageLimitBytes)
+        return reply.code(507).send({
+          error: 'STORAGE_FULL',
+          message: `The séance storage is full (${Math.round(opts.storageLimitBytes / 1024 / 1024)} MB). Ask the owner of this site to make room.`,
+        });
+      const id = await store.create(s, size);
       return reply.code(201).send({ id, actions: parsed.data.actions.length });
     });
 

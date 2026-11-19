@@ -19,6 +19,7 @@ describe('the pipeline order', () => {
     const walked: string[] = [];
     for (let s: (typeof PIPELINE)[number] | null = 'possess'; s; s = nextStep(s)) walked.push(s);
     expect(walked).toEqual([...PIPELINE]);
+    expect(nextStep('scan-upload')).toBe('possess');
     expect(nextStep('twin-replay')).toBeNull();
     expect(nextStep('voice-change')).toBeNull();
   });

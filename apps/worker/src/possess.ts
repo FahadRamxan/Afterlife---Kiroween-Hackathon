@@ -42,18 +42,27 @@ export function graveyardDosTime(p: { source: string; sourceApp: string }): stri
 
 export function possessFirstLook(deps: {
   pool: EmulatorPool;
-  bundleFor: (p: StepContext['project']) => Uint8Array | null;
-  dosTimeFor?: (p: StepContext['project']) => string | undefined;
+  bundleFor: (
+    p: StepContext['project'],
+    projectId: string,
+  ) => Promise<Uint8Array | null> | Uint8Array | null;
+  /** The app's DOS clock: a Graveyard manifest's, or an upload's own (from its DBF headers). */
+  dosTimeFor?: (
+    p: StepContext['project'],
+    projectId: string,
+  ) => Promise<string | undefined> | string | undefined;
 }): StepHandler {
   return async (ctx) => {
-    const bundle = deps.bundleFor(ctx.project);
+    const bundle = await deps.bundleFor(ctx.project, ctx.projectId);
     if (!bundle)
       return {
         status: 'skipped',
         reason: `There is no js-dos bundle for ${ctx.project.sourceApp} yet`,
       };
     // Without it js-dos keeps a clock of its own (Iqra, a 2001 app, showed 25-06-1998).
-    const dosTime = (deps.dosTimeFor ?? graveyardDosTime)(ctx.project);
+    const dosTime =
+      ctx.project.dosTime ??
+      (await (deps.dosTimeFor ?? graveyardDosTime)(ctx.project, ctx.projectId));
     await ctx.log(`Booting ${ctx.project.name} in headless js-dos`);
     const text = await deps.pool.use(
       bundle,

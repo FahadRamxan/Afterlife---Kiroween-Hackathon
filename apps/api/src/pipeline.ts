@@ -32,8 +32,8 @@ export class PgPipeline implements Pipeline {
     return new PgPipeline(db, boss);
   }
 
-  async start(projectId: string): Promise<void> {
-    await startPipeline(this.boss, this.db, projectId);
+  async start(projectId: string, from: 'possess' | 'scan-upload' = 'possess'): Promise<void> {
+    await startPipeline(this.boss, this.db, projectId, { from });
   }
 
   async steps(projectId: string): Promise<StepState[]> {

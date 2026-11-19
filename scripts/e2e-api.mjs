@@ -105,7 +105,9 @@ const stop = () => {
 const worker = spawn('pnpm', ['--filter', '@afterlife/worker', 'start'], {
   stdio: 'inherit',
   shell: true,
-  env: { ...process.env, DATABASE_URL: url, JSDOS_POOL_SIZE: '1' },
+  // No ClamAV on a Windows laptop: the EICAR-only test scanner, which says so on every result.
+  // ClamAV itself is tested in the worker image (pnpm ci:local, Docker smoke).
+  env: { ...process.env, DATABASE_URL: url, JSDOS_POOL_SIZE: '1', VIRUS_SCANNER: 'eicar-test' },
 });
 worker.on('exit', (code) => {
   if (code) console.error(`the e2e worker stopped with code ${code}`);

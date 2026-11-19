@@ -28,6 +28,8 @@ export type PipelineStep = (typeof PIPELINE)[number];
 
 /** The step after `step` in the pipeline, or null after the last one (or for an on-demand job). */
 export function nextStep(step: JobType): PipelineStep | null {
+  // A clean upload goes on to possession.
+  if (step === 'scan-upload') return 'possess';
   const i = (PIPELINE as readonly string[]).indexOf(step);
   return i < 0 || i === PIPELINE.length - 1 ? null : PIPELINE[i + 1]!;
 }
@@ -41,7 +43,8 @@ export async function startPipeline(
   boss: PgBoss,
   db: Db,
   projectId: string,
-  opts: { from?: PipelineStep } = {},
+  /** `scan-upload` for an uploaded app: once it is clean it goes on to possess. */
+  opts: { from?: PipelineStep | 'scan-upload' } = {},
 ): Promise<string | null> {
   const id = await enqueueStep(boss, db, opts.from ?? 'possess', { projectId, pipeline: true });
   // Running from now on (a resumed pipeline is no longer "failed"); the steps set it from here.
@@ -76,6 +79,8 @@ export const JOB_OPTIONS: Record<JobType, JobOptions> = {
   exorcise: { retryLimit: 3, retryDelay: 15, retryBackoff: true, timeoutSeconds: 10 * MIN },
   'twin-replay': { retryLimit: 2, retryDelay: 30, retryBackoff: true, timeoutSeconds: 30 * MIN },
   'voice-change': { retryLimit: 3, retryDelay: 10, retryBackoff: true, timeoutSeconds: 5 * MIN },
+  // ClamAV loads its signatures on each scan (about 30 s); a missing scanner fails closed.
+  'scan-upload': { retryLimit: 2, retryDelay: 20, retryBackoff: true, timeoutSeconds: 5 * MIN },
 };
 
 /** The idempotency key of a project step. */

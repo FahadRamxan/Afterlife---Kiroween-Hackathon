@@ -11,6 +11,7 @@ import {
 import { HeadlessPool } from '@afterlife/emulator/headless';
 import { startJobLoop } from './loop';
 import { defaultRegistry, type Registry } from './registry';
+import { scannerFromEnv, type VirusScanner } from './scanner';
 
 export type WorkerOptions = {
   databaseUrl: string | undefined;
@@ -18,6 +19,8 @@ export type WorkerOptions = {
   registry?: Registry;
   /** Emulators at once (JSDOS_POOL_SIZE, default 1: two take 441 MiB, see docs/deploy.md). */
   poolSize?: number;
+  /** The virus scanner for uploads (VIRUS_SCANNER: ClamAV by default). */
+  scanner?: VirusScanner;
   options?: Partial<Record<JobType, Partial<JobOptions>>>;
   pollingIntervalSeconds?: number;
   log?: (line: string) => void;
@@ -29,6 +32,7 @@ export async function startWorker({
   databaseUrl,
   registry,
   poolSize = 1,
+  scanner,
   options,
   pollingIntervalSeconds,
   log = console.log,
@@ -54,7 +58,8 @@ export async function startWorker({
   const loop = await startJobLoop({
     db,
     boss,
-    registry: registry ?? defaultRegistry({ pool }),
+    registry:
+      registry ?? defaultRegistry({ pool, db, scanner: scanner ?? scannerFromEnv(process.env) }),
     options,
     pollingIntervalSeconds,
     log,

@@ -76,18 +76,28 @@ export function createEmulatorServer(opts: ServerOptions): McpServer {
       ),
     );
 
+  // Tool calls run one at a time, in the order they came: two at once would share the emulator
+  // (keys from both interleaved, a snapshot taken mid-action).
+  let queue: Promise<unknown> = Promise.resolve();
+  const oneAtATime = <T>(fn: () => Promise<T>): Promise<T> => {
+    const run = queue.then(fn, fn);
+    queue = run.catch(() => {});
+    return run;
+  };
+
   /** Runs a tool: our own errors become error results the agent can act on. */
   const tool =
     <A>(fn: (args: A) => Promise<Result>) =>
-    async (args: A): Promise<Result> => {
-      try {
-        return await fn(args);
-      } catch (e) {
-        if (e instanceof ToolError || e instanceof EmulatorError || e instanceof KeyParseError)
-          return { content: [{ type: 'text', text: (e as Error).message }], isError: true };
-        throw e;
-      }
-    };
+    (args: A): Promise<Result> =>
+      oneAtATime(async () => {
+        try {
+          return await fn(args);
+        } catch (e) {
+          if (e instanceof ToolError || e instanceof EmulatorError || e instanceof KeyParseError)
+            return { content: [{ type: 'text', text: (e as Error).message }], isError: true };
+          throw e;
+        }
+      });
 
   /** Boots (or boots again) an app from its bundle, at its DOS clock, on a fresh emulator. */
   async function start(id: string) {

@@ -4,7 +4,8 @@
 //        /health with CORS for the allowed origin, runs as a non-root user, stops on SIGTERM.
 //   Worker: on the same Postgres it starts its pg-boss job loop, runs as a non-root user, and
 //           stops on SIGTERM with exit code 0. Inside the image it boots the real Shifa EXE in
-//           two headless js-dos emulators at once and reports the memory that takes.
+//           two headless js-dos emulators at once and reports the memory that takes. Its ClamAV
+//           finds the EICAR test file inside a zip and passes the real Shifa app (Prompt 40).
 // Usage: docker build -f apps/api/Dockerfile -t afterlife-api:local . (same for worker), then
 //        node scripts/docker-smoke.mjs
 import { execFileSync } from 'node:child_process';
@@ -23,7 +24,7 @@ const fail = (msg) => {
   process.exitCode = 1;
 };
 
-quiet('rm', '-f', 'al-api', 'al-worker', 'al-pg', 'al-boot');
+quiet('rm', '-f', 'al-api', 'al-worker', 'al-pg', 'al-boot', 'al-scan');
 quiet('network', 'rm', 'al-net');
 sh('network', 'create', 'al-net');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -170,6 +171,42 @@ try {
   if (sh('inspect', 'al-boot', '--format', '{{.State.ExitCode}}') !== '0')
     fail('smoke boot exit code');
 
+  // ClamAV in the image, through the worker's own scanner, with the memory it peaks at.
+  sh(
+    'run',
+    '-d',
+    '--name',
+    'al-scan',
+    'afterlife-worker:local',
+    'node',
+    '--import',
+    'tsx',
+    'src/smoke-scan.ts',
+  );
+  let peak = 0;
+  for (let i = 0; i < 240; i++) {
+    const state = sh('inspect', 'al-scan', '--format', '{{.State.Status}}');
+    if (state !== 'running') break;
+    const mem = sh('stats', '--no-stream', '--format', '{{.MemUsage}}', 'al-scan')
+      .split('/')[0]
+      .trim();
+    const mib = mem.endsWith('GiB')
+      ? parseFloat(mem) * 1024
+      : mem.endsWith('MiB')
+        ? parseFloat(mem)
+        : 0;
+    peak = Math.max(peak, mib);
+  }
+  sh('wait', 'al-scan');
+  const scanLogs = execFileSync('docker', ['logs', 'al-scan'], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  console.log(`scan logs:\n${scanLogs}`);
+  console.log(`worker image, ClamAV scan peak: ${Math.round(peak)} MiB`);
+  if (!/SMOKE SCAN OK eicar=\S+ shifa=clean/.test(scanLogs))
+    fail('ClamAV scan in the worker image');
+
   sh('stop', '-t', '10', 'al-worker');
   console.log(`worker logs:\n${sh('logs', 'al-worker')}`);
   const wExit = sh('inspect', 'al-worker', '--format', '{{.State.ExitCode}}');
@@ -188,7 +225,7 @@ try {
       /* no API container */
     }
   }
-  quiet('rm', '-f', 'al-api', 'al-worker', 'al-pg', 'al-boot');
+  quiet('rm', '-f', 'al-api', 'al-worker', 'al-pg', 'al-boot', 'al-scan');
   quiet('network', 'rm', 'al-net');
 }
 console.log(process.exitCode ? 'docker smoke FAILED' : 'docker smoke PASSED');

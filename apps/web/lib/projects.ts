@@ -8,6 +8,7 @@ const ProjectSchema = z.object({
   sourceApp: z.string(),
   status: z.enum(['created', 'queued', 'running', 'done', 'failed']),
   mode: z.enum(['live', 'recorded']),
+  dosTime: z.string().nullable().default(null),
   createdAt: z.iso.datetime(),
 });
 export type Project = z.infer<typeof ProjectSchema>;

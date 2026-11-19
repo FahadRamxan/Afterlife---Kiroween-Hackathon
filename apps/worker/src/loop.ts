@@ -157,7 +157,12 @@ async function runJob(o: LoopOptions, type: JobType, job: Job<unknown>) {
         project,
       )({
         projectId: data.projectId,
-        project: { name: project.name, source: project.source, sourceApp: project.sourceApp },
+        project: {
+          name: project.name,
+          source: project.source,
+          sourceApp: project.sourceApp,
+          dosTime: project.dosTime,
+        },
         step: type,
         attempt,
         force: !!data.force,
@@ -172,6 +177,8 @@ async function runJob(o: LoopOptions, type: JobType, job: Job<unknown>) {
       .set({
         status: result.status,
         output: output ?? null,
+        // A final failure keeps its reason as the error too, like a failed attempt.
+        error: result.status === 'failed' ? result.reason : null,
         finishedAt: sql`now()`,
         updatedAt: sql`now()`,
       })
@@ -180,10 +187,11 @@ async function runJob(o: LoopOptions, type: JobType, job: Job<unknown>) {
       step: type,
       state: result.status,
       attempt,
-      ...(result.status === 'skipped' ? { message: result.reason } : {}),
+      ...(result.status !== 'done' ? { message: result.reason } : {}),
     });
     // Queue the next step before the status is worked out, so a running pipeline never looks idle.
-    await chain(o, type, data);
+    // A final failure ends the pipeline here, and is not retried.
+    if (result.status !== 'failed') await chain(o, type, data);
     await refreshProjectStatus(db, data.projectId);
     return output;
   } catch (e) {

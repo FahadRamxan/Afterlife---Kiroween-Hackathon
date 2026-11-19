@@ -25,6 +25,10 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
   // Opened at once, so the first screen is not missed while the project loads.
   const live = useProjectLive(id);
 
+  // Bumped after a séance is saved, so its timeline shows "Séance recorded" at once.
+  const [version, setVersion] = useState(0);
+  const refresh = () => setVersion((v) => v + 1);
+
   useEffect(() => {
     let alive = true;
     getProject(API, id).then((r) => {
@@ -38,7 +42,7 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
     return () => {
       alive = false;
     };
-  }, [id]);
+  }, [id, version]);
 
   if (state.phase === 'loading')
     return (
@@ -69,6 +73,14 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
           {project.id}
         </code>
       </p>
+      {project.dosTime || app?.dosTime ? (
+        <p data-testid="dos-clock" className="mt-1 text-sm text-bone/70">
+          {t('project.dosClock')}{' '}
+          <time lang="en" dir="ltr" className="font-mono text-candle">
+            {project.dosTime ?? app?.dosTime}
+          </time>
+        </p>
+      ) : null}
       {project.mode === 'recorded' ? (
         <p
           data-testid="run-mode"
@@ -111,11 +123,20 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
                       bundle={app.bundle}
                       name={app.name}
                       dosTime={app.dosTime}
+                      raisedProjectId={project.id}
+                      onSaved={refresh}
                     />
                   </>
                 ),
               }
-            : {}
+            : project.source === 'upload'
+              ? {
+                  // An uploaded app: the virus scan, then possession, live. (Séances on uploads later.)
+                  possession: (
+                    <LivePanel events={live.events} status={live.status} name={project.name} />
+                  ),
+                }
+              : {}
         }
       />
     </PageShell>
