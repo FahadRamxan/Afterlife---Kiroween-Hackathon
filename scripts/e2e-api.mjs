@@ -89,7 +89,14 @@ if (!url) {
 const api = spawn('pnpm', ['--filter', '@afterlife/api', 'start'], {
   stdio: 'inherit',
   shell: true,
-  env: { ...process.env, DATABASE_URL: url },
+  // Every e2e test comes from 127.0.0.1: the per-address limits are raised for this run only.
+  // The limits themselves are tested in apps/api (rate-limit.test.ts).
+  env: {
+    ...process.env,
+    DATABASE_URL: url,
+    RATE_LIMIT_PER_MINUTE: '5000',
+    RATE_LIMIT_CREATE_PER_MINUTE: '1000',
+  },
 });
 const stop = () => {
   if (container) {
