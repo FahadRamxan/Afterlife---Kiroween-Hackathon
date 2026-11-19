@@ -92,6 +92,7 @@ describe('.env.example files (Prompt 10)', () => {
     expect(envKeys('apps/api/.env.example').sort()).toEqual([
       'DATABASE_URL',
       'HOST',
+      'LLM_TOKEN_BUDGET',
       'LOG_LEVEL',
       'PORT',
       'SEANCE_STORAGE_MB',

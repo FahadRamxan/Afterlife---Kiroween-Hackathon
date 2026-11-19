@@ -14,6 +14,7 @@ import pkg from '../package.json' with { type: 'json' };
 import { dbfInspectRoutes } from './dbf-inspect';
 import type { Env } from './env';
 import { liveRoutes, type LiveHub } from './live';
+import { llmCallRoutes, type LlmCallStore } from './llm-calls';
 import { MemoryProjectStore, projectRoutes, type Pipeline, type ProjectStore } from './projects';
 import { MemorySessionStore, sessionRoutes, type SessionStore } from './sessions';
 import { soulRoutes, type SoulStore } from './souls';
@@ -26,6 +27,7 @@ export type AppStores = {
   pipeline?: Pipeline;
   uploads?: UploadStore;
   souls?: SoulStore;
+  llmCalls?: LlmCallStore;
 };
 
 export type AppOptions = {
@@ -118,6 +120,12 @@ export function buildApp(
     soulRoutes(stores.souls, {
       projectExists: async (id) => (await projects.get(id)) !== null,
       createPerMinute: limits.createPerMinute,
+    }),
+  );
+  app.register(
+    llmCallRoutes(stores.llmCalls, {
+      projectExists: async (id) => (await projects.get(id)) !== null,
+      budgetTokens: env.LLM_TOKEN_BUDGET,
     }),
   );
   app.register(

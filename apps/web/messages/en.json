@@ -186,6 +186,34 @@
         "between": "From version {from} to version {to}",
         "sameRules": "The rules are the same."
       }
+    },
+    "work": {
+      "title": "Show your work",
+      "intro": "Every call the Crew made to the language model for this project: who asked, what for, and what it cost. The model only proposes; the Crew’s own code checks every answer.",
+      "loading": "Loading the model calls…",
+      "empty": "No model calls yet. The Crew asks the model only to choose input values and to propose rules, and each call appears here.",
+      "failed": "The model calls could not be loaded:",
+      "budget": "{used} of {tokens} tokens used",
+      "budgetLabel": "Model tokens used of this project’s budget",
+      "shown": "Showing the newest {shown} of {total} calls",
+      "attempt": "attempt {n}",
+      "tokens": "{n} tokens",
+      "refresh": "Refresh",
+      "request": "Request",
+      "response": "Response",
+      "opening": "Opening the call…",
+      "noResponse": "No response (the call failed or was not sent).",
+      "status": {
+        "ok": "Answered",
+        "error": "Failed",
+        "invalid": "Answer refused: did not fit its schema",
+        "over_budget": "Not sent: the token budget is used up"
+      },
+      "unavailable": {
+        "unconfigured": "The API is not configured.",
+        "down": "The API did not answer. Try again in a minute.",
+        "not-found": "There is no such project."
+      }
     }
   },
   "vessel": {

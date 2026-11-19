@@ -1,3 +1,4 @@
+import { DEFAULT_LLM_TOKEN_BUDGET } from '@afterlife/db';
 import { z } from 'zod';
 
 /** Proxies on a private network (proxy-addr's names): what TRUST_PROXY=1 trusts. */
@@ -43,6 +44,8 @@ const schema = z.object({
    * 0.5 GB for everything, so the default leaves room for projects, events and uploads.
    */
   SEANCE_STORAGE_MB: z.coerce.number().int().min(1).max(100_000).default(200),
+  /** Model tokens one project may use; the worker spends them, "Show your work" shows them. */
+  LLM_TOKEN_BUDGET: z.coerce.number().int().min(0).default(DEFAULT_LLM_TOKEN_BUDGET),
   /**
    * Postgres (Neon in prod, Docker locally). Without it séances are kept in memory, and lost on a
    * restart; the server says so when it starts.
