@@ -4,6 +4,7 @@ import type { Rule, Soul } from '@afterlife/soul';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { EmptyState } from './EmptyState';
+import { SoulVersions } from './SoulVersions';
 import {
   diffRows,
   getObservation,
@@ -60,6 +61,7 @@ export function SoulPanel({ projectId }: { projectId: string }) {
           {t('reference')}
         </p>
       ) : null}
+      <SoulVersions projectId={projectId} />
       <section aria-labelledby="entities-heading">
         <h2 id="entities-heading" className="text-lg font-semibold">
           {t('entities')}

@@ -29,3 +29,11 @@ export {
 } from './dsl';
 export { tryRule, type TryResult } from './tryout';
 export { describeCondition, earsFor, writeKiroSpec, type SpecFiles } from './spec-writer';
+export {
+  applySoulDiff,
+  diffSouls,
+  summarizeDiff,
+  type CollectionDiff,
+  type FieldChange,
+  type SoulDiff,
+} from './diff';

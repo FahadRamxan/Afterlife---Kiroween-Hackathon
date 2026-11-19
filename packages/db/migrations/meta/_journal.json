@@ -43,6 +43,13 @@
       "when": 1795056116320,
       "tag": "0005_seance_size_dos_time",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1795065440161,
+      "tag": "0006_souls_immutable",
+      "breakpoints": true
     }
   ]
 }
