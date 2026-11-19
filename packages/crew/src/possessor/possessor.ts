@@ -17,7 +17,7 @@ import {
   type ObservedScreen,
   type RecordOptions,
 } from '@afterlife/emulator';
-import { screenActions, type PossessAction } from './actions';
+import { EXIT_WORDS, screenActions, type PossessAction } from './actions';
 import { ScreenGraph, type ScreenGraphJson } from './graph';
 import { readSamples, type DataSample, type ValueChooser } from './values';
 
@@ -36,6 +36,8 @@ export type PossessorObservation = Observation & {
   changed: string[];
   /** Error lines the app showed after the keys (the status line in red). */
   errors: string[];
+  /** What the owner said while doing this, in a séance (guided steps only, Prompt 50). */
+  hint?: string;
   /** So far, this step included: screens found, and actions that changed data. */
   totals: { screens: number; saves: number };
 };
@@ -69,7 +71,7 @@ export type PossessOptions = {
    * Key sequences to press first, in order, before exploring (a séance's recorded path, Prompt
    * 50). A sequence that would leave the program is skipped.
    */
-  guide?: { keys: string; label?: string }[];
+  guide?: { keys: string; label?: string; hint?: string; home?: boolean }[];
   /**
    * How many values to type into each field (Prompt 49): the first to get through, then
    * boundary values once the screen has nothing else left to try. Default 1.
@@ -132,6 +134,7 @@ export async function possess(
     keys: string,
     kind: StepKind,
     label: string,
+    hint?: string,
   ): Promise<PossessorObservation> => {
     const obs = await recordAction(emu, keys, opts.record);
     steps++;
@@ -168,6 +171,7 @@ export async function possess(
       changed,
       errors,
       totals: { screens: graph.nodes.size, saves },
+      ...(hint ? { hint } : {}),
     };
     await opts.onObservation?.(o);
     if (newScreen) await log(`New screen: ${title(screen)}`);
@@ -206,7 +210,19 @@ export async function possess(
   for (const g of opts.guide ?? []) {
     const stop = stopNow();
     if (stop) return result(stop);
-    await act(g.keys, 'guide', g.label ?? g.keys);
+    // Between two séances: back to the first screen, where each one started.
+    if (g.home) {
+      for (let i = 0; i < 6 && screen.fingerprint !== graph.root && !stopNow(); i++)
+        if (!(await back())) break;
+      continue;
+    }
+    // The owner may have left by the menu at the end; the Possessor never does.
+    const item = screen.model.menu?.items.find((i) => i.key === g.keys);
+    if (item && EXIT_WORDS.test(item.label)) {
+      await log(`Skipped the owner's "${g.keys} ${item.label}": it leaves the program`);
+      continue;
+    }
+    await act(g.keys, 'guide', g.label ?? g.keys, g.hint);
   }
 
   for (;;) {

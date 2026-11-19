@@ -1,14 +1,18 @@
 import { readDbf } from '@afterlife/dbf';
+import { recordAction } from '@afterlife/emulator';
 import { describe, expect, it } from 'vitest';
 import { FakeLlmClient, fakeToolUse } from '../llm/fake';
 import { MemoryLlmCallLog } from '../llm/log';
 import { CrewLlm } from '../llm/runtime';
 import type { LlmRequest } from '../llm/types';
+import { guideFromSeance } from './guide';
 import { possess, type PossessorObservation } from './possessor';
 import { bootMiniShop } from './testing/mini-shop';
 import { dataValueChooser, llmValueChooser } from './values';
 
 const FAST = { stableMs: 1, pollMs: 1, maxWaitMs: 50 };
+/** Runs of 100+ steps, each drawing and decoding a full screen: seconds, not milliseconds. */
+const HEAVY = 30_000;
 
 async function run(opts: Partial<Parameters<typeof possess>[1]> = {}) {
   const { emu, app } = await bootMiniShop();
@@ -80,38 +84,53 @@ describe('possess on the mini shop', () => {
     expect(refused.errors).toEqual(['ITEM NOT FOUND']);
   });
 
-  it('boundary values (Prompt 49): a code that does not exist and a quantity of 0 are refused', async () => {
-    const { r, seen } = await run({ probesPerField: 4, maxActions: 150 });
-    const refused = Object.fromEntries(r.refused.map((x) => [x.text, x.label]));
-    expect(refused['ITEM NOT FOUND']).toBe('Code = ZZZ999 (new-key)');
-    expect(refused['BAD QUANTITY']).toBeDefined();
-    expect(seen.find((o) => o.label === 'Qty = 0 (zero)')?.errors).toEqual(['BAD QUANTITY']);
-    // Each refusal is an observation of its own, with the error on the status line.
-    const step = r.refused.find((x) => x.text === 'ITEM NOT FOUND')!.step;
-    expect(seen[step - 1]!.errors).toEqual(['ITEM NOT FOUND']);
-    // Probing came after a sale got through: the first value of each field is the typical one.
-    expect(r.firstChange['SALES.DBF:inserted']).toBeLessThan(step);
-  });
+  it(
+    'boundary values (Prompt 49): a code that does not exist and a quantity of 0 are refused',
+    async () => {
+      const { r, seen } = await run({ probesPerField: 4, maxActions: 150 });
+      const refused = Object.fromEntries(r.refused.map((x) => [x.text, x.label]));
+      expect(refused['ITEM NOT FOUND']).toBe('Code = ZZZ999 (new-key)');
+      expect(refused['BAD QUANTITY']).toBeDefined();
+      expect(seen.find((o) => o.label === 'Qty = 0 (zero)')?.errors).toEqual(['BAD QUANTITY']);
+      // Each refusal is an observation of its own, with the error on the status line.
+      const step = r.refused.find((x) => x.text === 'ITEM NOT FOUND')!.step;
+      expect(seen[step - 1]!.errors).toEqual(['ITEM NOT FOUND']);
+      // Probing came after a sale got through: the first value of each field is the typical one.
+      expect(r.firstChange['SALES.DBF:inserted']).toBeLessThan(step);
+    },
+    HEAVY,
+  );
 
-  it('gives up a walk that no longer leads where it did (found recording Shifa)', async () => {
-    // A code entered twice in one sale is refused, so the walk "TEA100{Enter}" to the quantity
-    // box stops working once the sale has that line. Shifa's real run walked it 40 times.
-    const { seen, r } = await run({ probesPerField: 4, maxActions: 150, idleLimit: 1000 });
-    let repeats = 0;
-    for (let i = 1; i < seen.length; i++) {
-      const same = seen[i]!.kind === 'walk' && seen[i]!.keys === seen[i - 1]!.keys;
-      repeats = same ? repeats + 1 : 0;
-      expect(repeats, `step ${seen[i]!.step}: ${seen[i]!.label}`).toBeLessThan(3);
-    }
-    expect(r.stoppedBecause).toBe('explored');
-  });
+  it(
+    'gives up a walk that no longer leads where it did (found recording Shifa)',
+    async () => {
+      // A code entered twice in one sale is refused, so the walk "TEA100{Enter}" to the quantity
+      // box stops working once the sale has that line. Shifa's real run walked it 40 times.
+      const { seen, r } = await run({ probesPerField: 4, maxActions: 150, idleLimit: 1000 });
+      let repeats = 0;
+      for (let i = 1; i < seen.length; i++) {
+        const same = seen[i]!.kind === 'walk' && seen[i]!.keys === seen[i - 1]!.keys;
+        repeats = same ? repeats + 1 : 0;
+        expect(repeats, `step ${seen[i]!.step}: ${seen[i]!.label}`).toBeLessThan(3);
+      }
+      expect(r.stoppedBecause).toBe('explored');
+    },
+    HEAVY,
+  );
 
-  it('stops at the action budget, and after N steps with nothing new', async () => {
-    expect((await run({ maxActions: 3 })).r).toMatchObject({ steps: 3, stoppedBecause: 'budget' });
-    const idle = await run({ idleLimit: 1 });
-    expect(['idle', 'explored']).toContain(idle.r.stoppedBecause);
-    expect(idle.r.steps).toBeLessThan((await run()).r.steps);
-  });
+  it(
+    'stops at the action budget, and after N steps with nothing new',
+    async () => {
+      expect((await run({ maxActions: 3 })).r).toMatchObject({
+        steps: 3,
+        stoppedBecause: 'budget',
+      });
+      const idle = await run({ idleLimit: 1 });
+      expect(['idle', 'explored']).toContain(idle.r.stoppedBecause);
+      expect(idle.r.steps).toBeLessThan((await run()).r.steps);
+    },
+    HEAVY,
+  );
 
   it('stops when the run is aborted', async () => {
     const ctl = new AbortController();
@@ -140,7 +159,8 @@ describe('possess on the mini shop', () => {
       budgetTokens: 1e6,
     });
     const { seen, emu } = await run({ values: llmValueChooser(llm) });
-    expect(new Set(asked)).toEqual(new Set(['Code', 'Qty']));
+    // The shop's four fields: a sale's code and quantity, a new item's name and price.
+    expect(new Set(asked)).toEqual(new Set(['Code', 'Qty', 'Name', 'Price']));
     expect(seen.some((o) => o.label === 'Code = SUG001')).toBe(true);
     // Its data files are shown to it, so it can name a real code.
     expect((client.requests[0]!.messages[0]!.content[0] as { text: string }).text).toContain(
@@ -153,11 +173,55 @@ describe('possess on the mini shop', () => {
     expect(sold % 3).toBe(0);
   });
 
-  it('a guided path is pressed first, before exploring (Prompt 50)', async () => {
-    const { seen } = await run({ guide: [{ keys: '2' }, { keys: '{Esc}' }] });
-    expect(seen.slice(0, 2).map((o) => [o.kind, o.keys])).toEqual([
-      ['guide', '2'],
-      ['guide', '{Esc}'],
+  it('a guided path is pressed first, before exploring, with its hints (Prompt 50)', async () => {
+    const { seen } = await run({
+      guide: [{ keys: '2', hint: 'yeh items hain' }, { keys: '{Esc}' }],
+    });
+    expect(seen.slice(0, 2).map((o) => [o.kind, o.keys, o.hint])).toEqual([
+      ['guide', '2', 'yeh items hain'],
+      ['guide', '{Esc}', undefined],
     ]);
+    expect(seen.slice(2).every((o) => o.kind !== 'guide' && o.hint === undefined)).toBe(true);
   });
+
+  it('a guided step that would leave the program is skipped, though the owner pressed it', async () => {
+    const logs: string[] = [];
+    const { seen, app } = await run({ guide: [{ keys: '3' }], onLog: (m) => void logs.push(m) });
+    expect(seen.some((o) => o.keys === '3')).toBe(false);
+    expect(app.state().at).not.toBe('exited');
+    expect(logs).toContain('Skipped the owner\'s "3 Exit": it leaves the program');
+  });
+
+  it(
+    "Prompt 50 done when: guided by the owner's séance, the save is reached in fewer steps than blind",
+    async () => {
+      // The owner's séance: Items, A, a name, a price. Recorded on the shop one key at a time.
+      const owner = await bootMiniShop();
+      const keys = ['2', 'A', ...'TAPAL CHAI', '{Enter}', ...'45', '{Enter}', '{Esc}'];
+      const seance = [];
+      for (const k of keys) seance.push(await recordAction(owner.emu, k, FAST));
+      const guide = guideFromSeance(seance);
+      expect(guide.map((g) => g.keys)).toEqual([
+        '2',
+        'A',
+        'TAPAL CHAI{Enter}',
+        '45{Enter}',
+        '{Esc}',
+      ]);
+
+      // The same settings for both, and no idle stop: each runs until everything is tried.
+      const same = { probesPerField: 3, maxActions: 200, idleLimit: 1000 };
+      const blind = await run(same);
+      const guided = await run({ ...same, guide });
+      const blindAt = blind.r.firstChange['ITEMS.DBF:inserted'];
+      const guidedAt = guided.r.firstChange['ITEMS.DBF:inserted'];
+      expect(blindAt).toBeGreaterThan(0);
+      expect(guidedAt).toBe(4);
+      expect(guidedAt).toBeLessThan(blindAt!);
+      // Then it explores the gaps: the sale the owner did not show is found and saved too.
+      expect(guided.r.firstChange['SALES.DBF:inserted']).toBeGreaterThan(guidedAt!);
+      expect(guided.r.stoppedBecause).toBe('explored');
+    },
+    HEAVY,
+  );
 });

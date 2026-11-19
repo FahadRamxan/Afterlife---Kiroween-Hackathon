@@ -76,13 +76,26 @@ export const ObservationSchema = z.object({
   stable: z.boolean(),
 }) satisfies z.ZodType<Observation>;
 
+/** A séance's longest session: a shop day (the voice note is much shorter). */
+export const MAX_SEANCE_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * One action of a séance: the observation, and when it was pressed, in ms from the séance's start
+ * (Prompt 50: the owner's voice notes are matched to the actions they speak over). Optional, so
+ * séances saved before still load.
+ */
+export const SeanceActionSchema = ObservationSchema.extend({
+  atMs: z.number().int().nonnegative().max(MAX_SEANCE_MS).optional(),
+});
+export type SeanceAction = z.infer<typeof SeanceActionSchema>;
+
 export const SeanceSessionSchema = z.object({
   /** The Graveyard app (or, from Prompt 40, the uploaded project) the séance was recorded on. */
   projectId: z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/),
   startedAt: z.iso.datetime(),
   /** The raised project (its UUID) the séance was recorded on, so it belongs to that project. */
   raisedProjectId: z.uuid().optional(),
-  actions: z.array(ObservationSchema).min(1).max(MAX_SESSION_ACTIONS),
+  actions: z.array(SeanceActionSchema).min(1).max(MAX_SESSION_ACTIONS),
   /** The owner's voice, explaining what they do (optional). */
   audio: z
     .object({

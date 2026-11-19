@@ -34,6 +34,7 @@ export class PgSessionStore implements SessionStore {
           dbfDiff: a.dbfDiff,
           durationMs: a.durationMs,
           stable: a.stable,
+          offsetMs: a.atMs ?? null,
         })),
       );
       return row!.id;
@@ -66,6 +67,7 @@ export class PgSessionStore implements SessionStore {
         dbfDiff: r.dbfDiff as Action['dbfDiff'],
         durationMs: r.durationMs,
         stable: r.stable,
+        ...(r.offsetMs === null ? {} : { atMs: r.offsetMs }),
       })),
       ...(s.audio && s.audioMime
         ? { audio: { mime: s.audioMime, base64: Buffer.from(s.audio).toString('base64') } }

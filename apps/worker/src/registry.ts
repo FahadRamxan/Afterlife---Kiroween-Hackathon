@@ -6,7 +6,7 @@ import { graveyardBundle, possessApp, type EmulatorPool } from './possess';
 import { scanUpload, uploadBundle } from './scan-upload';
 import type { VirusScanner } from './scanner';
 import { translateSoulStep } from './translate-soul';
-import { DEFAULT_TOKEN_BUDGET, type LlmClient } from '@afterlife/crew';
+import { DEFAULT_TOKEN_BUDGET, type LlmClient, type SpeechClient } from '@afterlife/crew';
 
 export type StepContext = {
   projectId: string;
@@ -59,6 +59,8 @@ export function defaultRegistry(
     maxActions?: number;
     /** Values typed into each field (POSSESS_PROBES). */
     probesPerField?: number;
+    /** Transcribes séance voice notes (SPEECH_PROVIDER); null: none. */
+    speech?: SpeechClient | null;
   } = {},
 ): Registry {
   const { db } = deps;
@@ -71,6 +73,7 @@ export function defaultRegistry(
           budgetTokens: deps.budgetTokens ?? DEFAULT_TOKEN_BUDGET,
           ...(deps.maxActions ? { maxActions: deps.maxActions } : {}),
           ...(deps.probesPerField ? { probesPerField: deps.probesPerField } : {}),
+          speech: deps.speech ?? null,
           // A Graveyard app's bundle is a file; an upload's is in the database once it is clean.
           bundleFor: async (p, projectId) =>
             p.source === 'upload' ? (db ? uploadBundle(db, projectId) : null) : graveyardBundle(p),

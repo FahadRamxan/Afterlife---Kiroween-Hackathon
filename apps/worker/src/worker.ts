@@ -8,7 +8,7 @@ import {
   type JobOptions,
   type JobType,
 } from '@afterlife/db';
-import { llmClientFrom, tokenBudgetFrom, type LlmClient } from '@afterlife/crew';
+import { llmClientFrom, speechClientFrom, tokenBudgetFrom, type LlmClient } from '@afterlife/crew';
 import { HeadlessPool } from '@afterlife/emulator/headless';
 import { startJobLoop } from './loop';
 import { defaultRegistry, type Registry } from './registry';
@@ -79,6 +79,7 @@ export async function startWorker({
         ...(Number(process.env.POSSESS_PROBES) > 0
           ? { probesPerField: Number(process.env.POSSESS_PROBES) }
           : {}),
+        speech: speechClientFrom(process.env),
       }),
     options,
     pollingIntervalSeconds,

@@ -12,8 +12,10 @@ import {
   strategyChooser,
   type LlmClient,
   type PossessorObservation,
+  type SpeechClient,
   type ValueChooser,
 } from '@afterlife/crew';
+import { seanceGuide, type SeanceGuide } from './seance-guide';
 import { SEED_PROJECTS, eq, observations, sql, type Db } from '@afterlife/db';
 import {
   waitForStableScreen,
@@ -82,6 +84,8 @@ export function possessApp(deps: {
   values?: ValueChooser;
   /** How long a screen must be still before it counts (tests use a fake app that is instant). */
   record?: RecordOptions;
+  /** Transcribes séance voice notes into hints (SPEECH_PROVIDER); null: none set up. */
+  speech?: SpeechClient | null;
 }): StepHandler {
   return async (ctx) => {
     const bundle = await deps.bundleFor(ctx.project, ctx.projectId);
@@ -118,6 +122,25 @@ export function possessApp(deps: {
         .from(observations)
         .where(eq(observations.projectId, ctx.projectId));
       seq = Number(row?.n ?? 0);
+    }
+    // The owner's séances on this project lead the way (Prompt 50).
+    const guided: SeanceGuide = db
+      ? await seanceGuide(db, ctx.projectId, deps.speech ?? null, ctx.signal)
+      : { guide: [], seances: 0, notes: { transcribed: 0, reused: 0, untranscribed: 0 }, hints: 0 };
+    if (guided.seances) {
+      const steps = guided.guide.filter((g) => !g.home).length;
+      await ctx.log(
+        `Guided by ${guided.seances === 1 ? 'the owner’s séance' : `${guided.seances} séances of the owner`}: ${steps} steps first, then the gaps`,
+      );
+      const n = guided.notes;
+      if (n.transcribed)
+        await ctx.log(`Voice notes transcribed: ${n.transcribed}, giving ${guided.hints} hints`);
+      if (n.reused)
+        await ctx.log(`Voice notes transcribed before: ${n.reused}, ${guided.hints} hints`);
+      if (n.untranscribed)
+        await ctx.log(
+          `${n.untranscribed} voice ${n.untranscribed === 1 ? 'note was' : 'notes were'} not transcribed: no speech service is set up`,
+        );
     }
     await ctx.log(`Booting ${ctx.project.name} in headless js-dos`);
     const result = await deps.pool.use(
@@ -161,6 +184,7 @@ export function possessApp(deps: {
               dbfDiff: o.dbfDiff,
               durationMs: Math.max(0, Math.round(o.durationMs)),
               stable: o.stable,
+              ...(o.hint ? { hint: { text: o.hint, from: 'seance' } } : {}),
             });
           await ctx.emit('observation', {
             step: o.step,
@@ -173,6 +197,7 @@ export function possessApp(deps: {
             newScreen: o.newScreen,
             changed: o.changed,
             errors: o.errors,
+            ...(o.hint ? { hint: o.hint } : {}),
             screens: o.totals.screens,
             saves: o.totals.saves,
           });
@@ -189,6 +214,7 @@ export function possessApp(deps: {
         };
         return possess(emu, {
           values,
+          ...(guided.guide.length ? { guide: guided.guide } : {}),
           maxActions: deps.maxActions ?? DEFAULT_MAX_ACTIONS,
           probesPerField: deps.probesPerField ?? DEFAULT_PROBES,
           // Probing a field often finds nothing new a few times in a row before it finds a rule.
@@ -214,6 +240,12 @@ export function possessApp(deps: {
         stoppedBecause: result.stoppedBecause,
         firstChange: result.firstChange,
         refused: result.refused,
+        guided: {
+          seances: guided.seances,
+          steps: guided.guide.filter((g) => !g.home).length,
+          hints: guided.hints,
+          notes: guided.notes,
+        },
         values: values.source,
         graph: result.graph,
       },

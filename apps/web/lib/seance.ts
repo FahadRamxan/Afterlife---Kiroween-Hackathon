@@ -45,6 +45,16 @@ export function keyFromEvent(e: KeyEventLike): KeyStroke | null {
   return { kind: 'key', key: letter, mods };
 }
 
+/**
+ * When each action was pressed, in whole ms from the start of the voice note (or of the séance
+ * when there is none), so the transcript's times line up with the actions (Prompt 50). A key
+ * pressed before the microphone started is at 0.
+ */
+export function actionTimes(keyAt: number[], voiceAt: number | null, seanceAt: number): number[] {
+  const start = voiceAt ?? seanceAt;
+  return keyAt.map((t) => Math.max(0, Math.round(t - start)));
+}
+
 /** A thumbnail `width` wide, keeping the screen's shape. */
 export function thumbnailSize(width: number, height: number, target: number) {
   return { width: target, height: Math.round((height * target) / width) };

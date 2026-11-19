@@ -83,7 +83,12 @@ export function miniShopBundle(): Uint8Array {
 
 type State =
   | { at: 'menu' }
-  | { at: 'items' }
+  | {
+      at: 'items';
+      /** Adding an item (A): its name, then its price. */
+      adding: { step: 'name' | 'price'; name: string; typing: string } | null;
+      added: string;
+    }
   | { at: 'code'; lines: { code: string; qty: number }[]; typing: string; error: string }
   | { at: 'qty'; lines: { code: string; qty: number }[]; code: string; typing: string }
   | { at: 'totals'; lines: { code: string; qty: number }[]; saved: string }
@@ -110,7 +115,8 @@ export function miniShopApp(): FakeApp & { state: () => State } {
           '1-3 Select',
           { row: 18, col: 40 },
         );
-      case 'items':
+      case 'items': {
+        const a = s.adding;
         return draw(
           'ITEMS',
           [
@@ -121,10 +127,20 @@ export function miniShopApp(): FakeApp & { state: () => State } {
               BODY,
               `${i.CODE} ${i.NAME.padEnd(20)} ${i.PRICE.padStart(6)} ${i.QTY.padStart(6)}`,
             ]),
+            ...(a
+              ? ([
+                  [20, 1, BODY, 'Name:'],
+                  [20, 8, FIELD, (a.step === 'name' ? a.typing : a.name).padEnd(20)],
+                  [21, 1, BODY, 'Price:'],
+                  ...(a.step === 'price' ? [[21, 8, FIELD, a.typing.padEnd(8)] as Put] : []),
+                ] as Put[])
+              : []),
+            ...(s.added ? [[23, 2, HILITE, s.added] as Put] : []),
           ],
-          'Esc=Back',
-          null,
+          a ? 'Enter=Next  Esc=Cancel' : 'A=Add item  Esc=Back',
+          a ? { row: a.step === 'name' ? 20 : 21, col: 8 + a.typing.length } : null,
         );
+      }
       case 'code':
       case 'qty': {
         const rows: Put[] = s.lines.map((l, n) => [
@@ -193,14 +209,47 @@ export function miniShopApp(): FakeApp & { state: () => State } {
       case 'menu':
         for (const c of chars) {
           if (c === '1') s = { at: 'code', lines: [], typing: '', error: '' };
-          else if (c === '2') s = { at: 'items' };
+          else if (c === '2') s = { at: 'items', adding: null, added: '' };
           else if (c === '3') s = { at: 'exited' };
           if (s.at !== 'menu') return;
         }
         return;
-      case 'items':
-        if (key === 'Esc') s = { at: 'menu' };
+      case 'items': {
+        const a = s.adding;
+        if (!a) {
+          if (key === 'Esc') s = { at: 'menu' };
+          else if (chars.some((c) => c.toUpperCase() === 'A'))
+            s = { at: 'items', adding: { step: 'name', name: '', typing: '' }, added: '' };
+          return;
+        }
+        if (key === 'Esc') s = { at: 'items', adding: null, added: '' };
+        else if (key === 'Enter') {
+          if (a.step === 'name')
+            s = a.typing.trim()
+              ? { ...s, adding: { step: 'price', name: a.typing.trim(), typing: '' } }
+              : s;
+          else if (/^\d{1,5}(\.\d{2})?$/.test(a.typing)) {
+            const items = readDbf(files.get('ITEMS.DBF')!).records.map(
+              (r) => ({ ...r.values }) as (typeof ITEMS)[number],
+            );
+            const code = `NEW${String(items.length + 1).padStart(3, '0')}`;
+            const price = Number(a.typing).toFixed(2);
+            files.set(
+              'ITEMS.DBF',
+              itemsDbf([...items, { CODE: code, NAME: a.name, PRICE: price, QTY: '0' }]),
+            );
+            s = { at: 'items', adding: null, added: `ITEM ${code} ADDED` };
+          }
+        } else
+          s = {
+            ...s,
+            adding: {
+              ...a,
+              typing: (a.typing + chars.join('')).slice(0, a.step === 'name' ? 20 : 8),
+            },
+          };
         return;
+      }
       case 'code':
         if (key === 'Esc') s = { at: 'menu' };
         else if (key === 'Enter') {

@@ -116,6 +116,13 @@ export const observations = pgTable(
     dbfDiff: jsonb('dbf_diff').notNull(),
     durationMs: integer('duration_ms').notNull(),
     stable: boolean('stable').notNull(),
+    /** A séance action: when it was pressed, in ms from the séance's start (Prompt 50). */
+    offsetMs: integer('offset_ms'),
+    /**
+     * What the owner said over it, for the Archaeologist: `{text, language, provider}` from the
+     * séance's voice note (Prompt 50). On a guided possession step, the hint of its séance step.
+     */
+    hint: jsonb('hint'),
     createdAt: createdAt(),
   },
   (t) => [

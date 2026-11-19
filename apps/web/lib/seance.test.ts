@@ -1,7 +1,34 @@
 import { printKeys } from '@afterlife/emulator';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { keyFromEvent, thumbnailSize } from './seance';
+import { actionTimes, keyFromEvent, thumbnailSize } from './seance';
+
+describe('actionTimes (Prompt 50)', () => {
+  it('counts from the voice note when there is one, else from the séance', () => {
+    expect(actionTimes([1500.4, 3000, 9000], 1000, 0)).toEqual([500, 2000, 8000]);
+    expect(actionTimes([1500, 3000], null, 1000)).toEqual([500, 2000]);
+    // A key before the microphone started is at its start.
+    expect(actionTimes([500, 2500], 1000, 0)).toEqual([0, 1500]);
+  });
+  it('whole, never negative, and in the order pressed (invariant)', () => {
+    fc.assert(
+      fc.property(
+        fc
+          .array(fc.double({ min: 0, max: 1e7, noNaN: true }), { maxLength: 30 })
+          .map((a) => a.sort((x, y) => x - y)),
+        fc.option(fc.double({ min: 0, max: 1e7, noNaN: true }), { nil: null }),
+        (keys, voice) => {
+          const t = actionTimes(keys, voice, 0);
+          for (let i = 0; i < t.length; i++) {
+            expect(Number.isInteger(t[i])).toBe(true);
+            expect(t[i]).toBeGreaterThanOrEqual(0);
+            if (i) expect(t[i]).toBeGreaterThanOrEqual(t[i - 1]!);
+          }
+        },
+      ),
+    );
+  });
+});
 
 const ev = (
   key: string,

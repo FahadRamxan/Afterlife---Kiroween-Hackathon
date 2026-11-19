@@ -4,15 +4,16 @@
 // show). The model is the fake one (unit tests never call the network); it only names values.
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { waitForStableScreen } from '@afterlife/emulator';
+import { recordAction, waitForStableScreen } from '@afterlife/emulator';
 import { HeadlessPool } from '@afterlife/emulator/headless';
 import { afterAll, describe, expect, it, vi } from 'vitest';
 import { FakeLlmClient, fakeToolUse } from '../llm/fake';
 import { MemoryLlmCallLog } from '../llm/log';
 import { CrewLlm } from '../llm/runtime';
 import type { LlmRequest } from '../llm/types';
-import { possess, type PossessorObservation } from './possessor';
-import { llmValueChooser } from './values';
+import { guideFromSeance } from './guide';
+import { possess, type PossessResult, type PossessorObservation } from './possessor';
+import { dataValueChooser, llmValueChooser } from './values';
 
 vi.setConfig({ testTimeout: 600_000 });
 const ROOT = resolve(__dirname, '../../../..');
@@ -81,5 +82,47 @@ describe('the Possessor on the real Shifa', () => {
     console.log(
       `Shifa: ${r.result.screens} screens, ${r.result.steps} steps, ${r.result.saves} saves, stopped: ${r.result.stoppedBecause}`,
     );
+    blind = r.result;
+  });
+
+  it('Prompt 50: guided by a real séance, it adds the customer in fewer steps than blind', async () => {
+    expect(blind, 'the blind run above').toBeDefined();
+    // The owner's séance, recorded on the real Shifa one key at a time, as the séance recorder does.
+    const keys = ['3', 'A', ...'ALI RAZA', '{Enter}', ...'0514567890', '{Enter}'];
+    const seance = await pool.use(
+      SHIFA,
+      async (emu) => {
+        await waitForStableScreen(emu, {
+          maxWaitMs: 60_000,
+          until: (s) => s.text.some((l) => l.includes('MAIN MENU')),
+        });
+        const out = [];
+        for (const k of keys) out.push(await recordAction(emu, k));
+        return out;
+      },
+      { dosTime: '1998-07-15 10:00:00' },
+    );
+    const guide = guideFromSeance(seance);
+    expect(guide.map((g) => g.keys)).toEqual(['3', 'A', 'ALI RAZA{Enter}', '0514567890{Enter}']);
+    const guided = await pool.use(
+      SHIFA,
+      async (emu) => {
+        await waitForStableScreen(emu, {
+          maxWaitMs: 60_000,
+          until: (s) => s.text.some((l) => l.includes('MAIN MENU')),
+        });
+        return possess(emu, { values: dataValueChooser, maxActions: 120, guide });
+      },
+      { dosTime: '1998-07-15 10:00:00' },
+    );
+    const blindAt = blind!.firstChange['CUSTOMER.DBF:inserted']!;
+    const guidedAt = guided.firstChange['CUSTOMER.DBF:inserted']!;
+    console.log(`Shifa customer saved at step ${guidedAt} guided, ${blindAt} blind`);
+    expect(guidedAt).toBe(4);
+    expect(guidedAt).toBeLessThan(blindAt);
+    // Then it explores the gaps: the bill the owner did not show is found and saved too.
+    expect(guided.firstChange['BILLS.DBF:inserted']).toBeGreaterThan(guidedAt);
   });
 });
+
+let blind: PossessResult | undefined;
