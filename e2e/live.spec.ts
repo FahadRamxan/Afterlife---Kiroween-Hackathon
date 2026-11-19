@@ -1,6 +1,7 @@
 // Prompt 38 "done when": the Raise page receives screen events from a real headless run. Raise
 // queues possession; the worker boots the real Shifa EXE in headless js-dos and sends its first
-// screen; the API streams it over the WebSocket; the page draws it.
+// screen; the API streams it over the WebSocket; the page draws it. From Prompt 48 the Possessor
+// explores, and the page counts what it finds.
 import { expect, test } from '@playwright/test';
 
 const API = 'http://localhost:4000';
@@ -20,18 +21,26 @@ test.describe('live progress', () => {
       timeout: 15_000,
     });
     const screen = page.getByTestId('live-screen');
+    // Every Shifa screen has its title bar; the Possessor moves on from the menu at once.
     await expect(screen).toContainText('SHIFA MEDICAL STORE', { timeout: 90_000 });
-    await expect(screen).toContainText('MAIN MENU');
-    // The step log says what happened, honestly: booted, and exploration not built yet.
-    const log = page.getByTestId('live-log');
-    await expect(log).toContainText('Booting Shifa Medical Store in headless js-dos');
-    await expect(log).toContainText('possess: skipped (Exploration is not built yet (Prompt 48)', {
+    // Prompt 48: the Possessor explores, and the counters say what it found. The e2e worker
+    // stops after 4 actions (POSSESS_MAX_ACTIONS), as many tests raise Shifa on one emulator.
+    const stats = page.getByTestId('possession-stats');
+    await expect(stats.getByTestId('stat-actions')).toHaveText('4 actions tried', {
+      timeout: 60_000,
+    });
+    await expect(stats.getByTestId('stat-screens')).toContainText(/[2-9] screens found/);
+    await expect(stats.getByTestId('possession-steps')).toContainText('1. 1 New Bill → NEW BILL');
+    await expect(page.getByTestId('step-possess')).toHaveAttribute('data-status', 'done', {
       timeout: 30_000,
     });
 
-    // Reloading replays the events: the screen is back without a new run.
+    // Reloading replays the events: the screen and the counters are back without a new run.
     await page.reload();
-    await expect(page.getByTestId('live-screen')).toContainText('MAIN MENU', { timeout: 15_000 });
+    await expect(page.getByTestId('live-screen')).toContainText('SHIFA MEDICAL STORE', {
+      timeout: 15_000,
+    });
+    await expect(page.getByTestId('stat-actions')).toHaveText('4 actions tried');
 
     await page.request.delete(`${API}/api/projects/${id}`);
   });

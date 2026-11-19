@@ -60,7 +60,13 @@ export function ShowYourWork({ projectId, events }: { projectId: string; events:
   const [list, setList] = useState<LlmCallList | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState<Set<string>>(new Set());
-  const steps = events.filter((e) => e.type === 'step').length;
+  // Reloaded when a step ends (its calls are all logged by then), not on every event: a raise
+  // sends dozens, and the API rate-limits each address.
+  const steps = events.filter(
+    (e) =>
+      e.type === 'step' &&
+      ['done', 'failed', 'skipped'].includes((e.payload as { state?: string })?.state ?? ''),
+  ).length;
   const load = useCallback(() => {
     let alive = true;
     getLlmCalls(API, projectId).then((r) => {
@@ -74,7 +80,15 @@ export function ShowYourWork({ projectId, events }: { projectId: string; events:
       alive = false;
     };
   }, [projectId, t]);
-  useEffect(() => load(), [load, steps]);
+  useEffect(() => {
+    // The replayed events arrive together: one load for the lot.
+    let cancel: (() => void) | undefined;
+    const timer = setTimeout(() => (cancel = load()), steps ? 500 : 0);
+    return () => {
+      clearTimeout(timer);
+      cancel?.();
+    };
+  }, [load, steps]);
   const n = (v: number) => v.toLocaleString(locale === 'ur' ? 'ur-PK' : 'en-US');
   return (
     <section aria-labelledby="work-heading" data-testid="show-your-work" className="mt-6">

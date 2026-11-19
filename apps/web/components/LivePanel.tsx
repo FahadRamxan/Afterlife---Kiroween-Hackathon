@@ -4,6 +4,7 @@ import { CrtScreen } from '@afterlife/ui';
 import { useTranslations } from 'next-intl';
 import { useMemo } from 'react';
 import { latestScreen, type LiveEvent } from '../lib/live';
+import { possessionStats } from '../lib/possession';
 import type { LiveStatus } from '../lib/use-project-live';
 
 type StepPayload = { step: string; state: string; attempt: number; message?: string };
@@ -26,6 +27,7 @@ export function LivePanel({
     return w.success ? fromWire(w.data) : null;
   }, [screen]);
   const lines = events.filter((e) => e.type === 'step' || e.type === 'log').slice(-8);
+  const stats = useMemo(() => possessionStats(events), [events]);
 
   return (
     <section aria-labelledby="live-heading" data-testid="live-panel" className="mt-6">
@@ -49,6 +51,36 @@ export function LivePanel({
       ) : (
         <p className="mt-3 text-sm text-bone/70">{t('waiting')}</p>
       )}
+      {stats ? (
+        <div data-testid="possession-stats" className="mt-3 text-sm">
+          <h3 className="font-semibold">{t('possession.title')}</h3>
+          <ul className="mt-1 flex flex-wrap gap-x-4">
+            <li data-testid="stat-screens">{t('possession.screens', { n: stats.screens })}</li>
+            <li data-testid="stat-actions">{t('possession.actions', { n: stats.actions })}</li>
+            <li data-testid="stat-changes" className={stats.changes ? 'text-candle' : undefined}>
+              {t('possession.changes', { n: stats.changes })}
+            </li>
+          </ul>
+          <h4 className="sr-only">{t('possession.recent')}</h4>
+          <ol data-testid="possession-steps" className="mt-1 space-y-0.5 font-mono text-xs">
+            {stats.recent.map((o) => (
+              <li key={o.step} lang="en" dir="ltr">
+                {o.step}. {o.label} → {o.to}
+                {o.newScreen ? (
+                  <span className="text-ectoplasm"> · {t('possession.newScreen')}</span>
+                ) : null}
+                {o.changed.length ? (
+                  <span className="text-candle">
+                    {' '}
+                    · {t('possession.changed', { files: o.changed.join(', ') })}
+                  </span>
+                ) : null}
+                {o.errors.length ? <span> · {o.errors.join('; ')}</span> : null}
+              </li>
+            ))}
+          </ol>
+        </div>
+      ) : null}
       {lines.length ? (
         <ol data-testid="live-log" className="mt-3 space-y-1 font-mono text-xs" lang="en" dir="ltr">
           {lines.map((e) => (

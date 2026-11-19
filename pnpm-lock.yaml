@@ -320,6 +320,15 @@ importers:
       '@afterlife/db':
         specifier: workspace:^
         version: link:../db
+      '@afterlife/dbf':
+        specifier: workspace:^
+        version: link:../dbf
+      '@afterlife/emulator':
+        specifier: workspace:^
+        version: link:../emulator
+      '@afterlife/screen':
+        specifier: workspace:^
+        version: link:../screen
       '@afterlife/soul':
         specifier: workspace:^
         version: link:../soul
