@@ -67,7 +67,7 @@ As of Prompt 40. The code covered grew by 70% since Prompt 30 (the API, the work
 
 ## Status
 
-Prompts 1 to 32 and 34 to 40 are merged. Prompt 33 (Kiro driving Shifa through MCP) needs a person in a Kiro chat; its `.kiro/settings/mcp.json` is in the repo.
+Prompts 1 to 47 are merged. For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
 
 - **1 to 10, foundation:** the monorepo, steering and hooks, the Haunted Ledger design system, the app shell (English and Urdu), the deploy skeleton.
 - **11 to 21, the Graveyard and data:** the DOS toolchain, three sample dead apps (Shifa Medical Store, Iqra School Fees, Barkat Kiryana Ledger) with their legacy bugs, the Graveyard page, the `.DBF` reader, writer, snapshot, diff and viewer, and the DBF inspector API behind the upload card.
