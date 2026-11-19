@@ -1,1 +1,18 @@
-export const packageName = '@afterlife/soul';
+export {
+  ActionSchema,
+  EntityFieldSchema,
+  EntitySchema,
+  FieldTypeSchema,
+  ProvenanceSchema,
+  RuleSchema,
+  ScreenSchema,
+  SoulError,
+  SoulSchema,
+  parseSoul,
+  serializeSoul,
+  type Action,
+  type Entity,
+  type Rule,
+  type Screen,
+  type Soul,
+} from './ir';
