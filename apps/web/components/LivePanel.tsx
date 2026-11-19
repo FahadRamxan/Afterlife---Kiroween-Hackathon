@@ -60,12 +60,36 @@ export function LivePanel({
             <li data-testid="stat-changes" className={stats.changes ? 'text-candle' : undefined}>
               {t('possession.changes', { n: stats.changes })}
             </li>
+            {stats.guided ? (
+              <li data-testid="stat-guided" className="text-ectoplasm">
+                {t('possession.guided', { n: stats.guided })}
+              </li>
+            ) : null}
           </ul>
+          {stats.hints.length ? (
+            <>
+              <h4 className="mt-2 font-semibold">{t('possession.hints')}</h4>
+              <ul data-testid="possession-hints" className="mt-1 space-y-0.5 text-xs">
+                {stats.hints.map((h) => (
+                  <li key={h.step}>
+                    <q dir="auto">{h.hint}</q>
+                    <span className="font-mono text-bone/70" lang="en" dir="ltr">
+                      {' '}
+                      ← {h.step}. {h.label}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : null}
           <h4 className="sr-only">{t('possession.recent')}</h4>
           <ol data-testid="possession-steps" className="mt-1 space-y-0.5 font-mono text-xs">
             {stats.recent.map((o) => (
-              <li key={o.step} lang="en" dir="ltr">
+              <li key={o.step} lang="en" dir="ltr" data-kind={o.kind}>
                 {o.step}. {o.label} → {o.to}
+                {o.kind === 'guide' ? (
+                  <span className="text-ectoplasm"> · {t('possession.ownerPath')}</span>
+                ) : null}
                 {o.newScreen ? (
                   <span className="text-ectoplasm"> · {t('possession.newScreen')}</span>
                 ) : null}

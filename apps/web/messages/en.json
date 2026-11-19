@@ -135,7 +135,10 @@
         "recent": "Latest steps",
         "newScreen": "new screen",
         "changed": "changed {files}",
-        "refused": "What the app refused (the boundary values found these)"
+        "refused": "What the app refused (the boundary values found these)",
+        "guided": "{n, plural, one {# step} other {# steps}} on the owner's séance path",
+        "ownerPath": "owner's path",
+        "hints": "What the owner said (voice notes, as hints for the rules)"
       }
     },
     "steps": {

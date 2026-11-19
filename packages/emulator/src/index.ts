@@ -60,8 +60,11 @@ export { seededDosTime, withFreshState, type FreshOptions } from './determinism'
 export {
   MAX_AUDIO_BASE64,
   MAX_SESSION_ACTIONS,
+  MAX_SEANCE_MS,
   ObservationSchema,
+  SeanceActionSchema,
   SeanceSessionSchema,
+  type SeanceAction as SeanceActionRecord,
   type SeanceSession,
 } from './session';
 export {

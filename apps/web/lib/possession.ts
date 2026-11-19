@@ -13,6 +13,10 @@ const ObservationEvent = z.object({
   errors: z.array(z.string()),
   screens: z.number().int().nonnegative(),
   saves: z.number().int().nonnegative(),
+  /** `guide`: a step of the owner's séance, walked first (Prompt 50). */
+  kind: z.enum(['explore', 'walk', 'back', 'guide']).optional(),
+  /** What the owner said over it. */
+  hint: z.string().optional(),
 });
 export type ObservationEvent = z.infer<typeof ObservationEvent>;
 
@@ -22,6 +26,9 @@ export type PossessionStats = {
   changes: number;
   /** The newest few steps, newest last. */
   recent: ObservationEvent[];
+  /** Steps that followed the owner's séance, and what the owner said over them. */
+  guided: number;
+  hints: { step: number; label: string; hint: string }[];
   /** Each error line the app showed, once, with the step and the value that caused it. */
   refused: { text: string; label: string; step: number }[];
 };
@@ -44,6 +51,8 @@ export function possessionStats(events: LiveEvent[], recent = 5): PossessionStat
     actions: last.step,
     changes: last.saves,
     recent: obs.slice(-recent),
+    guided: obs.filter((o) => o.kind === 'guide').length,
+    hints: obs.flatMap((o) => (o.hint ? [{ step: o.step, label: o.label, hint: o.hint }] : [])),
     refused: obs
       .flatMap((o) => o.errors.map((text) => ({ text, label: o.label, step: o.step })))
       .filter((x, i, all) => all.findIndex((y) => y.text === x.text) === i),

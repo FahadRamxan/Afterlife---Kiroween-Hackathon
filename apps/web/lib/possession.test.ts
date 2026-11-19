@@ -52,6 +52,17 @@ describe('possessionStats', () => {
     ]);
   });
 
+  it("counts the steps on the owner's path and keeps what the owner said (Prompt 50)", () => {
+    const s = possessionStats([
+      obs(1, { kind: 'guide', label: 'owner pressed 3', hint: 'naya gahak' }),
+      obs(2, { kind: 'guide', label: 'owner pressed A' }),
+      obs(3, { kind: 'explore' }),
+    ])!;
+    expect(s.guided).toBe(2);
+    expect(s.hints).toEqual([{ step: 1, label: 'owner pressed 3', hint: 'naya gahak' }]);
+    expect(possessionStats([obs(1)])!).toMatchObject({ guided: 0, hints: [] });
+  });
+
   it('a re-run starts counting again, and a malformed event is ignored', () => {
     const s = possessionStats([
       obs(1),

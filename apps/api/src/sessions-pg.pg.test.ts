@@ -2,7 +2,7 @@
 // restarts, with every action as a row in `observations`.
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { observations, sessions, uuidv7, eq } from '@afterlife/db';
+import { observations, sessions, uuidv7, asc, eq } from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { FakeEmulator, buildBundle, recordAction, type SeanceSession } from '@afterlife/emulator';
 import { renderScreen, type CellInput } from '@afterlife/screen';
@@ -56,6 +56,18 @@ describe('PgSessionStore', () => {
     expect(await store.get(id)).toEqual(s);
   });
 
+  it('keeps when each action was pressed (Prompt 50), and a séance without times still loads', async () => {
+    const s = await session(3);
+    const timed = { ...s, actions: s.actions.map((a, i) => ({ ...a, atMs: 1000 * i + 250 })) };
+    const id = await store.create(timed);
+    expect(await store.get(id)).toEqual(timed);
+    const rows = await t.db
+      .select({ offsetMs: observations.offsetMs })
+      .from(observations)
+      .where(eq(observations.sessionId, id))
+      .orderBy(asc(observations.seq));
+    expect(rows.map((r) => r.offsetMs)).toEqual([250, 1250, 2250]);
+  });
   it('keeps the voice note as bytes, and gives it back as the same base64', async () => {
     const bytes = Uint8Array.from({ length: 3000 }, (_, i) => (i * 7) % 256);
     const s = {

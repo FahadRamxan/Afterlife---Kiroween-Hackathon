@@ -110,3 +110,14 @@ export {
   type ProbeReason,
   type TypedField,
 } from './possessor/inputs';
+
+// Guided possession and speech (Prompt 50).
+export { attachHints, guideFromSeance, type GuideStep, type SeanceAction } from './possessor/guide';
+export {
+  FakeSpeechClient,
+  SEANCE_LANGUAGES,
+  type SpeechClient,
+  type SpeechSegment,
+  type Transcript,
+} from './speech/types';
+export { speechClientFrom, type SpeechEnv } from './speech/config';

@@ -11,7 +11,7 @@ import { Button, CrtScreen } from '@afterlife/ui';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { summarizeObservation } from '../lib/observation';
-import { keyFromEvent, thumbnailSize } from '../lib/seance';
+import { actionTimes, keyFromEvent, thumbnailSize } from '../lib/seance';
 import { useEmulator, useScreenGrid } from '../lib/use-emulator';
 
 type Props = {
@@ -23,7 +23,8 @@ type Props = {
   raisedProjectId?: string;
   onSaved?: (sessionId: string) => void;
 };
-type Action = { observation: Observation; thumb: string; changed: string[] };
+/** `at`: when its key was pressed (performance.now()), to line it up with the voice note. */
+type Action = { observation: Observation; thumb: string; changed: string[]; at: number };
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 
@@ -81,7 +82,10 @@ export function SeanceRecorder({
   const [savedCount, setSavedCount] = useState(0);
   const [saving, setSaving] = useState(false);
   const [voice, setVoice] = useState<'off' | 'on' | 'denied'>('off');
-  const queue = useRef<KeyStroke[]>([]);
+  const queue = useRef<{ stroke: KeyStroke; at: number }[]>([]);
+  // When the séance and the voice note started (performance.now()), for each action's time.
+  const seanceAt = useRef(0);
+  const voiceAt = useRef<number | null>(null);
   const busy = useRef(false);
   const [pending, setPending] = useState(0);
   const mic = useRef<{ recorder: MediaRecorder; chunks: Blob[] } | null>(null);
@@ -104,12 +108,12 @@ export function SeanceRecorder({
     busy.current = true;
     try {
       while (queue.current.length > 0) {
-        const stroke = queue.current.shift()!;
+        const { stroke, at } = queue.current.shift()!;
         setPending(queue.current.length);
         const observation = await recordAction(c, [stroke]);
         const changed = summarizeObservation(observation).tables.map((x) => x.name);
         const thumb = await thumbnail(c);
-        setActions((a) => [...a, { observation, thumb, changed }]);
+        setActions((a) => [...a, { observation, thumb, changed, at }]);
       }
     } catch (e) {
       setMessage((e as Error).message);
@@ -124,7 +128,7 @@ export function SeanceRecorder({
     if (!k) return;
     // Tab and the arrows belong to the old app here; Esc too. Leaving: click outside.
     e.preventDefault();
-    queue.current.push(k);
+    queue.current.push({ stroke: k, at: performance.now() });
     setPending(queue.current.length);
     void pump();
   }
@@ -136,6 +140,7 @@ export function SeanceRecorder({
       const chunks: Blob[] = [];
       recorder.ondataavailable = (ev) => ev.data.size > 0 && chunks.push(ev.data);
       recorder.start();
+      voiceAt.current = performance.now();
       mic.current = { recorder, chunks };
       setVoice('on');
     } catch {
@@ -170,7 +175,14 @@ export function SeanceRecorder({
           projectId,
           ...(raisedProjectId ? { raisedProjectId } : {}),
           startedAt,
-          actions: actions.map((a) => a.observation),
+          actions: (() => {
+            const times = actionTimes(
+              actions.map((a) => a.at),
+              audio ? voiceAt.current : null,
+              seanceAt.current,
+            );
+            return actions.map((a, i) => ({ ...a.observation, atMs: times[i] }));
+          })(),
           audio,
         }),
       });
@@ -195,6 +207,7 @@ export function SeanceRecorder({
           onClick={() => {
             setUrl(bundle);
             setStartedAt(new Date().toISOString());
+            seanceAt.current = performance.now();
           }}
         >
           {t('start')}
