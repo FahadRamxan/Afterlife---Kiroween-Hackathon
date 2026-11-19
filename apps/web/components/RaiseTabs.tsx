@@ -10,8 +10,11 @@ import { EmptyState } from './EmptyState';
 export function RaiseTabs({
   initial,
   panels = {},
+  ownEmpty = [],
 }: {
   initial: RaiseTab;
+  /** Tabs whose panel shows its own empty state (the Soul tab: only when there is no Soul). */
+  ownEmpty?: RaiseTab[];
   /** What a step shows under its empty-state note (the séance recorder on Possession). */
   panels?: Partial<Record<RaiseTab, ReactNode>>;
 }) {
@@ -45,7 +48,7 @@ export function RaiseTabs({
       {RAISE_TABS.map((id) => (
         <Tabs.Content key={id} value={id} className="focus-visible:outline-2">
           <h2 className="sr-only">{t(`tabs.${id}`)}</h2>
-          <EmptyState body={t(`empty.${id}`)} />
+          {ownEmpty.includes(id) && panels[id] ? null : <EmptyState body={t(`empty.${id}`)} />}
           {panels[id]}
         </Tabs.Content>
       ))}

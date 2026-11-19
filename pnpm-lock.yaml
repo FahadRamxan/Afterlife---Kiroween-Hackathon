@@ -107,6 +107,9 @@ importers:
       '@afterlife/emulator':
         specifier: workspace:^
         version: link:../../packages/emulator
+      '@afterlife/soul':
+        specifier: workspace:^
+        version: link:../../packages/soul
       '@fastify/cors':
         specifier: ^11.4.3
         version: 11.4.3

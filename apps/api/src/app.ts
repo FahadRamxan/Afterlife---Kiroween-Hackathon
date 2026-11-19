@@ -16,6 +16,7 @@ import type { Env } from './env';
 import { liveRoutes, type LiveHub } from './live';
 import { MemoryProjectStore, projectRoutes, type Pipeline, type ProjectStore } from './projects';
 import { MemorySessionStore, sessionRoutes, type SessionStore } from './sessions';
+import { soulRoutes, type SoulStore } from './souls';
 import { uploadRoutes, type UploadStore } from './uploads';
 
 export type AppStores = {
@@ -24,6 +25,7 @@ export type AppStores = {
   live?: LiveHub;
   pipeline?: Pipeline;
   uploads?: UploadStore;
+  souls?: SoulStore;
 };
 
 export type AppOptions = {
@@ -112,6 +114,12 @@ export function buildApp(
     projectRoutes(projects, { createPerMinute: limits.createPerMinute, pipeline: stores.pipeline }),
   );
   app.register(liveRoutes(stores.live ?? null, env.WEB_ORIGINS));
+  app.register(
+    soulRoutes(stores.souls, {
+      projectExists: async (id) => (await projects.get(id)) !== null,
+      createPerMinute: limits.createPerMinute,
+    }),
+  );
   app.register(
     uploadRoutes(stores.uploads, stores.pipeline, { createPerMinute: limits.createPerMinute }),
   );
