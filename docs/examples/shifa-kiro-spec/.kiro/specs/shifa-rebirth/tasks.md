@@ -1,0 +1,29 @@
+- [ ] 1. Model Medicine (6 fields from `MEDICINE.DBF`) and load its old records
+- [ ] 2. Model Customer (3 fields from `CUSTOMER.DBF`) and load its old records
+- [ ] 3. Model Bill (7 fields from `BILLS.DBF`) and load its old records
+- [ ] 4. Model Bill line (6 fields from `BILLITEM.DBF`) and load its old records
+- [ ] 5. Implement `discount-over-5000`
+  - Write a property test that the new code and `if bill.subtotal > 5000 then trunc(bill.subtotal * 0.10, 2) else 0` agree on generated inputs
+  - _Requirements: 1.1, 1.2_
+- [ ] 6. Implement `gst-17-truncated`
+  - Write a property test that the new code and `trunc((bill.subtotal - bill.discount) * 0.17, 2)` agree on generated inputs
+  - _Requirements: 2.1_
+- [ ] 7. Implement `bill-total`
+  - Write a property test that the new code and `bill.subtotal - bill.discount + bill.gst` agree on generated inputs
+  - _Requirements: 3.1_
+- [ ] 8. Implement `expired-batch-blocked`
+  - Write a property test that the new code and `medicine.expiry >= today` agree on generated inputs
+  - _Requirements: 4.1_
+- [ ] 9. Implement `qty-over-stock-refused`
+  - Write a property test that the new code and `item.qty <= medicine.qty` agree on generated inputs
+  - _Requirements: 5.1_
+- [ ] 10. Implement `stock-decrement`
+  - Write a property test that the new code and `medicine.qty - item.qty` agree on generated inputs
+  - _Requirements: 6.1_
+- [ ] 11. Implement `bill-subtotal`
+  - Write a property test that the new code and `sum(items, x => x.qty * x.price)` agree on generated inputs
+  - _Requirements: 7.1_
+- [ ] 12. Build the MAIN MENU screen
+- [ ] 13. Build the NEW BILL screen
+- [ ] 14. Build the STOCK screen
+- [ ] 15. Build the CUSTOMERS screen

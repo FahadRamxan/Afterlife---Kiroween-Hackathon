@@ -7,3 +7,7 @@ pnpm-lock.yaml
 # Byte-exact test snapshots (JSON.stringify output).
 packages/screen/src/__screens__/
 apps/web/public/js-dos/
+# Golden files are compared byte for byte (packages/soul spec writer).
+**/__golden__/**
+# Written by pnpm soul:spec --example; tests/soul-spec-example.test.ts keeps it current.
+docs/examples/
