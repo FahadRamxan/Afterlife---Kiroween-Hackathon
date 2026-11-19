@@ -67,6 +67,14 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
   const { project, events } = state;
   // Uploaded apps get their bundle in Prompt 40; until then only Graveyard apps are raised.
   const app = project.source === 'graveyard' ? findApp(project.sourceApp) : undefined;
+  // Once possession has begun, its tab shows it: the "has not taken over yet" note goes.
+  const possessing = live.events.some(
+    (e) =>
+      e.type === 'observation' ||
+      (e.type === 'step' &&
+        (e.payload as { step?: string; state?: string })?.step === 'possess' &&
+        ['started', 'done'].includes((e.payload as { state?: string }).state ?? '')),
+  );
   return (
     <PageShell title={t('title', { name: project.name })}>
       <p className="mt-2 text-sm text-bone/70">
@@ -114,7 +122,7 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
       </section>
       <RaiseTabs
         initial={initial}
-        ownEmpty={['soul']}
+        ownEmpty={possessing ? ['soul', 'possession'] : ['soul']}
         panels={
           app
             ? {

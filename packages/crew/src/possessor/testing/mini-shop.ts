@@ -96,8 +96,12 @@ type State =
 
 const money = (paisa: number) => (paisa / 100).toFixed(2);
 
-/** The app: a state machine that redraws after every key. `state` is exposed for the tests. */
-export function miniShopApp(): FakeApp & { state: () => State } {
+/**
+ * The app: a state machine that redraws after every key. `state` is exposed for the tests.
+ * `quitKeys`: like many real DOS programs, Esc or F10 on the main menu quits (its status bar
+ * says "F10=Quit").
+ */
+export function miniShopApp(opts: { quitKeys?: boolean } = {}): FakeApp & { state: () => State } {
   let s: State = { at: 'menu' };
   const price = (code: string) =>
     Math.round(Number(ITEMS.find((i) => i.CODE === code)!.PRICE) * 100);
@@ -112,7 +116,7 @@ export function miniShopApp(): FakeApp & { state: () => State } {
             [11, 32, BODY, '3  Exit'],
             [18, 32, BODY, 'Choice:'],
           ],
-          '1-3 Select',
+          opts.quitKeys ? '1-3 Select  F10=Quit' : '1-3 Select',
           { row: 18, col: 40 },
         );
       case 'items': {
@@ -207,6 +211,10 @@ export function miniShopApp(): FakeApp & { state: () => State } {
     const chars = k.kind === 'text' ? [...k.text] : [];
     switch (s.at) {
       case 'menu':
+        if (opts.quitKeys && (key === 'Esc' || key === 'F10')) {
+          s = { at: 'exited' };
+          return;
+        }
         for (const c of chars) {
           if (c === '1') s = { at: 'code', lines: [], typing: '', error: '' };
           else if (c === '2') s = { at: 'items', adding: null, added: '' };
@@ -297,8 +305,8 @@ export function miniShopApp(): FakeApp & { state: () => State } {
 }
 
 /** A booted FakeEmulator running the mini shop, and its app (to look at its state). */
-export async function bootMiniShop() {
-  const app = miniShopApp();
+export async function bootMiniShop(opts: { quitKeys?: boolean } = {}) {
+  const app = miniShopApp(opts);
   const emu = new FakeEmulator(app);
   await emu.boot(miniShopBundle());
   return { emu, app };

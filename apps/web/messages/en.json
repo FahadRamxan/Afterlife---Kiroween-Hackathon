@@ -166,7 +166,7 @@
     "soul": {
       "loading": "Opening the Soul…",
       "version": "Soul version {version}, by {by}, from {count, plural, one {# observation} other {# observations}}.",
-      "reference": "Reference Soul: written by the Afterlife team from this sample app's source code, as the answer key. The Archaeologist infers a Soul itself from Prompt 55.",
+      "reference": "Reference Soul: written by the Afterlife team from this sample app's source code, as the answer key. The Archaeologist will find a Soul by itself.",
       "entities": "Entities",
       "key": "key",
       "rules": "{count, plural, one {# rule} other {# rules}}",

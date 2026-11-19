@@ -64,6 +64,19 @@ export function hintKeys(key: string): string[] {
   });
 }
 
+/**
+ * How `keys` would leave the program on this screen, or null when they would not: a key the status
+ * bar names as an exit ("F10=Quit"), or Esc on the first screen, where many programs quit. The
+ * Possessor presses neither, even on an owner's guided path (crew.md: Esc always returns safely).
+ */
+export function quitBy(m: ScreenModel, keys: string, firstScreen: boolean): string | null {
+  if (firstScreen && keys === '{Esc}') return 'Esc on the first screen';
+  const hint = (m.status?.hints ?? []).find(
+    (h) => EXIT_WORDS.test(h.action) && hintKeys(h.key).includes(keys),
+  );
+  return hint ? `${hint.key}=${hint.action}` : null;
+}
+
 /** The label of a field: its own, or the nearest text left of it on the same row. */
 export function fieldLabel(
   m: ScreenModel,

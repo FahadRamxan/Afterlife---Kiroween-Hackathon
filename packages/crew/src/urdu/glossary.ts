@@ -26,6 +26,17 @@ export const SHOP_GLOSSARY: GlossaryEntry[] = [
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const wordRe = (w: string) => new RegExp(`(^|[^A-Za-z])${escape(w)}(?=$|[^A-Za-z])`, 'i');
 
+/** Not an Arabic-script letter (U+0600 to U+06FF): what may come right before a glossary word. */
+const NOT_LETTER = `[^${String.fromCharCode(0x0600)}-${String.fromCharCode(0x06ff)}]`;
+
+/**
+ * True when `word` starts a word of `ur`. Endings may follow it (a plural is the word plus an
+ * ending), but a word that only has its letters inside (the Urdu for "before" holds the two
+ * letters of "bill") does not count.
+ */
+const startsWord = (ur: string, word: string): boolean =>
+  new RegExp(`(?:^|${NOT_LETTER})${escape(word)}`).test(ur);
+
 /** The glossary entries whose English appears in the text. */
 export function termsIn(en: string, glossary: GlossaryEntry[] = SHOP_GLOSSARY): GlossaryEntry[] {
   return glossary.filter((g) => g.en.some((w) => wordRe(w).test(en)));
@@ -46,7 +57,7 @@ export function glossaryIssues(
   const issues: string[] = [];
   if (!hasUrduScript(ur)) issues.push('write the translation in Urdu script (Nastaliq)');
   for (const g of termsIn(en, glossary))
-    if (!ur.includes(g.ur)) issues.push(`say "${g.en[0]}" as "${g.ur}"`);
+    if (!startsWord(ur, g.ur)) issues.push(`say "${g.en[0]}" as "${g.ur}"`);
   return issues;
 }
 

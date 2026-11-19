@@ -11,9 +11,14 @@ if (!from || !to) {
   console.error('Usage: pnpm soul:spec <soul.json | --example> <out-dir>');
   process.exit(2);
 }
-const soul = from === '--example' ? SHIFA_REFERENCE_SOUL : parseSoul(readFileSync(from, 'utf8'));
+// `pnpm soul:spec` runs in packages/soul, so paths are taken from where it was typed (INIT_CWD).
+const here = process.env.INIT_CWD ?? process.cwd();
+const soul =
+  from === '--example'
+    ? SHIFA_REFERENCE_SOUL
+    : parseSoul(readFileSync(resolve(here, from), 'utf8'));
 for (const [path, text] of Object.entries(writeKiroSpec(soul))) {
-  const file = resolve(to, path);
+  const file = resolve(here, to, path);
   mkdirSync(dirname(file), { recursive: true });
   writeFileSync(file, text);
   console.log(`wrote ${file}`);

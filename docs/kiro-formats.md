@@ -35,29 +35,75 @@ Use Vitest and fast-check in this package.
 - **Location:** `.kiro/specs/<feature-name>/`.
 - **Files:** `requirements.md` (user stories, EARS acceptance criteria), `design.md`, `tasks.md`. A bugfix spec uses `bugfix.md` instead of `requirements.md`.
 - **Workflows:** Requirements-First, Design-First, Quick Spec.
-- Tasks are checkbox lists that Kiro updates as it runs them. Independent tasks run in parallel waves.
+- **Kiro checks the headings.** Kiro IDE lists a spec's missing parts as "Kiro Spec Format" problems in its Problems panel. The table is what that check asks for (checked in Kiro on 2026-11-19, when the first Shifa spec showed 22 problems). `packages/soul/src/spec-writer.test.ts` runs the same check on every spec Afterlife writes.
+
+| File              | Required (an error if missing)                                                                                                                              | Recommended (a warning if missing)                                                                                                            |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `requirements.md` | `# Requirements Document`, `## Introduction`, `## Requirements`, and `#### Acceptance Criteria` in each `### Requirement N: Title` block                    | `## Glossary`, and `**User Story:**` in each requirement block                                                                                |
+| `design.md`       | `## Overview`, `## Architecture`, `## Components and Interfaces`, `## Data Models`                                                                          | `## Correctness Properties` (each `### Property N: Title` with `**Validates: Requirements X.Y**`), `## Error Handling`, `## Testing Strategy` |
+| `tasks.md`        | `# Implementation Plan` (Kiro writes `# Implementation Plan: <name>`), and `## Task Dependency Graph` with a `json` block holding a non-empty `waves` array | `## Overview`, `## Tasks`, `## Notes`                                                                                                         |
+
+- Acceptance criteria are a numbered list in each requirement, so `1.2` means requirement 1, criterion 2.
+- Tasks are checkboxes that Kiro ticks as it runs them: `- [ ] N. Title` at the top, `  - [ ] N.M Title` under it, `- [x]` when done, and `- [ ]*` for an optional task. Plain `- ` bullets under a task are notes, such as `_Requirements: 1.1, 1.2_`.
+- The dependency graph holds only the leaf tasks (`N.M`), in waves numbered from 0. The tasks in a wave can run in parallel; a wave starts when the waves before it are done.
 
 ```markdown
 <!-- .kiro/specs/dbf-reader/requirements.md -->
 
-# Requirements
+# Requirements Document
 
-## User story
+## Introduction
 
-As a developer, I want to read a .DBF file so that I can inspect legacy data.
+Read the .DBF files of legacy apps.
 
-## Acceptance criteria
+## Glossary
 
-1. WHEN a valid dBASE III buffer is passed THE SYSTEM SHALL return its fields and records.
-2. WHEN a record has the deletion flag set THE SYSTEM SHALL mark it as deleted.
+- **Reader**: the DBF reader in `packages/dbf`.
+
+## Requirements
+
+### Requirement 1: Read a DBF file
+
+**User Story:** As a developer, I want to read a .DBF file, so that I can inspect legacy data.
+
+#### Acceptance Criteria
+
+1. WHEN a valid dBASE III buffer is passed, THE Reader SHALL return its fields and records.
+2. WHEN a record has the deletion flag set, THE Reader SHALL mark it as deleted.
 ```
 
-```markdown
+````markdown
 <!-- .kiro/specs/dbf-reader/tasks.md -->
 
-- [ ] 1. Write round-trip property test
-- [ ] 2. Implement readDbf
+# Implementation Plan: DBF reader
+
+## Overview
+
+The round-trip property test first, then the reader.
+
+## Tasks
+
+- [ ] 1. Read DBF files
+  - [ ] 1.1 Write the round-trip property test
+    - _Requirements: 1.1, 1.2_
+  - [ ] 1.2 Implement readDbf
+    - _Requirements: 1.1, 1.2_
+
+## Notes
+
+- Keep the round-trip test passing.
+
+## Task Dependency Graph
+
+```json
+{
+  "waves": [
+    { "id": 0, "tasks": ["1.1"] },
+    { "id": 1, "tasks": ["1.2"] }
+  ]
+}
 ```
+````
 
 ## Hooks
 

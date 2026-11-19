@@ -1,7 +1,7 @@
 'use client';
 
 import * as Tabs from '@radix-ui/react-tabs';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState, type ReactNode } from 'react';
 import { RAISE_TABS, type RaiseTab } from '../lib/raise-tabs';
 import { EmptyState } from './EmptyState';
@@ -19,6 +19,9 @@ export function RaiseTabs({
   panels?: Partial<Record<RaiseTab, ReactNode>>;
 }) {
   const t = useTranslations('raise');
+  // Radix Tabs writes dir="ltr" on its root unless told otherwise, which would turn every tab
+  // panel left to right in Urdu. It also decides which arrow key moves to the next tab.
+  const dir = useLocale() === 'ur' ? 'rtl' : 'ltr';
   const [tab, setTab] = useState<RaiseTab>(initial);
 
   function select(value: string) {
@@ -30,7 +33,7 @@ export function RaiseTabs({
   }
 
   return (
-    <Tabs.Root value={tab} onValueChange={select} className="mt-8">
+    <Tabs.Root value={tab} onValueChange={select} dir={dir} className="mt-8">
       <Tabs.List
         aria-label={t('tabsLabel')}
         className="flex flex-wrap gap-1 border-b border-bone/15"

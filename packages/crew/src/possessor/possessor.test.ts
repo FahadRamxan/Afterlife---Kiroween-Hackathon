@@ -193,6 +193,53 @@ describe('possess on the mini shop', () => {
   });
 
   it(
+    'a blank probe reads "Name = (blank)", once',
+    async () => {
+      const { seen } = await run({ probesPerField: 3 });
+      const blanks = seen.filter((o) => o.label.includes('= (blank)'));
+      expect(blanks.length).toBeGreaterThan(0);
+      expect(blanks.every((o) => !o.label.includes('(blank) (blank)'))).toBe(true);
+    },
+    HEAVY,
+  );
+
+  it('an owner who quit by a key (Esc or F10 on the first screen) is not followed out of the program', async () => {
+    const { emu, app } = await bootMiniShop({ quitKeys: true });
+    const seen: PossessorObservation[] = [];
+    const logs: string[] = [];
+    await possess(emu, {
+      values: dataValueChooser,
+      record: FAST,
+      maxActions: 6,
+      onObservation: (o) => void seen.push(o),
+      onLog: (m) => void logs.push(m),
+      // Esc on Items only goes back; on the menu, Esc and F10 would quit this app.
+      guide: [{ keys: '2' }, { keys: '{Esc}' }, { keys: '{Esc}' }, { keys: '{F10}' }],
+    });
+    expect(seen.filter((o) => o.kind === 'guide').map((o) => o.keys)).toEqual(['2', '{Esc}']);
+    expect(app.state().at).not.toBe('exited');
+    expect(logs).toContain('Skipped the owner\'s "Esc on the first screen": it leaves the program');
+    expect(logs).toContain('Skipped the owner\'s "F10=Quit": it leaves the program');
+  });
+
+  it(
+    'exploring an app that quits on Esc or F10 at its menu never quits it',
+    async () => {
+      const { emu, app } = await bootMiniShop({ quitKeys: true });
+      const seen: PossessorObservation[] = [];
+      const r = await possess(emu, {
+        values: dataValueChooser,
+        record: FAST,
+        onObservation: (o) => void seen.push(o),
+      });
+      expect(app.state().at).not.toBe('exited');
+      expect(seen.some((o) => o.keys === '{F10}')).toBe(false);
+      expect(r.stoppedBecause).toBe('explored');
+    },
+    HEAVY,
+  );
+
+  it(
     "Prompt 50 done when: guided by the owner's séance, the save is reached in fewer steps than blind",
     async () => {
       // The owner's séance: Items, A, a name, a price. Recorded on the shop one key at a time.

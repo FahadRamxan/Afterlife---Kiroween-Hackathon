@@ -316,11 +316,15 @@ export function dslDate(s: string): DslDate {
 }
 
 type Val = Dec | string | boolean | DslDate | Val[] | { [k: string]: unknown };
-/** What an expression is evaluated against: plain data. Numbers may be strings ("6000.00"). */
+/**
+ * What an expression is evaluated against: plain data. Numbers may be strings ("6000.00"), but
+ * digits with a leading zero ("0012", "03001234567") stay text: they are codes and phone numbers,
+ * and "0012" is not the code "12".
+ */
 export type Env = Record<string, unknown>;
 
 const isDec = (v: unknown): v is Dec => v instanceof D;
-const NUMERIC = /^-?\d+(\.\d+)?$/;
+const NUMERIC = /^-?(0|[1-9]\d*)(\.\d+)?$/;
 
 /** A value from the caller, in our types: numbers (and number-like strings) become decimals. */
 function lift(v: unknown): Val {
@@ -528,9 +532,12 @@ export function evaluate(e: Expr, env: Env): Val {
         const d = asDate(args[0]!, 'addDays');
         const n = asNum(args[1]!, 'addDays');
         if (!n.isInteger()) throw new DslError('addDays takes a whole number of days');
-        return new DslDate(
-          new Date((d.days + n.toNumber()) * 86_400_000).toISOString().slice(0, 10),
-        );
+        // Past the year 9999 (or before year 0) is no date a DBF can hold, and JS Date fails.
+        const ms = (d.days + n.toNumber()) * 86_400_000;
+        const iso = Math.abs(ms) <= 8.64e15 ? new Date(ms).toISOString().slice(0, 10) : '';
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(iso))
+          throw new DslError('addDays goes past the years 0 to 9999');
+        return new DslDate(iso);
       }
       case 'daysBetween':
       case 'weeksBetween': {
