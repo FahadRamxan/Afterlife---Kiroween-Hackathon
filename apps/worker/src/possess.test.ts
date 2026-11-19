@@ -9,7 +9,7 @@ import {
   type CellInput,
 } from '@afterlife/screen';
 import { describe, expect, it } from 'vitest';
-import { graveyardBundle, possessFirstLook } from './possess';
+import { graveyardBundle, graveyardDosTime, possessFirstLook } from './possess';
 import type { StepContext } from './registry';
 
 function menu(title: string) {
@@ -23,8 +23,14 @@ function menu(title: string) {
 /** Runs `work` on a fake emulator showing the Shifa main menu, like HeadlessPool.use. */
 const fakePool = {
   booted: 0,
-  async use<R>(_bundle: Uint8Array, work: (emu: EmulatorController) => Promise<R>) {
+  boots: [] as ({ dosTime?: string } | undefined)[],
+  async use<R>(
+    _bundle: Uint8Array,
+    work: (emu: EmulatorController) => Promise<R>,
+    boot?: { dosTime?: string },
+  ) {
     this.booted++;
+    this.boots.push(boot);
     const emu = new FakeEmulator({ screen: menu('SHIFA MAIN MENU') });
     await emu.boot(
       buildBundle({
@@ -71,6 +77,16 @@ describe('possess (first look, until the Possessor in Prompt 48)', () => {
     expect(gridText(grid)[0]).toContain('SHIFA MAIN MENU');
   });
 
+  it("boots at the app's own DOS clock (found in the Prompts 31 to 40 review)", async () => {
+    // Without it js-dos kept a clock of its own: Iqra, a 2001 app, showed 25-06-1998.
+    await possessFirstLook({
+      pool: fakePool,
+      bundleFor: () => new Uint8Array([1]),
+      dosTimeFor: () => '2001-03-12 10:00:00',
+    })(ctx('iqra', []));
+    expect(fakePool.boots.at(-1)).toEqual({ dosTime: '2001-03-12 10:00:00' });
+  });
+
   it('an app with no bundle (an upload, until Prompt 40) is skipped without booting anything', async () => {
     const events: [string, unknown][] = [];
     const before = fakePool.booted;
@@ -82,6 +98,24 @@ describe('possess (first look, until the Possessor in Prompt 48)', () => {
       reason: expect.stringMatching(/no js-dos bundle/i),
     });
     expect(fakePool.booted).toBe(before);
+  });
+});
+
+describe('graveyardDosTime', () => {
+  it("is each Graveyard app's manifest clock", () => {
+    for (const app of ['shifa', 'iqra', 'barkat']) {
+      const manifest = JSON.parse(
+        readFileSync(resolve(__dirname, `../../../samples/graveyard/${app}/manifest.json`), 'utf8'),
+      ) as { dosTime: string };
+      expect(graveyardDosTime({ source: 'graveyard', sourceApp: app })).toBe(manifest.dosTime);
+    }
+    expect(graveyardDosTime({ source: 'graveyard', sourceApp: 'iqra' })).toMatch(/^2001-/);
+  });
+
+  it('never reads a path from the project: unknown apps, uploads and path tricks get nothing', () => {
+    for (const sourceApp of ['../../../etc/passwd', 'shifa/../iqra', 'doom', ''])
+      expect(graveyardDosTime({ source: 'graveyard', sourceApp })).toBeUndefined();
+    expect(graveyardDosTime({ source: 'upload', sourceApp: 'shifa' })).toBeUndefined();
   });
 });
 

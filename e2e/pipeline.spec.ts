@@ -20,9 +20,12 @@ test.describe('pipeline', () => {
     test.setTimeout(120_000);
     const id = await raise(page, 'Raise Shifa Medical Store');
     const steps = page.getByTestId('steps');
-    await expect(steps.getByRole('progressbar')).toHaveAccessibleName('6 of 6 steps finished', {
-      timeout: 90_000,
-    });
+    await expect(steps.getByRole('progressbar')).toHaveAccessibleName(
+      '6 of 6 steps run, 6 of them skipped',
+      {
+        timeout: 90_000,
+      },
+    );
     for (const s of STEPS)
       await expect(page.getByTestId(`step-${s}`)).toHaveAttribute('data-status', 'skipped');
     await expect(page.getByTestId('step-possess')).toContainText(
@@ -54,7 +57,7 @@ test.describe('pipeline', () => {
     await expect(page.getByTestId('live-screen')).toContainText('MAIN MENU', { timeout: 60_000 });
     await expect(page.getByTestId('live-log')).toContainText('Recorded run from');
     await expect(page.getByTestId('steps').getByRole('progressbar')).toHaveAccessibleName(
-      '6 of 6 steps finished',
+      '6 of 6 steps run, 6 of them skipped',
       { timeout: 60_000 },
     );
     await expect(page.getByTestId('step-archaeology')).toContainText('Recorded run:');

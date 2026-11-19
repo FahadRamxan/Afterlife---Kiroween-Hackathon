@@ -117,7 +117,7 @@
     },
     "steps": {
       "title": "Rebirth steps",
-      "progress": "{settled} of {total} steps finished",
+      "progress": "{settled} of {total} steps run{skipped, plural, =0 {} other {, # of them skipped}}",
       "attempts": "attempt {n}",
       "again": "Run {step} again, alone",
       "againShort": "Run again",
