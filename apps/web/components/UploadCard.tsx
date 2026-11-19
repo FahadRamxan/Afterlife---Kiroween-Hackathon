@@ -1,8 +1,10 @@
 'use client';
 
-import { Card, DbfTable } from '@afterlife/ui';
+import { Button, Card, DbfTable } from '@afterlife/ui';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { useId, useRef, useState } from 'react';
+import { postUpload, type UploadAnswer } from '../lib/upload-raise';
 import {
   checkUpload,
   inspectZip,
@@ -19,6 +21,7 @@ type State =
   | {
       phase: 'checked';
       zip: Extract<ZipCheck, { ok: true }>;
+      file: { name: string; bytes: Uint8Array };
       inspect: InspectResult | 'reading' | 'unconfigured';
     };
 
@@ -26,8 +29,8 @@ const API = process.env.NEXT_PUBLIC_API_URL;
 
 /**
  * "Upload your own dead app". Checks the zip in the browser (name, size, then a DOS program and
- * DBF files inside), then previews its tables through POST /api/dbf/inspect. Nothing is stored;
- * the full upload comes in Prompt 40.
+ * DBF files inside), then previews its tables through POST /api/dbf/inspect. Nothing is stored
+ * until "Raise this app" (Prompt 40) sends the zip to POST /api/uploads.
  */
 export function UploadCard() {
   const t = useTranslations('graveyard.upload');
@@ -41,13 +44,15 @@ export function UploadCard() {
     if (!file) return setState({ phase: 'idle' });
     const first = checkUpload(file);
     if (!first.ok) return setState({ phase: 'error', reason: first.reason, entries: [] });
-    const zip = inspectZip(new Uint8Array(await file.arrayBuffer()));
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    const zip = inspectZip(bytes);
+    const picked = { name: file.name, bytes };
     if (n !== pick.current) return;
     if (!zip.ok) return setState({ phase: 'error', reason: zip.reason, entries: zip.entries });
-    if (!API) return setState({ phase: 'checked', zip, inspect: 'unconfigured' });
-    setState({ phase: 'checked', zip, inspect: 'reading' });
+    if (!API) return setState({ phase: 'checked', zip, file: picked, inspect: 'unconfigured' });
+    setState({ phase: 'checked', zip, file: picked, inspect: 'reading' });
     const inspect = await postInspect(API, zip.dbfs);
-    if (n === pick.current) setState({ phase: 'checked', zip, inspect });
+    if (n === pick.current) setState({ phase: 'checked', zip, file: picked, inspect });
   }
 
   const entries =
@@ -100,6 +105,7 @@ export function UploadCard() {
       ) : null}
 
       {state.phase === 'checked' ? <Preview inspect={state.inspect} /> : null}
+      {state.phase === 'checked' ? <RaiseUpload file={state.file} /> : null}
     </Card>
   );
 }
@@ -176,6 +182,59 @@ function Preview({ inspect }: { inspect: InspectResult | 'reading' | 'unconfigur
         </p>
       ) : null}
       <p className="text-xs text-bone/75">{t('notStored')}</p>
+    </div>
+  );
+}
+
+/**
+ * Sends the zip to the server, which checks it again, virus-scans it and builds its bundle, then
+ * opens the new project. With several programs in the zip, asks which one starts the app.
+ */
+function RaiseUpload({ file }: { file: { name: string; bytes: Uint8Array } }) {
+  const t = useTranslations('graveyard.upload');
+  const router = useRouter();
+  const [busy, setBusy] = useState(false);
+  const [answer, setAnswer] = useState<Extract<UploadAnswer, { ok: false }> | null>(null);
+  const [program, setProgram] = useState<string>('');
+
+  async function send() {
+    setBusy(true);
+    const r = await postUpload(API, file.bytes, file.name, program || undefined);
+    if (r.ok) return router.push(`/raise/${r.projectId}`);
+    setAnswer(r);
+    if (r.programs?.length && !program) setProgram(r.programs[0]!);
+    setBusy(false);
+  }
+
+  return (
+    <div className="flex flex-col gap-2">
+      {answer?.programs ? (
+        <label className="flex items-center gap-2 text-sm">
+          {t('whichProgram')}
+          <select
+            value={program}
+            onChange={(e) => setProgram(e.target.value)}
+            className="rounded-md bg-graveyard px-2 py-1 font-mono"
+          >
+            {answer.programs.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
+      <Button type="button" onClick={send} disabled={busy} className="self-start">
+        {busy ? t('raising') : t('raiseUpload')}
+      </Button>
+      {answer && !answer.programs ? (
+        <p role="alert" className="text-sm">
+          {answer.code === 'DOWN' || answer.code === 'UNCONFIGURED'
+            ? t(answer.code === 'DOWN' ? 'raiseDown' : 'raiseUnconfigured')
+            : `${t('refused')} ${answer.message}`}
+        </p>
+      ) : null}
+      <p className="text-xs text-bone/75">{t('scanNote')}</p>
     </div>
   );
 }

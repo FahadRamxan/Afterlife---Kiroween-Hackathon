@@ -286,8 +286,36 @@ export const JOB_TYPES = [
   'exorcise',
   'twin-replay',
   'voice-change',
+  // An uploaded app is virus-scanned and bundled before its pipeline starts (Prompt 40).
+  'scan-upload',
 ] as const;
 export type JobType = (typeof JOB_TYPES)[number];
+
+export const uploadStatus = pgEnum('upload_status', ['scanning', 'clean', 'infected', 'failed']);
+
+/**
+ * An uploaded dead app (Prompt 40): the zip as sent, until the virus scan, then the js-dos bundle
+ * built from it. An infected zip's bytes are deleted; the row stays, with the finding.
+ */
+export const uploads = pgTable('uploads', {
+  id: id(),
+  projectId: uuid('project_id')
+    .notNull()
+    .unique()
+    .references(() => projects.id, { onDelete: 'cascade' }),
+  fileName: text('file_name').notNull(),
+  sha256: text('sha256').notNull(),
+  size: integer('size').notNull(),
+  executable: text('executable').notNull(),
+  status: uploadStatus('status').notNull().default('scanning'),
+  zip: bytea('zip'),
+  bundle: bytea('bundle'),
+  /** Which scanner looked at it ("ClamAV 1.0.7/27470", or the EICAR-only test scanner). */
+  scanner: text('scanner'),
+  /** What the scanner found, if anything. */
+  finding: text('finding'),
+  createdAt: createdAt(),
+});
 
 export const stepStatus = pgEnum('step_status', ['queued', 'running', 'done', 'failed', 'skipped']);
 
@@ -363,4 +391,5 @@ export const TABLES = {
   registry_patterns: registryPatterns,
   pipeline_steps: pipelineSteps,
   project_events: projectEvents,
+  uploads,
 } as const;

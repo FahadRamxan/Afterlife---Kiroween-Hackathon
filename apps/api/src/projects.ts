@@ -125,7 +125,8 @@ function validationError(err: unknown) {
 
 /** Starts the rebirth of a new project (queues its first step). Absent without a database. */
 export interface Pipeline {
-  start(projectId: string): Promise<void>;
+  /** Queues the first step: possess, or the virus scan for an uploaded app. */
+  start(projectId: string, from?: 'possess' | 'scan-upload'): Promise<void>;
   /** The six steps, in order, with where each one is. */
   steps(projectId: string): Promise<StepState[]>;
   /** Runs one step again, alone. False when it is already queued. */
@@ -193,7 +194,7 @@ export function projectRoutes(
         if (body.source === 'upload')
           return reply.code(501).send({
             error: 'NOT_YET',
-            message: 'Raising an uploaded app arrives with the upload flow (Prompt 40)',
+            message: 'Upload the zip to POST /api/uploads: it is checked and virus-scanned first',
           });
         const seed = SEED_PROJECTS.find((p) => p.sourceApp === body.app)!;
         const p = await store.create({

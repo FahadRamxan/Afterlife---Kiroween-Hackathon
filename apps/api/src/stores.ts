@@ -5,6 +5,7 @@ import type { AppStores } from './app';
 import type { Env } from './env';
 import { PgLiveHub } from './live';
 import { PgPipeline } from './pipeline';
+import { PgUploadStore } from './uploads';
 import { MemoryProjectStore } from './projects';
 import { PgProjectStore } from './projects-pg';
 import { MemorySessionStore } from './sessions';
@@ -42,7 +43,13 @@ export async function openStores(
   const live = await PgLiveHub.start(db, env.DATABASE_URL, log);
   const pipeline = await PgPipeline.start(db, env.DATABASE_URL, log);
   return {
-    stores: { sessions: new PgSessionStore(db), projects: new PgProjectStore(db), live, pipeline },
+    stores: {
+      sessions: new PgSessionStore(db),
+      projects: new PgProjectStore(db),
+      uploads: new PgUploadStore(db),
+      live,
+      pipeline,
+    },
     close: async () => {
       await pipeline.close();
       await live.close();

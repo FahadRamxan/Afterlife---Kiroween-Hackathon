@@ -43,9 +43,16 @@
       "unconfigured": "The API is not configured, so the tables cannot be previewed.",
       "tableCaption": "{file} ({count, plural, one {# record} other {# records}})",
       "moreRows": "Showing the first {shown} of {total} records.",
-      "notStored": "Nothing is stored. Raising an uploaded app comes in a later build.",
+      "notStored": "Nothing is stored until you raise it.",
       "unreadable": "This file could not be read:",
-      "leftOut": "{count, plural, one {# more DBF file was} other {# more DBF files were}} not previewed: the first {shown} are shown."
+      "leftOut": "{count, plural, one {# more DBF file was} other {# more DBF files were}} not previewed: the first {shown} are shown.",
+      "raiseUpload": "Raise this app",
+      "raising": "Uploading…",
+      "whichProgram": "Which program starts the app?",
+      "refused": "The server refused this zip:",
+      "raiseDown": "The API did not answer, so the app was not uploaded.",
+      "raiseUnconfigured": "The API is not configured, so the app cannot be uploaded.",
+      "scanNote": "The server checks the zip again (file names, sizes, a real DOS program), scans it for viruses, and only ever runs the program inside the emulator."
     },
     "raising": "Raising…",
     "openUnsaved": "Open it without saving",

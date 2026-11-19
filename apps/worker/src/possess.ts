@@ -27,10 +27,13 @@ export function graveyardBundle(p: { source: string; sourceApp: string }): Uint8
 
 export function possessFirstLook(deps: {
   pool: EmulatorPool;
-  bundleFor: (p: StepContext['project']) => Uint8Array | null;
+  bundleFor: (
+    p: StepContext['project'],
+    projectId: string,
+  ) => Promise<Uint8Array | null> | Uint8Array | null;
 }): StepHandler {
   return async (ctx) => {
-    const bundle = deps.bundleFor(ctx.project);
+    const bundle = await deps.bundleFor(ctx.project, ctx.projectId);
     if (!bundle)
       return {
         status: 'skipped',

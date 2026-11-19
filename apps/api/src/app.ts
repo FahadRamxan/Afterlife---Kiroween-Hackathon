@@ -16,12 +16,14 @@ import type { Env } from './env';
 import { liveRoutes, type LiveHub } from './live';
 import { MemoryProjectStore, projectRoutes, type Pipeline, type ProjectStore } from './projects';
 import { MemorySessionStore, sessionRoutes, type SessionStore } from './sessions';
+import { uploadRoutes, type UploadStore } from './uploads';
 
 export type AppStores = {
   sessions?: SessionStore;
   projects?: ProjectStore;
   live?: LiveHub;
   pipeline?: Pipeline;
+  uploads?: UploadStore;
 };
 
 export type AppOptions = {
@@ -102,5 +104,8 @@ export function buildApp(
     projectRoutes(projects, { createPerMinute: limits.createPerMinute, pipeline: stores.pipeline }),
   );
   app.register(liveRoutes(stores.live ?? null, env.WEB_ORIGINS));
+  app.register(
+    uploadRoutes(stores.uploads, stores.pipeline, { createPerMinute: limits.createPerMinute }),
+  );
   return app;
 }

@@ -66,6 +66,15 @@ describe('worker image (Prompt 37)', () => {
     expect(dockerfile).toMatch(/^USER node$/m);
   });
 
+  it('has ClamAV with signatures, and uses it by default (Prompt 40)', () => {
+    expect(dockerfile).toMatch(/apt-get install[^\n]*clamav/);
+    expect(dockerfile).toMatch(/freshclam/);
+    expect(dockerfile).toMatch(/VIRUS_SCANNER=clamav/);
+    const smoke = read('scripts/docker-smoke.mjs');
+    expect(smoke).toContain("'src/smoke-scan.ts'");
+    expect(read('docs/deploy.md')).toMatch(/scan peaks at \d+ MiB/);
+  });
+
   it('the Docker smoke test boots Shifa inside the image and the job loop on Postgres', () => {
     const smoke = read('scripts/docker-smoke.mjs');
     expect(smoke).toContain("'src/smoke-boot.ts'");

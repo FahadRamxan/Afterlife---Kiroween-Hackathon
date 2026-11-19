@@ -115,7 +115,14 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
                   </>
                 ),
               }
-            : {}
+            : project.source === 'upload'
+              ? {
+                  // An uploaded app: the virus scan, then possession, live. (Séances on uploads later.)
+                  possession: (
+                    <LivePanel events={live.events} status={live.status} name={project.name} />
+                  ),
+                }
+              : {}
         }
       />
     </PageShell>
