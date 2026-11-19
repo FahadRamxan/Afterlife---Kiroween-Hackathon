@@ -57,7 +57,7 @@ export function SoulPanel({
         <p className="text-sm text-bone/75">
           {t('version', {
             version,
-            by: soul.provenance.createdBy,
+            by: t(`makers.${soul.provenance.createdBy}`),
             count: soul.provenance.observationCount,
           })}
         </p>

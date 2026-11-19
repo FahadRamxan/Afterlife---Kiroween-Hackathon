@@ -16,6 +16,7 @@ const API = process.env.NEXT_PUBLIC_API_URL;
 /** The Soul's versions, newest first, and "compare two versions". */
 export function SoulVersions({ projectId }: { projectId: string }) {
   const t = useTranslations('raise.soul.versions');
+  const soulT = useTranslations('raise.soul');
   const [versions, setVersions] = useState<VersionRow[] | null>(null);
   const [from, setFrom] = useState<number | null>(null);
   const [to, setTo] = useState<number | null>(null);
@@ -66,7 +67,7 @@ export function SoulVersions({ projectId }: { projectId: string }) {
             <time dateTime={v.createdAt} className="font-mono text-candle" lang="en" dir="ltr">
               {v.createdAt.slice(0, 19).replace('T', ' ')}
             </time>{' '}
-            · {t('by', { by: v.createdBy })} · {t('rules', { count: v.rules })}
+            · {t('by', { by: soulT(`makers.${v.createdBy}`) })} · {t('rules', { count: v.rules })}
             {v.changes ? (
               <span className="text-bone/70" lang="en" dir="ltr">
                 {' '}

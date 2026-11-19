@@ -139,6 +139,13 @@
         "guided": "{n, plural, one {# step} other {# steps}} on the owner's séance path",
         "ownerPath": "owner's path",
         "hints": "What the owner said (voice notes, as hints for the rules)"
+      },
+      "state": {
+        "started": "started",
+        "retrying": "trying again",
+        "done": "done",
+        "failed": "failed",
+        "skipped": "skipped"
       }
     },
     "steps": {
@@ -212,6 +219,12 @@
         "done": "Translated. The Soul now shows the rules in Urdu.",
         "notYet": "Not in Urdu yet.",
         "english": "In English"
+      },
+      "makers": {
+        "archaeologist": "the Archaeologist",
+        "owner": "the owner",
+        "voice-change": "a voice change",
+        "reference": "our team (reference)"
       }
     },
     "work": {
@@ -240,7 +253,9 @@
         "unconfigured": "The API is not configured.",
         "down": "The API did not answer. Try again in a minute.",
         "not-found": "There is no such project."
-      }
+      },
+      "hiddenNote": "This is a real shop's app, so what was sent to the model and what it answered is not shown here. Names and phone numbers are never sent to the model.",
+      "hidden": "Not shown: this is a real shop’s app."
     }
   },
   "vessel": {

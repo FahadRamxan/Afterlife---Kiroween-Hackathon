@@ -1,7 +1,16 @@
 // A scripted model for tests (unit tests never call the network). Each call takes the next step
 // of the script: a response, an error to throw, or a function of the request. It keeps every
 // request it was sent, so a test can check what an agent asked.
-import type { ContentBlock, Json, LlmClient, LlmRequest, LlmResponse, StopReason } from './types';
+import {
+  FULL_CAPABILITIES,
+  type ContentBlock,
+  type Json,
+  type LlmCapabilities,
+  type LlmClient,
+  type LlmRequest,
+  type LlmResponse,
+  type StopReason,
+} from './types';
 
 export type FakeStep = LlmResponse | Error | ((req: LlmRequest, n: number) => LlmResponse | Error);
 
@@ -33,6 +42,8 @@ export class FakeLlmClient implements LlmClient {
   constructor(
     script: FakeStep[] | ((req: LlmRequest, n: number) => LlmResponse | Error),
     readonly model = 'fake-model',
+    /** What the scripted model accepts: everything, unless a test plays a stricter model. */
+    readonly capabilities: LlmCapabilities = FULL_CAPABILITIES,
   ) {
     this.steps = Array.isArray(script) ? [...script] : [];
     if (!Array.isArray(script)) this.fn = script;
@@ -40,6 +51,11 @@ export class FakeLlmClient implements LlmClient {
 
   async converse(req: LlmRequest, opts: { signal?: AbortSignal } = {}): Promise<LlmResponse> {
     opts.signal?.throwIfAborted();
+    // A stricter model refuses what it does not take, as Sonnet 5.5 answers 400.
+    if (!this.capabilities.forcedToolChoice && req.toolChoice && req.toolChoice !== 'auto')
+      throw new Error('ValidationException: forced tool choice is not supported by this model');
+    if (!this.capabilities.temperature && req.temperature !== undefined)
+      throw new Error('ValidationException: temperature is not supported by this model');
     // A copy: the caller goes on adding messages to its own array.
     this.requests.push(structuredClone(req));
     const n = this.requests.length;

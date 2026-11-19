@@ -37,7 +37,7 @@ test('the version timeline lists each version and compares two', async ({ page }
 
   await page.goto(`/raise/${id}?tab=soul`);
   const versions = page.getByTestId('soul-versions');
-  await expect(versions.getByTestId('version-2')).toContainText('by owner');
+  await expect(versions.getByTestId('version-2')).toContainText('by the owner');
   await expect(versions.getByTestId('version-2')).toContainText('1 added, 1 removed, 1 changed');
   await expect(versions.getByTestId('version-1')).toContainText('the first version');
   await expect(page.getByTestId('soul')).toContainText('Soul version 2');

@@ -129,6 +129,7 @@ export function buildApp(
     llmCallRoutes(stores.llmCalls, {
       projectExists: async (id) => (await projects.get(id)) !== null,
       budgetTokens: env.LLM_TOKEN_BUDGET,
+      isRealShop: async (id) => (await projects.get(id))?.source === 'upload',
     }),
   );
   app.register(

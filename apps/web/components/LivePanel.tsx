@@ -119,10 +119,20 @@ export function LivePanel({
         </div>
       ) : null}
       {lines.length ? (
-        <ol data-testid="live-log" className="mt-3 space-y-1 font-mono text-xs" lang="en" dir="ltr">
+        <ol data-testid="live-log" className="mt-3 space-y-1 font-mono text-xs">
           {lines.map((e) => (
             <li key={e.seq} data-type={e.type}>
-              {describe(e)}
+              {e.type === 'step' ? (
+                <StepLine
+                  p={e.payload as StepPayload}
+                  state={(s) => (t.has(`state.${s}`) ? t(`state.${s}`) : s)}
+                />
+              ) : (
+                // The worker writes its log in English.
+                <span lang="en" dir="ltr">
+                  {(e.payload as LogPayload).message}
+                </span>
+              )}
             </li>
           ))}
         </ol>
@@ -131,10 +141,20 @@ export function LivePanel({
   );
 }
 
-function describe(e: LiveEvent): string {
-  if (e.type === 'step') {
-    const p = e.payload as StepPayload;
-    return `${p.step}: ${p.state}${p.message ? ` (${p.message})` : ''}`;
-  }
-  return (e.payload as LogPayload).message;
+/** "possess: done": the step's id (English, as the API names it), then its state in the page's language. */
+function StepLine({ p, state }: { p: StepPayload; state: (s: string) => string }) {
+  return (
+    <>
+      <span lang="en" dir="ltr">
+        {p.step}
+      </span>
+      : {state(p.state)}
+      {p.message ? (
+        <span lang="en" dir="ltr">
+          {' '}
+          ({p.message})
+        </span>
+      ) : null}
+    </>
+  );
 }

@@ -41,10 +41,30 @@ export type LlmResponse = {
   usage: LlmUsage;
 };
 
+/**
+ * What the model accepts. Claude Sonnet 5.5 and later answer 400 to a forced tool choice (`any`
+ * or one tool) and to any temperature (review 41-50), so for them neither is sent.
+ */
+export type LlmCapabilities = { forcedToolChoice: boolean; temperature: boolean };
+export const FULL_CAPABILITIES: LlmCapabilities = { forcedToolChoice: true, temperature: true };
+
+/** The request with only what the model accepts: no forced tool choice or temperature if not. */
+export function fitRequest(req: LlmRequest, caps: LlmCapabilities): LlmRequest {
+  const { temperature, toolChoice, ...rest } = req;
+  return {
+    ...rest,
+    ...(temperature !== undefined && caps.temperature ? { temperature } : {}),
+    ...(toolChoice !== undefined && (caps.forcedToolChoice || toolChoice === 'auto')
+      ? { toolChoice }
+      : {}),
+  };
+}
+
 export interface LlmClient {
   /** `bedrock`, `fake`: written on every logged call so the panel says which model answered. */
   readonly provider: string;
   readonly model: string;
+  readonly capabilities: LlmCapabilities;
   converse(req: LlmRequest, opts?: { signal?: AbortSignal }): Promise<LlmResponse>;
 }
 

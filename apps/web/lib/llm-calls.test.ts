@@ -23,7 +23,13 @@ describe('getLlmCalls', () => {
   it('reads the calls and the budget', async () => {
     const list = { budget: { tokens: 5000, used: 120 }, total: 1, calls: [call] };
     const f = json(200, { projectId: id, ...list });
-    expect(await getLlmCalls('https://a/', id, f)).toEqual({ ok: true, list });
+    // An old API without "bodies": they are shown.
+    expect(await getLlmCalls('https://a/', id, f)).toEqual({
+      ok: true,
+      list: { ...list, bodies: 'shown' },
+    });
+    const shop = json(200, { projectId: id, ...list, bodies: 'hidden' });
+    expect(await getLlmCalls('https://a/', id, shop)).toMatchObject({ list: { bodies: 'hidden' } });
     expect(f).toHaveBeenCalledWith(`https://a/api/projects/${id}/llm-calls`, expect.anything());
   });
   it('says why it cannot', async () => {
