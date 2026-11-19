@@ -44,7 +44,9 @@ export function buildApp(
   stores: AppStores = {},
   appOptions: AppOptions = {},
 ) {
-  // Behind Render's proxy the client's address is in X-Forwarded-For (TRUST_PROXY=1).
+  // Behind Render's proxy the client's address is in X-Forwarded-For (TRUST_PROXY=1). Only the
+  // proxies on a private network are trusted, never `true`: `true` takes the left-most address,
+  // which the visitor writes.
   const app = Fastify({ logger: { level: env.LOG_LEVEL }, trustProxy: env.TRUST_PROXY, ...opts });
   const sessions = stores.sessions ?? new MemorySessionStore();
   const projects = stores.projects ?? new MemoryProjectStore();
@@ -99,7 +101,7 @@ export function buildApp(
   });
 
   app.register(dbfInspectRoutes);
-  app.register(sessionRoutes(sessions));
+  app.register(sessionRoutes(sessions, { createPerMinute: limits.createPerMinute }));
   app.register(
     projectRoutes(projects, { createPerMinute: limits.createPerMinute, pipeline: stores.pipeline }),
   );

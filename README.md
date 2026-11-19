@@ -50,7 +50,7 @@ GitHub Actions is off for this repo, so every check runs locally. The workflow f
 5. **Nightly**: a Kiro Crew scheduled job runs `pnpm ci:local` on `main` and sends the result.
 6. **After a deploy**: `pnpm smoke:prod <url>`.
 
-Current counts: 1052 unit and property tests in 63 files (integration tests included), and 87 Playwright tests (Prompt 30, after the review fixes). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
+Current counts: 1283 unit and property tests in 98 files (integration and Postgres tests included), and 106 Playwright tests (Prompt 39, after the review fixes). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
 
 ## Coverage
 

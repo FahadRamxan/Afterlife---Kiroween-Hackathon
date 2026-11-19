@@ -35,9 +35,12 @@ export class MemorySessionStore implements SessionStore {
 export const MAX_SESSION_BYTES = 8 * 1024 * 1024;
 const Id = z.uuid();
 
-export function sessionRoutes(store: SessionStore) {
+export function sessionRoutes(store: SessionStore, opts: { createPerMinute: number }) {
   return async (app: FastifyInstance) => {
-    app.post('/api/sessions', { bodyLimit: MAX_SESSION_BYTES }, async (req, reply) => {
+    // Each séance can be 8 MB, so it gets the same lower per-address limit as a raise: the
+    // global 300 a minute would let one visitor write gigabytes a minute.
+    const config = { rateLimit: { max: opts.createPerMinute, timeWindow: '1 minute' } };
+    app.post('/api/sessions', { bodyLimit: MAX_SESSION_BYTES, config }, async (req, reply) => {
       const parsed = SeanceSessionSchema.safeParse(req.body);
       if (!parsed.success)
         return reply.code(400).send({

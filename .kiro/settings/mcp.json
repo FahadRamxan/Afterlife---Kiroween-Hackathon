@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "afterlife-emulator": {
+      "command": "node",
+      "args": ["--import", "tsx", "packages/mcp-emulator/src/main.ts"],
+      "env": {},
+      "disabled": false,
+      "autoApprove": ["list_apps", "read_screen", "read_table", "snapshot_data", "diff_data"]
+    }
+  }
+}

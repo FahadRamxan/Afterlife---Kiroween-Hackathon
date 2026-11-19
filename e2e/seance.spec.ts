@@ -63,6 +63,35 @@ test.describe('séance recording', () => {
     expect(body.audio).toBeUndefined();
   });
 
+  test('leaving the Possession tab turns the microphone off', async ({ page, context }) => {
+    // Found in the Prompts 31 to 40 review: the tab's content unmounts, but the recorder kept
+    // the microphone open (the browser's mic light stayed on) with nothing left to stop it.
+    await context.grantPermissions(['microphone']);
+    await page.addInitScript(() => {
+      const w = window as unknown as { __streams: MediaStream[] };
+      w.__streams = [];
+      const get = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+      navigator.mediaDevices.getUserMedia = async (c) => {
+        const s = await get(c);
+        w.__streams.push(s);
+        return s;
+      };
+    });
+    const { section } = await start(page);
+    await section.getByRole('button', { name: 'Record my voice too' }).click();
+    await expect(section.getByText('Recording your voice')).toBeVisible();
+    const tracks = () =>
+      page.evaluate(() =>
+        (window as unknown as { __streams: MediaStream[] }).__streams
+          .flatMap((s) => s.getTracks())
+          .map((t) => t.readyState),
+      );
+    expect(await tracks()).toEqual(['live']);
+    await page.getByRole('tab', { name: 'Soul', exact: true }).click();
+    await expect(section).toHaveCount(0);
+    await expect.poll(tracks).toEqual(['ended']);
+  });
+
   test("records the owner's voice with the keys (fake microphone)", async ({ page, context }) => {
     await context.grantPermissions(['microphone']);
     const { section } = await start(page);

@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+/** Proxies on a private network (proxy-addr's names): what TRUST_PROXY=1 trusts. */
+export const PRIVATE_PROXIES = 'loopback, linklocal, uniquelocal';
+
 const schema = z.object({
   PORT: z.coerce.number().int().min(1).max(65535).default(4000),
   HOST: z.string().min(1).default('0.0.0.0'),
@@ -15,11 +18,26 @@ const schema = z.object({
     )
     .pipe(z.array(z.url())),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
-  /** 1 behind a proxy that sets X-Forwarded-For (Render), so rate limits see the real address. */
+  /**
+   * Which proxies may tell the API the visitor's address (X-Forwarded-For). "1" (Render): only
+   * proxies on a private network, so the address is the one Render's proxy saw. Anything a
+   * visitor writes into the header themselves is never trusted: trusting every hop (Fastify's
+   * `true`) let anyone pick an address and get a fresh rate limit allowance on every request.
+   * Fastify ignores a hop count (it fails closed), so this is a list of addresses or ranges.
+   * "0" or "false": trust no proxy. Anything else: the trusted addresses, comma-separated.
+   */
   TRUST_PROXY: z
-    .enum(['0', '1', 'true', 'false'])
+    .string()
     .default('0')
-    .transform((v) => v === '1' || v === 'true'),
+    .transform((v) => v.trim())
+    .refine((v) => /^[\w.:/, -]*$/.test(v), { message: 'must be 0, 1 or a list of addresses' })
+    .transform((v): false | string =>
+      v === '' || v === '0' || v === 'false'
+        ? false
+        : v === '1' || v === 'true'
+          ? PRIVATE_PROXIES
+          : v,
+    ),
   /**
    * Postgres (Neon in prod, Docker locally). Without it séances are kept in memory, and lost on a
    * restart; the server says so when it starts.
