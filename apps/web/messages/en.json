@@ -164,7 +164,18 @@
   "playground": {
     "title": "Judge Playground",
     "emptyTitle": "The guided tour is being built",
-    "emptyBody": "Raise a dead app in five minutes, with no login."
+    "emptyBody": "Raise a dead app in five minutes, with no login.",
+    "tryout": {
+      "title": "Try a rule",
+      "body": "Rules in a Soul are written in a small expression language and worked out in exact decimals, never floats. Type a rule and its values; the answer appears below. Nothing is sent anywhere.",
+      "expression": "Rule",
+      "values": "Values (JSON; a date is '{'\"date\": \"1998-07-15\"'}')",
+      "error": {
+        "expression": "The rule cannot be read:",
+        "values": "The values are not JSON:",
+        "evaluation": "The rule cannot be worked out:"
+      }
+    }
   },
   "footer": {
     "credit": "Afterlife · MIT · Matrix AE",

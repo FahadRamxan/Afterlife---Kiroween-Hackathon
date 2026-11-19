@@ -13,6 +13,7 @@
     "@afterlife/dbf": "workspace:^",
     "@afterlife/emulator": "workspace:^",
     "@afterlife/screen": "workspace:^",
+    "@afterlife/soul": "workspace:^",
     "@afterlife/ui": "workspace:^",
     "@radix-ui/react-tabs": "^1.2.1",
     "@tailwindcss/postcss": "^4.3.5",

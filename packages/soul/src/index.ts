@@ -16,3 +16,15 @@ export {
   type Screen,
   type Soul,
 } from './ir';
+export {
+  DslDate,
+  DslError,
+  dslDate,
+  evaluate,
+  parseExpr,
+  printExpr,
+  type BinaryOp,
+  type Env,
+  type Expr,
+} from './dsl';
+export { tryRule, type TryResult } from './tryout';
