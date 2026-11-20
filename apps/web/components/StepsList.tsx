@@ -79,6 +79,12 @@ export function StepsList({ projectId, events }: { projectId: string; events: Li
                 {s.reason}
               </span>
             ) : null}
+            {/* A step that did its work in a recorded run says so too (product.md: label it). */}
+            {s.recorded && !s.reason ? (
+              <span data-testid="step-recorded" className="text-bone/70">
+                {t('recordedDone')}
+              </span>
+            ) : null}
             {s.error ? (
               <span className="text-bone" lang="en" dir="ltr">
                 {s.error}
