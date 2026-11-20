@@ -310,13 +310,30 @@ export type VesselOptions = {
   today: () => string;
 };
 
+export type PerformOptions = {
+  /**
+   * false: skip the validation rules. For a sale that already happened in the shop, replayed on
+   * the server when a phone syncs (Prompt 60): the phone checked it then. Typing checks and the
+   * records it points at are still checked.
+   */
+  validate?: boolean;
+};
+
 export type Vessel = {
   soul: Soul;
   store: EntityStore;
   actions: Action[];
-  performAction(actionId: string, inputs?: ActionInputs): Promise<ActionResult>;
+  performAction(
+    actionId: string,
+    inputs?: ActionInputs,
+    opts?: PerformOptions,
+  ): Promise<ActionResult>;
   /** The same, without saving: the running total while the owner types. */
-  previewAction(actionId: string, inputs?: ActionInputs): Promise<ActionResult>;
+  previewAction(
+    actionId: string,
+    inputs?: ActionInputs,
+    opts?: PerformOptions,
+  ): Promise<ActionResult>;
 };
 
 export function createVessel(soul: Soul, store: EntityStore, opts: VesselOptions): Vessel {
@@ -328,7 +345,12 @@ export function createVessel(soul: Soul, store: EntityStore, opts: VesselOptions
     return plans.get(id)!;
   };
 
-  async function run(actionId: string, inputs: ActionInputs, save: boolean): Promise<ActionResult> {
+  async function run(
+    actionId: string,
+    inputs: ActionInputs,
+    save: boolean,
+    perform: PerformOptions = {},
+  ): Promise<ActionResult> {
     const p = planFor(actionId);
     const H = p.header;
     const L = p.line;
@@ -495,7 +517,7 @@ export function createVessel(soul: Soul, store: EntityStore, opts: VesselOptions
     if (refused.length) return { ok: false, refused };
 
     // The validation rules: each must be true (for every line, when it is about a line).
-    for (const v of p.validations) {
+    for (const v of perform.validate === false ? [] : p.validations) {
       const targets = v.perLine ? lines.map((_, i) => i) : [undefined];
       for (const i of targets) {
         const ok = run(v.rule, v.ast, envFor(i), i);
@@ -612,8 +634,8 @@ export function createVessel(soul: Soul, store: EntityStore, opts: VesselOptions
     soul,
     store,
     actions: soul.actions,
-    performAction: (id, inputs = {}) => run(id, inputs, true),
-    previewAction: (id, inputs = {}) => run(id, inputs, false),
+    performAction: (id, inputs = {}, o) => run(id, inputs, true, o),
+    previewAction: (id, inputs = {}, o) => run(id, inputs, false, o),
   };
 }
 

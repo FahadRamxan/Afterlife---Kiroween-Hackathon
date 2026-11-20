@@ -25,6 +25,7 @@
     "@afterlife/dbf": "workspace:^",
     "@afterlife/soul": "workspace:^",
     "decimal.js": "^10.6.0",
-    "dexie": "^4.4.7"
+    "dexie": "^4.4.7",
+    "fflate": "^0.8.3"
   }
 }

@@ -13,6 +13,9 @@ export default tseslint.config(
       '**/next-env.d.ts',
       // js-dos, copied from node_modules by apps/web/scripts/copy-jsdos.mjs (third-party, minified).
       'apps/web/public/js-dos/**',
+      // Built by Serwist from apps/web/app/sw.ts.
+      'apps/web/public/sw*.js',
+      'apps/web/public/swe-worker*.js',
     ],
   },
   js.configs.recommended,

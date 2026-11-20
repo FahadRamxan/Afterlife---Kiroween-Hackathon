@@ -18,9 +18,22 @@ export {
   type ActionForm,
   type ActionInputs,
   type FormPart,
+  type PerformOptions,
   type ActionResult,
   type Refusal,
   type Vessel,
   type VesselOptions,
 } from './runtime';
 export { ValueError, blank, parseInput, toDbfValue } from './values';
+export { seedStore, tablesFromBundle } from './seed';
+export {
+  MemoryOutbox,
+  queuedVessel,
+  replaySale,
+  stockConflicts,
+  syncOutbox,
+  type Outbox,
+  type StockConflict,
+  type SyncItem,
+  type SyncResult,
+} from './sync';

@@ -85,6 +85,13 @@
       "when": 1795200261089,
       "tag": "0011_vessel_records",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1795205875998,
+      "tag": "0012_vessel_sync",
+      "breakpoints": true
     }
   ]
 }

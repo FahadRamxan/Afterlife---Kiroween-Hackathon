@@ -58,7 +58,7 @@ GitHub Actions is off for this repo, so every check runs locally. The workflow f
 5. **Nightly**: a Kiro Crew scheduled job runs `pnpm ci:local` on `main` and sends the result.
 6. **After a deploy**: `pnpm smoke:prod <url>`.
 
-Current counts: 1542 unit and property tests in 140 files (integration and Postgres tests included), and 120 Playwright tests (Prompt 50, after the review fixes). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
+Current counts: 1718 unit and property tests in 169 files (integration and Postgres tests included), and 136 Playwright tests (Prompt 60). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
 
 ## Coverage
 
@@ -66,16 +66,16 @@ Package code coverage from `pnpm test:coverage` (HTML report in `coverage/`). Th
 
 | Metric     | %   | Covered   |
 | ---------- | --- | --------- |
-| Lines      | 90% | 4050/4516 |
-| Statements | 89% | 4754/5352 |
-| Functions  | 91% | 1161/1276 |
-| Branches   | 86% | 2757/3206 |
+| Lines      | 91% | 5452/5977 |
+| Statements | 90% | 6452/7161 |
+| Functions  | 93% | 1638/1762 |
+| Branches   | 85% | 3722/4380 |
 
-As of Prompt 50, after the review fixes. The code covered grew by 60% since Prompt 40 (the Soul, the rule DSL, the LLM runtime and the Possessor), and line coverage rose from 86% to 90%. Property tests run with `FC_NUM_RUNS=100` in the git hooks and 2000 in `pnpm ci:local`.
+As of Prompt 60. The code covered grew by a third since Prompt 50 (the Archaeologist, the Vessel runtime, its stores and its sync), and line coverage rose from 90% to 91%. Property tests run with `FC_NUM_RUNS=100` in the git hooks and 2000 in `pnpm ci:local`.
 
 ## Status
 
-Prompts 1 to 50 are merged, with a review round after every ten. For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
+Prompts 1 to 60 are merged, with a review round after every ten up to 50. For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
 
 - **1 to 10, foundation:** the monorepo, steering and hooks, the Haunted Ledger design system, the app shell (English and Urdu), the deploy skeleton.
 - **11 to 21, the Graveyard and data:** the DOS toolchain, three sample dead apps (Shifa Medical Store, Iqra School Fees, Barkat Kiryana Ledger) with their legacy bugs, the Graveyard page, the `.DBF` reader, writer, snapshot, diff and viewer, and the DBF inspector API behind the upload card.
@@ -87,8 +87,11 @@ Prompts 1 to 50 are merged, with a review round after every ten. For Prompt 33, 
 
 - **41 to 46, the Soul:** the Soul IR in zod with a reference Soul of Shifa written by our team as the answer key, a rule expression language (our own parser and decimal evaluator, no `eval`) with a "Try a rule" playground, a Kiro spec writer (requirements in EARS, design, tasks and a steering file, checked by Kiro's own spec checker), the Soul tab with evidence and a spec download, immutable Soul versions with a diff view, and rules in Urdu (a shop-word glossary, cached per rule).
 - **47 to 50, the Possessor:** an LLM runtime behind `LlmClient` (Amazon Bedrock Converse and a fake for tests, retries, a token budget per project, zod-checked answers, every call on the "Show your work" panel); the Possessor, which explores the old app by itself (a screen graph, the LLM only for field values, Esc to go back, never a key that quits); an input strategy that types boundary values and records what the app refuses; and guided possession, which walks the owner's séance first and attaches their voice notes as hints.
+- **51 to 52, watching it work:** the Possession Theater (the screen graph growing live in React Flow, each data change as a card) and a stored screen graph with `replayPath`, the shortest key path to any screen.
+- **53 to 57, the Archaeologist:** entities, keys, foreign keys and counters from the data files; the model proposes 3 to 5 candidate rules per value written; every candidate is checked against every observation and only the simplest that explains all of them is kept, with probes when a threshold was never tried ("Try a bill subtotal of exactly 5000 and of 5001."); a score against each sample's hidden rules; and rules that light a candle and write themselves in on the Soul tab.
+- **58 to 60, the Vessel:** the runtime that runs a Soul (fields from rules, counters, parent keys and line positions; effects as DBF diffs; Shifa's scripted bills give exactly the real app's diffs), stores in memory, IndexedDB and Postgres; the reborn app at `/vessel/<id>` (the old menu as a bottom bar or a sidebar, a search-as-you-type picker, a running total, Urdu labels); and offline-first: bills saved on the phone with no network, synced when it is back, stock conflicts listed for the owner.
 
-Possession now explores for real: on Shifa it finds 11 screens in about 50 actions, saves bills and customers, and finds what the app refuses (an unknown medicine code, a blank name). The other five Crew steps still say "not built yet (Prompt N)" and are marked skipped, never done. Without model credentials the Possessor takes its values from the app's own data files, and the Urdu translation says it needs a model.
+Possession explores for real: on Shifa it finds 11 screens in about 50 actions, saves bills and customers, and finds what the app refuses. The archaeology step stores the entities, and with a language model it proposes and checks the rules (there is no model on this machine, so the recorded runs have entities only). The reborn app runs the reference Soul our team wrote from the C source; the rebirth, undertake, prove and exorcise steps still say "not built yet (Prompt N)" and are marked skipped, never done.
 
 `/design` boots the real Shifa EXE in js-dos: you can press keys, record what an action changed in the data files, and replay it from a fresh state. Details are in [docs/progress.md](docs/progress.md).
 

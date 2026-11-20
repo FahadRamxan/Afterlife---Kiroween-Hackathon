@@ -7,6 +7,7 @@ import { PgLiveHub } from './live';
 import { PgLlmCallStore } from './llm-calls';
 import { PgRuleEvidenceStore } from './rules';
 import { PgScreenGraphStore } from './screen-graph';
+import { PgVesselStore } from './vessel';
 import { PgPipeline } from './pipeline';
 import { PgSoulStore } from './souls';
 import { PgUploadStore } from './uploads';
@@ -46,15 +47,17 @@ export async function openStores(
   }
   const live = await PgLiveHub.start(db, env.DATABASE_URL, log);
   const pipeline = await PgPipeline.start(db, env.DATABASE_URL, log);
+  const projectStore = new PgProjectStore(db);
   return {
     stores: {
       sessions: new PgSessionStore(db),
-      projects: new PgProjectStore(db),
+      projects: projectStore,
       uploads: new PgUploadStore(db),
       souls: new PgSoulStore(db),
       llmCalls: new PgLlmCallStore(db),
       screenGraphs: new PgScreenGraphStore(db),
       ruleEvidence: new PgRuleEvidenceStore(db),
+      vessel: new PgVesselStore(db, (id) => projectStore.get(id)),
       live,
       pipeline,
     },

@@ -489,6 +489,27 @@ export const vesselRecords = pgTable(
   ],
 );
 
+/**
+ * Sales synced from a phone (Prompt 60): each one once, by the id the phone gave it, with what the
+ * server made of it and the stock conflicts the owner has to review.
+ */
+export const vesselSync = pgTable(
+  'vessel_sync',
+  {
+    id: uuid('id').primaryKey(),
+    projectId: projectId(),
+    actionId: text('action_id').notNull(),
+    /** The phone's item: the inputs, its date, what it did there. */
+    item: jsonb('item').notNull(),
+    /** The server's answer (taken or refused, renumbered, conflicts). */
+    result: jsonb('result').notNull(),
+    conflicts: integer('conflicts').notNull().default(0),
+    reviewedAt: timestamp('reviewed_at', { withTimezone: true }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index('vessel_sync_project').on(t.projectId, t.createdAt)],
+);
+
 /** Every table, in an order where each one's parents come first. */
 export const TABLES = {
   projects,
@@ -509,4 +530,5 @@ export const TABLES = {
   translations,
   screen_graphs: screenGraphs,
   vessel_records: vesselRecords,
+  vessel_sync: vesselSync,
 } as const;

@@ -1,14 +1,12 @@
 'use client';
 import type { Soul } from '@afterlife/soul';
-import { cn } from '@afterlife/ui';
-import { createVessel, type Vessel } from '@afterlife/vessel';
+import { Button, cn } from '@afterlife/ui';
+import type { Vessel } from '@afterlife/vessel';
+import { openPhone } from '@afterlife/vessel/indexeddb';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
-import { findApp } from '../lib/graveyard';
-import { getProject } from '../lib/projects';
-import { getSoul } from '../lib/soul-client';
-import { seededStore } from '../lib/vessel-seed';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useWord } from '../lib/use-word';
+import { PhoneError, reviewed, startPhone, syncPhone, type Synced } from '../lib/vessel-phone';
 import { vesselViews, type VesselView } from '../lib/vessel-views';
 import { EmptyState } from './EmptyState';
 import { PageShell } from './PageShell';
@@ -16,54 +14,120 @@ import { VesselBill } from './VesselBill';
 import { VesselTable } from './VesselTable';
 
 const API = process.env.NEXT_PUBLIC_API_URL;
+/** The cache the service worker falls back to offline (app/sw.ts). */
+const SHELL_CACHE = 'vessel-shell';
 
 type State =
   | { phase: 'loading' }
-  | { phase: 'empty'; reason: 'no-soul' | 'no-actions' | 'no-data' | 'failed'; message?: string }
+  | { phase: 'empty'; reason: string; message?: string }
   | { phase: 'ready'; soul: Soul; vessel: Vessel; views: VesselView[] };
 
+/** navigator.onLine, kept up to date. */
+function useOnline() {
+  const [online, setOnline] = useState(true);
+  useEffect(() => {
+    const on = () => setOnline(navigator.onLine);
+    on();
+    window.addEventListener('online', on);
+    window.addEventListener('offline', on);
+    return () => {
+      window.removeEventListener('online', on);
+      window.removeEventListener('offline', on);
+    };
+  }, []);
+  return online;
+}
+
 /**
- * The reborn app (Prompt 59): the Vessel runtime running the project's Soul, laid out for a phone.
- * The old main menu is the navigation (at the bottom on a phone, at the side on a desktop); each
- * screen is a form or a list. The records are the old app's own data files, in this page for now
- * (on the phone, offline, with Prompt 60).
+ * The service worker, for /vessel/ only, and the app's shell in its cache: this page and every
+ * script and font it loaded. Opened again offline, the page comes from there.
+ */
+async function keepShell(): Promise<boolean> {
+  if (!('serviceWorker' in navigator) || !('caches' in window)) return false;
+  await navigator.serviceWorker.register('/sw.js', { scope: '/vessel/' });
+  const urls = [
+    location.href,
+    ...performance
+      .getEntriesByType('resource')
+      .map((e) => e.name)
+      .filter(
+        (u) => u.startsWith(location.origin) && !u.includes('/api/') && !u.includes('webpack-hmr'),
+      ),
+  ];
+  const cache = await caches.open(SHELL_CACHE);
+  await Promise.all([...new Set(urls)].map((u) => cache.add(u).catch(() => undefined)));
+  return true;
+}
+
+/**
+ * The reborn app (Prompts 59 and 60): the Vessel runtime running the project's Soul, laid out for
+ * a phone, and offline-first. The shop's records, the Soul and the bills not yet sent are in
+ * IndexedDB on the phone; online, bills go to the server as soon as they are saved, and the
+ * server's records (other phones' sales) come back.
  */
 export function VesselApp({ projectId }: { projectId: string }) {
   const t = useTranslations('vessel');
   const word = useWord();
+  const online = useOnline();
+  const phone = useRef<ReturnType<typeof openPhone> | null>(null);
   const [state, setState] = useState<State>({ phase: 'loading' });
   const [current, setCurrent] = useState(0);
-  // Bumped after a save, so the lists read the records again.
-  const [saved, setSaved] = useState(0);
+  // Bumped when the records change under the screens (a save, the server's records).
+  const [dataVersion, setDataVersion] = useState(0);
+  const [waiting, setWaiting] = useState(0);
+  const [sync, setSync] = useState<Synced | null>(null);
+  const [syncing, setSyncing] = useState(false);
+  const [shell, setShell] = useState(false);
+
+  const countWaiting = useCallback(async () => {
+    if (phone.current) setWaiting((await phone.current.outbox.pending()).length);
+  }, []);
+
+  const doSync = useCallback(async () => {
+    if (!phone.current || !API || state.phase !== 'ready') return;
+    setSyncing(true);
+    try {
+      const r = await syncPhone(phone.current, {
+        api: API,
+        projectId,
+        files: state.soul.entities.map((e) => e.file),
+      });
+      setSync(r);
+      if (r.pulled) setDataVersion((n) => n + 1);
+    } finally {
+      setSyncing(false);
+      await countWaiting();
+    }
+  }, [projectId, state, countWaiting]);
 
   useEffect(() => {
     let alive = true;
-    (async () => {
-      const [p, s] = await Promise.all([getProject(API, projectId), getSoul(API, projectId)]);
-      if (!alive) return;
-      if (!s.ok)
-        return setState({
-          phase: 'empty',
-          reason: s.reason === 'none' ? 'no-soul' : 'failed',
-          ...(s.reason === 'error' ? { message: s.message } : {}),
-        });
-      if (!s.soul.actions.length) return setState({ phase: 'empty', reason: 'no-actions' });
-      const app =
-        p.ok && p.project.source === 'graveyard' ? findApp(p.project.sourceApp) : undefined;
-      if (!p.ok || !app) return setState({ phase: 'empty', reason: 'no-data' });
-      const res = await fetch(app.bundle);
-      if (!res.ok) return setState({ phase: 'empty', reason: 'failed', message: `${res.status}` });
-      const { store } = await seededStore(new Uint8Array(await res.arrayBuffer()), s.soul);
-      const today = (p.project.dosTime ?? app.dosTime).slice(0, 10);
-      const vessel = createVessel(s.soul, store, { today: () => today });
-      if (alive) setState({ phase: 'ready', soul: s.soul, vessel, views: vesselViews(s.soul) });
-    })().catch((e: unknown) => {
-      if (alive) setState({ phase: 'empty', reason: 'failed', message: (e as Error).message });
-    });
+    const p = openPhone(`afterlife-vessel-${projectId}`);
+    phone.current = p;
+    startPhone(p, { api: API, projectId })
+      .then(async ({ vessel, soul }) => {
+        if (!alive) return;
+        setState({ phase: 'ready', soul, vessel, views: vesselViews(soul) });
+        setWaiting((await p.outbox.pending()).length);
+        keepShell()
+          .then((ok) => alive && setShell(ok))
+          .catch(() => undefined);
+      })
+      .catch((e: unknown) => {
+        if (!alive) return;
+        const reason = e instanceof PhoneError ? e.reason : 'failed';
+        setState({ phase: 'empty', reason, message: (e as Error).message });
+      });
     return () => {
       alive = false;
+      void p.close();
     };
   }, [projectId]);
+
+  // Online again (or for the first time): send what is waiting, take the server's records.
+  useEffect(() => {
+    if (online && state.phase === 'ready') void doSync();
+  }, [online, state.phase, doSync]);
 
   if (state.phase !== 'ready')
     return (
@@ -73,7 +137,11 @@ export function VesselApp({ projectId }: { projectId: string }) {
         ) : (
           <EmptyState
             title={t('emptyTitle')}
-            body={`${t(`empty.${state.reason}`)}${state.message ? ` ${state.message}` : ''}`}
+            body={
+              state.reason === 'failed'
+                ? `${t('empty.failed')} ${state.message ?? ''}`
+                : t(`empty.${state.reason}`)
+            }
           />
         )}
       </PageShell>
@@ -81,14 +149,97 @@ export function VesselApp({ projectId }: { projectId: string }) {
 
   const { soul, vessel, views } = state;
   const view = views[current] ?? views[0]!;
+  const renumbered = sync?.results.filter((r) => r.renumbered) ?? [];
   return (
-    <main data-testid="vessel-app" className="mx-auto max-w-5xl px-4 pb-28 pt-6 md:px-6 md:pb-12">
-      <header className="mb-6">
+    <main
+      data-testid="vessel-app"
+      data-shell={shell ? 'kept' : 'no'}
+      data-waiting={waiting}
+      className="mx-auto max-w-5xl px-4 pb-28 pt-6 md:px-6 md:pb-12"
+    >
+      <header className="mb-4">
         <p className="text-sm text-ectoplasm">{t('title')}</p>
         <h1 className="text-2xl font-semibold" lang="en" dir="ltr">
           {soul.app.name}
         </h1>
       </header>
+
+      {/* Where the bills are: on this phone only, being sent, or on the server. */}
+      <div className="mb-4 space-y-2">
+        {!online ? (
+          <p
+            role="status"
+            data-testid="vessel-offline"
+            className="rounded-lg border border-candle/50 bg-candle/10 p-3 text-sm"
+          >
+            <span className="font-semibold">{t('sync.offline')}</span>{' '}
+            {waiting ? t('sync.waiting', { count: waiting }) : null}
+          </p>
+        ) : waiting || syncing ? (
+          <p role="status" data-testid="vessel-sending" className="text-sm text-bone/75">
+            {t('sync.sending', { count: waiting })}
+          </p>
+        ) : sync?.results.length ? (
+          <p role="status" data-testid="vessel-synced" className="text-sm text-bone/75">
+            {t('sync.done', { count: sync.results.filter((r) => r.ok).length })}
+            {renumbered.map((r) => (
+              <span key={r.id} className="block" lang="en" dir="ltr">
+                {t('sync.renumbered', { phone: r.renumbered!.phone, server: r.renumbered!.server })}
+              </span>
+            ))}
+          </p>
+        ) : null}
+        {sync?.review.length ? (
+          <section
+            data-testid="vessel-review"
+            aria-labelledby="vessel-review-title"
+            className="rounded-lg border border-blood/60 p-3"
+          >
+            <h2 id="vessel-review-title" className="font-semibold">
+              {t('review.title', {
+                count: sync.review.reduce((n, r) => n + r.conflicts.length, 0),
+              })}
+            </h2>
+            <p className="text-sm text-bone/75">{t('review.body')}</p>
+            <ul className="mt-2 space-y-2">
+              {sync.review.map((r) => (
+                <li
+                  key={r.id}
+                  className="flex flex-wrap items-center justify-between gap-2 text-sm"
+                >
+                  <span>
+                    {r.conflicts.map((c, i) => (
+                      <span key={i} className="block" data-testid="vessel-conflict">
+                        {t('review.conflict', {
+                          record: c.key,
+                          field: word(c.field),
+                          phoneBefore: String(c.phone.before ?? ''),
+                          phoneAfter: String(c.phone.after ?? ''),
+                          serverBefore: String(c.server?.before ?? ''),
+                          serverAfter: String(c.server?.after ?? ''),
+                        })}
+                        {r.record ? ` ${t('review.bill', { record: r.record })}` : ''}
+                      </span>
+                    ))}
+                  </span>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    onClick={async () => {
+                      if (API && (await reviewed(API, projectId, r.id)))
+                        setSync({ ...sync, review: sync.review.filter((x) => x.id !== r.id) });
+                    }}
+                  >
+                    {t('review.done')}
+                  </Button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+      </div>
+
       <div className="md:flex md:gap-6">
         <nav
           aria-label={t('nav')}
@@ -125,11 +276,16 @@ export function VesselApp({ projectId }: { projectId: string }) {
               key={view.id}
               vessel={vessel}
               actionId={view.actionId}
-              onSaved={() => setSaved((n) => n + 1)}
+              dataVersion={dataVersion}
+              onSaved={async () => {
+                setDataVersion((n) => n + 1);
+                await countWaiting();
+                if (navigator.onLine) await doSync();
+              }}
             />
           ) : (
             <VesselTable
-              key={`${view.id}-${saved}`}
+              key={`${view.id}-${dataVersion}`}
               vessel={vessel}
               entity={view.entity}
               fields={view.fields}
