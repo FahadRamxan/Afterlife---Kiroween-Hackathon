@@ -10,6 +10,21 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "devDependencies": {
+    "@types/node": "^22",
+    "fake-indexeddb": "^6.2.8",
+    "fast-check": "^4.10.2",
     "vitest": "^5.1.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./indexeddb": "./src/indexeddb.ts",
+    "./postgres": "./src/postgres.ts"
+  },
+  "dependencies": {
+    "@afterlife/db": "workspace:^",
+    "@afterlife/dbf": "workspace:^",
+    "@afterlife/soul": "workspace:^",
+    "decimal.js": "^10.6.0",
+    "dexie": "^4.4.7"
   }
 }

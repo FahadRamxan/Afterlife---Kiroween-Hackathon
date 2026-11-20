@@ -15,6 +15,7 @@
     "@afterlife/screen": "workspace:^",
     "@afterlife/soul": "workspace:^",
     "@afterlife/ui": "workspace:^",
+    "@afterlife/vessel": "workspace:^",
     "@radix-ui/react-tabs": "^1.2.1",
     "@tailwindcss/postcss": "^4.3.5",
     "@xyflow/react": "^12",

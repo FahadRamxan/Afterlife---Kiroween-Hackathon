@@ -126,7 +126,13 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
         panels={
           app
             ? {
-                soul: <SoulPanel projectId={project.id} events={live.events} />,
+                soul: (
+                  <SoulPanel
+                    projectId={project.id}
+                    events={live.events}
+                    app={{ bundle: app.bundle, dosTime: app.dosTime }}
+                  />
+                ),
                 possession: (
                   <>
                     <LivePanel events={live.events} status={live.status} name={app.name} />

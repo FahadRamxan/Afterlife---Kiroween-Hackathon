@@ -35,7 +35,10 @@ test('with the language toggle on Urdu, the rules are shown in Urdu first', asyn
   // In English the English comes first and the Urdu follows it.
   await expect(discount.getByTestId('rule-en')).toContainText('gets 10% off');
   await expect(discount.locator('p').first()).toHaveAttribute('data-testid', 'rule-en');
-  await expect(page.getByTestId('urdu-missing')).toHaveText('5 rules have no Urdu yet.');
+  // Two of the rules have the Urdu our team wrote; the others have none yet.
+  await expect(page.getByTestId('urdu-missing')).toHaveText(
+    `${SHIFA_REFERENCE_SOUL.rules.length - 2} rules have no Urdu yet.`,
+  );
 
   await page.getByRole('button', { name: 'اردو' }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'ur');
@@ -64,7 +67,9 @@ test('asking for a translation on a worker without a model says so, and changes 
   page,
 }) => {
   await raiseWithSoul(page, SHIFA_REFERENCE_SOUL);
-  await expect(page.getByTestId('urdu-missing')).toHaveText('7 rules have no Urdu yet.');
+  await expect(page.getByTestId('urdu-missing')).toHaveText(
+    `${SHIFA_REFERENCE_SOUL.rules.length} rules have no Urdu yet.`,
+  );
   await page.getByRole('button', { name: 'Translate rules into Urdu' }).click();
   await expect(page.getByTestId('urdu-failed')).toContainText(
     'No language model is set up on this worker',

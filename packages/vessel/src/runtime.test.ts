@@ -1,0 +1,220 @@
+import { diffTables } from '@afterlife/dbf';
+import type { Soul } from '@afterlife/soul';
+import { describe, expect, it } from 'vitest';
+import { actionForm, createVessel, VesselError } from './runtime';
+import { ConflictError, MemoryEntityStore } from './store';
+import {
+  SHIFA,
+  SHIFA_FILES,
+  SHIFA_TODAY,
+  shifaAfter,
+  shifaSeed,
+  shifaStore,
+} from './testing/shifa';
+
+const vessel = async () => {
+  const store = await shifaStore();
+  return { store, v: createVessel(SHIFA, store, { today: () => SHIFA_TODAY }) };
+};
+const KEYS: Record<string, string | null> = {
+  'BILLS.DBF': 'BILL_NO',
+  'BILLITEM.DBF': null,
+  'MEDICINE.DBF': 'CODE',
+  'CUSTOMER.DBF': 'CUST_ID',
+};
+
+/** What the real old app did for a scenario: its data files diffed against the seed. */
+function oldApp(scenario: string) {
+  const out: Record<string, ReturnType<typeof diffTables>> = {};
+  for (const f of SHIFA_FILES) {
+    const d = diffTables(shifaSeed(f), shifaAfter(scenario, f), { key: KEYS[f]! });
+    if (d.inserted.length || d.updated.length || d.deleted.length) out[f] = d;
+  }
+  return out;
+}
+
+describe('performAction on Shifa: the same effects as the real 1998 app', () => {
+  // The scripted bills, as typed into the real app in DOSBox (samples/graveyard/shifa/scenarios).
+  const bills = {
+    'bill-small': {
+      values: { CUST_ID: '' },
+      lines: [
+        { CODE: 'PAN500', QTY: '4' },
+        { CODE: 'BRU400', QTY: '2' },
+      ],
+    },
+    'bill-discount': { values: { CUST_ID: 'C0002' }, lines: [{ CODE: 'INS100', QTY: '8' }] },
+    'bill-5000': {
+      values: {},
+      lines: [
+        { CODE: 'INS100', QTY: '7' },
+        { CODE: 'DIS500', QTY: '72' },
+      ],
+    },
+  };
+  for (const [scenario, inputs] of Object.entries(bills))
+    it(`${scenario}: the effects equal the DBF diff of the old app's run`, async () => {
+      const { v } = await vessel();
+      const r = await v.performAction('save-bill', inputs);
+      if (!r.ok) throw new Error(JSON.stringify(r.refused));
+      expect(r.effects.tables).toEqual(oldApp(scenario));
+    });
+
+  it('a bill over Rs 5,000: 10% off, GST on the rest, truncated; the stock goes down', async () => {
+    const { v } = await vessel();
+    const r = await v.performAction('save-bill', bills['bill-discount']);
+    if (!r.ok) throw new Error('refused');
+    expect(r.record).toMatchObject({
+      BILL_NO: '9807-0001',
+      BILL_DATE: '19980715',
+      CUST_ID: 'C0002',
+      SUBTOTAL: '5200.00',
+      DISCOUNT: '520.00',
+      GST: '795.60',
+      TOTAL: '5475.60',
+    });
+    expect(r.lines).toEqual([
+      {
+        BILL_NO: '9807-0001',
+        LINE: '1',
+        CODE: 'INS100',
+        QTY: '8',
+        PRICE: '650.00',
+        AMOUNT: '5200.00',
+      },
+    ]);
+    expect(r.effects.tables['MEDICINE.DBF']!.updated).toEqual([
+      {
+        key: 'INS100',
+        beforeRecno: 8,
+        afterRecno: 8,
+        changes: [{ field: 'QTY', before: '12', after: '4', delta: '-8' }],
+      },
+    ]);
+  });
+
+  it('the next bill gets the next number, and reads back from the store', async () => {
+    const { v, store } = await vessel();
+    await v.performAction('save-bill', bills['bill-small']);
+    const r = await v.performAction('save-bill', bills['bill-small']);
+    expect(r.ok && r.record.BILL_NO).toBe('9807-0002');
+    const bills_ = await store.records('BILLS.DBF');
+    expect(bills_.map((b) => b.values.BILL_NO).slice(-2)).toEqual(['9807-0001', '9807-0002']);
+    // The same medicine twice in one bill comes off its stock twice.
+    const twice = await v.performAction('save-bill', {
+      lines: [
+        { CODE: 'PAN500', QTY: '1' },
+        { CODE: 'PAN500', QTY: '2' },
+      ],
+    });
+    expect(twice.ok && twice.effects.tables['MEDICINE.DBF']!.updated[0]!.changes[0]).toEqual({
+      field: 'QTY',
+      before: '232',
+      after: '229',
+      delta: '-3',
+    });
+  });
+});
+
+describe('what the app refuses (and then nothing changes)', () => {
+  const refuse = async (
+    inputs: Parameters<ReturnType<typeof createVessel>['performAction']>[1],
+  ) => {
+    const { v, store } = await vessel();
+    const before = await Promise.all(SHIFA_FILES.map((f) => store.records(f)));
+    const r = await v.performAction('save-bill', inputs);
+    expect(await Promise.all(SHIFA_FILES.map((f) => store.records(f)))).toEqual(before);
+    if (r.ok) throw new Error('it was not refused');
+    return r.refused;
+  };
+
+  it('an expired batch (SEP200, 30 June 1998), with the rule’s own words', async () => {
+    expect(await refuse({ lines: [{ CODE: 'SEP200', QTY: '1' }] })).toEqual([
+      {
+        message:
+          'A medicine whose batch has expired cannot be added to a bill. A batch that expires today can.',
+        rule: 'expired-batch-blocked',
+        line: 1,
+      },
+    ]);
+  });
+
+  it('more than the stock, an unknown code, an unknown customer, a bad number, no lines', async () => {
+    expect((await refuse({ lines: [{ CODE: 'THY050', QTY: '5' }] }))[0]).toMatchObject({
+      rule: 'qty-over-stock-refused',
+      line: 1,
+    });
+    expect(await refuse({ lines: [{ CODE: 'NOPE01', QTY: '1' }] })).toEqual([
+      { message: 'There is no medicine with CODE NOPE01', field: 'CODE', line: 1 },
+    ]);
+    expect(
+      (await refuse({ values: { CUST_ID: 'C9999' }, lines: [{ CODE: 'PAN500', QTY: '1' }] }))[0],
+    ).toMatchObject({
+      field: 'CUST_ID',
+    });
+    expect(await refuse({ lines: [{ CODE: 'PAN500', QTY: '1.5' }] })).toEqual([
+      { message: 'QTY must be a whole number', field: 'QTY', line: 1 },
+    ]);
+    expect(await refuse({ lines: [] })).toEqual([{ message: 'Bill needs at least one bill line' }]);
+  });
+
+  it('a value the app works out cannot be typed', async () => {
+    expect(
+      await refuse({ values: { TOTAL: '1.00' }, lines: [{ CODE: 'PAN500', QTY: '1' }] }),
+    ).toEqual([{ message: 'TOTAL is worked out by the app, not typed', field: 'TOTAL' }]);
+  });
+});
+
+describe('the store and the Soul', () => {
+  it('effects that no longer fit the store are refused whole: a ConflictError, no change', async () => {
+    const { v, store } = await vessel();
+    const r = await v.performAction('save-bill', { lines: [{ CODE: 'PAN500', QTY: '1' }] });
+    if (!r.ok) throw new Error('refused');
+    const after = await Promise.all(SHIFA_FILES.map((f) => store.records(f)));
+    // The same effects again: the bill's record number is taken, the stock is not 240 any more.
+    await expect(store.commit(r.effects)).rejects.toBeInstanceOf(ConflictError);
+    expect(await Promise.all(SHIFA_FILES.map((f) => store.records(f)))).toEqual(after);
+  });
+
+  it('an unknown action, or a Soul it cannot run, is a VesselError', async () => {
+    const store = new MemoryEntityStore();
+    await expect(
+      createVessel(SHIFA, store, { today: () => SHIFA_TODAY }).performAction('nope'),
+    ).rejects.toBeInstanceOf(VesselError);
+    const noStockRule: Soul = {
+      ...SHIFA,
+      rules: SHIFA.rules.filter((r) => r.id !== 'stock-decrement'),
+    };
+    await expect(
+      createVessel(noStockRule, store, { today: () => SHIFA_TODAY }).performAction('save-bill'),
+    ).rejects.toThrow(/changes medicine, but no rule says how/);
+    const circle: Soul = {
+      ...SHIFA,
+      rules: SHIFA.rules.map((r) =>
+        r.id === 'bill-subtotal' ? { ...r, expression: 'bill.total - 1' } : r,
+      ),
+    };
+    await expect(
+      createVessel(circle, store, { today: () => SHIFA_TODAY }).performAction('save-bill'),
+    ).rejects.toThrow(/circle/);
+  });
+});
+
+describe('actionForm', () => {
+  it('asks for what the owner types: the customer, and each line’s code and quantity', () => {
+    const f = actionForm(SHIFA, 'save-bill');
+    expect(f.header.entity.id).toBe('bill');
+    expect(f.header.inputs.map((x) => x.name)).toEqual(['CUST_ID']);
+    expect(f.header.computed.map((x) => x.name)).toEqual([
+      'BILL_NO',
+      'BILL_DATE',
+      'SUBTOTAL',
+      'DISCOUNT',
+      'GST',
+      'TOTAL',
+    ]);
+    expect(f.line?.entity.id).toBe('bill-item');
+    expect(f.line?.inputs.map((x) => x.name)).toEqual(['CODE', 'QTY']);
+    expect(() => actionForm(SHIFA, 'nope')).toThrow(VesselError);
+  });
+});

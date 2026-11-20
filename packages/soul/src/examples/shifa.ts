@@ -203,5 +203,37 @@ export const SHIFA_REFERENCE_SOUL: Soul = {
       evidence: [],
       confidence: 1,
     },
+    // What the Vessel needs to write a bill line and its bill (Prompt 58): the app takes the price
+    // from the medicine, works out each line's amount, and dates the bill with the PC's date.
+    {
+      id: 'line-price',
+      kind: 'compute',
+      target: 'bill_item.price',
+      en: "A bill line's price is the medicine's price.",
+      ur: '',
+      expression: 'medicine.price',
+      evidence: [],
+      confidence: 1,
+    },
+    {
+      id: 'line-amount',
+      kind: 'compute',
+      target: 'bill_item.amount',
+      en: "A bill line's amount is its quantity times its price.",
+      ur: '',
+      expression: 'item.qty * item.price',
+      evidence: [],
+      confidence: 1,
+    },
+    {
+      id: 'bill-date',
+      kind: 'compute',
+      target: 'bill.bill_date',
+      en: "A bill is dated the day it is saved, by the PC's clock.",
+      ur: '',
+      expression: 'today',
+      evidence: [],
+      confidence: 1,
+    },
   ],
 };

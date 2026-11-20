@@ -41,3 +41,4 @@ export {
 } from './diff';
 export { numberSoul, specRequirements } from './stored';
 export { recordEnv, type RecordEnv } from './record-env';
+export { NUMBER_COUNTER, nextCounter, nextId } from './counter';

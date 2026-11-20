@@ -78,6 +78,13 @@
       "when": 1795164627942,
       "tag": "0010_screen_graphs",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1795200261089,
+      "tag": "0011_vessel_records",
+      "breakpoints": true
     }
   ]
 }

@@ -102,3 +102,39 @@ The reborn Shifa Medical Store must behave exactly as the old one. Each requirem
 #### Acceptance Criteria
 
 1. THE SYSTEM SHALL set the bill subtotal to `sum(items, x => x.qty * x.price)`.
+
+### Requirement 8: `line-price`
+
+**User Story:** As the owner of Shifa Medical Store, I want the reborn app to keep this rule of the old one, so that my records come out the same.
+
+**Rule:** A bill line's price is the medicine's price.
+
+**Evidence:** none yet. **Confidence:** 100%.
+
+#### Acceptance Criteria
+
+1. THE SYSTEM SHALL set the bill item price to `medicine.price`.
+
+### Requirement 9: `line-amount`
+
+**User Story:** As the owner of Shifa Medical Store, I want the reborn app to keep this rule of the old one, so that my records come out the same.
+
+**Rule:** A bill line's amount is its quantity times its price.
+
+**Evidence:** none yet. **Confidence:** 100%.
+
+#### Acceptance Criteria
+
+1. THE SYSTEM SHALL set the bill item amount to `item.qty * item.price`.
+
+### Requirement 10: `bill-date`
+
+**User Story:** As the owner of Shifa Medical Store, I want the reborn app to keep this rule of the old one, so that my records come out the same.
+
+**Rule:** A bill is dated the day it is saved, by the PC's clock.
+
+**Evidence:** none yet. **Confidence:** 100%.
+
+#### Acceptance Criteria
+
+1. THE SYSTEM SHALL set the bill bill date to `today`.

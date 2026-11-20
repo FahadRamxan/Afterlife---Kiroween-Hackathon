@@ -189,6 +189,9 @@ importers:
       '@afterlife/ui':
         specifier: workspace:^
         version: link:../../packages/ui
+      '@afterlife/vessel':
+        specifier: workspace:^
+        version: link:../../packages/vessel
       '@radix-ui/react-tabs':
         specifier: ^1.2.1
         version: 1.2.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -570,7 +573,32 @@ importers:
         version: 5.1.0(@opentelemetry/api@1.10.0)(@types/node@22.20.5)(@vitest/coverage-v8@5.1.0)(vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
 
   packages/vessel:
+    dependencies:
+      '@afterlife/db':
+        specifier: workspace:^
+        version: link:../db
+      '@afterlife/dbf':
+        specifier: workspace:^
+        version: link:../dbf
+      '@afterlife/soul':
+        specifier: workspace:^
+        version: link:../soul
+      decimal.js:
+        specifier: ^10.6.0
+        version: 10.6.0
+      dexie:
+        specifier: ^4.4.7
+        version: 4.4.7
     devDependencies:
+      '@types/node':
+        specifier: ^22
+        version: 22.20.5
+      fake-indexeddb:
+        specifier: ^6.2.8
+        version: 6.2.8
+      fast-check:
+        specifier: ^4.10.2
+        version: 4.10.2
       vitest:
         specifier: ^5.1.0
         version: 5.1.0(@opentelemetry/api@1.10.0)(@types/node@22.20.5)(@vitest/coverage-v8@5.1.0)(vite@8.3.8(@types/node@22.20.5)(esbuild@0.28.2)(jiti@2.7.0)(tsx@4.23.15)(yaml@2.9.1))
@@ -2747,6 +2775,9 @@ packages:
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
 
+  dexie@4.4.7:
+    resolution: {integrity: sha512-wemFiCl3DTCnfzyqepUTX1ugbYbkTrw3aEZOG7YjAOUoEQB5g5PrEywPzk5JpbX/SxqQ9IvjUpxCDIEjoOWEfA==}
+
   drizzle-kit@0.31.11:
     resolution: {integrity: sha512-YCYqxTLIB2OCqf6w9/Vef13baBVbwQIPcbT4Y56AfO6B9ajZhDhD8Jkveg/hJvT/iuMloKD/IYYkyMMNhr7Kqg==}
     hasBin: true
@@ -3001,6 +3032,10 @@ packages:
 
   extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
+
+  fake-indexeddb@6.2.8:
+    resolution: {integrity: sha512-mpVW/HLUqwKXJ6F/s0hMgdK1eQfM4ncTHDioNGHWL0WKV3VcZCoZq1NKgboBbAge07aRCO7L48yziKssL59XEQ==}
+    engines: {node: '>=18'}
 
   fast-check@4.10.2:
     resolution: {integrity: sha512-iK2f+YrcmoeGqk6fA0ea2bptcu/itMIm4NfEozq6N25+aG6h7s5HZbB/k1aV7b5w5sFLMCbbtRUsTVR+BgC3xw==}
@@ -5619,7 +5654,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@reduxjs/toolkit@1.9.7(react-redux@8.1.3(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(redux@4.2.1))(react@19.3.1)':
+  '@reduxjs/toolkit@1.9.7(react-redux@8.1.3(react@19.3.1)(redux@4.2.1))(react@19.3.1)':
     dependencies:
       immer: 9.0.21
       redux: 4.2.1
@@ -6394,6 +6429,8 @@ snapshots:
     dependencies:
       dequal: 2.0.3
 
+  dexie@4.4.7: {}
+
   drizzle-kit@0.31.11:
     dependencies:
       '@drizzle-team/brocli': 0.10.2
@@ -6668,6 +6705,8 @@ snapshots:
       - supports-color
 
   extend@3.0.2: {}
+
+  fake-indexeddb@6.2.8: {}
 
   fast-check@4.10.2:
     dependencies:
@@ -6952,7 +6991,7 @@ snapshots:
 
   js-dos@8.5.4(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(redux@4.2.1):
     dependencies:
-      '@reduxjs/toolkit': 1.9.7(react-redux@8.1.3(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(redux@4.2.1))(react@19.3.1)
+      '@reduxjs/toolkit': 1.9.7(react-redux@8.1.3(react@19.3.1)(redux@4.2.1))(react@19.3.1)
       nipplejs: 0.10.2
       preact: 10.29.8
       react-checkbox-tree: 1.8.0(react@19.3.1)

@@ -53,11 +53,29 @@ Rebuild Shifa Medical Store from its Soul (version 1): model the old data files 
   - [ ] 8.2 Write a property test that the new code and `sum(items, x => x.qty * x.price)` agree on generated inputs
     - **Property 7: `bill-subtotal`**
     - **Validates: Requirements 7.1**
-- [ ] 9. Build the screens
-  - [ ] 9.1 Build the MAIN MENU screen
-  - [ ] 9.2 Build the NEW BILL screen
-  - [ ] 9.3 Build the STOCK screen
-  - [ ] 9.4 Build the CUSTOMERS screen
+- [ ] 9. Implement `line-price`
+  - [ ] 9.1 Write the rule in the new code
+    - _Requirements: 8.1_
+  - [ ] 9.2 Write a property test that the new code and `medicine.price` agree on generated inputs
+    - **Property 8: `line-price`**
+    - **Validates: Requirements 8.1**
+- [ ] 10. Implement `line-amount`
+  - [ ] 10.1 Write the rule in the new code
+    - _Requirements: 9.1_
+  - [ ] 10.2 Write a property test that the new code and `item.qty * item.price` agree on generated inputs
+    - **Property 9: `line-amount`**
+    - **Validates: Requirements 9.1**
+- [ ] 11. Implement `bill-date`
+  - [ ] 11.1 Write the rule in the new code
+    - _Requirements: 10.1_
+  - [ ] 11.2 Write a property test that the new code and `today` agree on generated inputs
+    - **Property 10: `bill-date`**
+    - **Validates: Requirements 10.1**
+- [ ] 12. Build the screens
+  - [ ] 12.1 Build the MAIN MENU screen
+  - [ ] 12.2 Build the NEW BILL screen
+  - [ ] 12.3 Build the STOCK screen
+  - [ ] 12.4 Build the CUSTOMERS screen
 
 ## Notes
 
@@ -71,9 +89,9 @@ Rebuild Shifa Medical Store from its Soul (version 1): model the old data files 
 {
   "waves": [
     { "id": 0, "tasks": ["1.1", "1.2", "1.3", "1.4"] },
-    { "id": 1, "tasks": ["2.1", "3.1", "4.1", "5.1", "6.1", "7.1", "8.1"] },
-    { "id": 2, "tasks": ["2.2", "3.2", "4.2", "5.2", "6.2", "7.2", "8.2"] },
-    { "id": 3, "tasks": ["9.1", "9.2", "9.3", "9.4"] }
+    { "id": 1, "tasks": ["2.1", "3.1", "4.1", "5.1", "6.1", "7.1", "8.1", "9.1", "10.1", "11.1"] },
+    { "id": 2, "tasks": ["2.2", "3.2", "4.2", "5.2", "6.2", "7.2", "8.2", "9.2", "10.2", "11.2"] },
+    { "id": 3, "tasks": ["12.1", "12.2", "12.3", "12.4"] }
   ]
 }
 ```

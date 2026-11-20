@@ -262,7 +262,27 @@
       "fresh": "Just exhumed",
       "exhumed": "{rules, plural, one {# rule} other {# rules}} exhumed from {observations, plural, one {# observation} other {# observations}}",
       "evidenceShown": "The observations this rule rests on",
-      "evidenceThumb": "Evidence {n}: keys {keys}"
+      "evidenceThumb": "Evidence {n}: keys {keys}",
+      "vessel": {
+        "title": "Run an action in the Vessel",
+        "body": "The reborn app is this runtime running the Soul. Type what the owner would, and it works out the rest from the rules, on the old app’s own data files, then shows what it changed in the same diff format as the old app’s. A copy in this page: start again any time.",
+        "loading": "Reading the old app’s data files…",
+        "bundleFailed": "The old app’s data files could not be loaded ({status}).",
+        "noActions": "This Soul has no actions yet, so there is nothing to run.",
+        "noData": "The data for an uploaded app comes with the Undertaker: it is not here yet.",
+        "cannotRun": "The Vessel cannot run this action: {message}",
+        "action": "Action",
+        "lines": "{name}s",
+        "addLine": "Add a line",
+        "remove": "Remove",
+        "removeLine": "Remove line {n}",
+        "computed": "Worked out by the Soul: {fields}.",
+        "run": "Run “{name}”",
+        "reset": "Start again",
+        "refused": "The app refused it:",
+        "line": "Line {n}",
+        "effects": "{file} ({name}): what the action changed"
+      }
     },
     "work": {
       "title": "Show your work",
