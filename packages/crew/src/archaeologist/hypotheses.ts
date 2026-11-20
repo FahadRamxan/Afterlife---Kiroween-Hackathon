@@ -36,6 +36,9 @@ export type Effect = {
   record: Record<string, string>;
 };
 
+/** An entity id as a rule names it: bill-item is bill_item (a dash would read as a minus). */
+export const ruleName = (id: string) => id.replace(/-/g, '_');
+
 const NUMBER = /^-?\d+(\.\d+)?$/;
 const text = (v: DbfValue | undefined) => (v === null || v === undefined ? '' : String(v).trim());
 const lower = (values: Record<string, DbfValue>) =>
@@ -128,13 +131,14 @@ function allowedFields(
 ): Set<string> {
   const out = new Set<string>();
   for (const k of Object.keys(effect.record))
-    if (k !== effect.field) out.add(`${effect.entity}.${k}`);
+    if (k !== effect.field) out.add(`${ruleName(effect.entity)}.${k}`);
   for (const [file, t] of Object.entries(observation.dbfDiff.tables)) {
     const id = entities.get(file.toUpperCase());
     if (!id || id === effect.entity) continue;
     for (const r of [...t.inserted, ...t.deleted])
-      for (const k of Object.keys(r.values)) out.add(`${id}.${k.toLowerCase()}`);
-    for (const u of t.updated) for (const c of u.changes) out.add(`${id}.${c.field.toLowerCase()}`);
+      for (const k of Object.keys(r.values)) out.add(`${ruleName(id)}.${k.toLowerCase()}`);
+    for (const u of t.updated)
+      for (const c of u.changes) out.add(`${ruleName(id)}.${c.field.toLowerCase()}`);
   }
   out.add('today');
   return out;
@@ -175,7 +179,7 @@ export function promptFor(
   if (!ids.has(effect.file.toUpperCase())) ids.set(effect.file.toUpperCase(), effect.entity);
   const related: string[] = [];
   for (const [file, t] of Object.entries(o.dbfDiff.tables)) {
-    const id = ids.get(file.toUpperCase()) ?? file.replace(/\.DBF$/i, '').toLowerCase();
+    const id = ruleName(ids.get(file.toUpperCase()) ?? file.replace(/\.DBF$/i, '').toLowerCase());
     if (
       file === effect.file &&
       effect.kind === 'inserted' &&
@@ -201,7 +205,7 @@ export function promptFor(
   const values = {
     min: String(MIN_CANDIDATES),
     max: String(MAX_CANDIDATES),
-    entity: effect.entity,
+    entity: ruleName(effect.entity),
     field: effect.field,
     file: effect.file,
     kind: effect.kind,
@@ -301,5 +305,5 @@ export async function hypothesesFor(
     },
     { agent: 'archaeologist', purpose: `rule hypotheses for ${effect.entity}.${effect.field}` },
   );
-  return { target: `${effect.entity}.${effect.field}`, effect, candidates: r.candidates };
+  return { target: `${ruleName(effect.entity)}.${effect.field}`, effect, candidates: r.candidates };
 }

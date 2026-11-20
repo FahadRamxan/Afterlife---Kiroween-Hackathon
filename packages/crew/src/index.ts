@@ -140,6 +140,7 @@ export {
   detectEntities,
   detectForeignKeys,
   detectKeys,
+  entityIdFor,
   NUMBER_COUNTER,
   nextCounter,
   numberCounter,
@@ -157,7 +158,23 @@ export {
   hypothesesFor,
   promptFor,
   renderTemplate,
+  ruleName,
   type Effect,
   type EffectObservation,
   type Hypotheses,
 } from './archaeologist/hypotheses';
+
+// Rule verification and selection (Prompt 55).
+export {
+  confidenceOf,
+  countNodes,
+  envFor,
+  selectRule,
+  targetOf,
+  verifyCandidates,
+  type CandidateCheck,
+  type RuleProbe,
+  type RuleProbeRunner,
+  type Verification,
+  type VerifyEntity,
+} from './archaeologist/verify';

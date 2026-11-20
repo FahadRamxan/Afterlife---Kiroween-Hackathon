@@ -84,9 +84,14 @@ export function defaultRegistry(
           status: 'skipped',
           reason: 'This worker has no emulator to run the app in',
         }),
-    // The entities, keys and counters (Prompt 53); the rules come with Prompts 54 and 55.
+    // The entities, keys and counters (Prompt 53), then the rules, checked (Prompts 54 and 55).
     archaeology: db
-      ? entitiesStep({ db, bundleFor })
+      ? entitiesStep({
+          db,
+          bundleFor,
+          llm: deps.llm ?? null,
+          budgetTokens: deps.budgetTokens ?? DEFAULT_TOKEN_BUDGET,
+        })
       : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
     rebirth: notBuiltYet('rebirth', 'Prompt 63'),
     undertake: notBuiltYet('undertake', 'Prompt 64'),
