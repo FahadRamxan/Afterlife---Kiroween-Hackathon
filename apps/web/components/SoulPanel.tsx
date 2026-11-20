@@ -2,6 +2,7 @@
 import { Button, Card, CrtScreen, DiffBadge, cn } from '@afterlife/ui';
 import type { Rule, Soul } from '@afterlife/soul';
 import { useLocale, useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { EmptyState } from './EmptyState';
 import { RuleCheck } from './RuleCheck';
@@ -93,6 +94,11 @@ export function SoulPanel({
           })}
         </p>
         <DownloadSpec soul={soul} />
+        {soul.actions.length ? (
+          <Button asChild size="sm" variant="secondary">
+            <Link href={`/vessel/${projectId}`}>{t('openVessel')}</Link>
+          </Button>
+        ) : null}
       </div>
       {soul.provenance.createdBy === 'reference' ? (
         <p
@@ -159,7 +165,7 @@ export function SoulPanel({
       </section>
       <RuleCheck projectId={projectId} events={events} />
       <VesselTryout
-        key={version}
+        key={`vessel-${version}`}
         soul={soul}
         bundle={app?.bundle ?? null}
         dosTime={app?.dosTime ?? null}

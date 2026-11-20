@@ -43,10 +43,19 @@ graph TD
 
 #### STOCK (`fp_94f36efd8f8e0a33`)
 
+- CODE: row 3, column 1, 6 wide, medicine.CODE
+- NAME: row 3, column 8, 20 wide, medicine.NAME
+- BATCH: row 3, column 29, 8 wide, medicine.BATCH
+- EXPIRY: row 3, column 38, 8 wide, medicine.EXPIRY
+- PRICE: row 3, column 48, 8 wide, medicine.PRICE
+- QTY: row 3, column 58, 5 wide, medicine.QTY
 - `{Esc}` goes to MAIN MENU
 
 #### CUSTOMERS (`fp_7ea2aa4052052a22`)
 
+- ID: row 2, column 1, 5 wide, customer.CUST_ID
+- NAME: row 2, column 8, 25 wide, customer.NAME
+- PHONE: row 2, column 35, 12 wide, customer.PHONE
 - `{Esc}` goes to MAIN MENU
 
 ### Actions

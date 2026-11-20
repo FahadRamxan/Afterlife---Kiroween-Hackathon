@@ -274,11 +274,14 @@ function plan(soul: Soul, action: Action): Plan {
 }
 
 /** What an action asks the owner for: the fields nothing in the Soul fills (Prompt 59 builds its form). */
-export type ActionForm = {
-  action: Action;
-  header: { entity: Entity; inputs: DbfField[]; computed: DbfField[] };
-  line: { entity: Entity; inputs: DbfField[]; computed: DbfField[] } | null;
+export type FormPart = {
+  entity: Entity;
+  inputs: DbfField[];
+  computed: DbfField[];
+  /** Fields that pick another record (a line's CODE is a medicine's CODE): the picker searches it. */
+  links: { field: string; entity: Entity; refField: string }[];
 };
+export type ActionForm = { action: Action; header: FormPart; line: FormPart | null };
 
 export function actionForm(soul: Soul, actionId: string): ActionForm {
   const action = soul.actions.find((a) => a.id === actionId);
@@ -286,15 +289,16 @@ export function actionForm(soul: Soul, actionId: string): ActionForm {
   const p = plan(soul, action);
   const filled = new Set(p.order.map((o) => `${o.scope}:${o.field}`));
   if (p.position) filled.add(`line:${p.position}`);
-  const split = (e: Entity, scope: 'header' | 'line', fields: string[]) => ({
+  const split = (e: Entity, scope: 'header' | 'line', fields: string[], links: Link[]) => ({
     entity: e,
+    links,
     inputs: e.fields.filter((f) => fields.includes(f.name) && !filled.has(`${scope}:${f.name}`)),
     computed: e.fields.filter((f) => filled.has(`${scope}:${f.name}`)),
   });
   return {
     action,
-    header: split(p.header, 'header', p.headerFields),
-    line: p.line ? split(p.line, 'line', p.lineFields) : null,
+    header: split(p.header, 'header', p.headerFields, p.headerLinks),
+    line: p.line ? split(p.line, 'line', p.lineFields, p.lineLinks) : null,
   };
 }
 
@@ -311,6 +315,8 @@ export type Vessel = {
   store: EntityStore;
   actions: Action[];
   performAction(actionId: string, inputs?: ActionInputs): Promise<ActionResult>;
+  /** The same, without saving: the running total while the owner types. */
+  previewAction(actionId: string, inputs?: ActionInputs): Promise<ActionResult>;
 };
 
 export function createVessel(soul: Soul, store: EntityStore, opts: VesselOptions): Vessel {
@@ -322,7 +328,7 @@ export function createVessel(soul: Soul, store: EntityStore, opts: VesselOptions
     return plans.get(id)!;
   };
 
-  async function performAction(actionId: string, inputs: ActionInputs = {}): Promise<ActionResult> {
+  async function run(actionId: string, inputs: ActionInputs, save: boolean): Promise<ActionResult> {
     const p = planFor(actionId);
     const H = p.header;
     const L = p.line;
@@ -598,11 +604,17 @@ export function createVessel(soul: Soul, store: EntityStore, opts: VesselOptions
       addedTables: [],
       removedTables: [],
     };
-    await store.commit(effects);
+    if (save) await store.commit(effects);
     return { ok: true, effects, record: header, lines };
   }
 
-  return { soul, store, actions: soul.actions, performAction };
+  return {
+    soul,
+    store,
+    actions: soul.actions,
+    performAction: (id, inputs = {}) => run(id, inputs, true),
+    previewAction: (id, inputs = {}) => run(id, inputs, false),
+  };
 }
 
 export { ConflictError };

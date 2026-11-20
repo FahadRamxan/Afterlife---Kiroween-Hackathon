@@ -110,8 +110,54 @@ export const SHIFA_REFERENCE_SOUL: Soul = {
       ],
       navigation: [{ keys: '{Esc}', to: MENU }],
     },
-    { id: STOCK, title: 'STOCK', fields: [], navigation: [{ keys: '{Esc}', to: MENU }] },
-    { id: CUSTOMERS, title: 'CUSTOMERS', fields: [], navigation: [{ keys: '{Esc}', to: MENU }] },
+    // The two lists: their columns, from the first row of the real screens (STOCK1.SCR, CUSTS.SCR).
+    {
+      id: STOCK,
+      title: 'STOCK',
+      fields: [
+        { label: 'CODE', row: 3, col: 1, width: 6, binds: { entity: 'medicine', field: 'CODE' } },
+        { label: 'NAME', row: 3, col: 8, width: 20, binds: { entity: 'medicine', field: 'NAME' } },
+        {
+          label: 'BATCH',
+          row: 3,
+          col: 29,
+          width: 8,
+          binds: { entity: 'medicine', field: 'BATCH' },
+        },
+        {
+          label: 'EXPIRY',
+          row: 3,
+          col: 38,
+          width: 8,
+          binds: { entity: 'medicine', field: 'EXPIRY' },
+        },
+        {
+          label: 'PRICE',
+          row: 3,
+          col: 48,
+          width: 8,
+          binds: { entity: 'medicine', field: 'PRICE' },
+        },
+        { label: 'QTY', row: 3, col: 58, width: 5, binds: { entity: 'medicine', field: 'QTY' } },
+      ],
+      navigation: [{ keys: '{Esc}', to: MENU }],
+    },
+    {
+      id: CUSTOMERS,
+      title: 'CUSTOMERS',
+      fields: [
+        { label: 'ID', row: 2, col: 1, width: 5, binds: { entity: 'customer', field: 'CUST_ID' } },
+        { label: 'NAME', row: 2, col: 8, width: 25, binds: { entity: 'customer', field: 'NAME' } },
+        {
+          label: 'PHONE',
+          row: 2,
+          col: 35,
+          width: 12,
+          binds: { entity: 'customer', field: 'PHONE' },
+        },
+      ],
+      navigation: [{ keys: '{Esc}', to: MENU }],
+    },
   ],
   actions: [
     {

@@ -282,7 +282,8 @@
         "refused": "The app refused it:",
         "line": "Line {n}",
         "effects": "{file} ({name}): what the action changed"
-      }
+      },
+      "openVessel": "Open the reborn app"
     },
     "work": {
       "title": "Show your work",
@@ -318,7 +319,58 @@
   "vessel": {
     "title": "Reborn app",
     "emptyTitle": "This app has not been reborn yet",
-    "emptyBody": "Project {projectId} will appear here after the rebirth step."
+    "emptyBody": "Project {projectId} will appear here after the rebirth step.",
+    "loading": "Opening the reborn app…",
+    "nav": "Reborn app",
+    "search": "Search",
+    "count": "{shown, plural, one {# shown} other {# shown}} of {total}",
+    "empty": {
+      "no-soul": "No Soul has been written for this project yet.",
+      "no-actions": "Its Soul has no actions yet, so the reborn app has nothing to do.",
+      "no-data": "The records for an uploaded app come with the Undertaker: they are not here yet.",
+      "failed": "The reborn app could not start:"
+    },
+    "bill": {
+      "who": "{name} (blank: walk-in)",
+      "walkIn": "Walk-in",
+      "find": "Add a {name}",
+      "findHint": "Type a name or a code",
+      "results": "Matches",
+      "lines": "Lines on this bill",
+      "less": "One less on line {n}",
+      "more": "One more on line {n}",
+      "qty": "Quantity on line {n}",
+      "remove": "Remove line {n}",
+      "removeShort": "Remove",
+      "empty": "Nothing on the bill yet: search above and tap to add.",
+      "saved": "Bill {key} saved. Total Rs {total}."
+    },
+    "words": {
+      "new_bill": "New bill",
+      "stock": "Stock",
+      "customers": "Customers",
+      "customer": "Customer",
+      "medicine": "Medicine",
+      "bill": "Bill",
+      "code": "Code",
+      "name": "Name",
+      "batch": "Batch",
+      "expiry": "Expiry",
+      "price": "Price",
+      "qty": "Qty",
+      "amount": "Amount",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "gst": "GST",
+      "total": "Total",
+      "id": "ID",
+      "phone": "Phone",
+      "cust_id": "Customer",
+      "bill_no": "Bill no.",
+      "bill_date": "Date",
+      "line": "Line",
+      "save_a_bill": "Save bill"
+    }
   },
   "verify": {
     "title": "Verify a certificate",
