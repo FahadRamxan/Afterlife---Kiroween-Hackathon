@@ -4,6 +4,7 @@ import type { Rule, Soul } from '@afterlife/soul';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { EmptyState } from './EmptyState';
+import { RuleCheck } from './RuleCheck';
 import { SoulVersions } from './SoulVersions';
 import type { LiveEvent } from '../lib/live';
 import { UrduRules } from './UrduRules';
@@ -44,7 +45,10 @@ export function SoulPanel({
   if (!answer) return <p className="mt-4 text-sm text-bone/70">{t('loading')}</p>;
   if (!answer.ok)
     return answer.reason === 'none' ? (
-      <EmptyState body={empty('empty.soul')} />
+      <div className="space-y-6">
+        <EmptyState body={empty('empty.soul')} />
+        <RuleCheck projectId={projectId} events={events} />
+      </div>
     ) : (
       <p role="alert" className="mt-4 text-sm">
         {answer.reason === 'error' ? answer.message : t(`unavailable.${answer.reason}`)}
@@ -106,6 +110,7 @@ export function SoulPanel({
           ))}
         </ol>
       </section>
+      <RuleCheck projectId={projectId} events={events} />
     </div>
   );
 }

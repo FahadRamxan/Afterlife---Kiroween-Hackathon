@@ -232,6 +232,28 @@
         "owner": "the owner",
         "voice-change": "a voice change",
         "reference": "our team (reference)"
+      },
+      "check": {
+        "title": "Check a rule",
+        "body": "Each candidate is run on every observation. It is kept only if it gives the value the old app wrote every time, and the simplest of those wins. The Archaeologist checks the model’s candidates the same way.",
+        "loading": "Reading the observations…",
+        "unconfigured": "The API is not configured, so rules cannot be checked.",
+        "noValues": "{count, plural, =0 {No observations yet: let the Possessor explore the app, or record a séance.} one {# observation, but the old app wrote no numbers in it.} other {# observations, but the old app wrote no numbers in them.}}",
+        "target": "Value the old app wrote",
+        "targetOption": "{target}: {effects, plural, one {# value} other {# values}} in {observations, plural, one {# observation} other {# observations}}",
+        "candidates": "Candidate rules, one per line (up to 10)",
+        "run": "{count, plural, one {Check against # observation} other {Check against # observations}}",
+        "selected": "Selected rule",
+        "selectedDetail": "Explains {effects, plural, one {the # value} other {all # values}} in {observations, plural, one {# observation} other {# observations}}. {nodes} nodes. Confidence {confidence}%, threshold coverage {coverage}%.",
+        "none": "{count, plural, one {No candidate explains the # value.} other {No candidate explains all # values.}}",
+        "noEffects": "The old app never wrote this value.",
+        "notARule": "Not a rule: {message}",
+        "explains": "Explains {explained} of {total, plural, one {# value} other {# values}} · {nodes} nodes",
+        "chosen": "simplest, chosen",
+        "alsoFits": "also fits, not chosen",
+        "miss": "The old app wrote {expected}; this gives {got}",
+        "missError": "The old app wrote {expected}; this gives no value ({error})",
+        "probes": "Probes to ask the Possessor for"
       }
     },
     "work": {

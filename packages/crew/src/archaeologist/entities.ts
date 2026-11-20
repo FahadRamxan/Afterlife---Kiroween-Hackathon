@@ -309,6 +309,9 @@ function naming(file: string): [string, string] {
   return [id, name];
 }
 
+/** The entity id the Soul gives a data file: BILLITEM.DBF is bill-item. */
+export const entityIdFor = (file: string): string => naming(file)[0];
+
 /** The Soul's entities: one per data file, with its keys, foreign keys and counters. */
 export async function detectEntities(
   tables: TableInput[],
