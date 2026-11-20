@@ -1,7 +1,12 @@
 // Prompt 44: a project's Soul and the observations its rules point at.
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { observations as observationsTable, souls as soulsTable, eq } from '@afterlife/db';
+import {
+  lastEvents,
+  observations as observationsTable,
+  souls as soulsTable,
+  eq,
+} from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { FakeEmulator, buildBundle, recordAction, type SeanceSession } from '@afterlife/emulator';
 import { renderScreen, type CellInput } from '@afterlife/screen';
@@ -97,6 +102,11 @@ describe('souls and observations', () => {
     });
     expect(put.statusCode).toBe(201);
     expect(put.json()).toEqual({ version: 1 });
+    // An open Soul tab hears of it (Prompt 57).
+    const events = await lastEvents(t.db, id);
+    expect(events.filter((e) => e.type === 'soul_updated').map((e) => e.payload)).toEqual([
+      { version: 1, rules: soul.rules.length, reason: 'posted' },
+    ]);
 
     const got = (await app.inject({ method: 'GET', url: `/api/projects/${id}/soul` })).json();
     expect(got.version).toBe(1);

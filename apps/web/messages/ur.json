@@ -258,7 +258,11 @@
         "miss": "پرانی ایپ نے {expected} لکھا؛ یہ {got} دیتا ہے",
         "missError": "پرانی ایپ نے {expected} لکھا؛ اس سے کوئی قدر نہیں ملتی ({error})",
         "probes": "پوزیسر سے یہ آزمائشیں کروائیں"
-      }
+      },
+      "fresh": "ابھی دریافت ہوا",
+      "exhumed": "{observations, plural, one {# مشاہدے} other {# مشاہدات}} سے {rules, plural, one {# قاعدہ} other {# قواعد}} دریافت",
+      "evidenceShown": "وہ مشاہدات جن پر یہ قاعدہ قائم ہے",
+      "evidenceThumb": "ثبوت {n}: کیز {keys}"
     },
     "work": {
       "title": "اپنا کام دکھائیں",

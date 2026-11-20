@@ -8,6 +8,7 @@ import {
   asc,
   desc,
   eq,
+  emitEvent,
   insertSoulVersion,
   sql,
   type Db,
@@ -101,10 +102,17 @@ export class PgSoulStore implements SoulStore {
 
   async add(projectId: string, soul: Soul): Promise<number> {
     // One writer at a time per project, so two versions never get the same number.
-    return insertSoulVersion(this.db, projectId, (version, parent) => {
-      const stored = numberSoul(soul, projectId, version, parent);
+    const version = await insertSoulVersion(this.db, projectId, (v, parent) => {
+      const stored = numberSoul(soul, projectId, v, parent);
       return { ir: stored, specMarkdown: specRequirements(stored) };
     });
+    // A Soul tab that is open reloads, and the rules that are new in it are exhumed (Prompt 57).
+    await emitEvent(this.db, projectId, 'soul_updated', {
+      version,
+      rules: soul.rules.length,
+      reason: 'posted',
+    });
+    return version;
   }
 
   async listObservations(projectId: string): Promise<{ rows: ObservationRow[]; total: number }> {

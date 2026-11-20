@@ -1,7 +1,7 @@
 import { strFromU8, unzipSync } from 'fflate';
 import { describe, expect, it, vi } from 'vitest';
 import { SHIFA_REFERENCE_SOUL } from '../../../packages/soul/src/examples/shifa';
-import { diffRows, getSoul, specZip, textGrid } from './soul-client';
+import { diffRows, getObservationCount, getSoul, specZip, textGrid } from './soul-client';
 
 const json = (status: number, body: unknown) =>
   vi.fn().mockResolvedValue(new Response(JSON.stringify(body), { status }));
@@ -93,5 +93,15 @@ describe('diffRows', () => {
       },
       { table: 'MEDICINE.DBF', kind: 'changed', key: 'PAN500', detail: 'QTY 240 → 238' },
     ]);
+  });
+});
+
+describe('getObservationCount', () => {
+  it('is the API’s total, or null when it cannot tell', async () => {
+    expect(await getObservationCount('https://a', 'p', json(200, { total: 143 }))).toBe(143);
+    expect(await getObservationCount('https://a', 'p', json(200, { total: -1 }))).toBeNull();
+    expect(await getObservationCount('https://a', 'p', json(404, {}))).toBeNull();
+    const down = vi.fn().mockRejectedValue(new Error('offline'));
+    expect(await getObservationCount('https://a', 'p', down)).toBeNull();
   });
 });
