@@ -5,6 +5,7 @@
 // - counters: keys the app numbers itself ("C0009" after "C0008", "9807-0001" in July 1998)
 // - derived fields: a field that is always the product or sum of others in its record
 import type { DbfFile, DbfValue, SnapshotDiff } from '@afterlife/dbf';
+import { NUMBER_COUNTER, nextCounter } from '@afterlife/soul';
 import type { Entity } from '@afterlife/soul';
 
 export type TableInput = { file: string; table: DbfFile };
@@ -125,27 +126,6 @@ export function counterPattern(ids: string[], dates?: string[]): string | null {
   return null;
 }
 
-/** The next id of a counter: one more than the highest (of this month, for YYMM ones). */
-export function nextCounter(
-  pattern: string,
-  ids: string[],
-  now?: { year: number; month: number },
-): string | null {
-  const width = /#+$/.exec(pattern)?.[0].length ?? 0;
-  if (!width) return null;
-  let prefix = pattern.slice(0, pattern.length - width);
-  if (prefix.startsWith('YYMM')) {
-    if (!now) return null;
-    prefix = `${String(now.year % 100).padStart(2, '0')}${String(now.month).padStart(2, '0')}${prefix.slice(4)}`;
-  }
-  const nums = ids
-    .filter((id) => id.startsWith(prefix))
-    .map((id) => Number(id.slice(prefix.length)));
-  const next = (nums.length ? Math.max(...nums) : 0) + 1;
-  const out = `${prefix}${String(next).padStart(width, '0')}`;
-  return out.length === pattern.length ? out : null;
-}
-
 const dateField = (t: DbfFile) => t.fields.find((f) => f.type === 'D')?.name;
 
 /**
@@ -182,9 +162,6 @@ export function detectCounters(
   }
   return [{ field, pattern }];
 }
-
-/** The counter pattern of a plain number the app gives out: one more than the highest. */
-export const NUMBER_COUNTER = 'n+1';
 
 /**
  * A whole-number field the app numbers itself (Iqra's RECEIPT, Barkat's ENTRY): unique in every
@@ -313,6 +290,8 @@ function naming(file: string): [string, string] {
 export const entityIdFor = (file: string): string => naming(file)[0];
 
 /** The Soul's entities: one per data file, with its keys, foreign keys and counters. */
+export { NUMBER_COUNTER, nextCounter };
+
 export async function detectEntities(
   tables: TableInput[],
   observations: SnapshotDiff[],

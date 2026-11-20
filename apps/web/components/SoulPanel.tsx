@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { EmptyState } from './EmptyState';
 import { RuleCheck } from './RuleCheck';
+import { VesselTryout } from './VesselTryout';
 import { SoulVersions } from './SoulVersions';
 import type { LiveEvent } from '../lib/live';
 import { foundRuleIds, freshRules, typed, typingMs } from '../lib/rule-discovery';
@@ -26,8 +27,11 @@ const API = process.env.NEXT_PUBLIC_API_URL;
 export function SoulPanel({
   projectId,
   events = [],
+  app = null,
 }: {
   projectId: string;
+  /** The old app's bundle and clock, for running the Soul's actions on its own data (Prompt 58). */
+  app?: { bundle: string; dosTime: string } | null;
   /** Live events: a new Soul version (the Urdu translation) reloads the tab. */
   events?: LiveEvent[];
 }) {
@@ -154,6 +158,12 @@ export function SoulPanel({
         </ol>
       </section>
       <RuleCheck projectId={projectId} events={events} />
+      <VesselTryout
+        key={version}
+        soul={soul}
+        bundle={app?.bundle ?? null}
+        dosTime={app?.dosTime ?? null}
+      />
     </div>
   );
 }

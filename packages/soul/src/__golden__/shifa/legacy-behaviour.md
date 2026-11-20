@@ -13,5 +13,8 @@ This code replaces a DOS app whose source is lost. These rules were observed in 
 - `qty-over-stock-refused`: A quantity larger than the stock is refused when the item is added. (`item.qty <= medicine.qty`)
 - `stock-decrement`: Saving a bill takes the quantity of each item off that medicine's stock. (`medicine.qty - item.qty`)
 - `bill-subtotal`: The subtotal is the sum of the lines, each its quantity times its price. (`sum(items, x => x.qty * x.price)`)
+- `line-price`: A bill line's price is the medicine's price. (`medicine.price`)
+- `line-amount`: A bill line's amount is its quantity times its price. (`item.qty * item.price`)
+- `bill-date`: A bill is dated the day it is saved, by the PC's clock. (`today`)
 
 Money is decimal, never floating point. Truncate where a rule truncates.

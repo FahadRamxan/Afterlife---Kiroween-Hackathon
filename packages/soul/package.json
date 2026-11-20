@@ -23,6 +23,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./arbitrary": "./src/arbitrary.ts",
-    "./dsl-arbitrary": "./src/dsl-arbitrary.ts"
+    "./dsl-arbitrary": "./src/dsl-arbitrary.ts",
+    "./examples/shifa": "./src/examples/shifa.ts"
   }
 }

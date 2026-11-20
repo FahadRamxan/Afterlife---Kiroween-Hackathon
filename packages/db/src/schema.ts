@@ -466,6 +466,29 @@ export const screenGraphs = pgTable('screen_graphs', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+/**
+ * The reborn app's records (Prompt 58), kept as the old app's .DBF files keep them: one row per
+ * record of a data file, by record number, values by field name (numbers as exact decimal text,
+ * dates as YYYYMMDD). A deleted record keeps its number, as in a DBF.
+ */
+export const vesselRecords = pgTable(
+  'vessel_records',
+  {
+    projectId: projectId(),
+    /** The data file ("BILLS.DBF"). */
+    file: text('file').notNull(),
+    /** From 0, in the order the records were added. */
+    recno: integer('recno').notNull(),
+    deleted: boolean('deleted').notNull().default(false),
+    values: jsonb('values').notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.projectId, t.file, t.recno] }),
+    check('vessel_records_recno', sql`${t.recno} >= 0`),
+  ],
+);
+
 /** Every table, in an order where each one's parents come first. */
 export const TABLES = {
   projects,
@@ -485,4 +508,5 @@ export const TABLES = {
   llm_calls: llmCalls,
   translations,
   screen_graphs: screenGraphs,
+  vessel_records: vesselRecords,
 } as const;

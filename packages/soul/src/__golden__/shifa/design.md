@@ -121,6 +121,9 @@ graph TD
 | `qty-over-stock-refused` | validate |  | `item.qty <= medicine.qty` | 100% | none yet |
 | `stock-decrement` | effect | medicine.qty | `medicine.qty - item.qty` | 100% | none yet |
 | `bill-subtotal` | compute | bill.subtotal | `sum(items, x => x.qty * x.price)` | 100% | none yet |
+| `line-price` | compute | bill_item.price | `medicine.price` | 100% | none yet |
+| `line-amount` | compute | bill_item.amount | `item.qty * item.price` | 100% | none yet |
+| `bill-date` | compute | bill.bill_date | `today` | 100% | none yet |
 
 ## Correctness Properties
 
@@ -168,6 +171,24 @@ For all inputs, the new code sets the bill subtotal to the value of `sum(items, 
 
 **Validates: Requirements 7.1**
 
+### Property 8: `line-price`
+
+For all inputs, the new code sets the bill item price to the value of `medicine.price`.
+
+**Validates: Requirements 8.1**
+
+### Property 9: `line-amount`
+
+For all inputs, the new code sets the bill item amount to the value of `item.qty * item.price`.
+
+**Validates: Requirements 9.1**
+
+### Property 10: `bill-date`
+
+For all inputs, the new code sets the bill bill date to the value of `today`.
+
+**Validates: Requirements 10.1**
+
 ## Error Handling
 
 The old app refuses an entry that breaks one of these rules, and leaves the data unchanged. The new code must do the same:
@@ -177,5 +198,5 @@ The old app refuses an entry that breaks one of these rules, and leaves the data
 
 ## Testing Strategy
 
-- Every rule has a property test (Properties 1 to 7 above): on generated inputs, the new code and the rule's expression must agree. Run each one at least 100 times.
+- Every rule has a property test (Properties 1 to 10 above): on generated inputs, the new code and the rule's expression must agree. Run each one at least 100 times.
 - The old records in the DBF files load into the new data models unchanged.

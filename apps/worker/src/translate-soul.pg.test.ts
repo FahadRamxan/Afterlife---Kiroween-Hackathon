@@ -73,7 +73,7 @@ describe('translate-soul', () => {
       createdBy: 'reference',
       projectId: id,
     });
-    expect(soul.provenance.note).toMatch(/^Urdu by fake\/fake-model: 7 translated/);
+    expect(soul.provenance.note).toMatch(new RegExp(`^Urdu by fake/fake-model: ${n} translated`));
     for (const rule of soul.rules) expect(glossaryIssues(rule.en, rule.ur)).toEqual([]);
     expect(v2!.specMarkdown).toContain(soul.rules[0]!.ur);
     expect(events.find((e) => e.type === 'soul_updated')?.payload).toMatchObject({ version: 2 });
@@ -86,7 +86,10 @@ describe('translate-soul', () => {
     const id = await project();
     const client = new FakeLlmClient([]);
     const r = await translateSoulStep({ db: t.db, llm: client, budgetTokens: 100_000 })(ctx(id).c);
-    expect(r).toMatchObject({ status: 'done', output: { translated: 0, cached: 7 } });
+    expect(r).toMatchObject({
+      status: 'done',
+      output: { translated: 0, cached: SHIFA_REFERENCE_SOUL.rules.length },
+    });
     expect(client.requests).toHaveLength(0);
   });
 
@@ -96,7 +99,7 @@ describe('translate-soul', () => {
     const again = await translateSoulStep({ db: t.db, llm: null, budgetTokens: 0 })(ctx(id).c);
     expect(again).toEqual({
       status: 'done',
-      output: { version: 2, translated: 0, cached: 0, kept: 7 },
+      output: { version: 2, translated: 0, cached: 0, kept: SHIFA_REFERENCE_SOUL.rules.length },
     });
   });
 
