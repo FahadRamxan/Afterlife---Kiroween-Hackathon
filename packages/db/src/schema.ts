@@ -450,6 +450,22 @@ export const translations = pgTable('translations', {
   createdAt: createdAt(),
 });
 
+/**
+ * A project's screen graph (Prompt 52): nodes are screen fingerprints, edges the key sequences
+ * between them. Kept after each possession, so the Oracle and Ghost Twin can reach any screen.
+ */
+export const screenGraphs = pgTable('screen_graphs', {
+  projectId: uuid('project_id')
+    .primaryKey()
+    .references(() => projects.id, { onDelete: 'cascade' }),
+  /** The first screen (where every path starts). */
+  root: text('root').notNull(),
+  /** `{fingerprint, title, firstSeen, visits}[]` and `{from, to, keys, count}[]`. */
+  nodes: jsonb('nodes').notNull(),
+  edges: jsonb('edges').notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 /** Every table, in an order where each one's parents come first. */
 export const TABLES = {
   projects,
@@ -468,4 +484,5 @@ export const TABLES = {
   uploads,
   llm_calls: llmCalls,
   translations,
+  screen_graphs: screenGraphs,
 } as const;

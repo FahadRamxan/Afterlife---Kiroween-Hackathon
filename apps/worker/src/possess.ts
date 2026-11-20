@@ -9,6 +9,7 @@ import {
   dataValueChooser,
   llmValueChooser,
   possess,
+  saveGraph,
   strategyChooser,
   type LlmClient,
   type PossessorObservation,
@@ -250,6 +251,8 @@ export function possessApp(deps: {
       dosTime ? { dosTime } : {},
     );
     if (ctx.signal.aborted) throw ctx.signal.reason;
+    // Kept, and added to what earlier runs found (Prompt 52).
+    const kept = db ? await saveGraph(db, ctx.projectId, result.graph) : result.graph;
     await ctx.log(
       `Possession ended (${result.stoppedBecause}): ${result.screens} screens, ${result.steps} actions, ${result.saves} that changed data`,
     );
@@ -270,6 +273,7 @@ export function possessApp(deps: {
         },
         values: values.source,
         graph: result.graph,
+        keptScreens: kept.nodes.length,
       },
     };
   };

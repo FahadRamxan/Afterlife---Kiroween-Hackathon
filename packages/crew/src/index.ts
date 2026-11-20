@@ -121,3 +121,13 @@ export {
   type Transcript,
 } from './speech/types';
 export { speechClientFrom, type SpeechEnv } from './speech/config';
+
+// The screen graph, kept and replayed (Prompt 52).
+export {
+  ReplayError,
+  edgeId,
+  replayPath,
+  shortestPath,
+  type ReplayResult,
+} from './possessor/replay';
+export { loadGraph, mergeGraphs, saveGraph } from './possessor/graph-store';
