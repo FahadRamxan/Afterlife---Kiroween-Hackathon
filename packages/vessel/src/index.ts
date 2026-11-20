@@ -17,6 +17,7 @@ export {
   ruleName,
   type ActionForm,
   type ActionInputs,
+  type FormPart,
   type ActionResult,
   type Refusal,
   type Vessel,

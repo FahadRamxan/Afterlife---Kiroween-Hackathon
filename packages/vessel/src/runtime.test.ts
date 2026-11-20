@@ -200,6 +200,17 @@ describe('the store and the Soul', () => {
   });
 });
 
+describe('previewAction', () => {
+  it('gives the same result as performing it, and saves nothing', async () => {
+    const { v, store } = await vessel();
+    const inputs = { values: { CUST_ID: 'C0002' }, lines: [{ CODE: 'INS100', QTY: '8' }] };
+    const before = await Promise.all(SHIFA_FILES.map((f) => store.records(f)));
+    const preview = await v.previewAction('save-bill', inputs);
+    expect(await Promise.all(SHIFA_FILES.map((f) => store.records(f)))).toEqual(before);
+    expect(await v.performAction('save-bill', inputs)).toEqual(preview);
+  });
+});
+
 describe('actionForm', () => {
   it('asks for what the owner types: the customer, and each line’s code and quantity', () => {
     const f = actionForm(SHIFA, 'save-bill');
@@ -215,6 +226,10 @@ describe('actionForm', () => {
     ]);
     expect(f.line?.entity.id).toBe('bill-item');
     expect(f.line?.inputs.map((x) => x.name)).toEqual(['CODE', 'QTY']);
+    expect(f.line?.links.map((l) => `${l.field} -> ${l.entity.id}.${l.refField}`)).toEqual([
+      'CODE -> medicine.CODE',
+    ]);
+    expect(f.header.links.map((l) => l.entity.id)).toEqual(['customer']);
     expect(() => actionForm(SHIFA, 'nope')).toThrow(VesselError);
   });
 });
