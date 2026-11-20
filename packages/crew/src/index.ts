@@ -131,3 +131,19 @@ export {
   type ReplayResult,
 } from './possessor/replay';
 export { loadGraph, mergeGraphs, saveGraph } from './possessor/graph-store';
+
+// The Archaeologist: entities, keys, foreign keys and counters (Prompt 53).
+export {
+  counterPattern,
+  detectCounters,
+  detectDerived,
+  detectEntities,
+  detectForeignKeys,
+  detectKeys,
+  NUMBER_COUNTER,
+  nextCounter,
+  numberCounter,
+  type Derived,
+  type FileForeignKey,
+  type TableInput,
+} from './archaeologist/entities';

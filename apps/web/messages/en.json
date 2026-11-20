@@ -174,7 +174,8 @@
         "not-found": "There is no such project.",
         "rate-limited": "Too many requests from your address.",
         "error": "The steps cannot be shown."
-      }
+      },
+      "recordedDone": "Recorded run: replayed from a real run saved earlier"
     },
     "soul": {
       "loading": "Opening the Soul…",

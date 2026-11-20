@@ -188,6 +188,9 @@ async function runJob(o: LoopOptions, type: JobType, job: Job<unknown>) {
       state: result.status,
       attempt,
       ...(result.status !== 'done' ? { message: result.reason } : {}),
+      ...(result.status === 'done' && (result.output as { recorded?: unknown } | null)?.recorded
+        ? { recorded: true }
+        : {}),
     });
     // Queue the next step before the status is worked out, so a running pipeline never looks idle.
     // A final failure ends the pipeline here, and is not retried.

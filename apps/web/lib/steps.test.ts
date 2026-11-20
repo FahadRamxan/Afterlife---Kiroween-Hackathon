@@ -22,6 +22,22 @@ describe('getSteps and rerunStep', () => {
     expect(f).toHaveBeenCalledWith(`https://a/api/projects/${id}/steps`, expect.anything());
   });
 
+  it('a step done in a recorded run is marked recorded by its live event (Prompt 53)', () => {
+    const ev = (state: string, extra = {}) => ({
+      seq: 1,
+      type: 'step',
+      at: '',
+      payload: { step: 'archaeology', state, attempt: 1, ...extra },
+    });
+    const done = applyStepEvents(SIX, [ev('started'), ev('done', { recorded: true })]);
+    expect(done.find((s) => s.step === 'archaeology')).toMatchObject({
+      status: 'done',
+      recorded: true,
+    });
+    const live = applyStepEvents(SIX, [ev('done')]);
+    expect(live.find((s) => s.step === 'archaeology')!.recorded).toBe(false);
+  });
+
   it('says why it cannot: no database, or the step is already waiting', async () => {
     expect(
       await getSteps('https://a', id, json(503, { error: 'NO_DATABASE', message: 'no db' })),

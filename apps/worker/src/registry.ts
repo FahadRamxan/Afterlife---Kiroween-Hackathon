@@ -2,6 +2,7 @@
 // says it is not built yet and is marked "skipped" (never "done").
 import type { EventType, JobType } from '@afterlife/db';
 import type { Db } from '@afterlife/db';
+import { entitiesStep } from './entities-step';
 import { graveyardBundle, possessApp, type EmulatorPool } from './possess';
 import { scanUpload, uploadBundle } from './scan-upload';
 import type { VirusScanner } from './scanner';
@@ -64,6 +65,9 @@ export function defaultRegistry(
   } = {},
 ): Registry {
   const { db } = deps;
+  // A Graveyard app's bundle is a file; an upload's is in the database once it is clean.
+  const bundleFor = async (p: StepContext['project'], projectId: string) =>
+    p.source === 'upload' ? (db ? uploadBundle(db, projectId) : null) : graveyardBundle(p);
   return {
     possess: deps.pool
       ? possessApp({
@@ -74,15 +78,16 @@ export function defaultRegistry(
           ...(deps.maxActions ? { maxActions: deps.maxActions } : {}),
           ...(deps.probesPerField ? { probesPerField: deps.probesPerField } : {}),
           speech: deps.speech ?? null,
-          // A Graveyard app's bundle is a file; an upload's is in the database once it is clean.
-          bundleFor: async (p, projectId) =>
-            p.source === 'upload' ? (db ? uploadBundle(db, projectId) : null) : graveyardBundle(p),
+          bundleFor,
         })
       : async () => ({
           status: 'skipped',
           reason: 'This worker has no emulator to run the app in',
         }),
-    archaeology: notBuiltYet('archaeology', 'Prompt 55'),
+    // The entities, keys and counters (Prompt 53); the rules come with Prompts 54 and 55.
+    archaeology: db
+      ? entitiesStep({ db, bundleFor })
+      : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
     rebirth: notBuiltYet('rebirth', 'Prompt 63'),
     undertake: notBuiltYet('undertake', 'Prompt 64'),
     prove: notBuiltYet('prove', 'Prompt 68'),

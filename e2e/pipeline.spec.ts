@@ -21,13 +21,15 @@ test.describe('pipeline', () => {
     const id = await raise(page, 'Raise Shifa Medical Store');
     const steps = page.getByTestId('steps');
     await expect(steps.getByRole('progressbar')).toHaveAccessibleName(
-      '6 of 6 steps run, 5 of them skipped',
+      '6 of 6 steps run, 4 of them skipped',
       {
         timeout: 90_000,
       },
     );
+    // Possession explores (Prompt 48); archaeology finds the entities (Prompt 53).
     await expect(page.getByTestId('step-possess')).toHaveAttribute('data-status', 'done');
-    for (const s of STEPS.slice(1))
+    await expect(page.getByTestId('step-archaeology')).toHaveAttribute('data-status', 'done');
+    for (const s of STEPS.slice(2))
       await expect(page.getByTestId(`step-${s}`)).toHaveAttribute('data-status', 'skipped');
     await expect(page.getByTestId('step-prove')).toContainText(
       'The prove step is not built yet (Prompt 68)',
@@ -61,7 +63,7 @@ test.describe('pipeline', () => {
       timeout: 60_000,
     });
     await expect(page.getByTestId('steps').getByRole('progressbar')).toHaveAccessibleName(
-      '6 of 6 steps run, 5 of them skipped',
+      '6 of 6 steps run, 4 of them skipped',
       { timeout: 60_000 },
     );
     await expect(page.getByTestId('step-archaeology')).toContainText('Recorded run:');

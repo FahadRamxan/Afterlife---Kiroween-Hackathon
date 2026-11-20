@@ -10,6 +10,8 @@ const StepEvent = z.object({
   state: z.enum(['started', 'retrying', 'done', 'failed', 'skipped']),
   attempt: z.number().int().positive(),
   message: z.string().optional(),
+  /** The step was replayed from a recorded run (demo mode), though it is done. */
+  recorded: z.boolean().optional(),
 });
 const LogEvent = z.object({ level: z.enum(['info', 'warn', 'error']), message: z.string() });
 

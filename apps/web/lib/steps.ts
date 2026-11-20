@@ -63,7 +63,13 @@ export async function rerunStep(
   }
 }
 
-type StepPayload = { step: string; state: string; attempt: number; message?: string };
+type StepPayload = {
+  step: string;
+  state: string;
+  attempt: number;
+  message?: string;
+  recorded?: boolean;
+};
 const STATE: Record<string, StepState['status']> = {
   started: 'running',
   retrying: 'queued',
@@ -86,7 +92,7 @@ export function applyStepEvents(steps: StepState[], events: LiveEvent[]): StepSt
     if (p.state === 'started') s.error = null;
     if (p.state === 'retrying' || p.state === 'failed') s.error = p.message ?? null;
     if (p.state === 'skipped') s.reason = p.message ?? null;
-    if (p.message?.startsWith('Recorded run')) s.recorded = true;
+    if (p.recorded || p.message?.startsWith('Recorded run')) s.recorded = true;
   }
   return out;
 }
