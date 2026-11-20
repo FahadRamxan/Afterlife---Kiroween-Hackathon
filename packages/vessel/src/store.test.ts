@@ -2,7 +2,7 @@ import 'fake-indexeddb/auto';
 import type { TableDiff } from '@afterlife/dbf';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { IndexedDbEntityStore } from './indexeddb';
+import { IndexedDbEntityStore, openPhone } from './indexeddb';
 import { ConflictError, MemoryEntityStore, applyTableDiff } from './store';
 import { storeContract } from './testing/store-contract';
 
@@ -93,5 +93,31 @@ describe('applyTableDiff', () => {
         expect(out.slice(0, records.length)).toEqual(records);
       }),
     );
+  });
+});
+
+describe('openPhone (fake IndexedDB)', () => {
+  it('keeps the outbox in order, and small values, across opening again', async () => {
+    const name = `phone-${n++}`;
+    const a = openPhone(name);
+    const item = (id: string) => ({
+      id,
+      actionId: 'save-bill',
+      inputs: {},
+      today: '1998-07-15',
+      at: '1998-07-15T10:00:00.000Z',
+      effects: { tables: {}, unchanged: [], addedTables: [], removedTables: [] },
+      record: { BILL_NO: id },
+    });
+    for (const id of ['c', 'a', 'b']) await a.outbox.add(item(id));
+    await a.meta.set('soul', { version: 3 });
+    await a.close();
+    const b = openPhone(name);
+    expect((await b.outbox.pending()).map((i) => i.id)).toEqual(['c', 'a', 'b']);
+    await b.outbox.remove(['a']);
+    expect((await b.outbox.pending()).map((i) => i.id)).toEqual(['c', 'b']);
+    expect(await b.meta.get('soul')).toEqual({ version: 3 });
+    expect(await b.meta.get('nothing')).toBeUndefined();
+    await b.close({ drop: true });
   });
 });

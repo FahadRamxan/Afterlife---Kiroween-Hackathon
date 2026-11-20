@@ -21,6 +21,7 @@ import { ruleRoutes, type RuleEvidenceStore } from './rules';
 import { screenGraphRoutes, type ScreenGraphStore } from './screen-graph';
 import { soulRoutes, type SoulStore } from './souls';
 import { uploadRoutes, type UploadStore } from './uploads';
+import { vesselRoutes, type VesselStore } from './vessel';
 
 export type AppStores = {
   sessions?: SessionStore;
@@ -32,6 +33,7 @@ export type AppStores = {
   llmCalls?: LlmCallStore;
   screenGraphs?: ScreenGraphStore;
   ruleEvidence?: RuleEvidenceStore;
+  vessel?: VesselStore;
 };
 
 export type AppOptions = {
@@ -143,6 +145,11 @@ export function buildApp(
   );
   app.register(
     ruleRoutes(stores.ruleEvidence, {
+      projectExists: async (id) => (await projects.get(id)) !== null,
+    }),
+  );
+  app.register(
+    vesselRoutes(stores.vessel, {
       projectExists: async (id) => (await projects.get(id)) !== null,
     }),
   );

@@ -328,7 +328,8 @@
       "no-soul": "No Soul has been written for this project yet.",
       "no-actions": "Its Soul has no actions yet, so the reborn app has nothing to do.",
       "no-data": "The records for an uploaded app come with the Undertaker: they are not here yet.",
-      "failed": "The reborn app could not start:"
+      "failed": "The reborn app could not start:",
+      "never-online": "Open the reborn app once with a connection: then it works offline on this phone."
     },
     "bill": {
       "who": "{name} (blank: walk-in)",
@@ -370,6 +371,20 @@
       "bill_date": "Date",
       "line": "Line",
       "save_a_bill": "Save bill"
+    },
+    "sync": {
+      "offline": "Offline, saved on this phone.",
+      "waiting": "{count, plural, one {# bill is} other {# bills are}} waiting to be sent.",
+      "sending": "{count, plural, =0 {Checking with the server…} one {Sending # bill…} other {Sending # bills…}}",
+      "done": "{count, plural, one {# bill sent:} other {# bills sent:}} everything is on the server.",
+      "renumbered": "Bill {phone} on this phone is bill {server} on the server (another phone took {phone})."
+    },
+    "review": {
+      "title": "{count, plural, one {# stock change to review} other {# stock changes to review}}",
+      "body": "Another phone sold the same item while this one was offline. Both sales stand; check the shelf.",
+      "conflict": "{record} {field}: on this phone {phoneBefore} to {phoneAfter}; on the server {serverBefore} to {serverAfter}.",
+      "bill": "(bill {record})",
+      "done": "Checked"
     }
   },
   "verify": {

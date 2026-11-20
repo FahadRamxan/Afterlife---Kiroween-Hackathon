@@ -17,11 +17,14 @@ type Line = Record<string, string>;
 export function VesselBill({
   vessel,
   actionId,
+  dataVersion = 0,
   onSaved,
 }: {
   vessel: Vessel;
   actionId: string;
-  onSaved: () => void;
+  /** Changes when the records changed under the form (the server's came back). */
+  dataVersion?: number;
+  onSaved: () => void | Promise<void>;
 }) {
   const t = useTranslations('vessel.bill');
   const word = useWord();
@@ -51,7 +54,7 @@ export function VesselBill({
     return () => {
       alive = false;
     };
-  }, [vessel, pick, headerLink, generation]);
+  }, [vessel, pick, headerLink, generation, dataVersion]);
 
   const inputs = useMemo(
     () => ({
@@ -114,7 +117,7 @@ export function VesselBill({
     setValues({});
     setPreview(null);
     setGeneration((g) => g + 1);
-    onSaved();
+    await onSaved();
   }
 
   const refusedFor = (line?: number) =>

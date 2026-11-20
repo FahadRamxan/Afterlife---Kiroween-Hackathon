@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/copy-jsdos.mjs && next dev",
-    "build": "node scripts/copy-jsdos.mjs && next build",
+    "dev": "node scripts/copy-jsdos.mjs && node scripts/build-sw.mjs && next dev",
+    "build": "node scripts/copy-jsdos.mjs && node scripts/build-sw.mjs --minify && next build",
     "start": "next start",
     "test": "vitest run --passWithNoTests",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.sw.json"
   },
   "dependencies": {
     "@afterlife/dbf": "workspace:^",
@@ -35,7 +35,9 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "esbuild": "^0.28.2",
     "fast-check": "^4.10.2",
+    "serwist": "^9.5.15",
     "vitest": "^5.1.0"
   }
 }

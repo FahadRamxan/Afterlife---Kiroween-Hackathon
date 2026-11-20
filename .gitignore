@@ -24,3 +24,6 @@ test-results/
 .vscode/
 # js-dos, copied from node_modules by apps/web/scripts/copy-jsdos.mjs.
 apps/web/public/js-dos/
+# The reborn app's service worker, built by Serwist from apps/web/app/sw.ts.
+apps/web/public/sw*
+apps/web/public/swe-worker*
