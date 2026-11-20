@@ -23,6 +23,8 @@
   --animate-data-pulse: data-pulse 600ms ease-out 3;
   /* Data that changed moves from the screen into its diff card (Prompt 51). */
   --animate-data-fly: data-fly 900ms ease-in 1 forwards;
+  /* A rule's evidence flies in under its card when the rule is exhumed (Prompt 57). */
+  --animate-evidence-fly: evidence-fly 600ms ease-out 1 both;
 }
 
 @keyframes crt-flicker {
@@ -91,6 +93,16 @@
   }
 }
 
+@keyframes evidence-fly {
+  from {
+    transform: translateY(-24px) scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
 @keyframes data-pulse {
   from {
     box-shadow: 0 0 10px 3px var(--color-candle);
@@ -130,6 +142,10 @@
   .data-fly {
     animation: var(--animate-data-fly);
   }
+  /* An observation a just-exhumed rule rests on, arriving under its card, once. */
+  .evidence-fly {
+    animation: var(--animate-evidence-fly);
+  }
   .crt-glow {
     text-shadow: 0 0 4px rgb(51 255 102 / 0.55);
     animation: var(--animate-crt-flicker);
@@ -143,6 +159,7 @@
   .candle-flame,
   .data-pulse,
   .data-fly,
+  .evidence-fly,
   .graveyard-fog {
     animation: none !important;
   }

@@ -258,7 +258,11 @@
         "miss": "The old app wrote {expected}; this gives {got}",
         "missError": "The old app wrote {expected}; this gives no value ({error})",
         "probes": "Probes to ask the Possessor for"
-      }
+      },
+      "fresh": "Just exhumed",
+      "exhumed": "{rules, plural, one {# rule} other {# rules}} exhumed from {observations, plural, one {# observation} other {# observations}}",
+      "evidenceShown": "The observations this rule rests on",
+      "evidenceThumb": "Evidence {n}: keys {keys}"
     },
     "work": {
       "title": "Show your work",

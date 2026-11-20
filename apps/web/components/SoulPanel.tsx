@@ -1,5 +1,5 @@
 'use client';
-import { Button, Card, CrtScreen, DiffBadge } from '@afterlife/ui';
+import { Button, Card, CrtScreen, DiffBadge, cn } from '@afterlife/ui';
 import type { Rule, Soul } from '@afterlife/soul';
 import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
@@ -7,10 +7,12 @@ import { EmptyState } from './EmptyState';
 import { RuleCheck } from './RuleCheck';
 import { SoulVersions } from './SoulVersions';
 import type { LiveEvent } from '../lib/live';
+import { foundRuleIds, freshRules, typed, typingMs } from '../lib/rule-discovery';
 import { UrduRules } from './UrduRules';
 import {
   diffRows,
   getObservation,
+  getObservationCount,
   getSoul,
   specZip,
   textGrid,
@@ -32,11 +34,26 @@ export function SoulPanel({
   const t = useTranslations('raise.soul');
   const empty = useTranslations('raise');
   const [answer, setAnswer] = useState<SoulAnswer | null>(null);
+  const [observed, setObserved] = useState<number | null>(null);
   const updates = events.filter((e) => e.type === 'soul_updated').length;
+  // The rules shown before (null until the first load), and those exhumed since: they light a
+  // candle and write themselves in (Prompt 57). Rules there on the first load were found earlier.
+  const shown = useRef<Set<string> | null>(null);
+  const [fresh, setFresh] = useState<ReadonlySet<string>>(new Set());
 
   useEffect(() => {
     let alive = true;
-    getSoul(API, projectId).then((a) => alive && setAnswer(a));
+    getSoul(API, projectId).then((a) => {
+      if (!alive) return;
+      if (a.ok) {
+        const ids = a.soul.rules.map((r) => r.id);
+        const f = freshRules(shown.current, ids);
+        if (f.length) setFresh((prev) => new Set([...prev, ...f]));
+        shown.current = new Set([...ids, ...(shown.current ?? [])]);
+      } else if (a.reason === 'none') shown.current ??= new Set();
+      setAnswer(a);
+    });
+    if (API) getObservationCount(API, projectId).then((n) => alive && setObserved(n));
     return () => {
       alive = false;
     };
@@ -55,6 +72,12 @@ export function SoulPanel({
       </p>
     );
   const { soul, version } = answer;
+  // Rules the Archaeologist just found (rule_found) that the stored Soul does not have yet.
+  const inSoul = new Set(soul.rules.map((r) => r.id));
+  const pending = foundRuleIds(events, -1)
+    .filter((id) => !inSoul.has(id))
+    .map((id) => pendingRule(events, id))
+    .filter((r): r is Rule => r !== null);
   return (
     <div data-testid="soul" className="mt-6 space-y-6">
       <div className="flex flex-wrap items-center gap-3">
@@ -103,10 +126,30 @@ export function SoulPanel({
         <h2 id="rules-heading" className="text-lg font-semibold">
           {t('rules', { count: soul.rules.length })}
         </h2>
+        {observed !== null ? (
+          <p
+            data-testid="exhumed-banner"
+            className="mt-1 flex items-center gap-2 text-sm text-bone/85"
+          >
+            <span
+              aria-hidden="true"
+              className={cn(
+                'inline-block h-3 w-2 rounded-full',
+                fresh.size || pending.length
+                  ? 'candle-flame animate-flame bg-candle shadow-[0_0_8px_2px_rgb(245_181_68/0.6)]'
+                  : 'bg-bone/30',
+              )}
+            />
+            {t('exhumed', { rules: soul.rules.length, observations: observed })}
+          </p>
+        ) : null}
         <UrduRules projectId={projectId} soul={soul} events={events} />
         <ol className="mt-2 space-y-3">
           {soul.rules.map((r) => (
-            <RuleCard key={r.id} rule={r} />
+            <RuleCard key={r.id} rule={r} fresh={fresh.has(r.id)} />
+          ))}
+          {pending.map((r) => (
+            <RuleCard key={r.id} rule={r} fresh />
           ))}
         </ol>
       </section>
@@ -115,10 +158,52 @@ export function SoulPanel({
   );
 }
 
-function RuleCard({ rule }: { rule: Rule }) {
+/** A rule from its rule_found event, before the Soul version with it is stored. */
+function pendingRule(events: LiveEvent[], id: string): Rule | null {
+  const e = events.find(
+    (x) => x.type === 'rule_found' && (x.payload as { ruleId?: string })?.ruleId === id,
+  );
+  const p = e?.payload as
+    { target?: string; expression?: string; en?: string; confidence?: number } | undefined;
+  if (!p?.expression || !p.en) return null;
+  return {
+    id,
+    kind: 'compute',
+    ...(p.target ? { target: p.target } : {}),
+    en: p.en,
+    ur: '',
+    expression: p.expression,
+    evidence: [],
+    confidence: typeof p.confidence === 'number' ? p.confidence : 0,
+  };
+}
+
+/** The text written in so far, one character at a time; all of it at once under reduced motion. */
+function useTypewriter(text: string, active: boolean) {
+  const [elapsed, setElapsed] = useState(active ? 0 : Number.POSITIVE_INFINITY);
+  useEffect(() => {
+    if (!active || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      setElapsed(Number.POSITIVE_INFINITY);
+      return;
+    }
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      setElapsed(now - start);
+      if (now - start < typingMs(text)) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [text, active]);
+  const shown = typed(text, elapsed);
+  return { text: shown, done: shown === text };
+}
+
+function RuleCard({ rule, fresh = false }: { rule: Rule; fresh?: boolean }) {
   const t = useTranslations('raise.soul');
   const urdu = useLocale() === 'ur';
   const [open, setOpen] = useState<string | null>(null);
+  const en = useTypewriter(rule.en, fresh);
   const ur = rule.ur.trim() ? (
     <p data-testid="rule-ur" lang="ur" dir="rtl" className="font-urdu text-lg leading-[2]">
       {rule.ur}
@@ -129,8 +214,21 @@ function RuleCard({ rule }: { rule: Rule }) {
     </p>
   ) : null;
   return (
-    <li data-testid={`rule-${rule.id}`}>
-      <Card className="space-y-2">
+    <li
+      data-testid={`rule-${rule.id}`}
+      data-fresh={fresh ? 'true' : undefined}
+      data-typed={en.done ? 'true' : 'false'}
+    >
+      <Card className={cn('space-y-2', fresh && 'border-candle/60')}>
+        {fresh ? (
+          <p data-testid="rule-fresh" className="flex items-center gap-2 text-sm text-candle">
+            <span
+              aria-hidden="true"
+              className="candle-flame inline-block h-3 w-2 animate-flame rounded-full bg-candle shadow-[0_0_8px_2px_rgb(245_181_68/0.6)]"
+            />
+            {t('fresh')}
+          </p>
+        ) : null}
         {/* In Urdu the owner reads the Urdu first; the English stays, for the developer. */}
         {urdu ? ur : null}
         <p
@@ -139,7 +237,14 @@ function RuleCard({ rule }: { rule: Rule }) {
           dir="ltr"
           className={urdu ? 'text-sm text-bone/75' : undefined}
         >
-          {rule.en}
+          {en.done ? (
+            rule.en
+          ) : (
+            <>
+              <span aria-hidden="true">{en.text}</span>
+              <span className="sr-only">{rule.en}</span>
+            </>
+          )}
         </p>
         {urdu ? null : ur}
         <pre className="overflow-x-auto rounded-md bg-graveyard p-2 text-xs" lang="en" dir="ltr">
@@ -169,9 +274,57 @@ function RuleCard({ rule }: { rule: Rule }) {
             <span className="text-bone/70">{t('noEvidence')}</span>
           )}
         </div>
+        {fresh && en.done && rule.evidence.length ? (
+          <EvidenceThumbs ids={rule.evidence.slice(0, 3)} onOpen={setOpen} />
+        ) : null}
       </Card>
       {open ? <EvidenceDialog id={open} onClose={() => setOpen(null)} /> : null}
     </li>
+  );
+}
+
+/** The observations a just-exhumed rule rests on, flying in as small screens of the old app. */
+function EvidenceThumbs({ ids, onOpen }: { ids: string[]; onOpen: (id: string) => void }) {
+  const t = useTranslations('raise.soul');
+  const [obs, setObs] = useState<(Observation | null)[] | null>(null);
+  // By value: the parent passes a new array on every render.
+  const key = ids.join(' ');
+  useEffect(() => {
+    let alive = true;
+    if (API)
+      Promise.all(key.split(' ').map((id) => getObservation(API, id))).then(
+        (o) => alive && setObs(o),
+      );
+    return () => {
+      alive = false;
+    };
+  }, [key]);
+  if (!obs) return null;
+  return (
+    <ul className="flex flex-wrap gap-3" aria-label={t('evidenceShown')}>
+      {obs.map((o, i) =>
+        o ? (
+          <li
+            key={o.id}
+            data-testid="evidence-thumb"
+            className="evidence-fly w-44"
+            style={{ animationDelay: `${i * 150}ms` }}
+          >
+            <button
+              type="button"
+              onClick={() => onOpen(o.id)}
+              className="w-full text-left"
+              aria-label={t('evidenceThumb', { n: i + 1, keys: o.keys })}
+            >
+              <CrtScreen
+                grid={textGrid(o.screenAfter.text)}
+                label={t('evidenceThumb', { n: i + 1, keys: o.keys })}
+              />
+            </button>
+          </li>
+        ) : null,
+      )}
+    </ul>
   );
 }
 

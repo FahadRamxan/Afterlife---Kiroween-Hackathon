@@ -67,6 +67,24 @@ export async function getObservation(
   }
 }
 
+/** How many observations the project has (its own and its séances'), or null when unknown. */
+export async function getObservationCount(
+  api: string,
+  projectId: string,
+  fetcher: typeof fetch = fetch,
+): Promise<number | null> {
+  try {
+    const res = await fetcher(
+      `${base(api)}/api/projects/${encodeURIComponent(projectId)}/observations`,
+      { cache: 'no-store' },
+    );
+    if (!res.ok) return null;
+    const total = ((await res.json()) as { total?: unknown }).total;
+    return typeof total === 'number' && Number.isInteger(total) && total >= 0 ? total : null;
+  } catch {
+    return null;
+  }
+}
 /** The Kiro spec of a Soul as a zip: one folder, ready to open in Kiro. */
 export function specZip(soul: Soul): Uint8Array {
   const root = `${soul.app.id}-kiro-spec`;
