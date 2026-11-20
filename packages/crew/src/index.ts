@@ -147,3 +147,17 @@ export {
   type FileForeignKey,
   type TableInput,
 } from './archaeologist/entities';
+
+// Rule hypotheses (Prompt 54).
+export {
+  HYPOTHESES_TEMPLATE,
+  MAX_CANDIDATES,
+  MIN_CANDIDATES,
+  effectsOf,
+  hypothesesFor,
+  promptFor,
+  renderTemplate,
+  type Effect,
+  type EffectObservation,
+  type Hypotheses,
+} from './archaeologist/hypotheses';
