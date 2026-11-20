@@ -21,7 +21,16 @@ const valid: GraveyardManifestT = {
   dosTime: '1998-07-15 10:00:00',
   preview: 'menu/MENU.SCR',
   knownRules: [
-    { id: 'gst-17-truncated', text: '17% GST, truncated to the paisa.', scenarios: ['bill-small'] },
+    {
+      id: 'gst-17-truncated',
+      text: '17% GST, truncated to the paisa.',
+      scenarios: ['bill-small'],
+      truth: {
+        kind: 'compute',
+        target: 'bill.gst',
+        expression: 'trunc((bill.subtotal - bill.discount) * 0.17, 2)',
+      },
+    },
   ],
   knownBugs: [
     { id: 'y2k-expiry', text: 'Two-digit year.', severity: 'high', scenarios: ['y2k-blocks-2000'] },
@@ -39,7 +48,21 @@ describe('GraveyardManifest', () => {
     ['a lower-case id with spaces', { ...valid, id: 'Shifa Store' }],
     ['a non-DOS executable', { ...valid, executable: 'shifa.exe' }],
     ['no data files', { ...valid, dataFiles: [] }],
-    ['a rule without evidence', { ...valid, knownRules: [{ id: 'x', text: 'y', scenarios: [] }] }],
+    [
+      'a rule without evidence',
+      { ...valid, knownRules: [{ ...valid.knownRules[0]!, id: 'x', scenarios: [] }] },
+    ],
+    [
+      'a rule without its truth',
+      { ...valid, knownRules: [{ id: 'x', text: 'y', scenarios: ['bill-small'] }] },
+    ],
+    [
+      'a truth with a bad target',
+      {
+        ...valid,
+        knownRules: [{ ...valid.knownRules[0]!, truth: { kind: 'compute', target: 'BILL' } }],
+      },
+    ],
     ['a bad severity', { ...valid, knownBugs: [{ ...valid.knownBugs[0]!, severity: 'meh' }] }],
     ['duplicate rule ids', { ...valid, knownRules: [valid.knownRules[0]!, valid.knownRules[0]!] }],
     ['a story longer than 3 lines', { ...valid, story: 'a\nb\nc\nd' }],
@@ -73,14 +96,26 @@ describe('publicEntry', () => {
       fc.property(fc.string({ minLength: 1 }), fc.string({ minLength: 1 }), (rule, bug) => {
         const m = {
           ...valid,
-          knownRules: [{ id: 'r', text: `SECRET-RULE ${rule}`, scenarios: ['s'] }],
+          knownRules: [
+            {
+              id: 'r',
+              text: `SECRET-RULE ${rule}`,
+              scenarios: ['s'],
+              // The truth the score checks against is hidden too (Prompt 56).
+              truth: {
+                kind: 'compute' as const,
+                target: 'bill.gst',
+                expression: `SECRET-TRUTH ${rule}`,
+              },
+            },
+          ],
           knownBugs: [
             { id: 'b', text: `SECRET-BUG ${bug}`, severity: 'low' as const, scenarios: ['s'] },
           ],
         };
         const json = JSON.stringify(publicEntry(m, []));
         expect(json).not.toContain('SECRET-');
-        expect(json).not.toMatch(/knownRules|knownBugs|scenarios/);
+        expect(json).not.toMatch(/knownRules|knownBugs|scenarios|truth|bill\.gst/);
       }),
     );
   });

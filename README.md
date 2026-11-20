@@ -23,28 +23,29 @@ See [plan.md](plan.md) for the plan and [prompt.md](prompt.md) for the build pro
 
 ## Commands
 
-| Command                 | What it does                                                                                   |
-| ----------------------- | ---------------------------------------------------------------------------------------------- |
-| `pnpm dev`              | Run all apps in dev mode                                                                       |
-| `pnpm build`            | Build everything                                                                               |
-| `pnpm test`             | Vitest across the workspace                                                                    |
-| `pnpm e2e`              | Playwright end-to-end tests                                                                    |
-| `pnpm lint`             | ESLint                                                                                         |
-| `pnpm typecheck`        | TypeScript strict checks                                                                       |
-| `pnpm verify`           | lint, typecheck, test and e2e, all of them                                                     |
-| `pnpm ci:local`         | Everything CI did: verify with 2000 property runs, production e2e, Docker builds and smoke     |
-| API docs                | `http://localhost:4000/api/docs` (Swagger UI) and `/api/openapi.json` while `pnpm dev` runs    |
-| `pnpm pipeline:record`  | Run the real pipeline on each Graveyard app and save it for demo mode (`apps/worker/recorded`) |
-| `pnpm db:migrate`       | Apply the database migrations to `DATABASE_URL` (the API also does it when it starts)          |
-| `pnpm db:migrate:down`  | Undo the newest migration                                                                      |
-| `pnpm db:seed`          | Add the three Graveyard projects (safe to run again)                                           |
-| `pnpm db:generate`      | Write the next migration from `packages/db/src/schema.ts` (then write its `.down.sql`)         |
-| `pnpm screenshots`      | Retake the UI tour in `docs/screenshots`                                                       |
-| `pnpm mcp:gif`          | Record the MCP demo GIF from a real session (`apps/web/public/mcp/afterlife-mcp.gif`)          |
-| `pnpm screen:capture`   | Record the VGA fonts and real js-dos frames of the sample apps (screen decoder fixtures)       |
-| `pnpm smoke:prod <url>` | The `@smoke` Playwright tests against a deployed site                                          |
-| `pnpm test:coverage`    | Vitest with coverage (the table below; HTML report in `coverage/`)                             |
-| `pnpm soul:spec`        | Write the Kiro spec of a Soul: `pnpm soul:spec <soul.json \| --example> <dir>`                 |
+| Command                  | What it does                                                                                   |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
+| `pnpm dev`               | Run all apps in dev mode                                                                       |
+| `pnpm build`             | Build everything                                                                               |
+| `pnpm test`              | Vitest across the workspace                                                                    |
+| `pnpm e2e`               | Playwright end-to-end tests                                                                    |
+| `pnpm lint`              | ESLint                                                                                         |
+| `pnpm typecheck`         | TypeScript strict checks                                                                       |
+| `pnpm verify`            | lint, typecheck, test and e2e, all of them                                                     |
+| `pnpm ci:local`          | Everything CI did: verify with 2000 property runs, production e2e, Docker builds and smoke     |
+| API docs                 | `http://localhost:4000/api/docs` (Swagger UI) and `/api/openapi.json` while `pnpm dev` runs    |
+| `pnpm pipeline:record`   | Run the real pipeline on each Graveyard app and save it for demo mode (`apps/worker/recorded`) |
+| `pnpm db:migrate`        | Apply the database migrations to `DATABASE_URL` (the API also does it when it starts)          |
+| `pnpm db:migrate:down`   | Undo the newest migration                                                                      |
+| `pnpm db:seed`           | Add the three Graveyard projects (safe to run again)                                           |
+| `pnpm db:generate`       | Write the next migration from `packages/db/src/schema.ts` (then write its `.down.sql`)         |
+| `pnpm screenshots`       | Retake the UI tour in `docs/screenshots`                                                       |
+| `pnpm mcp:gif`           | Record the MCP demo GIF from a real session (`apps/web/public/mcp/afterlife-mcp.gif`)          |
+| `pnpm screen:capture`    | Record the VGA fonts and real js-dos frames of the sample apps (screen decoder fixtures)       |
+| `pnpm smoke:prod <url>`  | The `@smoke` Playwright tests against a deployed site                                          |
+| `pnpm test:coverage`     | Vitest with coverage (the table below; HTML report in `coverage/`)                             |
+| `pnpm soul:spec`         | Write the Kiro spec of a Soul: `pnpm soul:spec <soul.json \| --example> <dir>`                 |
+| `pnpm score:archaeology` | Score the Archaeologist against each sample's hidden rules (`--write` updates the score below) |
 
 ## How we test
 
@@ -90,6 +91,20 @@ Prompts 1 to 50 are merged, with a review round after every ten. For Prompt 33, 
 Possession now explores for real: on Shifa it finds 11 screens in about 50 actions, saves bills and customers, and finds what the app refuses (an unknown medicine code, a blank name). The other five Crew steps still say "not built yet (Prompt N)" and are marked skipped, never done. Without model credentials the Possessor takes its values from the app's own data files, and the Urdu translation says it needs a model.
 
 `/design` boots the real Shifa EXE in js-dos: you can press keys, record what an action changed in the data files, and replay it from a fresh state. Details are in [docs/progress.md](docs/progress.md).
+
+## Archaeology score
+
+Each sample app hides its business rules in its manifest (`knownRules`, with the truth our team wrote from the C source). `pnpm score:archaeology` runs the Archaeologist on the app's data files and its recorded possession and scores the Soul it finds: a hidden rule is recovered when the Soul has the same counter, or a rule for the same value that is the same expression (exact) or gives the same value on every scripted scenario run that shows the rule (equivalent). `tests/archaeology-score.test.ts` fails if the score drops, so the nightly `pnpm ci:local` checks it.
+
+<!-- archaeology-score:start -->
+
+**Without a language model** (entities and counters only: the rules need a model):
+
+- Afterlife recovered 2 of 7 hidden rules in Shifa Medical Store (2 exact). Precision 100%, recall 29%.
+- Afterlife recovered 1 of 6 hidden rules in Iqra School Fees (1 exact). Precision 100%, recall 17%.
+- Afterlife recovered 1 of 5 hidden rules in Barkat Kiryana Ledger (1 exact). Precision 100%, recall 20%.
+
+<!-- archaeology-score:end -->
 
 ## Screenshots
 

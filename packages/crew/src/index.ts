@@ -178,3 +178,22 @@ export {
   type Verification,
   type VerifyEntity,
 } from './archaeologist/verify';
+export {
+  MAX_RULE_TARGETS,
+  inferRules,
+  type InferOptions,
+  type Inferred,
+} from './archaeologist/infer';
+
+// Archaeology scoring against a sample's hidden truth (Prompt 56).
+export {
+  normalizeExpression,
+  scoreSentence,
+  scoreSoul,
+  type HiddenRule,
+  type InferredSoul,
+  type RuleScore,
+  type Score,
+  type ScoreEvidence,
+  type Truth,
+} from './archaeologist/scoring';

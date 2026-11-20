@@ -1,11 +1,13 @@
 import { CRTFrame, Tombstone } from '@afterlife/ui';
 import { useTranslations } from 'next-intl';
+import { scoreFor } from '../lib/archaeology-score';
 import { storyLines, type GraveyardApp } from '../lib/graveyard';
 import { RaiseButton } from './RaiseButton';
 
 /** One dead app: its first screen from a real DOSBox run, idle under fog, and a Raise button. */
 export function GraveyardCard({ app }: { app: GraveyardApp }) {
   const t = useTranslations('graveyard');
+  const score = scoreFor(app.id);
   return (
     <Tombstone
       data-testid="tombstone"
@@ -38,6 +40,11 @@ export function GraveyardCard({ app }: { app: GraveyardApp }) {
           <p key={line}>{line}</p>
         ))}
       </div>
+      {score ? (
+        <p data-testid="archaeology-score" className="mt-2 text-xs text-bone/75">
+          {t(score.mode === 'no-model' ? 'score.noModel' : 'score.model', score)}
+        </p>
+      ) : null}
     </Tombstone>
   );
 }

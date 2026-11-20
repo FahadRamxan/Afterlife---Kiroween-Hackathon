@@ -70,7 +70,11 @@
     },
     "recorded": "Recorded run",
     "recordedApp": "Watch a recorded run of {name}",
-    "recordedHint": "Fast: replays a real run of this app, saved earlier. Labelled as recorded."
+    "recordedHint": "Fast: replays a real run of this app, saved earlier. Labelled as recorded.",
+    "score": {
+      "noModel": "Archaeology score: {recovered} of {known} hidden rules recovered ({exact} exact), without a language model.",
+      "model": "Archaeology score: {recovered} of {known} hidden rules recovered ({exact} exact), with {mode}."
+    }
   },
   "raise": {
     "title": "Raising {name}",

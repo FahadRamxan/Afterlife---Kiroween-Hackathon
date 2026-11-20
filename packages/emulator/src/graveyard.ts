@@ -13,6 +13,33 @@ const Evidence = {
   scenarios: z.array(Slug).min(1),
 };
 
+const Target = z.string().regex(/^[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*$/, 'entity.field, lower case');
+/**
+ * A hidden rule in a form the score can check (Prompt 56), written by our team from the C source.
+ * `expression` is in the Soul's rule language; it is left out when the language cannot say it
+ * (a lookup in a table the action did not write, calendar weeks).
+ */
+export const RuleTruth = z.discriminatedUnion('kind', [
+  z
+    .object({
+      kind: z.enum(['compute', 'effect']),
+      target: Target,
+      expression: z.string().min(1).optional(),
+    })
+    .strict(),
+  z.object({ kind: z.literal('validate'), expression: z.string().min(1).optional() }).strict(),
+  z
+    .object({
+      kind: z.literal('counter'),
+      entity: Slug,
+      field: z.string().regex(/^[A-Z_][A-Z0-9_]{0,9}$/),
+      pattern: z.string().min(1),
+    })
+    .strict(),
+  /** A report or list the app prints: nothing in the data files shows it. */
+  z.object({ kind: z.literal('report') }).strict(),
+]);
+
 const uniqueIds = (items: { id: string }[]) =>
   new Set(items.map((i) => i.id)).size === items.length;
 
@@ -40,7 +67,7 @@ export const GraveyardManifest = z
     /** Screen dump in fixtures/<app>/ used as the Graveyard preview. */
     preview: z.string().regex(/^[a-z0-9-]+\/[A-Z0-9_-]+\.SCR$/),
     knownRules: z
-      .array(z.object(Evidence).strict())
+      .array(z.object({ ...Evidence, truth: RuleTruth }).strict())
       .min(1)
       .refine(uniqueIds, 'rule ids must be unique'),
     knownBugs: z

@@ -131,7 +131,8 @@ function allowedFields(
 ): Set<string> {
   const out = new Set<string>();
   for (const k of Object.keys(effect.record))
-    if (k !== effect.field) out.add(`${ruleName(effect.entity)}.${k}`);
+    // A changed field may be used: in the rule it is its value before (stock - quantity).
+    if (k !== effect.field || effect.kind === 'changed') out.add(`${ruleName(effect.entity)}.${k}`);
   for (const [file, t] of Object.entries(observation.dbfDiff.tables)) {
     const id = entities.get(file.toUpperCase());
     if (!id || id === effect.entity) continue;
@@ -211,7 +212,7 @@ export function promptFor(
     kind: effect.kind,
     change:
       effect.kind === 'changed'
-        ? `It changed from ${effect.before} to ${effect.after} (${effect.delta ?? 'no delta'}).`
+        ? `It changed from ${effect.before} to ${effect.after} (${effect.delta ?? 'no delta'}). In a rule, ${ruleName(effect.entity)}.${effect.field} is its value before the change.`
         : `It was written as ${effect.after} in a new record.`,
     record: lines(
       Object.fromEntries(Object.entries(effect.record).filter(([k]) => k !== effect.field)),
