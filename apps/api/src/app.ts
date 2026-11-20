@@ -17,6 +17,7 @@ import { liveRoutes, type LiveHub } from './live';
 import { llmCallRoutes, type LlmCallStore } from './llm-calls';
 import { MemoryProjectStore, projectRoutes, type Pipeline, type ProjectStore } from './projects';
 import { MemorySessionStore, sessionRoutes, type SessionStore } from './sessions';
+import { screenGraphRoutes, type ScreenGraphStore } from './screen-graph';
 import { soulRoutes, type SoulStore } from './souls';
 import { uploadRoutes, type UploadStore } from './uploads';
 
@@ -28,6 +29,7 @@ export type AppStores = {
   uploads?: UploadStore;
   souls?: SoulStore;
   llmCalls?: LlmCallStore;
+  screenGraphs?: ScreenGraphStore;
 };
 
 export type AppOptions = {
@@ -130,6 +132,11 @@ export function buildApp(
       projectExists: async (id) => (await projects.get(id)) !== null,
       budgetTokens: env.LLM_TOKEN_BUDGET,
       isRealShop: async (id) => (await projects.get(id))?.source === 'upload',
+    }),
+  );
+  app.register(
+    screenGraphRoutes(stores.screenGraphs, {
+      projectExists: async (id) => (await projects.get(id)) !== null,
     }),
   );
   app.register(

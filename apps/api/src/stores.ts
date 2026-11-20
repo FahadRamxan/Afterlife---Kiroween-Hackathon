@@ -5,6 +5,7 @@ import type { AppStores } from './app';
 import type { Env } from './env';
 import { PgLiveHub } from './live';
 import { PgLlmCallStore } from './llm-calls';
+import { PgScreenGraphStore } from './screen-graph';
 import { PgPipeline } from './pipeline';
 import { PgSoulStore } from './souls';
 import { PgUploadStore } from './uploads';
@@ -51,6 +52,7 @@ export async function openStores(
       uploads: new PgUploadStore(db),
       souls: new PgSoulStore(db),
       llmCalls: new PgLlmCallStore(db),
+      screenGraphs: new PgScreenGraphStore(db),
       live,
       pipeline,
     },

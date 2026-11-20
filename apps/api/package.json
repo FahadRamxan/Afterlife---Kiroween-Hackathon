@@ -11,6 +11,7 @@
     "start": "tsx src/server.ts"
   },
   "dependencies": {
+    "@afterlife/crew": "workspace:^",
     "@afterlife/db": "workspace:^",
     "@afterlife/dbf": "workspace:^",
     "@afterlife/emulator": "workspace:^",
