@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@afterlife/crew':
+        specifier: workspace:^
+        version: link:packages/crew
       '@afterlife/db':
         specifier: workspace:^
         version: link:packages/db

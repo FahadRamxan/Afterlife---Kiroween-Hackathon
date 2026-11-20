@@ -4,7 +4,7 @@ import { FakeLlmClient, fakeToolUse } from '../llm/fake';
 import { MemoryLlmCallLog } from '../llm/log';
 import { CrewLlm } from '../llm/runtime';
 import { effectsOf, hypothesesFor } from './hypotheses';
-import { shifaEntities, shifaRun } from './testing/shifa-runs';
+import { shifaEntities, shifaRun } from './testing/graveyard-runs';
 import {
   confidenceOf,
   countNodes,

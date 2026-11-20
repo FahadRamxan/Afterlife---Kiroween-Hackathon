@@ -6,22 +6,17 @@
 import {
   CrewLlm,
   LlmBudgetError,
-  LlmSchemaError,
   PgLlmCallLog,
   detectEntities,
-  effectsOf,
-  hypothesesFor,
-  selectRule,
-  targetOf,
-  type Effect,
+  inferRules,
   type EffectObservation,
+  type Inferred,
   type LlmClient,
-  type RuleProbe,
   type TableInput,
 } from '@afterlife/crew';
 import { readDbf, type SnapshotDiff } from '@afterlife/dbf';
 import { asc, eq, insertSoulVersion, observations, sessions, sql, type Db } from '@afterlife/db';
-import { numberSoul, specRequirements, type Entity, type Rule, type Soul } from '@afterlife/soul';
+import { numberSoul, specRequirements, type Soul } from '@afterlife/soul';
 import { graveyardDosTime } from './possess';
 import { unzipSync } from 'fflate';
 import type { StepContext, StepHandler } from './registry';
@@ -52,97 +47,9 @@ function screensOf(rows: { screenAfter: unknown; screenAfterFp: string }[]): Sou
   return [...seen].map(([id, title]) => ({ id, title, fields: [], navigation: [] }));
 }
 
-/** At most this many values get rules per run: each costs one model call. */
-export const MAX_RULE_TARGETS = 16;
+export { MAX_RULE_TARGETS } from '@afterlife/crew';
 export const NO_RULE_MODEL =
   'No language model is set up on this worker (LLM_PROVIDER=bedrock, with AWS credentials), so no rules were proposed: entities only';
-
-/** The rule for each value the old app wrote, from the model's candidates, checked here. */
-async function inferRules(
-  ctx: StepContext,
-  llm: CrewLlm,
-  entities: Entity[],
-  obs: EffectObservation[],
-  today: string | undefined,
-): Promise<{ rules: Rule[]; probes: RuleProbe[]; targets: number; unexplained: string[] }> {
-  const byTarget = new Map<string, Effect[]>();
-  for (const e of effectsOf(obs, entities)) {
-    const list = byTarget.get(targetOf(e)) ?? [];
-    list.push(e);
-    byTarget.set(targetOf(e), list);
-  }
-  const rules: Rule[] = [];
-  const probes: RuleProbe[] = [];
-  const unexplained: string[] = [];
-  // By name: the stored observations (JSONB) do not keep a record's field order.
-  const targets = [...byTarget].sort(([x], [y]) => x.localeCompare(y)).slice(0, MAX_RULE_TARGETS);
-  if (byTarget.size > targets.length)
-    await ctx.log(
-      `${byTarget.size} values were written; rules for the first ${targets.length}`,
-      'warn',
-    );
-  for (const [target, effects] of targets) {
-    if (ctx.signal.aborted) throw ctx.signal.reason;
-    // The model sees a value that is not zero when there is one: a 0.00 discount says little.
-    const shown = effects.find((e) => !/^-?0+(\.0+)?$/.test(e.after)) ?? effects[0]!;
-    let candidates: { expression: string; why: string }[];
-    try {
-      candidates = (await hypothesesFor(shown, obs, llm, entities)).candidates;
-    } catch (e) {
-      if (e instanceof LlmSchemaError) {
-        await ctx.log(`${target}: the model gave no usable candidates (${e.message})`, 'warn');
-        unexplained.push(target);
-        continue;
-      }
-      throw e;
-    }
-    const v = await selectRule(
-      target,
-      candidates.map((c) => c.expression),
-      obs,
-      entities,
-      today ? { today } : {},
-    );
-    probes.push(...v.probes);
-    if (!v.selected) {
-      unexplained.push(target);
-      await ctx.log(
-        `${target}: none of ${candidates.length} candidates explains all ${v.effects} values${v.probes.length ? `. Probes to run: ${v.probes.map((p) => p.text).join(' ')}` : ''}`,
-        'warn',
-      );
-      continue;
-    }
-    const sel = v.selected;
-    const why = candidates.find((c) => c.expression === sel.expression)?.why.trim();
-    const effect = effects[0]!;
-    const rule: Rule = {
-      id: target.replace(/[._]/g, '-').slice(0, 48),
-      kind: effect.kind === 'changed' ? 'effect' : 'compute',
-      target,
-      en: (why || `${target} is ${sel.expression}`).slice(0, 500),
-      ur: '',
-      expression: sel.expression,
-      evidence: sel.evidence,
-      confidence: sel.confidence,
-    };
-    rules.push(rule);
-    await ctx.emit('rule_found', {
-      ruleId: rule.id,
-      target,
-      expression: rule.expression,
-      en: rule.en,
-      confidence: rule.confidence,
-      observations: sel.evidence.length,
-      candidates: candidates.length,
-      alsoFit: v.alsoFit,
-      probes: v.probes.map((p) => p.text),
-    });
-    await ctx.log(
-      `${target} = ${sel.expression}: explains all ${v.effects} values in ${sel.evidence.length} observations (confidence ${Math.round(sel.confidence * 100)}%)`,
-    );
-  }
-  return { rules, probes, targets: targets.length, unexplained };
-}
 
 export function entitiesStep(deps: {
   db: Db;
@@ -195,7 +102,7 @@ export function entitiesStep(deps: {
       ];
       await ctx.log(`${e.file}: ${parts.join(', ')}`);
     }
-    let found: Awaited<ReturnType<typeof inferRules>> | null = null;
+    let found: Inferred | null = null;
     if (!deps.llm) await ctx.log(NO_RULE_MODEL, 'warn');
     else {
       const llm = new CrewLlm({
@@ -208,7 +115,6 @@ export function entitiesStep(deps: {
       const today = ctx.project.dosTime ?? graveyardDosTime(ctx.project);
       try {
         found = await inferRules(
-          ctx,
           llm,
           entities,
           rows.map((r) => ({
@@ -217,7 +123,23 @@ export function entitiesStep(deps: {
             screenBefore: r.screenBefore as EffectObservation['screenBefore'],
             dbfDiff: r.dbfDiff as SnapshotDiff,
           })),
-          today,
+          {
+            ...(today ? { today } : {}),
+            signal: ctx.signal,
+            log: (m, level) => ctx.log(m, level),
+            found: (rule, v) =>
+              ctx.emit('rule_found', {
+                ruleId: rule.id,
+                target: rule.target,
+                expression: rule.expression,
+                en: rule.en,
+                confidence: rule.confidence,
+                observations: v.selected!.evidence.length,
+                candidates: v.candidates,
+                alsoFit: v.alsoFit,
+                probes: v.probes.map((p) => p.text),
+              }),
+          },
         );
       } catch (e) {
         // A spent budget does not come back on a retry: keep the entities, say so.

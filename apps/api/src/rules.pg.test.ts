@@ -3,7 +3,7 @@
 import { observations, sessions } from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { shifaRun } from '../../../packages/crew/src/archaeologist/testing/shifa-runs';
+import { shifaRun } from '../../../packages/crew/src/archaeologist/testing/graveyard-runs';
 import { buildApp } from './app';
 import { parseEnv } from './env';
 import { PgProjectStore } from './projects-pg';
@@ -178,8 +178,8 @@ describe('POST /api/projects/:id/rules/verify', () => {
 describe('entitiesFromDiffs', () => {
   it('names the data files as the Soul does, with the key the diff matched by', () => {
     expect(entitiesFromDiffs([shifaRun('bill-small').dbfDiff])).toEqual([
-      { id: 'bill', file: 'BILLS.DBF', key: ['BILL_NO'] },
       { id: 'bill-item', file: 'BILLITEM.DBF', key: [] },
+      { id: 'bill', file: 'BILLS.DBF', key: ['BILL_NO'] },
       { id: 'medicine', file: 'MEDICINE.DBF', key: ['CODE'] },
     ]);
   });

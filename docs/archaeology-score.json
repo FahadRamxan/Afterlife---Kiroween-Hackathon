@@ -1,0 +1,128 @@
+{
+  "no-model": [
+    {
+      "app": "shifa",
+      "name": "Shifa Medical Store",
+      "observations": 6,
+      "score": {
+        "known": 7,
+        "inferred": 2,
+        "recovered": 2,
+        "exact": 2,
+        "precision": 1,
+        "recall": 0.286,
+        "rules": [
+          {
+            "id": "gst-17-truncated",
+            "status": "missed"
+          },
+          {
+            "id": "discount-over-5000",
+            "status": "missed"
+          },
+          {
+            "id": "expired-batch-blocked",
+            "status": "missed"
+          },
+          {
+            "id": "stock-decrement",
+            "status": "missed"
+          },
+          {
+            "id": "bill-number-yymm",
+            "status": "exact",
+            "by": "counter bill.BILL_NO"
+          },
+          {
+            "id": "qty-over-stock-refused",
+            "status": "missed"
+          },
+          {
+            "id": "customer-next-id",
+            "status": "exact",
+            "by": "counter customer.CUST_ID"
+          }
+        ],
+        "extra": []
+      }
+    },
+    {
+      "app": "iqra",
+      "name": "Iqra School Fees",
+      "observations": 1,
+      "score": {
+        "known": 6,
+        "inferred": 1,
+        "recovered": 1,
+        "exact": 1,
+        "precision": 1,
+        "recall": 0.167,
+        "rules": [
+          {
+            "id": "fee-by-class",
+            "status": "missed"
+          },
+          {
+            "id": "sibling-discount-15",
+            "status": "missed"
+          },
+          {
+            "id": "late-fee-50-per-week",
+            "status": "missed"
+          },
+          {
+            "id": "receipt-sequential",
+            "status": "exact",
+            "by": "counter payment.RECEIPT"
+          },
+          {
+            "id": "month-paid-once",
+            "status": "missed"
+          },
+          {
+            "id": "valid-fee-month",
+            "status": "missed"
+          }
+        ],
+        "extra": []
+      }
+    },
+    {
+      "app": "barkat",
+      "name": "Barkat Kiryana Ledger",
+      "observations": 2,
+      "score": {
+        "known": 5,
+        "inferred": 1,
+        "recovered": 1,
+        "exact": 1,
+        "precision": 1,
+        "recall": 0.2,
+        "rules": [
+          {
+            "id": "running-balance",
+            "status": "missed"
+          },
+          {
+            "id": "credit-limit",
+            "status": "missed"
+          },
+          {
+            "id": "no-advance-payment",
+            "status": "missed"
+          },
+          {
+            "id": "monthly-reminders",
+            "status": "missed"
+          },
+          {
+            "id": "ledger-sequence",
+            "status": "exact",
+            "by": "counter ledger.ENTRY"
+          }
+        ],
+        "extra": []
+      }
+    }
+  ]
+}

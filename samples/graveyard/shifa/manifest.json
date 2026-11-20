@@ -15,37 +15,72 @@
     {
       "id": "gst-17-truncated",
       "text": "GST is 17% of the bill after discount, truncated (not rounded) to the paisa.",
-      "scenarios": ["bill-small", "bill-discount"]
+      "scenarios": ["bill-small", "bill-discount"],
+      "truth": {
+        "kind": "compute",
+        "target": "bill.gst",
+        "expression": "trunc((bill.subtotal - bill.discount) * 0.17, 2)"
+      }
     },
     {
       "id": "discount-over-5000",
       "text": "A bill whose subtotal is over Rs 5,000 gets 10% off, truncated. Exactly Rs 5,000 gets no discount. The discount comes before GST.",
-      "scenarios": ["bill-discount", "bill-5000"]
+      "scenarios": ["bill-discount", "bill-5000"],
+      "truth": {
+        "kind": "compute",
+        "target": "bill.discount",
+        "expression": "if bill.subtotal > 5000 then trunc(bill.subtotal * 0.10, 2) else 0"
+      }
     },
     {
       "id": "expired-batch-blocked",
       "text": "A medicine whose batch has expired cannot be added to a bill. A batch that expires today can.",
-      "scenarios": ["expired"]
+      "scenarios": ["expired"],
+      "truth": {
+        "kind": "validate",
+        "expression": "medicine.expiry >= today"
+      }
     },
     {
       "id": "stock-decrement",
       "text": "Saving a bill takes the quantity of each item off that medicine's stock.",
-      "scenarios": ["bill-small", "bill-discount"]
+      "scenarios": ["bill-small", "bill-discount"],
+      "truth": {
+        "kind": "effect",
+        "target": "medicine.qty",
+        "expression": "medicine.qty - bill_item.qty"
+      }
     },
     {
       "id": "bill-number-yymm",
       "text": "Bill numbers are YYMM-#### from the bill date, counting from 0001 again each month.",
-      "scenarios": ["bill-small", "daily-report", "y2k-sells-expired"]
+      "scenarios": ["bill-small", "daily-report", "y2k-sells-expired"],
+      "truth": {
+        "kind": "counter",
+        "entity": "bill",
+        "field": "BILL_NO",
+        "pattern": "YYMM-####"
+      }
     },
     {
       "id": "qty-over-stock-refused",
       "text": "A quantity larger than the stock is refused when the item is added.",
-      "scenarios": ["negative-stock"]
+      "scenarios": ["negative-stock"],
+      "truth": {
+        "kind": "validate",
+        "expression": "bill_item.qty <= medicine.qty"
+      }
     },
     {
       "id": "customer-next-id",
       "text": "A new customer gets the next id (C0009 after C0008), and a blank name is refused.",
-      "scenarios": ["customers"]
+      "scenarios": ["customers"],
+      "truth": {
+        "kind": "counter",
+        "entity": "customer",
+        "field": "CUST_ID",
+        "pattern": "C####"
+      }
     }
   ],
   "knownBugs": [

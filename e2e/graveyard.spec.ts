@@ -1,4 +1,11 @@
 import { expect, test } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+/** Prompt 56: the archaeology score, as `pnpm score:archaeology --write` recorded it. */
+const SCORES = JSON.parse(
+  readFileSync(resolve(__dirname, '../docs/archaeology-score.json'), 'utf8'),
+) as Record<string, { app: string; score: { recovered: number; known: number; exact: number } }[]>;
 
 const apps = [
   { id: 'shifa', name: 'Shifa Medical Store', years: '1998–2004', screen: 'SHIFA MEDICAL STORE' },
@@ -27,6 +34,19 @@ test.describe('/graveyard', () => {
       await expect(crt).toContainText(app.screen);
     }
     await expect(page.getByText(/written by our team/)).toBeVisible();
+  });
+
+  test('each tombstone shows its archaeology score, the same as the scoring script’s', async ({
+    page,
+  }) => {
+    await page.goto('/graveyard');
+    const stones = page.getByTestId('tombstone');
+    for (const [i, app] of apps.entries()) {
+      const s = SCORES['no-model']!.find((x) => x.app === app.id)!.score;
+      await expect(stones.nth(i).getByTestId('archaeology-score')).toHaveText(
+        `Archaeology score: ${s.recovered} of ${s.known} hidden rules recovered (${s.exact} exact), without a language model.`,
+      );
+    }
   });
 
   for (const app of apps) {

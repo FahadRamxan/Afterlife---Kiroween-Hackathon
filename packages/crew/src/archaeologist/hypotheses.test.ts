@@ -117,6 +117,14 @@ describe('the prompt template (packages/crew/prompts/rule-hypotheses.md)', () =>
     expect(p.user).toContain('medicine.qty: 12 -> 4');
   });
 
+  it('for a changed value, the field means its value before the change', () => {
+    const [stock] = effectsOf([saved], ENTITIES).filter((e) => e.field === 'qty');
+    const p = promptFor(stock!, [saved], ENTITIES);
+    expect(p.user).toContain(
+      'It changed from 12 to 4 (-8). In a rule, medicine.qty is its value before the change.',
+    );
+  });
+
   it('renderTemplate fills every placeholder it is given and refuses a missing one', () => {
     expect(renderTemplate('a {{x}} b {{y}}', { x: '1', y: '2' })).toBe('a 1 b 2');
     expect(() => renderTemplate('a {{x}}', {})).toThrow(/x/);
@@ -178,6 +186,22 @@ describe('hypothesesFor (Prompt 54 done when: schema-validated, with a fake LLM)
     expect(h.candidates).toHaveLength(3);
     const back = client.requests[1]!.messages[2]!.content[0] as ToolResultBlock;
     expect(String(back.content)).toMatch(/candidates\.1\.expression/);
+  });
+
+  it('a changed value’s rule may use the field itself (its value before)', async () => {
+    const [stock] = effectsOf([saved], ENTITIES).filter((e) => e.field === 'qty');
+    const client = new FakeLlmClient([
+      fakeToolUse('answer', {
+        candidates: [
+          { expression: 'medicine.qty - 8', why: 'a' },
+          { expression: 'medicine.qty - 4', why: 'b' },
+          { expression: 'medicine.qty / 3', why: 'c' },
+        ],
+      }),
+    ]);
+    const h = await hypothesesFor(stock!, [saved], llmWith(client), ENTITIES);
+    expect(h.target).toBe('medicine.qty');
+    expect(h.candidates).toHaveLength(3);
   });
 
   it('fewer than 3, more than 5, a repeated one, or a field it was not shown are refused', async () => {

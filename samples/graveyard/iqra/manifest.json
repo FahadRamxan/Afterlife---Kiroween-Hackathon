@@ -15,32 +15,57 @@
     {
       "id": "fee-by-class",
       "text": "The monthly fee is the fee for the student's class.",
-      "scenarios": ["pay-ontime", "schedule"]
+      "scenarios": ["pay-ontime", "schedule"],
+      "truth": {
+        "kind": "compute",
+        "target": "payment.fee"
+      }
     },
     {
       "id": "sibling-discount-15",
       "text": "The second and later children of a family get 15% off the monthly fee, truncated to the paisa.",
-      "scenarios": ["sibling"]
+      "scenarios": ["sibling"],
+      "truth": {
+        "kind": "compute",
+        "target": "payment.discount",
+        "expression": "if student.sib >= 2 then trunc(payment.fee * 0.15, 2) else 0"
+      }
     },
     {
       "id": "late-fee-50-per-week",
       "text": "Paying after the 10th of the fee month costs Rs 50 per late week, capped at Rs 500. The late fee is not discounted.",
-      "scenarios": ["late-monday", "late-cap"]
+      "scenarios": ["late-monday", "late-cap"],
+      "truth": {
+        "kind": "compute",
+        "target": "payment.late_fee"
+      }
     },
     {
       "id": "receipt-sequential",
       "text": "Receipt numbers go up by one for every payment.",
-      "scenarios": ["sibling", "receipts-today"]
+      "scenarios": ["sibling", "receipts-today"],
+      "truth": {
+        "kind": "counter",
+        "entity": "payment",
+        "field": "RECEIPT",
+        "pattern": "n+1"
+      }
     },
     {
       "id": "month-paid-once",
       "text": "A month already paid for a student is refused, naming the receipt.",
-      "scenarios": ["duplicate"]
+      "scenarios": ["duplicate"],
+      "truth": {
+        "kind": "validate"
+      }
     },
     {
       "id": "valid-fee-month",
       "text": "The fee month (MMYYYY) defaults to the current month; a month outside 1 to 12 is refused.",
-      "scenarios": ["pay-ontime", "errors"]
+      "scenarios": ["pay-ontime", "errors"],
+      "truth": {
+        "kind": "validate"
+      }
     }
   ],
   "knownBugs": [

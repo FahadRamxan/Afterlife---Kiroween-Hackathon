@@ -11,6 +11,7 @@ export {
 export {
   GraveyardCatalog,
   GraveyardManifest,
+  RuleTruth,
   publicEntry,
   type GraveyardEntry,
   type GraveyardManifestT,

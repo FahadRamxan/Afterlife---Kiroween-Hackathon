@@ -31,6 +31,7 @@
     "screenshots": "pnpm --filter @afterlife/e2e screenshots",
     "screen:capture": "tsx scripts/screen-capture.ts",
     "mcp:gif": "tsx scripts/mcp-gif.ts",
+    "score:archaeology": "tsx scripts/score-archaeology.ts",
     "db:migrate": "pnpm --filter @afterlife/db migrate",
     "db:migrate:down": "pnpm --filter @afterlife/db migrate:down",
     "db:seed": "pnpm --filter @afterlife/db seed",
@@ -39,6 +40,7 @@
     "soul:spec": "pnpm --filter @afterlife/soul spec"
   },
   "devDependencies": {
+    "@afterlife/crew": "workspace:^",
     "@afterlife/db": "workspace:^",
     "@afterlife/dbf": "workspace:^",
     "@afterlife/emulator": "workspace:^",

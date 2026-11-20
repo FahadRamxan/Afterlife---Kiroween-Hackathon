@@ -15,27 +15,49 @@
     {
       "id": "running-balance",
       "text": "Each party has a running balance: a sale on credit adds to it, a payment subtracts, and every ledger row stores the balance after it.",
-      "scenarios": ["sale-ok", "payment-ok", "ledger"]
+      "scenarios": ["sale-ok", "payment-ok", "ledger"],
+      "truth": {
+        "kind": "effect",
+        "target": "party.balance",
+        "expression": "if ledger.kind = 'P' then party.balance - ledger.amount else party.balance + ledger.amount"
+      }
     },
     {
       "id": "credit-limit",
       "text": "A sale that would take the balance over the party's credit limit is refused. Exactly the limit is allowed.",
-      "scenarios": ["sale-limit"]
+      "scenarios": ["sale-limit"],
+      "truth": {
+        "kind": "validate",
+        "expression": "party.balance + ledger.amount <= party.limit"
+      }
     },
     {
       "id": "no-advance-payment",
       "text": "A payment larger than the balance is refused.",
-      "scenarios": ["payment-too-much"]
+      "scenarios": ["payment-too-much"],
+      "truth": {
+        "kind": "validate",
+        "expression": "ledger.amount <= party.balance"
+      }
     },
     {
       "id": "monthly-reminders",
       "text": "The reminder list holds every party that owes money and has not paid since the 1st of this month. No interest is charged.",
-      "scenarios": ["reminders", "payment-ok"]
+      "scenarios": ["reminders", "payment-ok"],
+      "truth": {
+        "kind": "report"
+      }
     },
     {
       "id": "ledger-sequence",
       "text": "Ledger entries are numbered in order, and a payment sets the party's last payment date.",
-      "scenarios": ["sale-ok", "payment-ok"]
+      "scenarios": ["sale-ok", "payment-ok"],
+      "truth": {
+        "kind": "counter",
+        "entity": "ledger",
+        "field": "ENTRY",
+        "pattern": "n+1"
+      }
     }
   ],
   "knownBugs": [
