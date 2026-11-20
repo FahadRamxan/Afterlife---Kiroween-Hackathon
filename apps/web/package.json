@@ -17,6 +17,7 @@
     "@afterlife/ui": "workspace:^",
     "@radix-ui/react-tabs": "^1.2.1",
     "@tailwindcss/postcss": "^4.3.5",
+    "@xyflow/react": "^12",
     "fflate": "^0.8.3",
     "js-dos": "8.5.4",
     "next": "^15",

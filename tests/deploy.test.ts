@@ -95,6 +95,8 @@ describe('.env.example files (Prompt 10)', () => {
       'LLM_TOKEN_BUDGET',
       'LOG_LEVEL',
       'PORT',
+      'RATE_LIMIT_CREATE_PER_MINUTE',
+      'RATE_LIMIT_PER_MINUTE',
       'SEANCE_STORAGE_MB',
       'TRUST_PROXY',
       'WEB_ORIGINS',

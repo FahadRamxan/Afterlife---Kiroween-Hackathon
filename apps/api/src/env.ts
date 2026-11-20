@@ -44,6 +44,12 @@ const schema = z.object({
    * 0.5 GB for everything, so the default leaves room for projects, events and uploads.
    */
   SEANCE_STORAGE_MB: z.coerce.number().int().min(1).max(100_000).default(200),
+  /**
+   * Requests per minute from one address, and raises (new projects, séances, Souls) per minute.
+   * The e2e run raises them: all its tests come from one address.
+   */
+  RATE_LIMIT_PER_MINUTE: z.coerce.number().int().min(1).max(1_000_000).default(300),
+  RATE_LIMIT_CREATE_PER_MINUTE: z.coerce.number().int().min(1).max(1_000_000).default(20),
   /** Model tokens one project may use; the worker spends them, "Show your work" shows them. */
   LLM_TOKEN_BUDGET: z.coerce.number().int().min(0).default(DEFAULT_LLM_TOKEN_BUDGET),
   /**
