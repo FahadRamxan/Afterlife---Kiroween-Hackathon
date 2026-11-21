@@ -3,21 +3,9 @@
 // worker's cache, its records from IndexedDB), and two phones selling the same insulin offline
 // put the stock change on the owner's review list.
 import { expect, test, type BrowserContext, type Page } from '@playwright/test';
-import { SHIFA_REFERENCE_SOUL } from '../packages/soul/src/examples/shifa';
+import { API, raiseShifaWithSoul } from './helpers/raise';
 
-const API = 'http://localhost:4000';
-
-async function shifaWithSoul(page: Page) {
-  await page.goto('/graveyard');
-  await page.getByRole('button', { name: 'Raise Shifa Medical Store' }).click();
-  await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
-  const id = page.url().split('/').at(-1)!;
-  const res = await page.request.post(`${API}/api/projects/${id}/souls`, {
-    data: SHIFA_REFERENCE_SOUL,
-  });
-  expect(res.status()).toBe(201);
-  return id;
-}
+const shifaWithSoul = (page: Page) => raiseShifaWithSoul(page);
 
 /** The Vessel open on this page, its records on the phone and its shell kept for offline. */
 async function open(page: Page, id: string) {

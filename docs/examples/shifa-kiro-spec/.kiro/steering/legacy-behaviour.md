@@ -11,6 +11,8 @@ This code replaces a DOS app whose source is lost. These rules were observed in 
 - `bill-total`: The total is the subtotal less the discount, plus GST. (`bill.subtotal - bill.discount + bill.gst`)
 - `expired-batch-blocked`: A medicine whose batch has expired cannot be added to a bill. A batch that expires today can. (`medicine.expiry >= today`)
 - `qty-over-stock-refused`: A quantity larger than the stock is refused when the item is added. (`item.qty <= medicine.qty`)
+- `one-line-per-medicine`: A medicine can be on a bill only once: adding it again is refused (ALREADY IN BILL). (`count(items, x => x.code = item.code) = 1`)
+- `customer-name-required`: A new customer needs a name: a blank name is refused (NAME REQUIRED). (`customer.name != ''`)
 - `stock-decrement`: Saving a bill takes the quantity of each item off that medicine's stock. (`medicine.qty - item.qty`)
 - `bill-subtotal`: The subtotal is the sum of the lines, each its quantity times its price. (`sum(items, x => x.qty * x.price)`)
 - `line-price`: A bill line's price is the medicine's price. (`medicine.price`)

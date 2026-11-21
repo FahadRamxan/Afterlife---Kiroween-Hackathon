@@ -5,6 +5,8 @@ import type { Vessel } from '@afterlife/vessel';
 import { useTranslations } from 'next-intl';
 import { useEffect, useId, useState } from 'react';
 import { displayValue, searchRecords } from '../lib/vessel-views';
+import { Button } from '@afterlife/ui';
+import { VesselBill } from './VesselBill';
 import { useWord } from '../lib/use-word';
 
 /** A list of an entity's records (the old STOCK and CUSTOMERS screens), with a search box. */
@@ -12,16 +14,24 @@ export function VesselTable({
   vessel,
   entity,
   fields,
+  addActionId,
+  onSaved,
 }: {
   vessel: Vessel;
   entity: Entity;
   fields: string[];
+  /** The action that adds a record to this list ("Add a customer"). */
+  addActionId?: string;
+  onSaved?: () => void | Promise<void>;
 }) {
   const t = useTranslations('vessel');
   const word = useWord();
   const searchId = useId();
   const [records, setRecords] = useState<DbfRecord[] | null>(null);
   const [query, setQuery] = useState('');
+  const [adding, setAdding] = useState(false);
+  const [version, setVersion] = useState(0);
+  const addAction = addActionId ? vessel.soul.actions.find((a) => a.id === addActionId) : undefined;
 
   useEffect(() => {
     let alive = true;
@@ -29,7 +39,7 @@ export function VesselTable({
     return () => {
       alive = false;
     };
-  }, [vessel, entity]);
+  }, [vessel, entity, version]);
 
   const cols = fields
     .map((f) => entity.fields.find((x) => x.name === f))
@@ -41,6 +51,30 @@ export function VesselTable({
     : records.filter((r) => !r.deleted);
   return (
     <div className="space-y-3">
+      {addAction ? (
+        adding ? (
+          <section
+            aria-label={word(addAction.name)}
+            className="rounded-lg border border-bone/20 p-3"
+          >
+            <VesselBill
+              vessel={vessel}
+              actionId={addAction.id}
+              onSaved={async () => {
+                setVersion((n) => n + 1);
+                await onSaved?.();
+              }}
+            />
+            <Button type="button" variant="ghost" className="mt-2" onClick={() => setAdding(false)}>
+              {t('close')}
+            </Button>
+          </section>
+        ) : (
+          <Button type="button" className="min-h-12" onClick={() => setAdding(true)}>
+            {word(addAction.name)}
+          </Button>
+        )
+      ) : null}
       <label htmlFor={searchId} className="sr-only">
         {t('search')}
       </label>

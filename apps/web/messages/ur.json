@@ -344,7 +344,8 @@
       "remove": "سطر {n} ہٹائیں",
       "removeShort": "ہٹائیں",
       "empty": "بل پر ابھی کچھ نہیں: اوپر تلاش کریں اور شامل کرنے کے لیے دبائیں۔",
-      "saved": "بل {key} محفوظ ہو گیا۔ کل رقم {total} روپے۔"
+      "saved": "بل {key} محفوظ ہو گیا۔ کل رقم {total} روپے۔",
+      "savedRecord": "{name} {key} محفوظ ہو گیا۔"
     },
     "words": {
       "new_bill": "نیا بل",
@@ -370,7 +371,8 @@
       "bill_no": "بل نمبر",
       "bill_date": "تاریخ",
       "line": "سطر",
-      "save_a_bill": "بل محفوظ کریں"
+      "save_a_bill": "بل محفوظ کریں",
+      "add_a_customer": "نیا گاہک"
     },
     "sync": {
       "offline": "آف لائن، اس فون پر محفوظ۔",
@@ -385,7 +387,8 @@
       "conflict": "{record} {field}: اس فون پر {phoneBefore} سے {phoneAfter}؛ سرور پر {serverBefore} سے {serverAfter}۔",
       "bill": "(بل {record})",
       "done": "دیکھ لیا"
-    }
+    },
+    "close": "بند کریں"
   },
   "verify": {
     "title": "سرٹیفکیٹ کی تصدیق",

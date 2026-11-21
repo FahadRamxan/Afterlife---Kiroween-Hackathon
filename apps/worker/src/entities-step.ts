@@ -8,6 +8,8 @@ import {
   LlmBudgetError,
   PgLlmCallLog,
   detectEntities,
+  inferActions,
+  stepFromObservation,
   inferRules,
   type EffectObservation,
   type Inferred,
@@ -35,16 +37,28 @@ export function bundleTables(bundle: Uint8Array): TableInput[] {
   return out.sort((a, b) => a.file.localeCompare(b.file));
 }
 
-/** Screens found by possession: a Soul screen per fingerprint, with its title. */
-function screensOf(rows: { screenAfter: unknown; screenAfterFp: string }[]): Soul['screens'] {
+/**
+ * Screens found by possession: a Soul screen per fingerprint (the screens keys were pressed on,
+ * where actions start, and the screens they led to), with its title.
+ */
+function screensOf(
+  rows: {
+    screenBefore: unknown;
+    screenAfter: unknown;
+    screenAfterFp: string;
+    screenBeforeFp: string;
+  }[],
+): Soul['screens'] {
   const seen = new Map<string, string>();
+  const title = (s: unknown) =>
+    ((s as { model?: { title?: { name?: string } } })?.model?.title?.name ?? '')
+      .trim()
+      .slice(0, 80);
   for (const r of rows) {
-    if (seen.has(r.screenAfterFp)) continue;
-    const title =
-      (r.screenAfter as { model?: { title?: { name?: string } } })?.model?.title?.name ?? '';
-    seen.set(r.screenAfterFp, title.trim().slice(0, 80));
+    if (!seen.has(r.screenBeforeFp)) seen.set(r.screenBeforeFp, title(r.screenBefore));
+    if (!seen.has(r.screenAfterFp)) seen.set(r.screenAfterFp, title(r.screenAfter));
   }
-  return [...seen].map(([id, title]) => ({ id, title, fields: [], navigation: [] }));
+  return [...seen].map(([id, t]) => ({ id, title: t, fields: [], navigation: [] }));
 }
 
 export { MAX_RULE_TARGETS } from '@afterlife/crew';
@@ -79,6 +93,7 @@ export function entitiesStep(deps: {
         dbfDiff: observations.dbfDiff,
         screenAfter: observations.screenAfter,
         screenAfterFp: observations.screenAfterFp,
+        screenBeforeFp: observations.screenBeforeFp,
       })
       .from(observations)
       // Possession's observations, and those of the owner's séances on the project.
@@ -148,6 +163,12 @@ export function entitiesStep(deps: {
       }
     }
     const rules = found?.rules ?? [];
+    // What the owner does that writes data: the bill they save, the customer they add.
+    const actions = inferActions(rows.map(stepFromObservation), entities);
+    for (const a of actions)
+      await ctx.log(
+        `Action "${a.name}" on ${a.screen}: ${a.effects.map((e) => `${e.kind} ${e.entity}`).join(', ')}, keys ${a.keys}`,
+      );
     const soul: Soul = {
       schemaVersion: 1,
       app: {
@@ -170,7 +191,7 @@ export function entitiesStep(deps: {
       },
       entities,
       screens: screensOf(rows),
-      actions: [],
+      actions,
       rules,
     };
     const version = await insertSoulVersion(deps.db, ctx.projectId, (v, parent) => {
@@ -183,6 +204,7 @@ export function entitiesStep(deps: {
       keys: entities.filter((e) => e.key.length).length,
       foreignKeys: entities.reduce((n, e) => n + e.foreignKeys.length, 0),
       counters: entities.reduce((n, e) => n + e.counters.length, 0),
+      actions: actions.length,
       rules: rules.length,
       unexplained: found?.unexplained ?? [],
       probes: (found?.probes ?? []).map((p) => p.text),

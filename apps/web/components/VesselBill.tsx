@@ -32,6 +32,8 @@ export function VesselBill({
   const pick = form.line?.links[0] ?? null;
   const headerLink = form.header.links[0] ?? null;
   const qtyField = form.line?.inputs.find((f) => f.name !== pick?.field && f.type === 'N') ?? null;
+  // What the record itself asks for and nothing picks (a customer's name and phone).
+  const plainInputs = form.header.inputs.filter((f) => f.name !== headerLink?.field);
   const otherLineInputs =
     form.line?.inputs.filter((f) => f !== qtyField && f.name !== pick?.field) ?? [];
   const pickId = useId();
@@ -136,7 +138,9 @@ export function VesselBill({
           data-testid="vessel-saved"
           className="rounded-lg border border-ectoplasm/50 bg-ectoplasm/10 p-3"
         >
-          {t('saved', { key: done.key, total: done.total })}
+          {done.total
+            ? t('saved', { key: done.key, total: done.total })
+            : t('savedRecord', { name: word(form.header.entity.name), key: done.key })}
         </p>
       ) : null}
 
@@ -173,6 +177,35 @@ export function VesselBill({
               })}
           </datalist>
         </div>
+      ) : null}
+
+      {plainInputs.length ? (
+        <fieldset className="grid gap-3 sm:grid-cols-2">
+          {plainInputs.map((f) => (
+            <label key={f.name} className="flex flex-col gap-1 text-sm font-medium">
+              {word(f.name)}
+              <input
+                value={values[f.name] ?? ''}
+                onChange={(e) => {
+                  setValues({ ...values, [f.name]: e.target.value });
+                  setDone(null);
+                }}
+                maxLength={f.length}
+                inputMode={f.type === 'N' ? 'decimal' : undefined}
+                lang="en"
+                dir="ltr"
+                className="min-h-12 rounded-lg border border-bone/25 bg-graveyard px-3 text-base"
+              />
+              {refusedFor()
+                .filter((r) => r.field === f.name)
+                .map((r, k) => (
+                  <span key={k} role="alert" className="text-sm text-blood">
+                    {r.message}
+                  </span>
+                ))}
+            </label>
+          ))}
+        </fieldset>
       ) : null}
 
       {pick ? (

@@ -303,6 +303,11 @@ export function VesselApp({ projectId }: { projectId: string }) {
               vessel={vessel}
               entity={view.entity}
               fields={view.fields}
+              {...(view.addActionId ? { addActionId: view.addActionId } : {})}
+              onSaved={async () => {
+                await countWaiting();
+                if (navigator.onLine) await doSync();
+              }}
             />
           )}
         </section>

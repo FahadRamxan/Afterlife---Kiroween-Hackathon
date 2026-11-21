@@ -1,3 +1,4 @@
+// @spec archaeologist-completion#1.3 The archaeology step stores the actions.
 // Prompt 53: after possession, the worker writes the detected entities into a Soul version.
 // The real Shifa bundle's data files, and observations of a bill and a customer saved on them.
 import { readFileSync } from 'node:fs';
@@ -162,6 +163,12 @@ describe('the entities step (Prompt 53)', () => {
     const soul = SoulSchema.parse(row!.ir);
     expect(soul.provenance).toMatchObject({ createdBy: 'archaeologist', observationCount: 2 });
     expect(soul.rules).toEqual([]);
+    // The actions the observations show: the bill saved and the customer added.
+    expect(soul.actions.map((x) => [x.id, x.effects.map((e) => `${e.kind} ${e.entity}`)])).toEqual([
+      ['save-bill', ['insert bill', 'insert bill-item']],
+      ['add-customer', ['insert customer']],
+    ]);
+    expect(r).toMatchObject({ output: { actions: 2 } });
     for (const ref of SHIFA_REFERENCE_SOUL.entities) {
       const got = soul.entities.find((e) => e.id === ref.id)!;
       expect(

@@ -104,7 +104,8 @@ type Plan = {
   position: string | null;
   /** Fields worked out by a rule or a counter, in an order where each one's inputs come first. */
   order: { scope: 'header' | 'line'; field: string; rule?: Rule; counter?: string }[];
-  validations: { rule: Rule; ast: Expr; perLine: boolean }[];
+  /** `heads`: the names it uses (bill, item, customer): it applies only where all of them are. */
+  validations: { rule: Rule; ast: Expr; perLine: boolean; heads: Set<string> }[];
   effects: { rule: Rule; ast: Expr; entity: Entity; field: string; perLine: boolean }[];
 };
 
@@ -198,7 +199,12 @@ function plan(soul: Soul, action: Action): Plan {
   const updates = action.effects.filter((e) => e.kind === 'update').map((e) => ent(e.entity));
   for (const { rule, ast } of parsed) {
     if (rule.kind === 'validate') {
-      validations.push({ rule, ast, perLine: usesLine(ast) });
+      validations.push({
+        rule,
+        ast,
+        perLine: usesLine(ast),
+        heads: new Set(refs(ast).map((p) => p[0]!)),
+      });
       continue;
     }
     if (!rule.target) continue;
@@ -520,7 +526,11 @@ export function createVessel(soul: Soul, store: EntityStore, opts: VesselOptions
     for (const v of perform.validate === false ? [] : p.validations) {
       const targets = v.perLine ? lines.map((_, i) => i) : [undefined];
       for (const i of targets) {
-        const ok = run(v.rule, v.ast, envFor(i), i);
+        // A rule about records this action does not have (the customer of a walk-in bill, or a
+        // rule of another action) does not apply here.
+        const env = envFor(i);
+        if ([...v.heads].some((h) => !Object.hasOwn(env, h))) continue;
+        const ok = run(v.rule, v.ast, env, i);
         if (ok === undefined) continue;
         if (ok !== true)
           refused.push({

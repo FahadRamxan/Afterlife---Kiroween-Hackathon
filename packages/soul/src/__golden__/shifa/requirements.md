@@ -79,7 +79,31 @@ The reborn Shifa Medical Store must behave exactly as the old one. Each requirem
 
 1. IF the item qty is over the medicine qty THEN THE SYSTEM SHALL refuse the entry and leave the data unchanged.
 
-### Requirement 6: `stock-decrement`
+### Requirement 6: `one-line-per-medicine`
+
+**User Story:** As the owner of Shifa Medical Store, I want the reborn app to keep this rule of the old one, so that my records come out the same.
+
+**Rule:** A medicine can be on a bill only once: adding it again is refused (ALREADY IN BILL).
+
+**Evidence:** none yet. **Confidence:** 100%.
+
+#### Acceptance Criteria
+
+1. IF `count(items, x => x.code = item.code)` is not 1 THEN THE SYSTEM SHALL refuse the entry and leave the data unchanged.
+
+### Requirement 7: `customer-name-required`
+
+**User Story:** As the owner of Shifa Medical Store, I want the reborn app to keep this rule of the old one, so that my records come out the same.
+
+**Rule:** A new customer needs a name: a blank name is refused (NAME REQUIRED).
+
+**Evidence:** none yet. **Confidence:** 100%.
+
+#### Acceptance Criteria
+
+1. IF the customer name is "" THEN THE SYSTEM SHALL refuse the entry and leave the data unchanged.
+
+### Requirement 8: `stock-decrement`
 
 **User Story:** As the owner of Shifa Medical Store, I want the reborn app to keep this rule of the old one, so that my records come out the same.
 
@@ -91,7 +115,7 @@ The reborn Shifa Medical Store must behave exactly as the old one. Each requirem
 
 1. WHEN "Save a bill" is done THE SYSTEM SHALL set the medicine qty to `medicine.qty - item.qty`.
 
-### Requirement 7: `bill-subtotal`
+### Requirement 9: `bill-subtotal`
 
 **User Story:** As the owner of Shifa Medical Store, I want the reborn app to keep this rule of the old one, so that my records come out the same.
 
@@ -103,7 +127,7 @@ The reborn Shifa Medical Store must behave exactly as the old one. Each requirem
 
 1. THE SYSTEM SHALL set the bill subtotal to `sum(items, x => x.qty * x.price)`.
 
-### Requirement 8: `line-price`
+### Requirement 10: `line-price`
 
 **User Story:** As the owner of Shifa Medical Store, I want the reborn app to keep this rule of the old one, so that my records come out the same.
 
@@ -115,7 +139,7 @@ The reborn Shifa Medical Store must behave exactly as the old one. Each requirem
 
 1. THE SYSTEM SHALL set the bill item price to `medicine.price`.
 
-### Requirement 9: `line-amount`
+### Requirement 11: `line-amount`
 
 **User Story:** As the owner of Shifa Medical Store, I want the reborn app to keep this rule of the old one, so that my records come out the same.
 
@@ -127,7 +151,7 @@ The reborn Shifa Medical Store must behave exactly as the old one. Each requirem
 
 1. THE SYSTEM SHALL set the bill item amount to `item.qty * item.price`.
 
-### Requirement 10: `bill-date`
+### Requirement 12: `bill-date`
 
 **User Story:** As the owner of Shifa Medical Store, I want the reborn app to keep this rule of the old one, so that my records come out the same.
 

@@ -2,19 +2,10 @@
 // app's own data files (read out of its js-dos bundle); the bill is the scripted "bill-discount"
 // run, and the numbers are the ones the real 1998 app wrote in DOSBox for it.
 import { expect, test, type Page } from '@playwright/test';
-import { SHIFA_REFERENCE_SOUL } from '../packages/soul/src/examples/shifa';
-
-const API = 'http://localhost:4000';
+import { API, raiseShifaWithSoul } from './helpers/raise';
 
 async function shifaWithSoul(page: Page) {
-  await page.goto('/graveyard');
-  await page.getByRole('button', { name: 'Raise Shifa Medical Store' }).click();
-  await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
-  const id = page.url().split('/').at(-1)!;
-  const res = await page.request.post(`${API}/api/projects/${id}/souls`, {
-    data: SHIFA_REFERENCE_SOUL,
-  });
-  expect(res.status()).toBe(201);
+  const id = await raiseShifaWithSoul(page);
   await page.goto(`/raise/${id}?tab=soul`);
   const panel = page.getByTestId('vessel-tryout');
   await expect(panel).toHaveAttribute('data-ready', 'true', { timeout: 30_000 });

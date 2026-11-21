@@ -185,6 +185,16 @@ export {
   type Inferred,
 } from './archaeologist/infer';
 
+// The Soul's actions, from the observations (review of 51-60).
+export {
+  inferActions,
+  labelScore,
+  macroOf,
+  stepFromEvent,
+  stepFromObservation,
+  type ActionStep,
+} from './archaeologist/actions';
+
 // Archaeology scoring against a sample's hidden truth (Prompt 56).
 export {
   normalizeExpression,

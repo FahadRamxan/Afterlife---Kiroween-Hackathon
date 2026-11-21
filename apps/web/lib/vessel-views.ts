@@ -6,7 +6,15 @@ import type { Entity, Soul } from '@afterlife/soul';
 
 export type VesselView =
   | { id: string; title: string; kind: 'action'; actionId: string }
-  | { id: string; title: string; kind: 'table'; entity: Entity; fields: string[] };
+  | {
+      id: string;
+      title: string;
+      kind: 'table';
+      entity: Entity;
+      fields: string[];
+      /** An action that adds a record to this list (the old CUSTOMERS screen's "A=Add"). */
+      addActionId?: string;
+    };
 
 /** The entities whose records only exist inside another's (a bill's lines). */
 function lineEntities(soul: Soul): Set<string> {
@@ -21,12 +29,22 @@ function lineEntities(soul: Soul): Set<string> {
   return out;
 }
 
+/** An action with no lines that writes one record of `entity`: adding to its list. */
+const adds = (soul: Soul, entity: string) =>
+  soul.actions.find(
+    (a) =>
+      a.effects.filter((e) => e.kind === 'insert').length === 1 &&
+      a.effects.some((e) => e.kind === 'insert' && e.entity === entity),
+  );
+
 function viewFor(soul: Soul, screenId: string): VesselView | null {
   const screen = soul.screens.find((s) => s.id === screenId);
   if (!screen) return null;
-  const action = soul.actions.find((a) => a.screen === screenId);
-  if (action) return { id: screenId, title: screen.title, kind: 'action', actionId: action.id };
   const bound = screen.fields.filter((f) => f.binds);
+  const action = soul.actions.find((a) => a.screen === screenId);
+  // A screen where an action starts is its form, unless it is a list the action adds to.
+  if (action && !(bound.length && adds(soul, bound[0]!.binds!.entity) === action))
+    return { id: screenId, title: screen.title, kind: 'action', actionId: action.id };
   const counts = new Map<string, number>();
   for (const f of bound) counts.set(f.binds!.entity, (counts.get(f.binds!.entity) ?? 0) + 1);
   const top = [...counts].sort((a, b) => b[1] - a[1])[0]?.[0];
@@ -38,6 +56,7 @@ function viewFor(soul: Soul, screenId: string): VesselView | null {
     kind: 'table',
     entity,
     fields: bound.filter((f) => f.binds!.entity === entity.id).map((f) => f.binds!.field),
+    ...(adds(soul, entity.id) ? { addActionId: adds(soul, entity.id)!.id } : {}),
   };
 }
 
@@ -50,22 +69,20 @@ export function vesselViews(soul: Soul): VesselView[] {
   if (views.length) return views;
   // No menu was found: each action, then a list of each entity that stands on its own.
   const lines = lineEntities(soul);
+  const tables = soul.entities.filter((e) => !lines.has(e.id));
+  const listed = new Set(tables.map((e) => adds(soul, e.id)?.id));
   return [
-    ...soul.actions.map((a) => ({
-      id: a.id,
-      title: a.name,
-      kind: 'action' as const,
-      actionId: a.id,
+    ...soul.actions
+      .filter((a) => !listed.has(a.id))
+      .map((a) => ({ id: a.id, title: a.name, kind: 'action' as const, actionId: a.id })),
+    ...tables.map((e) => ({
+      id: e.id,
+      title: e.name,
+      kind: 'table' as const,
+      entity: e,
+      fields: e.fields.map((f) => f.name),
+      ...(adds(soul, e.id) ? { addActionId: adds(soul, e.id)!.id } : {}),
     })),
-    ...soul.entities
-      .filter((e) => !lines.has(e.id))
-      .map((e) => ({
-        id: e.id,
-        title: e.name,
-        kind: 'table' as const,
-        entity: e,
-        fields: e.fields.map((f) => f.name),
-      })),
   ];
 }
 

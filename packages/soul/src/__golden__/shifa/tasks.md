@@ -41,41 +41,53 @@ Rebuild Shifa Medical Store from its Soul (version 1): model the old data files 
   - [ ] 6.2 Write a property test that the new code and `item.qty <= medicine.qty` agree on generated inputs
     - **Property 5: `qty-over-stock-refused`**
     - **Validates: Requirements 5.1**
-- [ ] 7. Implement `stock-decrement`
+- [ ] 7. Implement `one-line-per-medicine`
   - [ ] 7.1 Write the rule in the new code
     - _Requirements: 6.1_
-  - [ ] 7.2 Write a property test that the new code and `medicine.qty - item.qty` agree on generated inputs
-    - **Property 6: `stock-decrement`**
+  - [ ] 7.2 Write a property test that the new code and `count(items, x => x.code = item.code) = 1` agree on generated inputs
+    - **Property 6: `one-line-per-medicine`**
     - **Validates: Requirements 6.1**
-- [ ] 8. Implement `bill-subtotal`
+- [ ] 8. Implement `customer-name-required`
   - [ ] 8.1 Write the rule in the new code
     - _Requirements: 7.1_
-  - [ ] 8.2 Write a property test that the new code and `sum(items, x => x.qty * x.price)` agree on generated inputs
-    - **Property 7: `bill-subtotal`**
+  - [ ] 8.2 Write a property test that the new code and `customer.name != ''` agree on generated inputs
+    - **Property 7: `customer-name-required`**
     - **Validates: Requirements 7.1**
-- [ ] 9. Implement `line-price`
+- [ ] 9. Implement `stock-decrement`
   - [ ] 9.1 Write the rule in the new code
     - _Requirements: 8.1_
-  - [ ] 9.2 Write a property test that the new code and `medicine.price` agree on generated inputs
-    - **Property 8: `line-price`**
+  - [ ] 9.2 Write a property test that the new code and `medicine.qty - item.qty` agree on generated inputs
+    - **Property 8: `stock-decrement`**
     - **Validates: Requirements 8.1**
-- [ ] 10. Implement `line-amount`
+- [ ] 10. Implement `bill-subtotal`
   - [ ] 10.1 Write the rule in the new code
     - _Requirements: 9.1_
-  - [ ] 10.2 Write a property test that the new code and `item.qty * item.price` agree on generated inputs
-    - **Property 9: `line-amount`**
+  - [ ] 10.2 Write a property test that the new code and `sum(items, x => x.qty * x.price)` agree on generated inputs
+    - **Property 9: `bill-subtotal`**
     - **Validates: Requirements 9.1**
-- [ ] 11. Implement `bill-date`
+- [ ] 11. Implement `line-price`
   - [ ] 11.1 Write the rule in the new code
     - _Requirements: 10.1_
-  - [ ] 11.2 Write a property test that the new code and `today` agree on generated inputs
-    - **Property 10: `bill-date`**
+  - [ ] 11.2 Write a property test that the new code and `medicine.price` agree on generated inputs
+    - **Property 10: `line-price`**
     - **Validates: Requirements 10.1**
-- [ ] 12. Build the screens
-  - [ ] 12.1 Build the MAIN MENU screen
-  - [ ] 12.2 Build the NEW BILL screen
-  - [ ] 12.3 Build the STOCK screen
-  - [ ] 12.4 Build the CUSTOMERS screen
+- [ ] 12. Implement `line-amount`
+  - [ ] 12.1 Write the rule in the new code
+    - _Requirements: 11.1_
+  - [ ] 12.2 Write a property test that the new code and `item.qty * item.price` agree on generated inputs
+    - **Property 11: `line-amount`**
+    - **Validates: Requirements 11.1**
+- [ ] 13. Implement `bill-date`
+  - [ ] 13.1 Write the rule in the new code
+    - _Requirements: 12.1_
+  - [ ] 13.2 Write a property test that the new code and `today` agree on generated inputs
+    - **Property 12: `bill-date`**
+    - **Validates: Requirements 12.1**
+- [ ] 14. Build the screens
+  - [ ] 14.1 Build the MAIN MENU screen
+  - [ ] 14.2 Build the NEW BILL screen
+  - [ ] 14.3 Build the STOCK screen
+  - [ ] 14.4 Build the CUSTOMERS screen
 
 ## Notes
 
@@ -89,9 +101,9 @@ Rebuild Shifa Medical Store from its Soul (version 1): model the old data files 
 {
   "waves": [
     { "id": 0, "tasks": ["1.1", "1.2", "1.3", "1.4"] },
-    { "id": 1, "tasks": ["2.1", "3.1", "4.1", "5.1", "6.1", "7.1", "8.1", "9.1", "10.1", "11.1"] },
-    { "id": 2, "tasks": ["2.2", "3.2", "4.2", "5.2", "6.2", "7.2", "8.2", "9.2", "10.2", "11.2"] },
-    { "id": 3, "tasks": ["12.1", "12.2", "12.3", "12.4"] }
+    { "id": 1, "tasks": ["2.1", "3.1", "4.1", "5.1", "6.1", "7.1", "8.1", "9.1", "10.1", "11.1", "12.1", "13.1"] },
+    { "id": 2, "tasks": ["2.2", "3.2", "4.2", "5.2", "6.2", "7.2", "8.2", "9.2", "10.2", "11.2", "12.2", "13.2"] },
+    { "id": 3, "tasks": ["14.1", "14.2", "14.3", "14.4"] }
   ]
 }
 ```
