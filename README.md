@@ -58,7 +58,7 @@ GitHub Actions is off for this repo, so every check runs locally. The workflow f
 5. **Nightly** (planned, not set up yet): a Kiro Crew scheduled job will run `pnpm ci:local` on its own clone of `main` and send the result.
 6. **After a deploy**: `pnpm smoke:prod <url>`.
 
-Current counts: 1723 unit and property tests in 169 files (integration and Postgres tests included), and 136 Playwright tests (Prompt 60). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
+Current counts: 1775 unit and property tests in 177 files (integration and Postgres tests included), and 140 Playwright tests (after the review of 51 to 60). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
 
 ## Coverage
 
@@ -75,7 +75,7 @@ As of Prompt 60. The code covered grew by a third since Prompt 50 (the Archaeolo
 
 ## Status
 
-Prompts 1 to 60 are merged, with a review round after every ten. The review of 51 to 60 fixed three bugs in the reborn app's sync and stock checks (two syncs at once could lose a sale; a phone could send its outbox twice at once; two lines of one medicine could sell more than the stock). For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
+Prompts 1 to 60 are merged, with a review round after every ten. The review of 51 to 60 fixed three bugs in the reborn app's sync and stock checks (two syncs at once could lose a sale; a phone could send its outbox twice at once; two lines of one medicine could sell more than the stock), and its findings for Kiro are done: the Archaeologist infers the actions, finds rules without a model and types its probe bills into the old app; the model table is by family; the screen graph groups states under their screen; and small fixes in the reborn app and the Soul tab. For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
 
 - **1 to 10, foundation:** the monorepo, steering and hooks, the Haunted Ledger design system, the app shell (English and Urdu), the deploy skeleton.
 - **11 to 21, the Graveyard and data:** the DOS toolchain, three sample dead apps (Shifa Medical Store, Iqra School Fees, Barkat Kiryana Ledger) with their legacy bugs, the Graveyard page, the `.DBF` reader, writer, snapshot, diff and viewer, and the DBF inspector API behind the upload card.
@@ -93,9 +93,9 @@ Prompts 1 to 60 are merged, with a review round after every ten. The review of 5
 
 ### What works today, and what does not yet
 
-- **Works:** possession explores for real (on Shifa, 47 actions find 11 screen states, 6 data changes and 4 of the app's refusals). The Possession Theater, the rule check, the live rule animation, and the reborn app all work in the browser. The reborn app matches the 1998 app to the paisa (8 insulin: 5,200.00, 520.00 off, GST 795.60, total 5,475.60), in English and Urdu, and offline.
-- **Not yet:** a live raise does not reach the reborn app on its own. The Archaeologist finds the entities, but it writes no actions, and without a language model it writes no rules. The reborn app and its e2e tests run the reference Soul our team wrote from the C source. The rebirth, undertake, prove and exorcise steps still say "not built yet (Prompt N)" and are marked skipped, never done.
-- **Next:** before Prompt 61, the Archaeologist infers the actions from the observations, runs its probes in the old app, and finds simple rules without a model. Then Prompts 61 to 80: receipts, export, the Surgeon, the Undertaker, the Oracle and the certificate, the Exorcist, and Ghost Twin.
+- **Works:** possession explores for real (on Shifa, 47 actions find 5 screens in 11 states, 6 data changes and 4 of the app's refusals). With no language model, the Archaeologist infers the actions (save a bill, add a customer) and finds the rules: on real Shifa it typed 7 probe bills into the old app (12.50 to 10,001) and found all 8 of the reference Soul's computed rules, the 10% discount over Rs 5,000 and the GST after it included. A recorded run of Shifa opens that Soul in the reborn app, which makes the bill with the old app's numbers. The Possession Theater, the rule check, the live rule animation, and the reborn app all work in the browser. The reborn app matches the 1998 app to the paisa (8 insulin: 5,200.00, 520.00 off, GST 795.60, total 5,475.60), in English and Urdu, and offline.
+- **Not yet:** without a model, the rules that refuse something (an expired batch, more than the stock) are not found, nor Iqra's fees by class and Barkat's credit limit (scores below). Most of the e2e tests of the reborn app still run the reference Soul our team wrote from the C source, so their numbers are checked against a known answer. The rebirth, undertake, prove and exorcise steps still say "not built yet (Prompt N)" and are marked skipped, never done.
+- **Next:** Prompts 61 to 80, each from a Kiro spec in `.kiro/specs/`: receipts, export, the Surgeon, the Undertaker, the Oracle and the certificate, the Exorcist, and Ghost Twin.
 
 `/design` boots the real Shifa EXE in js-dos: you can press keys, record what an action changed in the data files, and replay it from a fresh state. Details are in [docs/progress.md](docs/progress.md).
 

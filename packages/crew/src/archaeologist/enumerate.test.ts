@@ -161,6 +161,16 @@ describe('enumerateCandidates: what one observation is evidence of', () => {
     expect(two).toContain('trunc(bill.subtotal * 1400, 2)');
   });
 
+  it('a rate on tiny bills, where truncation spoils the biggest one’s ratio, is still found', () => {
+    // fast-check's counterexample (seed 1180784383): 17% truncated of 1.00 and 1.16 is 0.17 and
+    // 0.19; 0.19 / 1.16 is 0.16, and only the 1.00 bill gives the rate.
+    const runs = [
+      bill(1, { SUBTOTAL: '1.00', DISCOUNT: '0.00', GST: '0.17' }),
+      bill(2, { SUBTOTAL: '1.16', DISCOUNT: '0.00', GST: '0.19' }),
+    ];
+    expect(find('bill.gst', runs).selected?.expression).toBe('trunc(bill.subtotal * 0.17, 2)');
+  });
+
   it('a constant needs two observations, and is never a value the Possessor typed', () => {
     expect(candidates('bill.discount', [bill(1, { DISCOUNT: '0.00' })])).not.toContain('0');
     const agreed = [bill(1, { DISCOUNT: '100.00' }), bill(2, { DISCOUNT: '100.00' })];

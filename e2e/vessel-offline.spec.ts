@@ -76,6 +76,35 @@ test.describe('the reborn app offline', () => {
     await page.request.delete(`${API}/api/projects/${id}`);
   });
 
+  test('a search in the stock list stays when the phone comes back online and syncs', async ({
+    page,
+    context,
+  }) => {
+    // The list used to be drawn again from scratch when the sync brought the server's records,
+    // and what the owner had typed in Search was lost (seen as a flaky vessel.spec.ts).
+    const id = await shifaWithSoul(page);
+    await open(page, id);
+    await context.setOffline(true);
+    await sell(page, 'insu', 1);
+    await page
+      .getByRole('navigation', { name: 'Reborn app' })
+      .getByRole('button', { name: 'Stock' })
+      .click();
+    const search = page.getByRole('searchbox', { name: 'Search' });
+    await search.fill('insulin');
+    const stock = page.getByTestId('vessel-table-medicine');
+    await expect(stock.getByRole('row')).toHaveCount(2);
+    await context.setOffline(false);
+    await expect(page.getByTestId('vessel-synced')).toContainText('1 bill sent', {
+      timeout: 30_000,
+    });
+    await expect(search).toHaveValue('insulin');
+    await expect(stock.getByRole('row')).toHaveCount(2);
+    // The records were read again: the insulin sold offline is still 11 on the list.
+    await expect(stock.getByRole('row').filter({ hasText: 'INS100' })).toContainText('11');
+    await page.request.delete(`${API}/api/projects/${id}`);
+  });
+
   test('two phones sell the same insulin offline: both sales stand, and the change is to review', async ({
     browser,
   }) => {

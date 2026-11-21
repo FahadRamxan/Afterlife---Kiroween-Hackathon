@@ -3,7 +3,7 @@ import type { DbfField, DbfRecord, DbfValue } from '@afterlife/dbf';
 import { Button, Card, cn } from '@afterlife/ui';
 import { actionForm, type ActionResult, type Vessel } from '@afterlife/vessel';
 import { useTranslations } from 'next-intl';
-import { useEffect, useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useWord } from '../lib/use-word';
 import { displayValue, money, searchRecords } from '../lib/vessel-views';
 
@@ -48,6 +48,16 @@ export function VesselBill({
   const [done, setDone] = useState<{ key: string; total: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [generation, setGeneration] = useState(0);
+  // The line just added or added to: scrolled into view, above the sticky totals card on a phone
+  // (review of 51-60, finding 7).
+  const [touched, setTouched] = useState<{ line: number; n: number } | null>(null);
+  const linesRef = useRef<HTMLOListElement>(null);
+  useEffect(() => {
+    if (!touched) return;
+    const el = linesRef.current?.children[touched.line];
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el?.scrollIntoView({ block: 'center', behavior: still ? 'auto' : 'smooth' });
+  }, [touched]);
 
   useEffect(() => {
     let alive = true;
@@ -98,6 +108,7 @@ export function VesselBill({
       );
     } else
       setLines([...lines, { [pick!.field]: code, ...(qtyField ? { [qtyField.name]: '1' } : {}) }]);
+    setTouched((x) => ({ line: at >= 0 ? at : lines.length, n: (x?.n ?? 0) + 1 }));
     setQuery('');
     setDone(null);
   }
@@ -275,7 +286,7 @@ export function VesselBill({
       ) : null}
 
       {form.line ? (
-        <ol aria-label={t('lines')} className="space-y-2">
+        <ol ref={linesRef} aria-label={t('lines')} className="space-y-2">
           {lines.map((l, i) => {
             const r = pick ? byKey(l[pick.field] ?? '') : undefined;
             const done_ = preview?.ok ? preview.lines[i] : undefined;

@@ -11,7 +11,9 @@ const ObservationEvent = z.object({
   newScreen: z.boolean(),
   changed: z.array(z.string()),
   errors: z.array(z.string()),
+  /** Screen states (fingerprints) so far, and screens (states grouped by title): review 51-60. */
   screens: z.number().int().nonnegative(),
+  titles: z.number().int().nonnegative().optional(),
   saves: z.number().int().nonnegative(),
   /** `guide`: a step of the owner's séance, walked first (Prompt 50). */
   kind: z.enum(['explore', 'walk', 'back', 'guide']).optional(),
@@ -26,7 +28,9 @@ const ObservationEvent = z.object({
 export type ObservationEvent = z.infer<typeof ObservationEvent>;
 
 export type PossessionStats = {
+  /** Screen states, and screens by title (null for a run recorded before titles were counted). */
   screens: number;
+  titles: number | null;
   actions: number;
   changes: number;
   /** The newest few steps, newest last. */
@@ -53,6 +57,7 @@ export function possessionStats(events: LiveEvent[], recent = 5): PossessionStat
   if (!last) return null;
   return {
     screens: last.screens,
+    titles: last.titles ?? null,
     actions: last.step,
     changes: last.saves,
     recent: obs.slice(-recent),

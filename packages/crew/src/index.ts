@@ -4,8 +4,10 @@ export const packageName = '@afterlife/crew';
 export * from './llm/types';
 export { FakeLlmClient, estimateTokens, fakeText, fakeToolUse, type FakeStep } from './llm/fake';
 export {
+  BEDROCK_MODEL_TABLE,
   BedrockLlmClient,
   DEFAULT_BEDROCK_MODEL,
+  bedrockCapabilities,
   fromBedrockOutput,
   toBedrockInput,
   toBedrockMessages,

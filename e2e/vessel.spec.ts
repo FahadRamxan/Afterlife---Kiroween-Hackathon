@@ -126,6 +126,24 @@ test.describe('the reborn app', () => {
     expect(box.y + box.height).toBeGreaterThan(844 - 2);
     const tab = (await nav.getByRole('button', { name: 'Stock' }).boundingBox())!;
     expect(tab.height).toBeGreaterThanOrEqual(48);
+    // Review of 51-60, finding 7: the page is named after the shop, and each new line scrolls into
+    // view above the sticky totals card, its + and − buttons not hidden under it.
+    await expect(page).toHaveTitle('Shifa Medical Store · Reborn app · Afterlife');
+    const find = page.getByRole('combobox', { name: 'Add a Medicine' });
+    for (const code of ['pan5', 'fla4', 'dis5', 'bru4', 'zan1']) {
+      await find.fill(code);
+      await find.press('Enter');
+    }
+    await expect(page.getByTestId('vessel-bill-line')).toHaveCount(5);
+    const plus = page.getByRole('button', { name: 'One more on line 5' });
+    await expect(plus).toBeInViewport();
+    await expect
+      .poll(async () => {
+        const b = (await plus.boundingBox())!;
+        const card = (await page.getByTestId('vessel-totals').boundingBox())!;
+        return b.y + b.height <= card.y;
+      })
+      .toBe(true);
     await page
       .getByRole('group', { name: 'Language' })
       .getByRole('button', { name: 'اردو' })

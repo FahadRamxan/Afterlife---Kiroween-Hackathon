@@ -142,3 +142,11 @@ export const wordKey = (s: string) =>
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '_')
     .replace(/^_|_$/g, '');
+
+/**
+ * The reborn app's page title (review of 51-60, finding 7): "Reborn app · Afterlife", and once
+ * its Soul is open "Shifa Medical Store · Reborn app · Afterlife".
+ */
+export function vesselTitle(label: string, appName?: string | null): string {
+  return [appName?.trim(), label, 'Afterlife'].filter(Boolean).join(' · ');
+}

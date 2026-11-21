@@ -8,18 +8,22 @@ import type { GraphEdge, GraphNode } from '../lib/theater';
 const COLS = 3;
 
 /**
- * The screens the Possessor has found (React Flow): one node per screen in the order found, the
- * one it is on now lit in ectoplasm, and the keys that led from one to another. The same list is
+ * The screens the Possessor has found (React Flow): one node per screen title in the order found,
+ * with how many states of it were seen, the one it is on now lit in ectoplasm, and the keys that
+ * led from one to another. The same list is
  * given to screen readers as text.
  */
 export function ScreenGraphView({ nodes, edges }: { nodes: GraphNode[]; edges: GraphEdge[] }) {
   const t = useTranslations('raise.live.theater');
+  // A screen seen in several states (a bill with lines added): "NEW BILL · 4 states".
+  const label = (n: GraphNode) =>
+    n.states > 1 ? t('states', { title: n.title, n: n.states }) : n.title;
   const flowNodes = useMemo<Node[]>(
     () =>
       nodes.map((n) => ({
         id: n.id,
         position: { x: (n.order % COLS) * 170, y: Math.floor(n.order / COLS) * 90 },
-        data: { label: n.title },
+        data: { label: label(n) },
         draggable: false,
         connectable: false,
         className: n.current ? 'theater-node theater-node-current' : 'theater-node',
@@ -33,7 +37,7 @@ export function ScreenGraphView({ nodes, edges }: { nodes: GraphNode[]; edges: G
           width: 140,
         },
       })),
-    [nodes],
+    [nodes, t],
   );
   // React Flow measures each node before it shows it, so it keeps the nodes in its own state.
   const [shown, setShown, onNodesChange] = useNodesState<Node>(flowNodes);
@@ -78,8 +82,8 @@ export function ScreenGraphView({ nodes, edges }: { nodes: GraphNode[]; edges: G
       </div>
       <ol className="sr-only" lang="en" dir="ltr">
         {nodes.map((n) => (
-          <li key={n.id} data-testid="graph-node" data-current={n.current}>
-            {n.title}
+          <li key={n.id} data-testid="graph-node" data-current={n.current} data-states={n.states}>
+            {label(n)}
           </li>
         ))}
       </ol>

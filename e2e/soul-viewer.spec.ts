@@ -5,6 +5,7 @@ import { expect, test } from '@playwright/test';
 import { strFromU8, unzipSync } from 'fflate';
 import { readFileSync } from 'node:fs';
 import { SHIFA_REFERENCE_SOUL } from '../packages/soul/src/examples/shifa';
+import { raiseShifaWithSoul } from './helpers/raise';
 
 const API = 'http://localhost:4000';
 
@@ -77,6 +78,25 @@ test.describe('the Soul tab', () => {
     expect(Object.keys(files)).toContain('shifa-kiro-spec/.kiro/steering/legacy-behaviour.md');
 
     await page.request.delete(`${API}/api/projects/${projectId}`);
+  });
+
+  test('a Soul a person wrote with no rules: not "exhumed", and no line about their Urdu', async ({
+    page,
+  }) => {
+    // Review of 51-60, finding 7.
+    const id = await raiseShifaWithSoul(
+      page,
+      { ...SHIFA_REFERENCE_SOUL, rules: [] },
+      { recorded: true },
+    );
+    await page.goto(`/raise/${id}?tab=soul`);
+    await expect(page.getByTestId('exhumed-banner')).toHaveText(
+      '0 rules written by our team (the reference Soul), not exhumed from the observations',
+      { timeout: 30_000 },
+    );
+    await expect(page.getByTestId('urdu-rules')).toHaveCount(0);
+    await expect(page.getByText('Every rule is in Urdu.')).toHaveCount(0);
+    await page.request.delete(`${API}/api/projects/${id}`);
   });
 
   test('a project without a Soul says so', async ({ page }) => {

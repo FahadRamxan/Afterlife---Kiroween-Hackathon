@@ -14,7 +14,7 @@ import {
   syncPhone,
   type Synced,
 } from '../lib/vessel-phone';
-import { vesselViews, type VesselView } from '../lib/vessel-views';
+import { vesselTitle, vesselViews, type VesselView } from '../lib/vessel-views';
 import { EmptyState } from './EmptyState';
 import { PageShell } from './PageShell';
 import { VesselBill } from './VesselBill';
@@ -137,6 +137,12 @@ export function VesselApp({ projectId }: { projectId: string }) {
       void p.close();
     };
   }, [projectId]);
+
+  // The page title names the shop once its Soul is open (review of 51-60, finding 7).
+  const appName = state.phase === 'ready' ? state.soul.app.name : null;
+  useEffect(() => {
+    if (appName) document.title = vesselTitle(t('title'), appName);
+  }, [appName, t]);
 
   // Online again (or for the first time): send what is waiting, take the server's records.
   useEffect(() => {
@@ -299,8 +305,9 @@ export function VesselApp({ projectId }: { projectId: string }) {
             />
           ) : (
             <VesselTable
-              key={`${view.id}-${dataVersion}`}
+              key={view.id}
               vessel={vessel}
+              dataVersion={dataVersion}
               entity={view.entity}
               fields={view.fields}
               {...(view.addActionId ? { addActionId: view.addActionId } : {})}

@@ -36,6 +36,8 @@ describe('possessionStats', () => {
       obs(3, { screens: 3, saves: 1, changed: ['BILLS.DBF'], label: 'F2=Save bill' }),
     ])!;
     expect(s).toMatchObject({ screens: 3, actions: 3, changes: 1 });
+    // A run recorded before screens were counted by title says how many states it found.
+    expect(s.titles).toBeNull();
     expect(s.recent.map((r) => r.label)).toEqual(['step 1', 'step 2', 'F2=Save bill']);
   });
 
@@ -71,9 +73,10 @@ describe('possessionStats', () => {
     ];
     const s = possessionStats([
       obs(249, { screens: 11, saves: 6, guided: 4, refused }),
-      obs(250, { screens: 11, saves: 6, guided: 4, refused }),
+      obs(250, { screens: 11, titles: 5, saves: 6, guided: 4, refused }),
     ])!;
-    expect(s).toMatchObject({ actions: 250, screens: 11, changes: 6, guided: 4 });
+    // 11 screen states of 5 screens (review of 51-60, finding 6).
+    expect(s).toMatchObject({ actions: 250, screens: 11, titles: 5, changes: 6, guided: 4 });
     expect(s.refused).toEqual(refused);
   });
 

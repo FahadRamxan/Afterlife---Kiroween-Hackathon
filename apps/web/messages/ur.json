@@ -133,7 +133,8 @@
       },
       "possession": {
         "title": "قابض نے کیا پایا",
-        "screens": "{n, plural, one {# اسکرین} other {# اسکرینیں}} ملیں",
+        "screens": "{n, plural, one {# اسکرین} other {# اسکرینیں}} ملیں ({states, plural, one {# حالت} other {# حالتیں}})",
+        "states": "اسکرین کی {n, plural, one {# حالت} other {# حالتیں}} ملیں",
         "actions": "{n, plural, one {# عمل} other {# اعمال}} آزمائے",
         "changes": "{n, plural, one {# ڈیٹا تبدیلی} other {# ڈیٹا تبدیلیاں}} دیکھی گئیں",
         "recent": "تازہ ترین قدم",
@@ -153,6 +154,7 @@
       },
       "theater": {
         "graph": "ملنے والی اسکرینیں، اور ان کے درمیان کیز",
+        "states": "{title} · {n} حالتیں",
         "thinking": "قابض کیا کر رہا ہے",
         "changed": "قدم {step} پر ڈیٹا بدلا:",
         "onlyChanged": "صرف وہ ریکارڈ جو بدلے، پرانی ایپ کی اپنی ڈیٹا فائلوں سے۔"
@@ -261,6 +263,7 @@
       },
       "fresh": "ابھی دریافت ہوا",
       "exhumed": "{observations, plural, one {# مشاہدے} other {# مشاہدات}} سے {rules, plural, one {# قاعدہ} other {# قواعد}} دریافت",
+      "written": "{rules, plural, one {# قاعدہ} other {# قواعد}} {by, select, reference {ہماری ٹیم نے لکھے (حوالہ جاتی روح)} other {مالک نے طے کیے}}، مشاہدات سے دریافت نہیں ہوئے",
       "evidenceShown": "وہ مشاہدات جن پر یہ قاعدہ قائم ہے",
       "evidenceThumb": "ثبوت {n}: کیز {keys}",
       "vessel": {
