@@ -23,6 +23,10 @@ describe('vesselViews', () => {
       'QTY',
     ]);
     expect(views[0]!.kind === 'action' && views[0]!.actionId).toBe('save-bill');
+    // The customers list adds a customer, as the old screen's "A=Add" did.
+    const customers = views[2]!;
+    expect(customers.kind === 'table' && customers.addActionId).toBe('add-customer');
+    expect(stock.kind === 'table' && stock.addActionId).toBeUndefined();
   });
 
   it('a Soul without a menu still gets each action and each list of records', () => {

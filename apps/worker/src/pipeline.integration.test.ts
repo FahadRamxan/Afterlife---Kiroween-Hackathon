@@ -36,6 +36,8 @@ describe('the pipeline on the real Shifa', () => {
       await runPipeline(boss, t.db, p!.id);
       const s = await waitForPipeline(t.db, p!.id, TEN_MINUTES);
       expect(Date.now() - started).toBeLessThan(TEN_MINUTES);
+      // A failed step says which and why.
+      expect(s.steps.filter((x) => x.status === 'failed')).toEqual([]);
       expect(s.status).toBe('done');
       expect(s.steps.map((x) => x.step)).toEqual([...PIPELINE]);
       for (const step of s.steps) expect(['done', 'skipped']).toContain(step.status);

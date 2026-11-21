@@ -60,7 +60,8 @@ graph TD
 
 ### Actions
 
-- **Save a bill** (`{Enter}{F2}` on NEW BILL): inserts bill, inserts bill-item, updates medicine
+- **Save a bill** (`{@CUST_ID}{Enter}{lines}{#CODE}{Enter}{#QTY}{Enter}{/lines}{Enter}{F2}` on NEW BILL): inserts bill, inserts bill-item, updates medicine
+- **Add a customer** (`A{@NAME}{Enter}{@PHONE}{Enter}` on CUSTOMERS): inserts customer
 
 ## Data Models
 
@@ -128,6 +129,8 @@ graph TD
 | `bill-total` | compute | bill.total | `bill.subtotal - bill.discount + bill.gst` | 100% | none yet |
 | `expired-batch-blocked` | validate |  | `medicine.expiry >= today` | 100% | none yet |
 | `qty-over-stock-refused` | validate |  | `item.qty <= medicine.qty` | 100% | none yet |
+| `one-line-per-medicine` | validate |  | `count(items, x => x.code = item.code) = 1` | 100% | none yet |
+| `customer-name-required` | validate |  | `customer.name != ''` | 100% | none yet |
 | `stock-decrement` | effect | medicine.qty | `medicine.qty - item.qty` | 100% | none yet |
 | `bill-subtotal` | compute | bill.subtotal | `sum(items, x => x.qty * x.price)` | 100% | none yet |
 | `line-price` | compute | bill_item.price | `medicine.price` | 100% | none yet |
@@ -168,35 +171,47 @@ For all entries, the new code accepts an entry exactly when `item.qty <= medicin
 
 **Validates: Requirements 5.1**
 
-### Property 6: `stock-decrement`
+### Property 6: `one-line-per-medicine`
 
-For all saves of "Save a bill", the new code sets the medicine qty to the value of `medicine.qty - item.qty`.
+For all entries, the new code accepts an entry exactly when `count(items, x => x.code = item.code) = 1` holds, and otherwise refuses it and leaves the data unchanged.
 
 **Validates: Requirements 6.1**
 
-### Property 7: `bill-subtotal`
+### Property 7: `customer-name-required`
 
-For all inputs, the new code sets the bill subtotal to the value of `sum(items, x => x.qty * x.price)`.
+For all entries, the new code accepts an entry exactly when `customer.name != ''` holds, and otherwise refuses it and leaves the data unchanged.
 
 **Validates: Requirements 7.1**
 
-### Property 8: `line-price`
+### Property 8: `stock-decrement`
 
-For all inputs, the new code sets the bill item price to the value of `medicine.price`.
+For all saves of "Save a bill", the new code sets the medicine qty to the value of `medicine.qty - item.qty`.
 
 **Validates: Requirements 8.1**
 
-### Property 9: `line-amount`
+### Property 9: `bill-subtotal`
 
-For all inputs, the new code sets the bill item amount to the value of `item.qty * item.price`.
+For all inputs, the new code sets the bill subtotal to the value of `sum(items, x => x.qty * x.price)`.
 
 **Validates: Requirements 9.1**
 
-### Property 10: `bill-date`
+### Property 10: `line-price`
+
+For all inputs, the new code sets the bill item price to the value of `medicine.price`.
+
+**Validates: Requirements 10.1**
+
+### Property 11: `line-amount`
+
+For all inputs, the new code sets the bill item amount to the value of `item.qty * item.price`.
+
+**Validates: Requirements 11.1**
+
+### Property 12: `bill-date`
 
 For all inputs, the new code sets the bill bill date to the value of `today`.
 
-**Validates: Requirements 10.1**
+**Validates: Requirements 12.1**
 
 ## Error Handling
 
@@ -204,8 +219,10 @@ The old app refuses an entry that breaks one of these rules, and leaves the data
 
 - `expired-batch-blocked`: A medicine whose batch has expired cannot be added to a bill. A batch that expires today can.
 - `qty-over-stock-refused`: A quantity larger than the stock is refused when the item is added.
+- `one-line-per-medicine`: A medicine can be on a bill only once: adding it again is refused (ALREADY IN BILL).
+- `customer-name-required`: A new customer needs a name: a blank name is refused (NAME REQUIRED).
 
 ## Testing Strategy
 
-- Every rule has a property test (Properties 1 to 10 above): on generated inputs, the new code and the rule's expression must agree. Run each one at least 100 times.
+- Every rule has a property test (Properties 1 to 12 above): on generated inputs, the new code and the rule's expression must agree. Run each one at least 100 times.
 - The old records in the DBF files load into the new data models unchanged.

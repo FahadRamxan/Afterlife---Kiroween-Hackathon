@@ -522,6 +522,9 @@ importers:
       '@afterlife/dbf':
         specifier: workspace:^
         version: link:../dbf
+      '@afterlife/emulator':
+        specifier: workspace:^
+        version: link:../emulator
       fast-check:
         specifier: ^4.10.2
         version: 4.10.2

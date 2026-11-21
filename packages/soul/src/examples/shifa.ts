@@ -164,7 +164,8 @@ export const SHIFA_REFERENCE_SOUL: Soul = {
       id: 'save-bill',
       screen: BILL,
       name: 'Save a bill',
-      keys: '{Enter}{F2}',
+      // From its own screen: the customer, each line's code and quantity, Enter to end, F2.
+      keys: '{@CUST_ID}{Enter}{lines}{#CODE}{Enter}{#QTY}{Enter}{/lines}{Enter}{F2}',
       effects: [
         {
           entity: 'bill',
@@ -178,6 +179,13 @@ export const SHIFA_REFERENCE_SOUL: Soul = {
         },
         { entity: 'medicine', kind: 'update', fields: ['QTY'] },
       ],
+    },
+    {
+      id: 'add-customer',
+      screen: CUSTOMERS,
+      name: 'Add a customer',
+      keys: 'A{@NAME}{Enter}{@PHONE}{Enter}',
+      effects: [{ entity: 'customer', kind: 'insert', fields: ['CUST_ID', 'NAME', 'PHONE'] }],
     },
   ],
   rules: [
@@ -226,6 +234,25 @@ export const SHIFA_REFERENCE_SOUL: Soul = {
       en: 'A quantity larger than the stock is refused when the item is added.',
       ur: '',
       expression: 'item.qty <= medicine.qty',
+      evidence: [],
+      confidence: 1,
+    },
+    {
+      // The real app says ALREADY IN BILL (the Possessor found it): one line per medicine.
+      id: 'one-line-per-medicine',
+      kind: 'validate',
+      en: 'A medicine can be on a bill only once: adding it again is refused (ALREADY IN BILL).',
+      ur: '',
+      expression: 'count(items, x => x.code = item.code) = 1',
+      evidence: [],
+      confidence: 1,
+    },
+    {
+      id: 'customer-name-required',
+      kind: 'validate',
+      en: 'A new customer needs a name: a blank name is refused (NAME REQUIRED).',
+      ur: '',
+      expression: "customer.name != ''",
       evidence: [],
       confidence: 1,
     },

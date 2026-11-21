@@ -344,7 +344,8 @@
       "remove": "Remove line {n}",
       "removeShort": "Remove",
       "empty": "Nothing on the bill yet: search above and tap to add.",
-      "saved": "Bill {key} saved. Total Rs {total}."
+      "saved": "Bill {key} saved. Total Rs {total}.",
+      "savedRecord": "{name} {key} saved."
     },
     "words": {
       "new_bill": "New bill",
@@ -370,7 +371,8 @@
       "bill_no": "Bill no.",
       "bill_date": "Date",
       "line": "Line",
-      "save_a_bill": "Save bill"
+      "save_a_bill": "Save bill",
+      "add_a_customer": "Add a customer"
     },
     "sync": {
       "offline": "Offline, saved on this phone.",
@@ -385,7 +387,8 @@
       "conflict": "{record} {field}: on this phone {phoneBefore} to {phoneAfter}; on the server {serverBefore} to {serverAfter}.",
       "bill": "(bill {record})",
       "done": "Checked"
-    }
+    },
+    "close": "Close"
   },
   "verify": {
     "title": "Verify a certificate",

@@ -3,19 +3,10 @@
 // expected totals are worked out by hand from the rules (10% off over Rs 5,000, 17% GST after the
 // discount, both truncated to the paisa).
 import { expect, test, type Page } from '@playwright/test';
-import { SHIFA_REFERENCE_SOUL } from '../packages/soul/src/examples/shifa';
-
-const API = 'http://localhost:4000';
+import { API, raiseShifaWithSoul } from './helpers/raise';
 
 async function openVessel(page: Page) {
-  await page.goto('/graveyard');
-  await page.getByRole('button', { name: 'Raise Shifa Medical Store' }).click();
-  await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
-  const id = page.url().split('/').at(-1)!;
-  const res = await page.request.post(`${API}/api/projects/${id}/souls`, {
-    data: SHIFA_REFERENCE_SOUL,
-  });
-  expect(res.status()).toBe(201);
+  const id = await raiseShifaWithSoul(page);
   await page.goto(`/raise/${id}?tab=soul`);
   await page.getByRole('link', { name: 'Open the reborn app' }).click();
   await expect(page).toHaveURL(new RegExp(`/vessel/${id}$`));
@@ -87,6 +78,28 @@ test.describe('the reborn app', () => {
     await page.getByRole('searchbox', { name: 'Search' }).fill('insulin');
     await expect(stock.getByRole('row')).toHaveCount(2);
 
+    await page.request.delete(`${API}/api/projects/${id}`);
+  });
+
+  test('adds a customer from the customers list; a blank name is refused in the rule’s words', async ({
+    page,
+  }) => {
+    const id = await openVessel(page);
+    await page
+      .getByRole('navigation', { name: 'Reborn app' })
+      .getByRole('button', { name: 'Customers' })
+      .click();
+    await page.getByRole('button', { name: 'Add a customer' }).click();
+    const form = page.getByRole('region', { name: 'Add a customer' });
+    await form.getByLabel('Phone').fill('051-4567890');
+    await expect(form.getByRole('alert')).toContainText('A new customer needs a name');
+    await expect(form.getByRole('button', { name: 'Add a customer' })).toBeDisabled();
+    await form.getByLabel('Name').fill('ALI RAZA');
+    await form.getByRole('button', { name: 'Add a customer' }).click();
+    await expect(form.getByTestId('vessel-saved')).toHaveText('Customer C0009 saved.');
+    // The list has the new customer, numbered by the counter (C0009 after C0008).
+    const list = page.getByTestId('vessel-table-customer');
+    await expect(list.getByRole('row').filter({ hasText: 'ALI RAZA' })).toContainText('C0009');
     await page.request.delete(`${API}/api/projects/${id}`);
   });
 

@@ -12,9 +12,14 @@ import {
   shifaStore,
 } from './testing/shifa';
 
-const vessel = async () => {
+const vessel = async (soul: Soul = SHIFA) => {
   const store = await shifaStore();
-  return { store, v: createVessel(SHIFA, store, { today: () => SHIFA_TODAY }) };
+  return { store, v: createVessel(soul, store, { today: () => SHIFA_TODAY }) };
+};
+/** Shifa without ALREADY IN BILL: a Soul that takes one medicine on two lines (the stock decides). */
+const TWO_LINES: Soul = {
+  ...SHIFA,
+  rules: SHIFA.rules.filter((r) => r.id !== 'one-line-per-medicine'),
 };
 const KEYS: Record<string, string | null> = {
   'BILLS.DBF': 'BILL_NO',
@@ -100,27 +105,30 @@ describe('performAction on Shifa: the same effects as the real 1998 app', () => 
     expect(r.ok && r.record.BILL_NO).toBe('9807-0002');
     const bills_ = await store.records('BILLS.DBF');
     expect(bills_.map((b) => b.values.BILL_NO).slice(-2)).toEqual(['9807-0001', '9807-0002']);
-    // The same medicine twice in one bill comes off its stock twice.
+    // The same medicine again on one bill is refused, as the old app does (ALREADY IN BILL).
     const twice = await v.performAction('save-bill', {
       lines: [
         { CODE: 'PAN500', QTY: '1' },
         { CODE: 'PAN500', QTY: '2' },
       ],
     });
-    expect(twice.ok && twice.effects.tables['MEDICINE.DBF']!.updated[0]!.changes[0]).toEqual({
-      field: 'QTY',
-      before: '232',
-      after: '229',
-      delta: '-3',
-    });
+    expect(twice.ok ? [] : twice.refused).toEqual(
+      [1, 2].map((line) => ({
+        message:
+          'A medicine can be on a bill only once: adding it again is refused (ALREADY IN BILL).',
+        rule: 'one-line-per-medicine',
+        line,
+      })),
+    );
   });
 });
 
 describe('what the app refuses (and then nothing changes)', () => {
   const refuse = async (
     inputs: Parameters<ReturnType<typeof createVessel>['performAction']>[1],
+    soul: Soul = SHIFA,
   ) => {
-    const { v, store } = await vessel();
+    const { v, store } = await vessel(soul);
     const before = await Promise.all(SHIFA_FILES.map((f) => store.records(f)));
     const r = await v.performAction('save-bill', inputs);
     expect(await Promise.all(SHIFA_FILES.map((f) => store.records(f)))).toEqual(before);
@@ -162,12 +170,15 @@ describe('what the app refuses (and then nothing changes)', () => {
     // PAN500 has 240: 200 and then 100 would leave -60. (The old app does not take a second line of
     // one medicine at all, ALREADY IN BILL; this Soul has no such rule, so the stock rule decides.)
     expect(
-      await refuse({
-        lines: [
-          { CODE: 'PAN500', QTY: '200' },
-          { CODE: 'PAN500', QTY: '100' },
-        ],
-      }),
+      await refuse(
+        {
+          lines: [
+            { CODE: 'PAN500', QTY: '200' },
+            { CODE: 'PAN500', QTY: '100' },
+          ],
+        },
+        TWO_LINES,
+      ),
     ).toEqual([
       {
         message: 'A quantity larger than the stock is refused when the item is added.',
@@ -186,7 +197,7 @@ describe('what the app refuses (and then nothing changes)', () => {
 
 describe('two lines of one medicine', () => {
   it('that fit its stock together are taken, and the stock goes down by both', async () => {
-    const { v, store } = await vessel();
+    const { v, store } = await vessel(TWO_LINES);
     const r = await v.performAction('save-bill', {
       lines: [
         { CODE: 'PAN500', QTY: '200' },

@@ -42,3 +42,5 @@ export {
 export { numberSoul, specRequirements } from './stored';
 export { recordEnv, type RecordEnv } from './record-env';
 export { NUMBER_COUNTER, nextCounter, nextId } from './counter';
+export { kiroProblems, type Problem as KiroProblem } from './kiro-format';
+export { MacroError, expandMacro, isMacro, keyText, macroFields } from './macro';

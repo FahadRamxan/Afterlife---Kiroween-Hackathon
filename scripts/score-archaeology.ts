@@ -58,7 +58,8 @@ export function recordedObservations(app: string): EffectObservation[] {
     }));
 }
 
-export async function scoreSample(app: string, llm: LlmClient | null): Promise<SampleScore> {
+/** A sample's data files, its recorded possession and the entities found in them. */
+export async function sampleInputs(app: string) {
   const manifest = JSON.parse(
     readFileSync(path.join(ROOT, 'samples', 'graveyard', app, 'manifest.json'), 'utf8'),
   ) as { name: string; dosTime: string };
@@ -75,6 +76,11 @@ export async function scoreSample(app: string, llm: LlmClient | null): Promise<S
     tables,
     observations.map((o) => o.dbfDiff),
   );
+  return { manifest, tables, observations, entities };
+}
+
+export async function scoreSample(app: string, llm: LlmClient | null): Promise<SampleScore> {
+  const { manifest, observations, entities } = await sampleInputs(app);
   const rules = llm
     ? (
         await inferRules(
