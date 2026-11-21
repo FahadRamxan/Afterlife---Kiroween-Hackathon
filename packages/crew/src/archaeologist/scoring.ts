@@ -6,7 +6,7 @@
 // rules, how many were recovered.
 import { parseExpr, printExpr } from '@afterlife/soul';
 import type { EffectObservation } from './hypotheses';
-import { verifyCandidates, type VerifyEntity } from './verify';
+import { verifyCandidates, type VerifyEntity, type VerifyOptions } from './verify';
 
 /** The machine-checkable form of a hidden rule. `expression` is absent when the DSL cannot say it. */
 export type Truth =
@@ -28,7 +28,12 @@ export type InferredSoul = {
  * The scripted scenario runs of the app (each observation's id is its scenario). A rule is checked
  * on the runs that show it, so the runs of a known legacy bug do not count against the truth.
  */
-export type ScoreEvidence = { observations: EffectObservation[]; entities: VerifyEntity[] };
+export type ScoreEvidence = {
+  observations: EffectObservation[];
+  entities: VerifyEntity[];
+  /** The day the runs were made and the records they started from, as the Archaeologist had. */
+  options?: VerifyOptions;
+};
 
 export type RuleScore = {
   id: string;
@@ -100,7 +105,7 @@ export function scoreSoul(
   const explains = (target: string, expression: string, scenarios: string[]) => {
     if (!evidence) return false;
     const runs = evidence.observations.filter((o) => scenarios.includes(o.id));
-    const v = verifyCandidates(target, [expression], runs, evidence.entities);
+    const v = verifyCandidates(target, [expression], runs, evidence.entities, evidence.options);
     return v.effects > 0 && v.selected !== null;
   };
   // A rule the truth does not list is checked on the runs of every hidden rule.

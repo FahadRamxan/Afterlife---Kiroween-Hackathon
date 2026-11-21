@@ -3,22 +3,24 @@
     {
       "app": "shifa",
       "name": "Shifa Medical Store",
-      "observations": 6,
+      "observations": 92,
       "score": {
         "known": 7,
-        "inferred": 2,
-        "recovered": 2,
-        "exact": 2,
+        "inferred": 10,
+        "recovered": 5,
+        "exact": 4,
         "precision": 1,
-        "recall": 0.286,
+        "recall": 0.714,
         "rules": [
           {
             "id": "gst-17-truncated",
-            "status": "missed"
+            "status": "exact",
+            "by": "rule bill-gst"
           },
           {
             "id": "discount-over-5000",
-            "status": "missed"
+            "status": "equivalent",
+            "by": "rule bill-discount"
           },
           {
             "id": "expired-batch-blocked",
@@ -26,7 +28,8 @@
           },
           {
             "id": "stock-decrement",
-            "status": "missed"
+            "status": "exact",
+            "by": "rule medicine-qty"
           },
           {
             "id": "bill-number-yymm",
@@ -43,16 +46,37 @@
             "by": "counter customer.CUST_ID"
           }
         ],
-        "extra": []
+        "extra": [
+          {
+            "label": "rule bill-bill-date",
+            "verified": true
+          },
+          {
+            "label": "rule bill-item-price",
+            "verified": true
+          },
+          {
+            "label": "rule bill-item-amount",
+            "verified": true
+          },
+          {
+            "label": "rule bill-subtotal",
+            "verified": true
+          },
+          {
+            "label": "rule bill-total",
+            "verified": true
+          }
+        ]
       }
     },
     {
       "app": "iqra",
       "name": "Iqra School Fees",
-      "observations": 1,
+      "observations": 25,
       "score": {
         "known": 6,
-        "inferred": 1,
+        "inferred": 2,
         "recovered": 1,
         "exact": 1,
         "precision": 1,
@@ -84,24 +108,30 @@
             "status": "missed"
           }
         ],
-        "extra": []
+        "extra": [
+          {
+            "label": "rule payment-pay-date",
+            "verified": true
+          }
+        ]
       }
     },
     {
       "app": "barkat",
       "name": "Barkat Kiryana Ledger",
-      "observations": 2,
+      "observations": 37,
       "score": {
         "known": 5,
-        "inferred": 1,
-        "recovered": 1,
+        "inferred": 4,
+        "recovered": 2,
         "exact": 1,
         "precision": 1,
-        "recall": 0.2,
+        "recall": 0.4,
         "rules": [
           {
             "id": "running-balance",
-            "status": "missed"
+            "status": "equivalent",
+            "by": "rule party-balance"
           },
           {
             "id": "credit-limit",
@@ -121,7 +151,16 @@
             "by": "counter ledger.ENTRY"
           }
         ],
-        "extra": []
+        "extra": [
+          {
+            "label": "rule ledger-tx-date",
+            "verified": true
+          },
+          {
+            "label": "rule party-last-pay",
+            "verified": true
+          }
+        ]
       }
     }
   ]

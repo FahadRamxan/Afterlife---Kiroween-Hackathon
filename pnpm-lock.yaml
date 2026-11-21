@@ -277,6 +277,9 @@ importers:
       '@afterlife/soul':
         specifier: workspace:^
         version: link:../../packages/soul
+      '@afterlife/vessel':
+        specifier: workspace:^
+        version: link:../../packages/vessel
       fflate:
         specifier: ^0.8.3
         version: 0.8.3
@@ -353,6 +356,9 @@ importers:
       '@afterlife/soul':
         specifier: workspace:^
         version: link:../soul
+      '@afterlife/vessel':
+        specifier: workspace:^
+        version: link:../vessel
       '@aws-sdk/client-bedrock-runtime':
         specifier: ^3.1172.0
         version: 3.1172.0

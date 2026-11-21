@@ -47,7 +47,14 @@ describe('the pipeline on the real Shifa', () => {
       expect(out.screens).toBeGreaterThanOrEqual(5);
       expect(out.saves).toBeGreaterThan(0);
       const kept = await t.db.select().from(observations).where(eq(observations.projectId, p!.id));
-      expect(kept).toHaveLength(out.steps);
+      const probe = (o: (typeof kept)[number]) =>
+        (o.hint as { from?: string } | null)?.from === 'probe';
+      expect(kept.filter((o) => !probe(o))).toHaveLength(out.steps);
+      // Archaeology then typed its probe bills into the old app (review of 51-60, finding 3); each
+      // step of them is kept too, labelled with the probe it was for.
+      const probes = kept.filter(probe);
+      expect(probes.length).toBeGreaterThan(0);
+      for (const o of probes) expect((o.hint as { text: string }).text).toMatch(/^probe: bill\./);
 
       // The steps ran in order, and possess read the real main menu.
       const events = await listEvents(t.db, p!.id, { limit: 500 });

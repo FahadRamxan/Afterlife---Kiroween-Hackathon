@@ -89,6 +89,7 @@ export function defaultRegistry(
       ? entitiesStep({
           db,
           bundleFor,
+          ...(deps.pool ? { pool: deps.pool } : {}),
           llm: deps.llm ?? null,
           budgetTokens: deps.budgetTokens ?? DEFAULT_TOKEN_BUDGET,
         })

@@ -1,6 +1,6 @@
 {
   "app": "iqra",
-  "recordedAt": "2026-11-20T11:48:34.944Z",
+  "recordedAt": "2026-11-21T05:01:47.104Z",
   "source": "pnpm pipeline:record",
   "steps": [
     {
@@ -25,19 +25,19 @@
             {
               "to": "fp_7bfa02f2fb1aa86e",
               "from": "fp_5604084b6493e1fe",
-              "keys": "032001{Enter}",
-              "count": 1
-            },
-            {
-              "to": "fp_7bfa02f2fb1aa86e",
-              "from": "fp_7bfa02f2fb1aa86e",
-              "keys": "032001{Enter}",
+              "keys": "{Enter}",
               "count": 1
             },
             {
               "to": "fp_7bfa02f2fb1aa86e",
               "from": "fp_7bfa02f2fb1aa86e",
               "keys": "{Enter}",
+              "count": 1
+            },
+            {
+              "to": "fp_7bfa02f2fb1aa86e",
+              "from": "fp_7bfa02f2fb1aa86e",
+              "keys": "032001{Enter}",
               "count": 1
             },
             {
@@ -128,7 +128,7 @@
               "to": "fp_ccbb9ac2eb2c1722",
               "from": "fp_ccbb9ac2eb2c1722",
               "keys": "S0001{Enter}",
-              "count": 5
+              "count": 3
             },
             {
               "to": "fp_ccbb9ac2eb2c1722",
@@ -152,7 +152,7 @@
             },
             {
               "title": "COLLECT FEE",
-              "visits": 12,
+              "visits": 10,
               "firstSeen": 1,
               "fingerprint": "fp_ccbb9ac2eb2c1722"
             },
@@ -195,7 +195,7 @@
           ]
         },
         "saves": 1,
-        "steps": 27,
+        "steps": 25,
         "guided": {
           "hints": 0,
           "notes": {
@@ -228,7 +228,7 @@
             "level": "info",
             "message": "Booting Iqra School Fees in headless js-dos"
           },
-          "afterMs": 9
+          "afterMs": 11
         },
         {
           "type": "screen",
@@ -321,7 +321,7 @@
             ],
             "fingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 914
+          "afterMs": 840
         },
         {
           "type": "log",
@@ -329,7 +329,7 @@
             "level": "info",
             "message": "First screen: IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001"
           },
-          "afterMs": 916
+          "afterMs": 852
         },
         {
           "type": "log",
@@ -337,12 +337,12 @@
             "level": "info",
             "message": "Exploring. No language model is set up, so field values come from the data files."
           },
-          "afterMs": 918
+          "afterMs": 853
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c8-fd5b-7fac-83e7-370a988f37df",
+            "id": "01a1fc7b-0d7a-77a8-a5e2-4b5ff23a0033",
             "to": "COLLECT FEE",
             "from": "MAIN MENU",
             "keys": "{Enter}",
@@ -359,7 +359,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 1662
+          "afterMs": 1485
         },
         {
           "type": "screen",
@@ -369,7 +369,7 @@
               "attrs": [
                 "33f3f3f3f333f3f3f3f3f3f333f3f3f3f333f3f3f333333333333333333333333333f3f3f3f3f3f3f333f3f3f3333333333333333333333333333333333333333333333333f3f3f3f3f3f3f3f3f3f333",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f1f1f111f1f111f111077777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f1f1f111f1f111f111777777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -420,10 +420,7 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e657874202055703d50726576696f7573206669656c64202046323d53617665207265636569707420204573633d4261636b2020202020202020202020202020202020202020202020"
               ],
-              "cursor": {
-                "col": 14,
-                "row": 2
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -455,7 +452,7 @@
             ],
             "fingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 1741
+          "afterMs": 1531
         },
         {
           "type": "log",
@@ -463,12 +460,12 @@
             "level": "info",
             "message": "New screen: COLLECT FEE"
           },
-          "afterMs": 1744
+          "afterMs": 1538
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-0307-713e-aea2-f93603dbc0f0",
+            "id": "01a1fc7b-122e-73a4-8369-7f0ce9687e38",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "S0001{Enter}",
@@ -485,7 +482,7 @@
             "fingerprint": "fp_5604084b6493e1fe",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 2999
+          "afterMs": 2590
         },
         {
           "type": "screen",
@@ -581,7 +578,7 @@
             ],
             "fingerprint": "fp_5604084b6493e1fe"
           },
-          "afterMs": 3106
+          "afterMs": 2640
         },
         {
           "type": "log",
@@ -589,18 +586,18 @@
             "level": "info",
             "message": "New screen: COLLECT FEE"
           },
-          "afterMs": 3108
+          "afterMs": 2643
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-08f5-7c2a-a23d-a927f2cc3bdc",
+            "id": "01a1fc7b-14b4-7539-b76d-a34d0a4d0ceb",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
-            "keys": "032001{Enter}",
+            "keys": "{Enter}",
             "kind": "explore",
             "step": 3,
-            "label": "Fee month (MMYYYY) = 032001",
+            "label": "Enter=Next",
             "saves": 0,
             "errors": [],
             "guided": 0,
@@ -611,7 +608,7 @@
             "fingerprint": "fp_7bfa02f2fb1aa86e",
             "fromFingerprint": "fp_5604084b6493e1fe"
           },
-          "afterMs": 4397
+          "afterMs": 3181
         },
         {
           "type": "screen",
@@ -672,10 +669,7 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e657874202055703d50726576696f7573206669656c64202046323d53617665207265636569707420204573633d4261636b2020202020202020202020202020202020202020202020"
               ],
-              "cursor": {
-                "col": 27,
-                "row": 7
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -707,7 +701,7 @@
             ],
             "fingerprint": "fp_7bfa02f2fb1aa86e"
           },
-          "afterMs": 4503
+          "afterMs": 3228
         },
         {
           "type": "log",
@@ -715,39 +709,17 @@
             "level": "info",
             "message": "New screen: COLLECT FEE"
           },
-          "afterMs": 4505
+          "afterMs": 3231
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-0ed4-797a-b216-5efaade1cbbf",
-            "to": "COLLECT FEE",
-            "from": "COLLECT FEE",
-            "keys": "032001{Enter}",
-            "kind": "explore",
-            "step": 4,
-            "label": "Fee month (MMYYYY) = 032001",
-            "saves": 0,
-            "errors": [],
-            "guided": 0,
-            "changed": [],
-            "refused": [],
-            "screens": 4,
-            "newScreen": false,
-            "fingerprint": "fp_7bfa02f2fb1aa86e",
-            "fromFingerprint": "fp_7bfa02f2fb1aa86e"
-          },
-          "afterMs": 5779
-        },
-        {
-          "type": "observation",
-          "payload": {
-            "id": "01a1f8c9-11e6-740d-8fe8-a2fa00468274",
+            "id": "01a1fc7b-1721-7a0d-8e2f-71638be37842",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "{Enter}",
             "kind": "explore",
-            "step": 5,
+            "step": 4,
             "label": "Enter=Next",
             "saves": 0,
             "errors": [],
@@ -759,12 +731,34 @@
             "fingerprint": "fp_7bfa02f2fb1aa86e",
             "fromFingerprint": "fp_7bfa02f2fb1aa86e"
           },
-          "afterMs": 6504
+          "afterMs": 3751
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-14b6-7bf9-9f21-097842f8b997",
+            "id": "01a1fc7b-1c00-7260-9782-7f2e173f5d42",
+            "to": "COLLECT FEE",
+            "from": "COLLECT FEE",
+            "keys": "032001{Enter}",
+            "kind": "explore",
+            "step": 5,
+            "label": "Fee month (MMYYYY) = 032001",
+            "saves": 0,
+            "errors": [],
+            "guided": 0,
+            "changed": [],
+            "refused": [],
+            "screens": 4,
+            "newScreen": false,
+            "fingerprint": "fp_7bfa02f2fb1aa86e",
+            "fromFingerprint": "fp_7bfa02f2fb1aa86e"
+          },
+          "afterMs": 4895
+        },
+        {
+          "type": "observation",
+          "payload": {
+            "id": "01a1fc7b-1e4c-7951-b994-ade7bdf57c7a",
             "to": "COLLECT FEE",
             "diff": {
               "tables": {
@@ -813,7 +807,7 @@
             "fingerprint": "fp_38f58572972cfc62",
             "fromFingerprint": "fp_7bfa02f2fb1aa86e"
           },
-          "afterMs": 7167
+          "afterMs": 5433
         },
         {
           "type": "screen",
@@ -906,7 +900,7 @@
             ],
             "fingerprint": "fp_38f58572972cfc62"
           },
-          "afterMs": 7272
+          "afterMs": 5485
         },
         {
           "type": "log",
@@ -914,7 +908,7 @@
             "level": "info",
             "message": "New screen: COLLECT FEE"
           },
-          "afterMs": 7274
+          "afterMs": 5490
         },
         {
           "type": "log",
@@ -922,12 +916,12 @@
             "level": "info",
             "message": "F2=Save receipt changed PAYMENT.DBF"
           },
-          "afterMs": 7275
+          "afterMs": 5492
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-1809-73b5-9204-f0238971b747",
+            "id": "01a1fc7b-20d1-7f52-9ab5-315dfe0cadc9",
             "to": "MAIN MENU",
             "from": "COLLECT FEE",
             "keys": "{Enter}",
@@ -944,7 +938,7 @@
             "fingerprint": "fp_7c83f89671c9e84b",
             "fromFingerprint": "fp_38f58572972cfc62"
           },
-          "afterMs": 7948
+          "afterMs": 6023
         },
         {
           "type": "screen",
@@ -1037,12 +1031,12 @@
             ],
             "fingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 8051
+          "afterMs": 6072
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-1b94-7f60-91a2-1913ffbfef85",
+            "id": "01a1fc7b-23e0-7388-8155-4b72710fce94",
             "to": "STUDENTS",
             "from": "MAIN MENU",
             "keys": "{Down}{Enter}",
@@ -1059,7 +1053,7 @@
             "fingerprint": "fp_817582cfc70747d0",
             "fromFingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 8783
+          "afterMs": 6743
         },
         {
           "type": "screen",
@@ -1152,7 +1146,7 @@
             ],
             "fingerprint": "fp_817582cfc70747d0"
           },
-          "afterMs": 8888
+          "afterMs": 6804
         },
         {
           "type": "log",
@@ -1160,12 +1154,12 @@
             "level": "info",
             "message": "New screen: STUDENTS"
           },
-          "afterMs": 8890
+          "afterMs": 6806
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-1efc-7569-90d3-e5fb1ca54eb1",
+            "id": "01a1fc7b-266e-7925-abed-d2a470314b75",
             "to": "STUDENTS",
             "from": "STUDENTS",
             "keys": "{PgDn}",
@@ -1182,7 +1176,7 @@
             "fingerprint": "fp_817582cfc70747d0",
             "fromFingerprint": "fp_817582cfc70747d0"
           },
-          "afterMs": 9586
+          "afterMs": 7343
         },
         {
           "type": "screen",
@@ -1275,12 +1269,12 @@
             ],
             "fingerprint": "fp_817582cfc70747d0"
           },
-          "afterMs": 9671
+          "afterMs": 7403
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-21ff-70af-a7cf-c6678d3e1306",
+            "id": "01a1fc7b-28ff-7ad0-a112-0e39e61bb4b7",
             "to": "STUDENTS",
             "from": "STUDENTS",
             "keys": "{PgUp}",
@@ -1297,7 +1291,7 @@
             "fingerprint": "fp_817582cfc70747d0",
             "fromFingerprint": "fp_817582cfc70747d0"
           },
-          "afterMs": 10297
+          "afterMs": 7944
         },
         {
           "type": "screen",
@@ -1390,12 +1384,12 @@
             ],
             "fingerprint": "fp_817582cfc70747d0"
           },
-          "afterMs": 10378
+          "afterMs": 7996
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-24f8-7467-9ddd-4fc6702996d1",
+            "id": "01a1fc7b-2b76-794c-a8f3-91cf989ce1e1",
             "to": "MAIN MENU",
             "from": "STUDENTS",
             "keys": "{Esc}",
@@ -1412,7 +1406,7 @@
             "fingerprint": "fp_7c83f89671c9e84b",
             "fromFingerprint": "fp_817582cfc70747d0"
           },
-          "afterMs": 10997
+          "afterMs": 11281
         },
         {
           "type": "screen",
@@ -1505,12 +1499,12 @@
             ],
             "fingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 11099
+          "afterMs": 11374
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-2904-7109-b044-db72fed94ecd",
+            "id": "01a1fc7b-2ef4-7b66-8e7e-c7da22f186e8",
             "to": "FEE SCHEDULE",
             "from": "MAIN MENU",
             "keys": "{Down}{Down}{Enter}",
@@ -1527,7 +1521,7 @@
             "fingerprint": "fp_df5b10f3562a797d",
             "fromFingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 11952
+          "afterMs": 12101
         },
         {
           "type": "screen",
@@ -1620,7 +1614,7 @@
             ],
             "fingerprint": "fp_df5b10f3562a797d"
           },
-          "afterMs": 13229
+          "afterMs": 12151
         },
         {
           "type": "log",
@@ -1628,12 +1622,12 @@
             "level": "info",
             "message": "New screen: FEE SCHEDULE"
           },
-          "afterMs": 13232
+          "afterMs": 12154
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-2caf-7edb-8208-8b353d4d0fed",
+            "id": "01a1fc7b-316c-7423-9059-cdf56284fb4a",
             "to": "MAIN MENU",
             "from": "FEE SCHEDULE",
             "keys": "{Esc}",
@@ -1650,7 +1644,7 @@
             "fingerprint": "fp_7c83f89671c9e84b",
             "fromFingerprint": "fp_df5b10f3562a797d"
           },
-          "afterMs": 15578
+          "afterMs": 12679
         },
         {
           "type": "screen",
@@ -1743,12 +1737,12 @@
             ],
             "fingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 15682
+          "afterMs": 12725
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-3186-7dcb-b226-c773037c4d1d",
+            "id": "01a1fc7b-351d-7776-ac43-f78de5ee3838",
             "to": "TODAY'S RECEIPTS",
             "from": "MAIN MENU",
             "keys": "{Down}{Down}{Down}{Enter}",
@@ -1765,7 +1759,7 @@
             "fingerprint": "fp_4f6957f46c6a00bc",
             "fromFingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 16719
+          "afterMs": 13545
         },
         {
           "type": "screen",
@@ -1858,7 +1852,7 @@
             ],
             "fingerprint": "fp_4f6957f46c6a00bc"
           },
-          "afterMs": 16846
+          "afterMs": 13597
         },
         {
           "type": "log",
@@ -1866,12 +1860,12 @@
             "level": "info",
             "message": "New screen: TODAY'S RECEIPTS"
           },
-          "afterMs": 16849
+          "afterMs": 13599
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-3516-73b2-aa98-a36b64da3754",
+            "id": "01a1fc7b-3791-7c0b-a4b9-8a81e38ec136",
             "to": "MAIN MENU",
             "from": "TODAY'S RECEIPTS",
             "keys": "{Esc}",
@@ -1888,7 +1882,7 @@
             "fingerprint": "fp_7c83f89671c9e84b",
             "fromFingerprint": "fp_4f6957f46c6a00bc"
           },
-          "afterMs": 17560
+          "afterMs": 14121
         },
         {
           "type": "screen",
@@ -1981,12 +1975,12 @@
             ],
             "fingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 17659
+          "afterMs": 14171
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-38a0-765a-9605-c407b7da3c18",
+            "id": "01a1fc7b-39f7-7150-b991-e06eb335c592",
             "to": "COLLECT FEE",
             "from": "MAIN MENU",
             "keys": "{Enter}",
@@ -2003,7 +1997,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 18393
+          "afterMs": 14684
         },
         {
           "type": "screen",
@@ -2099,12 +2093,12 @@
             ],
             "fingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 18482
+          "afterMs": 14736
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-3c10-7e87-bd89-79afbf42c66a",
+            "id": "01a1fc7b-3c60-77b9-8253-5dd92d327baa",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "{Enter}",
@@ -2127,7 +2121,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 19203
+          "afterMs": 15250
         },
         {
           "type": "screen",
@@ -2220,7 +2214,7 @@
             ],
             "fingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 19317
+          "afterMs": 15305
         },
         {
           "type": "log",
@@ -2228,12 +2222,12 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 19319
+          "afterMs": 15307
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-400c-7c1b-a17e-65aa89534db3",
+            "id": "01a1fc7b-3ef0-7041-ba72-c6dc9a8c5318",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "{F2}",
@@ -2256,7 +2250,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 20140
+          "afterMs": 15851
         },
         {
           "type": "log",
@@ -2264,12 +2258,12 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 20142
+          "afterMs": 15855
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-434e-7c87-b0a3-5d515f1f7e96",
+            "id": "01a1fc7b-411e-7288-b048-6f7295dfa047",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "{Up}",
@@ -2292,7 +2286,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 20904
+          "afterMs": 16362
         },
         {
           "type": "screen",
@@ -2302,7 +2296,7 @@
               "attrs": [
                 "33f3f3f3f333f3f3f3f3f3f333f3f3f3f333f3f3f333333333333333333333333333f3f3f3f3f3f3f333f3f3f3333333333333333333333333333333333333333333333333f3f3f3f3f3f3f3f3f3f333",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f1f1f111f1f111f111777777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f1f1f111f1f111f111077777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -2353,7 +2347,10 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e657874202055703d50726576696f7573206669656c64202046323d53617665207265636569707420204573633d4261636b2020202020202020202020202020202020202020202020"
               ],
-              "cursor": null,
+              "cursor": {
+                "col": 14,
+                "row": 2
+              },
               "cellWidth": 8
             },
             "text": [
@@ -2385,12 +2382,12 @@
             ],
             "fingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 21012
+          "afterMs": 16404
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-492f-7c88-8fee-85d7c2bef2f5",
+            "id": "01a1fc7b-4598-7936-ba04-83811028da7d",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "Z9999{Enter}",
@@ -2413,7 +2410,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 22286
+          "afterMs": 17413
         },
         {
           "type": "screen",
@@ -2509,7 +2506,7 @@
             ],
             "fingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 22395
+          "afterMs": 17458
         },
         {
           "type": "log",
@@ -2517,12 +2514,12 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 22397
+          "afterMs": 17464
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-4eb0-7821-897d-5367061125f6",
+            "id": "01a1fc7b-4a3c-7bba-a851-9033f412a25f",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "S0001{Enter}",
@@ -2545,7 +2542,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 23579
+          "afterMs": 18501
         },
         {
           "type": "log",
@@ -2553,12 +2550,12 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 23581
+          "afterMs": 18502
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-5410-7648-bf5e-940c0d00c1e6",
+            "id": "01a1fc7b-4e95-7fd2-9eb7-5aad6385983e",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "S0002{Enter}",
@@ -2581,7 +2578,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 24842
+          "afterMs": 19522
         },
         {
           "type": "log",
@@ -2589,12 +2586,12 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 24844
+          "afterMs": 19524
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-58e4-721f-a076-d6cb203dacf0",
+            "id": "01a1fc7b-52fe-76f7-95eb-77b07d12f051",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "S0001{Enter}",
@@ -2617,7 +2614,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 25976
+          "afterMs": 20557
         },
         {
           "type": "log",
@@ -2625,12 +2622,12 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 25978
+          "afterMs": 20559
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-5e56-7194-8161-6ff639cb4191",
+            "id": "01a1fc7b-575a-7615-999e-11fa3628598a",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "S0001{Enter}",
@@ -2653,7 +2650,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 27256
+          "afterMs": 21583
         },
         {
           "type": "log",
@@ -2661,89 +2658,17 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 27258
+          "afterMs": 21585
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1f8c9-63f4-78fd-8b95-d053fb0cc7ed",
-            "to": "COLLECT FEE",
-            "from": "COLLECT FEE",
-            "keys": "S0001{Enter}",
-            "kind": "walk",
-            "step": 25,
-            "label": "walk: S0001{Enter}",
-            "saves": 1,
-            "errors": ["STUDENT NOT FOUND"],
-            "guided": 0,
-            "changed": [],
-            "refused": [
-              {
-                "step": 17,
-                "text": "STUDENT NOT FOUND",
-                "label": "Enter=Next"
-              }
-            ],
-            "screens": 8,
-            "newScreen": false,
-            "fingerprint": "fp_ccbb9ac2eb2c1722",
-            "fromFingerprint": "fp_ccbb9ac2eb2c1722"
-          },
-          "afterMs": 28562
-        },
-        {
-          "type": "log",
-          "payload": {
-            "level": "info",
-            "message": "The app said: STUDENT NOT FOUND"
-          },
-          "afterMs": 28565
-        },
-        {
-          "type": "observation",
-          "payload": {
-            "id": "01a1f8c9-6911-7cfa-a1c6-9c78cfb03234",
-            "to": "COLLECT FEE",
-            "from": "COLLECT FEE",
-            "keys": "S0001{Enter}",
-            "kind": "walk",
-            "step": 26,
-            "label": "walk: S0001{Enter}",
-            "saves": 1,
-            "errors": ["STUDENT NOT FOUND"],
-            "guided": 0,
-            "changed": [],
-            "refused": [
-              {
-                "step": 17,
-                "text": "STUDENT NOT FOUND",
-                "label": "Enter=Next"
-              }
-            ],
-            "screens": 8,
-            "newScreen": false,
-            "fingerprint": "fp_ccbb9ac2eb2c1722",
-            "fromFingerprint": "fp_ccbb9ac2eb2c1722"
-          },
-          "afterMs": 29747
-        },
-        {
-          "type": "log",
-          "payload": {
-            "level": "info",
-            "message": "The app said: STUDENT NOT FOUND"
-          },
-          "afterMs": 29750
-        },
-        {
-          "type": "observation",
-          "payload": {
-            "id": "01a1f8c9-6bdb-71d3-a6f8-5d556d4518b8",
+            "id": "01a1fc7b-5997-7ef6-86c2-9293de7926fc",
             "to": "MAIN MENU",
             "from": "COLLECT FEE",
             "keys": "{Esc}",
             "kind": "back",
-            "step": 27,
+            "step": 25,
             "label": "Esc",
             "saves": 1,
             "errors": [],
@@ -2761,7 +2686,7 @@
             "fingerprint": "fp_7c83f89671c9e84b",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 30396
+          "afterMs": 22104
         },
         {
           "type": "screen",
@@ -2854,15 +2779,15 @@
             ],
             "fingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 30493
+          "afterMs": 22153
         },
         {
           "type": "log",
           "payload": {
             "level": "info",
-            "message": "Possession ended (explored): 8 screens, 27 actions, 1 that changed data"
+            "message": "Possession ended (explored): 8 screens, 25 actions, 1 that changed data"
           },
-          "afterMs": 30539
+          "afterMs": 22171
         }
       ]
     },
@@ -2871,13 +2796,15 @@
       "status": "done",
       "output": {
         "keys": 2,
-        "rules": 0,
+        "rules": 1,
+        "probed": 0,
         "probes": [],
+        "actions": 1,
         "version": 1,
         "counters": 1,
         "entities": 3,
         "foreignKeys": 1,
-        "unexplained": []
+        "unexplained": ["payment.discount", "payment.fee", "payment.late_fee", "payment.total"]
       },
       "events": [
         {
@@ -2886,7 +2813,7 @@
             "level": "info",
             "message": "FEES.DBF: no key"
           },
-          "afterMs": 10
+          "afterMs": 12
         },
         {
           "type": "log",
@@ -2894,7 +2821,7 @@
             "level": "info",
             "message": "PAYMENT.DBF: key RECEIPT, counter RECEIPT n+1, STU_ID refers to student"
           },
-          "afterMs": 11
+          "afterMs": 13
         },
         {
           "type": "log",
@@ -2902,30 +2829,95 @@
             "level": "info",
             "message": "STUDENT.DBF: key STU_ID"
           },
-          "afterMs": 13
+          "afterMs": 14
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "info",
+            "message": "Action \"Add a payment\" on fp_ccbb9ac2eb2c1722: insert payment, keys {@STU_ID}{Enter}{Enter}{Enter}032001{Enter}{F2}"
+          },
+          "afterMs": 17
         },
         {
           "type": "log",
           "payload": {
             "level": "warn",
-            "message": "No language model is set up on this worker (LLM_PROVIDER=bedrock, with AWS credentials), so no rules were proposed: entities only"
+            "message": "No language model is set up on this worker (LLM_PROVIDER=bedrock, with AWS credentials): the rules are found among short expressions over the fields, each checked against every observation"
           },
-          "afterMs": 14
+          "afterMs": 20
+        },
+        {
+          "type": "rule_found",
+          "payload": {
+            "en": "The payment pay date is today.",
+            "probes": [],
+            "ruleId": "payment-pay-date",
+            "target": "payment.pay_date",
+            "alsoFit": [],
+            "candidates": 1,
+            "confidence": 0.33,
+            "expression": "today",
+            "observations": 1
+          },
+          "afterMs": 41
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "info",
+            "message": "payment.pay_date = today: explains all 1 values in 1 observations (confidence 33%)"
+          },
+          "afterMs": 43
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "warn",
+            "message": "payment.discount: 2 rules fit its one observation, so none is kept yet"
+          },
+          "afterMs": 44
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "warn",
+            "message": "payment.fee: 3 rules fit its one observation, so none is kept yet"
+          },
+          "afterMs": 46
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "warn",
+            "message": "payment.late_fee: 3 rules fit its one observation, so none is kept yet"
+          },
+          "afterMs": 47
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "warn",
+            "message": "payment.total: 3 rules fit its one observation, so none is kept yet"
+          },
+          "afterMs": 48
         },
         {
           "type": "soul_updated",
           "payload": {
             "keys": 2,
-            "rules": 0,
+            "rules": 1,
+            "probed": 0,
             "probes": [],
-            "reason": "entities",
+            "reason": "rules",
+            "actions": 1,
             "version": 1,
             "counters": 1,
             "entities": 3,
             "foreignKeys": 1,
-            "unexplained": []
+            "unexplained": ["payment.discount", "payment.fee", "payment.late_fee", "payment.total"]
           },
-          "afterMs": 22
+          "afterMs": 57
         }
       ]
     },
@@ -2961,5 +2953,2436 @@
       },
       "events": []
     }
-  ]
+  ],
+  "observations": [
+    {
+      "id": "01a1fc7b-0d7a-77a8-a5e2-4b5ff23a0033",
+      "seq": 0,
+      "keys": "{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_7c83f89671c9e84b",
+        "text": [
+          " IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          "                            IQRA MODEL SCHOOL                                   ",
+          "                       Chaklala Scheme III, Rawalpindi                          ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                              Collect Fee                                       ",
+          "                                                                                ",
+          "                              Students                                          ",
+          "                                                                                ",
+          "                              Fee Schedule                                      ",
+          "                                                                                ",
+          "                              Today's Receipts                                  ",
+          "                                                                                ",
+          "                              Exit                                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Up/Down=Move  Enter=Select    Iqra Soft (C) 2001                               "
+        ],
+        "model": {
+          "title": {
+            "name": "MAIN MENU"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID :                                                                   ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 14,
+          "row": 2
+        }
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 547,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-122e-73a4-8369-7f0ce9687e38",
+      "seq": 1,
+      "keys": "S0001{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID :                                                                   ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 14,
+          "row": 2
+        }
+      },
+      "screenAfter": {
+        "fingerprint": "fp_5604084b6493e1fe",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : S0001                                                             ",
+          " Name       : AHMED                                                             ",
+          " Father     : MUHAMMAD ASLAM                                                    ",
+          " Class      : 3               Family     : F001   Child no. 1                   ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 1051,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-14b4-7539-b76d-a34d0a4d0ceb",
+      "seq": 2,
+      "keys": "{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_5604084b6493e1fe",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : S0001                                                             ",
+          " Name       : AHMED                                                             ",
+          " Father     : MUHAMMAD ASLAM                                                    ",
+          " Class      : 3               Family     : F001   Child no. 1                   ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 27,
+          "row": 7
+        }
+      },
+      "screenAfter": {
+        "fingerprint": "fp_7bfa02f2fb1aa86e",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : S0001                                                             ",
+          " Name       : AHMED                                                             ",
+          " Father     : MUHAMMAD ASLAM                                                    ",
+          " Class      : 3               Family     : F001   Child no. 1                   ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "          MONTHLY FEE (class 3)            1400.00                              ",
+          "          SIBLING DISCOUNT 15%                0.00                              ",
+          "          LATE FEE (1 WK)                    50.00                              ",
+          "          ────────────────────────────────────────                              ",
+          "          TOTAL                            1450.00                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 497,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-1721-7a0d-8e2f-71638be37842",
+      "seq": 3,
+      "keys": "{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_7bfa02f2fb1aa86e",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : S0001                                                             ",
+          " Name       : AHMED                                                             ",
+          " Father     : MUHAMMAD ASLAM                                                    ",
+          " Class      : 3               Family     : F001   Child no. 1                   ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "          MONTHLY FEE (class 3)            1400.00                              ",
+          "          SIBLING DISCOUNT 15%                0.00                              ",
+          "          LATE FEE (1 WK)                    50.00                              ",
+          "          ────────────────────────────────────────                              ",
+          "          TOTAL                            1450.00                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_7bfa02f2fb1aa86e",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : S0001                                                             ",
+          " Name       : AHMED                                                             ",
+          " Father     : MUHAMMAD ASLAM                                                    ",
+          " Class      : 3               Family     : F001   Child no. 1                   ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "          MONTHLY FEE (class 3)            1400.00                              ",
+          "          SIBLING DISCOUNT 15%                0.00                              ",
+          "          LATE FEE (1 WK)                    50.00                              ",
+          "          ────────────────────────────────────────                              ",
+          "          TOTAL                            1450.00                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 27,
+          "row": 7
+        }
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 495,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-1c00-7260-9782-7f2e173f5d42",
+      "seq": 4,
+      "keys": "032001{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_7bfa02f2fb1aa86e",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : S0001                                                             ",
+          " Name       : AHMED                                                             ",
+          " Father     : MUHAMMAD ASLAM                                                    ",
+          " Class      : 3               Family     : F001   Child no. 1                   ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "          MONTHLY FEE (class 3)            1400.00                              ",
+          "          SIBLING DISCOUNT 15%                0.00                              ",
+          "          LATE FEE (1 WK)                    50.00                              ",
+          "          ────────────────────────────────────────                              ",
+          "          TOTAL                            1450.00                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_7bfa02f2fb1aa86e",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : S0001                                                             ",
+          " Name       : AHMED                                                             ",
+          " Father     : MUHAMMAD ASLAM                                                    ",
+          " Class      : 3               Family     : F001   Child no. 1                   ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "          MONTHLY FEE (class 3)            1400.00                              ",
+          "          SIBLING DISCOUNT 15%                0.00                              ",
+          "          LATE FEE (1 WK)                    50.00                              ",
+          "          ────────────────────────────────────────                              ",
+          "          TOTAL                            1450.00                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 1151,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-1e4c-7951-b994-ade7bdf57c7a",
+      "seq": 5,
+      "keys": "{F2}",
+      "screenBefore": {
+        "fingerprint": "fp_7bfa02f2fb1aa86e",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : S0001                                                             ",
+          " Name       : AHMED                                                             ",
+          " Father     : MUHAMMAD ASLAM                                                    ",
+          " Class      : 3               Family     : F001   Child no. 1                   ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "          MONTHLY FEE (class 3)            1400.00                              ",
+          "          SIBLING DISCOUNT 15%                0.00                              ",
+          "          LATE FEE (1 WK)                    50.00                              ",
+          "          ────────────────────────────────────────                              ",
+          "          TOTAL                            1450.00                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 27,
+          "row": 7
+        }
+      },
+      "screenAfter": {
+        "fingerprint": "fp_38f58572972cfc62",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID :                                                                   ",
+          " Name       : AHMED                                                             ",
+          " Father     : MUHAMMAD ASLAM                                                    ",
+          " Class      : 3               Family     : F001   Child no. 1                   ",
+          "                                                                                ",
+          " Fee month (MMYYYY) :                                                           ",
+          "                                                                                ",
+          "                                                                                ",
+          "          MONTHLY FEE (class 3)            1400.00                              ",
+          "          SIBLING DISCOUNT 15%                0.00                              ",
+          "          LATE FEE (1 WK)                    50.00                              ",
+          "          ────────────────────────────────────────                              ",
+          "          TOTAL                            1450.00                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  RECEIPT 000007 SAVED - PRESS ANY KEY                                          ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {
+          "PAYMENT.DBF": {
+            "key": "RECEIPT",
+            "schema": {
+              "added": [],
+              "removed": []
+            },
+            "deleted": [],
+            "updated": [],
+            "inserted": [
+              {
+                "key": "7",
+                "recno": 6,
+                "values": {
+                  "FEE": "1400.00",
+                  "TOTAL": "1450.00",
+                  "STU_ID": "S0001",
+                  "RECEIPT": "7",
+                  "DISCOUNT": "0.00",
+                  "LATE_FEE": "50.00",
+                  "PAY_DATE": "20010312",
+                  "FEE_MONTH": "200103"
+                }
+              }
+            ]
+          }
+        },
+        "unchanged": ["FEES.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 509,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-20d1-7f52-9ab5-315dfe0cadc9",
+      "seq": 6,
+      "keys": "{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_38f58572972cfc62",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID :                                                                   ",
+          " Name       : AHMED                                                             ",
+          " Father     : MUHAMMAD ASLAM                                                    ",
+          " Class      : 3               Family     : F001   Child no. 1                   ",
+          "                                                                                ",
+          " Fee month (MMYYYY) :                                                           ",
+          "                                                                                ",
+          "                                                                                ",
+          "          MONTHLY FEE (class 3)            1400.00                              ",
+          "          SIBLING DISCOUNT 15%                0.00                              ",
+          "          LATE FEE (1 WK)                    50.00                              ",
+          "          ────────────────────────────────────────                              ",
+          "          TOTAL                            1450.00                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  RECEIPT 000007 SAVED - PRESS ANY KEY                                          ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_7c83f89671c9e84b",
+        "text": [
+          " IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          "                            IQRA MODEL SCHOOL                                   ",
+          "                       Chaklala Scheme III, Rawalpindi                          ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                              Collect Fee                                       ",
+          "                                                                                ",
+          "                              Students                                          ",
+          "                                                                                ",
+          "                              Fee Schedule                                      ",
+          "                                                                                ",
+          "                              Today's Receipts                                  ",
+          "                                                                                ",
+          "                              Exit                                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Up/Down=Move  Enter=Select    Iqra Soft (C) 2001                               "
+        ],
+        "model": {
+          "title": {
+            "name": "MAIN MENU"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 498,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-23e0-7388-8155-4b72710fce94",
+      "seq": 7,
+      "keys": "{Down}{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_7c83f89671c9e84b",
+        "text": [
+          " IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          "                            IQRA MODEL SCHOOL                                   ",
+          "                       Chaklala Scheme III, Rawalpindi                          ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                              Collect Fee                                       ",
+          "                                                                                ",
+          "                              Students                                          ",
+          "                                                                                ",
+          "                              Fee Schedule                                      ",
+          "                                                                                ",
+          "                              Today's Receipts                                  ",
+          "                                                                                ",
+          "                              Exit                                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Up/Down=Move  Enter=Select    Iqra Soft (C) 2001                               "
+        ],
+        "model": {
+          "title": {
+            "name": "MAIN MENU"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_817582cfc70747d0",
+        "text": [
+          " IQRA SCHOOL FEES 1.1               STUDENTS                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          " ID     NAME                 FATHER               CLASS FAMILY CHILD            ",
+          " S0001  AHMED                MUHAMMAD ASLAM          3  F001      1             ",
+          " S0002  AYESHA               MUHAMMAD ASLAM          1  F001      2             ",
+          " S0003  FATIMA               TARIQ MAHMOOD          10  F002      1             ",
+          " S0004  BILAL                TARIQ MAHMOOD           8  F002      2             ",
+          " S0005  HAMZA                KHALID HUSSAIN          9  F003      1             ",
+          " S0006  ZAINAB               KHALID HUSSAIN          7  F003      2             ",
+          " S0007  MARYAM               JAVED IQBAL             8  F004      1             ",
+          " S0008  USMAN                JAVED IQBAL             6  F004      2             ",
+          " S0009  ALI                  NASIR ALI               7  F005      1             ",
+          " S0010  SANA                 NASIR ALI               5  F005      2             ",
+          " S0011  HIRA                 RIAZ AHMED              6  F006      1             ",
+          " S0012  HASSAN               RIAZ AHMED              4  F006      2             ",
+          " S0013  ZAIN                 SHAHID RAFIQ            5  F007      1             ",
+          " S0014  IQRA                 SHAHID RAFIQ            3  F007      2             ",
+          " S0015  AMNA                 ZAHID KHAN              4  F008      1             ",
+          " S0016  SAAD                 ZAHID KHAN              2  F008      2             ",
+          " S0017  FAHAD                PERVAIZ AKHTAR          3  F009      1             ",
+          "                                                                                ",
+          " PAGE 1 OF 4   60 STUDENTS                                                      ",
+          "                                                                                ",
+          " PgDn=Next page  PgUp=Previous page  Esc=Back                                   "
+        ],
+        "model": {
+          "title": {
+            "name": "STUDENTS"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 655,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-266e-7925-abed-d2a470314b75",
+      "seq": 8,
+      "keys": "{PgDn}",
+      "screenBefore": {
+        "fingerprint": "fp_817582cfc70747d0",
+        "text": [
+          " IQRA SCHOOL FEES 1.1               STUDENTS                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          " ID     NAME                 FATHER               CLASS FAMILY CHILD            ",
+          " S0001  AHMED                MUHAMMAD ASLAM          3  F001      1             ",
+          " S0002  AYESHA               MUHAMMAD ASLAM          1  F001      2             ",
+          " S0003  FATIMA               TARIQ MAHMOOD          10  F002      1             ",
+          " S0004  BILAL                TARIQ MAHMOOD           8  F002      2             ",
+          " S0005  HAMZA                KHALID HUSSAIN          9  F003      1             ",
+          " S0006  ZAINAB               KHALID HUSSAIN          7  F003      2             ",
+          " S0007  MARYAM               JAVED IQBAL             8  F004      1             ",
+          " S0008  USMAN                JAVED IQBAL             6  F004      2             ",
+          " S0009  ALI                  NASIR ALI               7  F005      1             ",
+          " S0010  SANA                 NASIR ALI               5  F005      2             ",
+          " S0011  HIRA                 RIAZ AHMED              6  F006      1             ",
+          " S0012  HASSAN               RIAZ AHMED              4  F006      2             ",
+          " S0013  ZAIN                 SHAHID RAFIQ            5  F007      1             ",
+          " S0014  IQRA                 SHAHID RAFIQ            3  F007      2             ",
+          " S0015  AMNA                 ZAHID KHAN              4  F008      1             ",
+          " S0016  SAAD                 ZAHID KHAN              2  F008      2             ",
+          " S0017  FAHAD                PERVAIZ AKHTAR          3  F009      1             ",
+          "                                                                                ",
+          " PAGE 1 OF 4   60 STUDENTS                                                      ",
+          "                                                                                ",
+          " PgDn=Next page  PgUp=Previous page  Esc=Back                                   "
+        ],
+        "model": {
+          "title": {
+            "name": "STUDENTS"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_817582cfc70747d0",
+        "text": [
+          " IQRA SCHOOL FEES 1.1               STUDENTS                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          " ID     NAME                 FATHER               CLASS FAMILY CHILD            ",
+          " S0018  KHADIJA              PERVAIZ AKHTAR          1  F009      2             ",
+          " S0019  MAHNOOR              IMRAN SHAH             10  F010      1             ",
+          " S0020  UMAR                 IMRAN SHAH              8  F010      2             ",
+          " S0021  ABDULLAH             ASIF RAZA               9  F011      1             ",
+          " S0022  ALISHBA              ASIF RAZA               7  F011      2             ",
+          " S0023  HARIS                ASIF RAZA               5  F011      3             ",
+          " S0024  DANIYAL              SAJID MEHMOOD           8  F012      1             ",
+          " S0025  TALHA                WASEEM ABBAS            7  F013      1             ",
+          " S0026  SHAHZAIB             NADEEM BAIG             6  F014      1             ",
+          " S0027  ARSALAN              AMJAD BUTT              5  F015      1             ",
+          " S0028  FAIZAN               SHAFIQ UR REHMAN        4  F016      1             ",
+          " S0029  OWAIS                MUNIR AHMED             3  F017      1             ",
+          " S0030  RAYYAN               KASHIF NAWAZ           10  F018      1             ",
+          " S0031  HUZAIFA              ARSHAD MALIK            9  F019      1             ",
+          " S0032  AHMED                IRFAN QURESHI           8  F020      1             ",
+          " S0033  BILAL                GHULAM MUSTAFA          7  F021      1             ",
+          " S0034  HAMZA                ANWAR HUSSAIN           6  F022      1             ",
+          "                                                                                ",
+          " PAGE 2 OF 4   60 STUDENTS                                                      ",
+          "                                                                                ",
+          " PgDn=Next page  PgUp=Previous page  Esc=Back                                   "
+        ],
+        "model": {
+          "title": {
+            "name": "STUDENTS"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 497,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-28ff-7ad0-a112-0e39e61bb4b7",
+      "seq": 9,
+      "keys": "{PgUp}",
+      "screenBefore": {
+        "fingerprint": "fp_817582cfc70747d0",
+        "text": [
+          " IQRA SCHOOL FEES 1.1               STUDENTS                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          " ID     NAME                 FATHER               CLASS FAMILY CHILD            ",
+          " S0018  KHADIJA              PERVAIZ AKHTAR          1  F009      2             ",
+          " S0019  MAHNOOR              IMRAN SHAH             10  F010      1             ",
+          " S0020  UMAR                 IMRAN SHAH              8  F010      2             ",
+          " S0021  ABDULLAH             ASIF RAZA               9  F011      1             ",
+          " S0022  ALISHBA              ASIF RAZA               7  F011      2             ",
+          " S0023  HARIS                ASIF RAZA               5  F011      3             ",
+          " S0024  DANIYAL              SAJID MEHMOOD           8  F012      1             ",
+          " S0025  TALHA                WASEEM ABBAS            7  F013      1             ",
+          " S0026  SHAHZAIB             NADEEM BAIG             6  F014      1             ",
+          " S0027  ARSALAN              AMJAD BUTT              5  F015      1             ",
+          " S0028  FAIZAN               SHAFIQ UR REHMAN        4  F016      1             ",
+          " S0029  OWAIS                MUNIR AHMED             3  F017      1             ",
+          " S0030  RAYYAN               KASHIF NAWAZ           10  F018      1             ",
+          " S0031  HUZAIFA              ARSHAD MALIK            9  F019      1             ",
+          " S0032  AHMED                IRFAN QURESHI           8  F020      1             ",
+          " S0033  BILAL                GHULAM MUSTAFA          7  F021      1             ",
+          " S0034  HAMZA                ANWAR HUSSAIN           6  F022      1             ",
+          "                                                                                ",
+          " PAGE 2 OF 4   60 STUDENTS                                                      ",
+          "                                                                                ",
+          " PgDn=Next page  PgUp=Previous page  Esc=Back                                   "
+        ],
+        "model": {
+          "title": {
+            "name": "STUDENTS"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_817582cfc70747d0",
+        "text": [
+          " IQRA SCHOOL FEES 1.1               STUDENTS                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          " ID     NAME                 FATHER               CLASS FAMILY CHILD            ",
+          " S0001  AHMED                MUHAMMAD ASLAM          3  F001      1             ",
+          " S0002  AYESHA               MUHAMMAD ASLAM          1  F001      2             ",
+          " S0003  FATIMA               TARIQ MAHMOOD          10  F002      1             ",
+          " S0004  BILAL                TARIQ MAHMOOD           8  F002      2             ",
+          " S0005  HAMZA                KHALID HUSSAIN          9  F003      1             ",
+          " S0006  ZAINAB               KHALID HUSSAIN          7  F003      2             ",
+          " S0007  MARYAM               JAVED IQBAL             8  F004      1             ",
+          " S0008  USMAN                JAVED IQBAL             6  F004      2             ",
+          " S0009  ALI                  NASIR ALI               7  F005      1             ",
+          " S0010  SANA                 NASIR ALI               5  F005      2             ",
+          " S0011  HIRA                 RIAZ AHMED              6  F006      1             ",
+          " S0012  HASSAN               RIAZ AHMED              4  F006      2             ",
+          " S0013  ZAIN                 SHAHID RAFIQ            5  F007      1             ",
+          " S0014  IQRA                 SHAHID RAFIQ            3  F007      2             ",
+          " S0015  AMNA                 ZAHID KHAN              4  F008      1             ",
+          " S0016  SAAD                 ZAHID KHAN              2  F008      2             ",
+          " S0017  FAHAD                PERVAIZ AKHTAR          3  F009      1             ",
+          "                                                                                ",
+          " PAGE 1 OF 4   60 STUDENTS                                                      ",
+          "                                                                                ",
+          " PgDn=Next page  PgUp=Previous page  Esc=Back                                   "
+        ],
+        "model": {
+          "title": {
+            "name": "STUDENTS"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 491,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-2b76-794c-a8f3-91cf989ce1e1",
+      "seq": 10,
+      "keys": "{Esc}",
+      "screenBefore": {
+        "fingerprint": "fp_817582cfc70747d0",
+        "text": [
+          " IQRA SCHOOL FEES 1.1               STUDENTS                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          " ID     NAME                 FATHER               CLASS FAMILY CHILD            ",
+          " S0001  AHMED                MUHAMMAD ASLAM          3  F001      1             ",
+          " S0002  AYESHA               MUHAMMAD ASLAM          1  F001      2             ",
+          " S0003  FATIMA               TARIQ MAHMOOD          10  F002      1             ",
+          " S0004  BILAL                TARIQ MAHMOOD           8  F002      2             ",
+          " S0005  HAMZA                KHALID HUSSAIN          9  F003      1             ",
+          " S0006  ZAINAB               KHALID HUSSAIN          7  F003      2             ",
+          " S0007  MARYAM               JAVED IQBAL             8  F004      1             ",
+          " S0008  USMAN                JAVED IQBAL             6  F004      2             ",
+          " S0009  ALI                  NASIR ALI               7  F005      1             ",
+          " S0010  SANA                 NASIR ALI               5  F005      2             ",
+          " S0011  HIRA                 RIAZ AHMED              6  F006      1             ",
+          " S0012  HASSAN               RIAZ AHMED              4  F006      2             ",
+          " S0013  ZAIN                 SHAHID RAFIQ            5  F007      1             ",
+          " S0014  IQRA                 SHAHID RAFIQ            3  F007      2             ",
+          " S0015  AMNA                 ZAHID KHAN              4  F008      1             ",
+          " S0016  SAAD                 ZAHID KHAN              2  F008      2             ",
+          " S0017  FAHAD                PERVAIZ AKHTAR          3  F009      1             ",
+          "                                                                                ",
+          " PAGE 1 OF 4   60 STUDENTS                                                      ",
+          "                                                                                ",
+          " PgDn=Next page  PgUp=Previous page  Esc=Back                                   "
+        ],
+        "model": {
+          "title": {
+            "name": "STUDENTS"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_7c83f89671c9e84b",
+        "text": [
+          " IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          "                            IQRA MODEL SCHOOL                                   ",
+          "                       Chaklala Scheme III, Rawalpindi                          ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                              Collect Fee                                       ",
+          "                                                                                ",
+          "                              Students                                          ",
+          "                                                                                ",
+          "                              Fee Schedule                                      ",
+          "                                                                                ",
+          "                              Today's Receipts                                  ",
+          "                                                                                ",
+          "                              Exit                                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Up/Down=Move  Enter=Select    Iqra Soft (C) 2001                               "
+        ],
+        "model": {
+          "title": {
+            "name": "MAIN MENU"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 494,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-2ef4-7b66-8e7e-c7da22f186e8",
+      "seq": 11,
+      "keys": "{Down}{Down}{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_7c83f89671c9e84b",
+        "text": [
+          " IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          "                            IQRA MODEL SCHOOL                                   ",
+          "                       Chaklala Scheme III, Rawalpindi                          ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                              Collect Fee                                       ",
+          "                                                                                ",
+          "                              Students                                          ",
+          "                                                                                ",
+          "                              Fee Schedule                                      ",
+          "                                                                                ",
+          "                              Today's Receipts                                  ",
+          "                                                                                ",
+          "                              Exit                                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Up/Down=Move  Enter=Select    Iqra Soft (C) 2001                               "
+        ],
+        "model": {
+          "title": {
+            "name": "MAIN MENU"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_df5b10f3562a797d",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             FEE SCHEDULE                       12-03-2001 ",
+          "                                                                                ",
+          " Monthly tuition fee, 2000-01 session. Due on the 10th of each month.           ",
+          "                                                                                ",
+          "          CLASS       MONTHLY FEE                                               ",
+          "          CLASS  1      1200.00                                                 ",
+          "          CLASS  2      1300.00                                                 ",
+          "          CLASS  3      1400.00                                                 ",
+          "          CLASS  4      1500.00                                                 ",
+          "          CLASS  5      1600.00                                                 ",
+          "          CLASS  6      1800.00                                                 ",
+          "          CLASS  7      2000.00                                                 ",
+          "          CLASS  8      2200.00                                                 ",
+          "          CLASS  9      2400.00                                                 ",
+          "          CLASS 10      2600.00                                                 ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Esc=Back                                                                       "
+        ],
+        "model": {
+          "title": {
+            "name": "FEE SCHEDULE"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 708,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-316c-7423-9059-cdf56284fb4a",
+      "seq": 12,
+      "keys": "{Esc}",
+      "screenBefore": {
+        "fingerprint": "fp_df5b10f3562a797d",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             FEE SCHEDULE                       12-03-2001 ",
+          "                                                                                ",
+          " Monthly tuition fee, 2000-01 session. Due on the 10th of each month.           ",
+          "                                                                                ",
+          "          CLASS       MONTHLY FEE                                               ",
+          "          CLASS  1      1200.00                                                 ",
+          "          CLASS  2      1300.00                                                 ",
+          "          CLASS  3      1400.00                                                 ",
+          "          CLASS  4      1500.00                                                 ",
+          "          CLASS  5      1600.00                                                 ",
+          "          CLASS  6      1800.00                                                 ",
+          "          CLASS  7      2000.00                                                 ",
+          "          CLASS  8      2200.00                                                 ",
+          "          CLASS  9      2400.00                                                 ",
+          "          CLASS 10      2600.00                                                 ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Esc=Back                                                                       "
+        ],
+        "model": {
+          "title": {
+            "name": "FEE SCHEDULE"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_7c83f89671c9e84b",
+        "text": [
+          " IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          "                            IQRA MODEL SCHOOL                                   ",
+          "                       Chaklala Scheme III, Rawalpindi                          ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                              Collect Fee                                       ",
+          "                                                                                ",
+          "                              Students                                          ",
+          "                                                                                ",
+          "                              Fee Schedule                                      ",
+          "                                                                                ",
+          "                              Today's Receipts                                  ",
+          "                                                                                ",
+          "                              Exit                                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Up/Down=Move  Enter=Select    Iqra Soft (C) 2001                               "
+        ],
+        "model": {
+          "title": {
+            "name": "MAIN MENU"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 491,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-351d-7776-ac43-f78de5ee3838",
+      "seq": 13,
+      "keys": "{Down}{Down}{Down}{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_7c83f89671c9e84b",
+        "text": [
+          " IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          "                            IQRA MODEL SCHOOL                                   ",
+          "                       Chaklala Scheme III, Rawalpindi                          ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                              Collect Fee                                       ",
+          "                                                                                ",
+          "                              Students                                          ",
+          "                                                                                ",
+          "                              Fee Schedule                                      ",
+          "                                                                                ",
+          "                              Today's Receipts                                  ",
+          "                                                                                ",
+          "                              Exit                                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Up/Down=Move  Enter=Select    Iqra Soft (C) 2001                               "
+        ],
+        "model": {
+          "title": {
+            "name": "MAIN MENU"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_4f6957f46c6a00bc",
+        "text": [
+          " IQRA SCHOOL FEES 1.1           TODAY'S RECEIPTS                     12-03-2001 ",
+          "                                                                                ",
+          " Receipts for 12-03-2001                                                        ",
+          "                                                                                ",
+          " RECEIPT  STUDENT                      MONTH       TOTAL                        ",
+          " 000007   S0001  AHMED                 03/2001    1450.00                       ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " RECEIPTS: 1   COLLECTED: 1450.00                                               ",
+          "                                                                                ",
+          "                                                                                ",
+          " Esc=Back                                                                       "
+        ],
+        "model": {
+          "title": {
+            "name": "TODAY'S RECEIPTS"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 826,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-3791-7c0b-a4b9-8a81e38ec136",
+      "seq": 14,
+      "keys": "{Esc}",
+      "screenBefore": {
+        "fingerprint": "fp_4f6957f46c6a00bc",
+        "text": [
+          " IQRA SCHOOL FEES 1.1           TODAY'S RECEIPTS                     12-03-2001 ",
+          "                                                                                ",
+          " Receipts for 12-03-2001                                                        ",
+          "                                                                                ",
+          " RECEIPT  STUDENT                      MONTH       TOTAL                        ",
+          " 000007   S0001  AHMED                 03/2001    1450.00                       ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " RECEIPTS: 1   COLLECTED: 1450.00                                               ",
+          "                                                                                ",
+          "                                                                                ",
+          " Esc=Back                                                                       "
+        ],
+        "model": {
+          "title": {
+            "name": "TODAY'S RECEIPTS"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_7c83f89671c9e84b",
+        "text": [
+          " IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          "                            IQRA MODEL SCHOOL                                   ",
+          "                       Chaklala Scheme III, Rawalpindi                          ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                              Collect Fee                                       ",
+          "                                                                                ",
+          "                              Students                                          ",
+          "                                                                                ",
+          "                              Fee Schedule                                      ",
+          "                                                                                ",
+          "                              Today's Receipts                                  ",
+          "                                                                                ",
+          "                              Exit                                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Up/Down=Move  Enter=Select    Iqra Soft (C) 2001                               "
+        ],
+        "model": {
+          "title": {
+            "name": "MAIN MENU"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 491,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-39f7-7150-b991-e06eb335c592",
+      "seq": 15,
+      "keys": "{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_7c83f89671c9e84b",
+        "text": [
+          " IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          "                            IQRA MODEL SCHOOL                                   ",
+          "                       Chaklala Scheme III, Rawalpindi                          ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                              Collect Fee                                       ",
+          "                                                                                ",
+          "                              Students                                          ",
+          "                                                                                ",
+          "                              Fee Schedule                                      ",
+          "                                                                                ",
+          "                              Today's Receipts                                  ",
+          "                                                                                ",
+          "                              Exit                                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Up/Down=Move  Enter=Select    Iqra Soft (C) 2001                               "
+        ],
+        "model": {
+          "title": {
+            "name": "MAIN MENU"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID :                                                                   ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 486,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-3c60-77b9-8253-5dd92d327baa",
+      "seq": 16,
+      "keys": "{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID :                                                                   ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID :                                                                   ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 489,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-3ef0-7041-ba72-c6dc9a8c5318",
+      "seq": 17,
+      "keys": "{F2}",
+      "screenBefore": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID :                                                                   ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID :                                                                   ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 14,
+          "row": 2
+        }
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 514,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-411e-7288-b048-6f7295dfa047",
+      "seq": 18,
+      "keys": "{Up}",
+      "screenBefore": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID :                                                                   ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID :                                                                   ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 14,
+          "row": 2
+        }
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 484,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-4598-7936-ba04-83811028da7d",
+      "seq": 19,
+      "keys": "Z9999{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID :                                                                   ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 14,
+          "row": 2
+        }
+      },
+      "screenAfter": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : Z9999                                                             ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 1020,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-4a3c-7bba-a851-9033f412a25f",
+      "seq": 20,
+      "keys": "S0001{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : Z9999                                                             ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : Z9999                                                             ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 18,
+          "row": 2
+        }
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 1053,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-4e95-7fd2-9eb7-5aad6385983e",
+      "seq": 21,
+      "keys": "S0002{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : Z9999                                                             ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : Z9999                                                             ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 18,
+          "row": 2
+        }
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 1043,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-52fe-76f7-95eb-77b07d12f051",
+      "seq": 22,
+      "keys": "S0001{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : Z9999                                                             ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 18,
+          "row": 2
+        }
+      },
+      "screenAfter": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : Z9999                                                             ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 1051,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-575a-7615-999e-11fa3628598a",
+      "seq": 23,
+      "keys": "S0001{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : Z9999                                                             ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : Z9999                                                             ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 18,
+          "row": 2
+        }
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 1038,
+      "stable": true
+    },
+    {
+      "id": "01a1fc7b-5997-7ef6-86c2-9293de7926fc",
+      "seq": 24,
+      "keys": "{Esc}",
+      "screenBefore": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : Z9999                                                             ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "screenAfter": {
+        "fingerprint": "fp_7c83f89671c9e84b",
+        "text": [
+          " IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001 ",
+          "                                                                                ",
+          "                                                                                ",
+          "                            IQRA MODEL SCHOOL                                   ",
+          "                       Chaklala Scheme III, Rawalpindi                          ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                              Collect Fee                                       ",
+          "                                                                                ",
+          "                              Students                                          ",
+          "                                                                                ",
+          "                              Fee Schedule                                      ",
+          "                                                                                ",
+          "                              Today's Receipts                                  ",
+          "                                                                                ",
+          "                              Exit                                              ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Up/Down=Move  Enter=Select    Iqra Soft (C) 2001                               "
+        ],
+        "model": {
+          "title": {
+            "name": "MAIN MENU"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 498,
+      "stable": true
+    }
+  ],
+  "soul": {
+    "app": {
+      "id": "iqra",
+      "name": "Iqra School Fees"
+    },
+    "rules": [
+      {
+        "en": "The payment pay date is today.",
+        "id": "payment-pay-date",
+        "ur": "",
+        "kind": "compute",
+        "target": "payment.pay_date",
+        "evidence": ["01a1fc7b-1e4c-7951-b994-ade7bdf57c7a"],
+        "confidence": 0.33,
+        "expression": "today"
+      }
+    ],
+    "actions": [
+      {
+        "id": "add-payment",
+        "keys": "{@STU_ID}{Enter}{Enter}{Enter}032001{Enter}{F2}",
+        "name": "Add a payment",
+        "screen": "fp_ccbb9ac2eb2c1722",
+        "effects": [
+          {
+            "kind": "insert",
+            "entity": "payment",
+            "fields": [
+              "RECEIPT",
+              "PAY_DATE",
+              "STU_ID",
+              "FEE_MONTH",
+              "FEE",
+              "DISCOUNT",
+              "LATE_FEE",
+              "TOTAL"
+            ]
+          }
+        ]
+      }
+    ],
+    "screens": [
+      {
+        "id": "fp_7c83f89671c9e84b",
+        "title": "MAIN MENU",
+        "fields": [],
+        "navigation": []
+      },
+      {
+        "id": "fp_ccbb9ac2eb2c1722",
+        "title": "COLLECT FEE",
+        "fields": [],
+        "navigation": []
+      },
+      {
+        "id": "fp_5604084b6493e1fe",
+        "title": "COLLECT FEE",
+        "fields": [],
+        "navigation": []
+      },
+      {
+        "id": "fp_7bfa02f2fb1aa86e",
+        "title": "COLLECT FEE",
+        "fields": [],
+        "navigation": []
+      },
+      {
+        "id": "fp_38f58572972cfc62",
+        "title": "COLLECT FEE",
+        "fields": [],
+        "navigation": []
+      },
+      {
+        "id": "fp_817582cfc70747d0",
+        "title": "STUDENTS",
+        "fields": [],
+        "navigation": []
+      },
+      {
+        "id": "fp_df5b10f3562a797d",
+        "title": "FEE SCHEDULE",
+        "fields": [],
+        "navigation": []
+      },
+      {
+        "id": "fp_4f6957f46c6a00bc",
+        "title": "TODAY'S RECEIPTS",
+        "fields": [],
+        "navigation": []
+      }
+    ],
+    "version": 1,
+    "entities": [
+      {
+        "id": "fee",
+        "key": [],
+        "file": "FEES.DBF",
+        "name": "Fee",
+        "fields": [
+          {
+            "name": "CLASS",
+            "type": "N",
+            "length": 2,
+            "decimals": 0
+          },
+          {
+            "name": "MONTHLY",
+            "type": "N",
+            "length": 7,
+            "decimals": 2
+          }
+        ],
+        "counters": [],
+        "foreignKeys": []
+      },
+      {
+        "id": "payment",
+        "key": ["RECEIPT"],
+        "file": "PAYMENT.DBF",
+        "name": "Payment",
+        "fields": [
+          {
+            "name": "RECEIPT",
+            "type": "N",
+            "length": 6,
+            "decimals": 0
+          },
+          {
+            "name": "PAY_DATE",
+            "type": "D",
+            "length": 8,
+            "decimals": 0
+          },
+          {
+            "name": "STU_ID",
+            "type": "C",
+            "length": 5,
+            "decimals": 0
+          },
+          {
+            "name": "FEE_MONTH",
+            "type": "C",
+            "length": 6,
+            "decimals": 0
+          },
+          {
+            "name": "FEE",
+            "type": "N",
+            "length": 7,
+            "decimals": 2
+          },
+          {
+            "name": "DISCOUNT",
+            "type": "N",
+            "length": 7,
+            "decimals": 2
+          },
+          {
+            "name": "LATE_FEE",
+            "type": "N",
+            "length": 6,
+            "decimals": 2
+          },
+          {
+            "name": "TOTAL",
+            "type": "N",
+            "length": 8,
+            "decimals": 2
+          }
+        ],
+        "counters": [
+          {
+            "field": "RECEIPT",
+            "pattern": "n+1"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "fields": ["STU_ID"],
+            "references": {
+              "entity": "student",
+              "fields": ["STU_ID"]
+            }
+          }
+        ]
+      },
+      {
+        "id": "student",
+        "key": ["STU_ID"],
+        "file": "STUDENT.DBF",
+        "name": "Student",
+        "fields": [
+          {
+            "name": "STU_ID",
+            "type": "C",
+            "length": 5,
+            "decimals": 0
+          },
+          {
+            "name": "NAME",
+            "type": "C",
+            "length": 20,
+            "decimals": 0
+          },
+          {
+            "name": "FATHER",
+            "type": "C",
+            "length": 20,
+            "decimals": 0
+          },
+          {
+            "name": "CLASS",
+            "type": "N",
+            "length": 2,
+            "decimals": 0
+          },
+          {
+            "name": "FAMILY",
+            "type": "C",
+            "length": 4,
+            "decimals": 0
+          },
+          {
+            "name": "SIB",
+            "type": "N",
+            "length": 1,
+            "decimals": 0
+          }
+        ],
+        "counters": [],
+        "foreignKeys": []
+      }
+    ],
+    "provenance": {
+      "note": "Entities from the data files; 1 actions and 1 rules, each rule checked against every observation.",
+      "createdAt": "2026-11-21T05:01:44.876Z",
+      "createdBy": "archaeologist",
+      "projectId": "01a1fc7b-0544-7828-9226-6ea6327357bd",
+      "observationCount": 25
+    },
+    "schemaVersion": 1
+  }
 }

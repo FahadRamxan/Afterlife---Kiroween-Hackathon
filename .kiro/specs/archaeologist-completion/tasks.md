@@ -13,17 +13,17 @@ Actions first (they are what the Vessel runs), then rules without a model, then 
     - _Requirements: 1.1, 1.2, 1.3, 1.4_
   - [x] 1.3 Store the actions in the archaeology step's Soul
     - _Requirements: 1.5_
-- [ ] 2. Rules without a model
-  - [ ] 2.1 Write the enumerator and its tests
+- [x] 2. Rules without a model
+  - [x] 2.1 Write the enumerator and its tests
     - _Requirements: 2.1, 2.2_
-  - [ ] 2.2 Use it when no model is set up, and check the archaeology score
+  - [x] 2.2 Use it when no model is set up, and check the archaeology score
     - _Requirements: 2.3_
-- [ ] 3. Probes in the old app
-  - [ ] 3.1 Write the probe planner and its property
+- [x] 3. Probes in the old app
+  - [x] 3.1 Write the probe planner and its property
     - _Requirements: 3.1, 3.2_
-  - [ ] 3.2 Run the probes in the worker through the emulator pool
+  - [x] 3.2 Run the probes in the worker through the emulator pool
     - _Requirements: 3.3_
-  - [ ] 3.3 Keep the observations and the Soul in recorded runs, with an e2e test
+  - [x] 3.3 Keep the observations and the Soul in recorded runs, with an e2e test
     - _Requirements: 3.4_
 
 ## Notes

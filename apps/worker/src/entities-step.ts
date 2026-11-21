@@ -9,6 +9,7 @@ import {
   PgLlmCallLog,
   detectEntities,
   inferActions,
+  loadGraph,
   stepFromObservation,
   inferRules,
   type EffectObservation,
@@ -19,7 +20,8 @@ import {
 import { readDbf, type SnapshotDiff } from '@afterlife/dbf';
 import { asc, eq, insertSoulVersion, observations, sessions, sql, type Db } from '@afterlife/db';
 import { numberSoul, specRequirements, type Soul } from '@afterlife/soul';
-import { graveyardDosTime } from './possess';
+import { graveyardDosTime, type EmulatorPool } from './possess';
+import { probeRunner } from './probe-runner';
 import { unzipSync } from 'fflate';
 import type { StepContext, StepHandler } from './registry';
 
@@ -63,13 +65,17 @@ function screensOf(
 
 export { MAX_RULE_TARGETS } from '@afterlife/crew';
 export const NO_RULE_MODEL =
-  'No language model is set up on this worker (LLM_PROVIDER=bedrock, with AWS credentials), so no rules were proposed: entities only';
+  'No language model is set up on this worker (LLM_PROVIDER=bedrock, with AWS credentials): the rules are found among short expressions over the fields, each checked against every observation';
+export const MODEL_RULES =
+  'The language model proposes candidate rules, with short expressions over the fields; each is checked against every observation';
 
 export function entitiesStep(deps: {
   db: Db;
   /** The model that proposes candidate rules (LLM_PROVIDER); none: entities only. */
   llm?: LlmClient | null;
   budgetTokens?: number;
+  /** The emulator, for the probes (bills the rules need to see) typed into the old app. */
+  pool?: EmulatorPool;
   bundleFor: (
     p: StepContext['project'],
     projectId: string,
@@ -117,60 +123,38 @@ export function entitiesStep(deps: {
       ];
       await ctx.log(`${e.file}: ${parts.join(', ')}`);
     }
-    let found: Inferred | null = null;
-    if (!deps.llm) await ctx.log(NO_RULE_MODEL, 'warn');
-    else {
-      const llm = new CrewLlm({
-        client: deps.llm,
-        log: new PgLlmCallLog(deps.db),
-        projectId: ctx.projectId,
-        budgetTokens: deps.budgetTokens ?? 200_000,
-        signal: ctx.signal,
-      });
-      const today = ctx.project.dosTime ?? graveyardDosTime(ctx.project);
-      try {
-        found = await inferRules(
-          llm,
-          entities,
-          rows.map((r) => ({
-            id: r.id,
-            keys: r.keys,
-            screenBefore: r.screenBefore as EffectObservation['screenBefore'],
-            dbfDiff: r.dbfDiff as SnapshotDiff,
-          })),
-          {
-            ...(today ? { today } : {}),
-            signal: ctx.signal,
-            log: (m, level) => ctx.log(m, level),
-            found: (rule, v) =>
-              ctx.emit('rule_found', {
-                ruleId: rule.id,
-                target: rule.target,
-                expression: rule.expression,
-                en: rule.en,
-                confidence: rule.confidence,
-                observations: v.selected!.evidence.length,
-                candidates: v.candidates,
-                alsoFit: v.alsoFit,
-                probes: v.probes.map((p) => p.text),
-              }),
-          },
-        );
-      } catch (e) {
-        // A spent budget does not come back on a retry: keep the entities, say so.
-        if (!(e instanceof LlmBudgetError)) throw e;
-        await ctx.log(`Rules stopped: ${e.message}`, 'warn');
-      }
-    }
-    const rules = found?.rules ?? [];
     // What the owner does that writes data: the bill they save, the customer they add.
     const actions = inferActions(rows.map(stepFromObservation), entities);
     for (const a of actions)
       await ctx.log(
         `Action "${a.name}" on ${a.screen}: ${a.effects.map((e) => `${e.kind} ${e.entity}`).join(', ')}, keys ${a.keys}`,
       );
-    const soul: Soul = {
-      schemaVersion: 1,
+    const today = ctx.project.dosTime ?? graveyardDosTime(ctx.project);
+    // The app's own records: a bill line's medicine is looked up in them, and probes priced.
+    const records = Object.fromEntries(tables.map((t) => [t.file, t.table.records]));
+    const llm = deps.llm
+      ? new CrewLlm({
+          client: deps.llm,
+          log: new PgLlmCallLog(deps.db),
+          projectId: ctx.projectId,
+          budgetTokens: deps.budgetTokens ?? 200_000,
+          signal: ctx.signal,
+        })
+      : null;
+    await ctx.log(llm ? MODEL_RULES : NO_RULE_MODEL, llm ? 'info' : 'warn');
+    const graph = deps.pool && actions.length ? await loadGraph(deps.db, ctx.projectId) : null;
+    if (deps.pool && actions.length && !graph)
+      await ctx.log('No screen graph is kept for this project, so the probes are not run', 'warn');
+    let seq = 0;
+    if (graph) {
+      const [n] = await deps.db
+        .select({ n: sql<number>`coalesce(max(${observations.seq}) + 1, 0)` })
+        .from(observations)
+        .where(eq(observations.projectId, ctx.projectId));
+      seq = Number(n?.n ?? 0);
+    }
+    const draft = {
+      schemaVersion: 1 as const,
       app: {
         id:
           ctx.project.sourceApp
@@ -182,16 +166,76 @@ export function entitiesStep(deps: {
       version: 1,
       provenance: {
         createdAt: (deps.now ?? (() => new Date()))().toISOString(),
-        createdBy: 'archaeologist',
+        createdBy: 'archaeologist' as const,
         projectId: ctx.projectId,
         observationCount: rows.length,
-        note: rules.length
-          ? `Entities from the data files; ${rules.length} rules, each checked against every observation.`
-          : 'Entities, keys, foreign keys and counters from the data files and the observations. No rules yet.',
       },
       entities,
       screens: screensOf(rows),
       actions,
+    };
+    let found: Inferred | null = null;
+    try {
+      found = await inferRules(
+        llm,
+        entities,
+        rows.map((r) => ({
+          id: r.id,
+          keys: r.keys,
+          screenBefore: r.screenBefore as EffectObservation['screenBefore'],
+          dbfDiff: r.dbfDiff as SnapshotDiff,
+        })),
+        {
+          ...(today ? { today } : {}),
+          tables: records,
+          signal: ctx.signal,
+          ...(graph && deps.pool
+            ? {
+                probe: probeRunner({
+                  db: deps.db,
+                  pool: deps.pool,
+                  projectId: ctx.projectId,
+                  bundle,
+                  dosTime: today,
+                  tables: records,
+                  graph,
+                  draft,
+                  nextSeq: () => seq++,
+                  log: (m, level) => ctx.log(m, level),
+                  signal: ctx.signal,
+                }),
+              }
+            : {}),
+          log: (m, level) => ctx.log(m, level),
+          found: (rule, v) =>
+            ctx.emit('rule_found', {
+              ruleId: rule.id,
+              target: rule.target,
+              expression: rule.expression,
+              en: rule.en,
+              confidence: rule.confidence,
+              observations: rule.evidence.length,
+              candidates: v.candidates,
+              alsoFit: v.alsoFit,
+              probes: v.probes.map((p) => p.text),
+            }),
+        },
+      );
+    } catch (e) {
+      // A spent budget does not come back on a retry: keep the entities, say so.
+      if (!(e instanceof LlmBudgetError)) throw e;
+      await ctx.log(`Rules stopped: ${e.message}`, 'warn');
+    }
+    const rules = found?.rules ?? [];
+    const soul: Soul = {
+      ...draft,
+      provenance: {
+        ...draft.provenance,
+        observationCount: rows.length + (found?.added.length ?? 0),
+        note: rules.length
+          ? `Entities from the data files; ${actions.length} actions and ${rules.length} rules, each rule checked against every observation${found?.probed.length ? ` (${found.probed.length} probes run in the old app)` : ''}.`
+          : 'Entities, keys, foreign keys and counters from the data files and the observations. No rules yet.',
+      },
       rules,
     };
     const version = await insertSoulVersion(deps.db, ctx.projectId, (v, parent) => {
@@ -207,6 +251,7 @@ export function entitiesStep(deps: {
       actions: actions.length,
       rules: rules.length,
       unexplained: found?.unexplained ?? [],
+      probed: found?.probed.length ?? 0,
       probes: (found?.probes ?? []).map((p) => p.text),
     };
     await ctx.emit('soul_updated', { ...output, reason: rules.length ? 'rules' : 'entities' });

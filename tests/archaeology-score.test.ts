@@ -1,3 +1,4 @@
+// @spec archaeologist-completion#2.2 The score without a model, rules included, never drops.
 // Prompt 56 done when: the score is computed for all 3 samples, and this fails if it drops. It
 // runs the Archaeologist without a model (entities and counters from the data files and the
 // recorded possession), and compares with docs/archaeology-score.json. A higher score is fine:

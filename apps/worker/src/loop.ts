@@ -91,7 +91,7 @@ function handlerFor(
 ): StepHandler {
   if (project.mode !== 'recorded') return registry[type];
   const rec = (o.recordingFor ?? loadRecording)(project.sourceApp);
-  if (rec) return replayStep(rec, type);
+  if (rec) return replayStep(rec, type, o.db);
   return async () => ({
     status: 'skipped',
     reason: `There is no recorded run of ${project.sourceApp}`,

@@ -47,36 +47,42 @@ describe('inferRules', () => {
       found: (rule) => void found.push(rule.target!),
       log: (m) => void logs.push(m),
     });
-    expect(r.rules.map((x) => [x.target, x.kind, x.expression])).toEqual([
-      [
-        'bill.discount',
-        'compute',
-        'if bill.subtotal > 5000 then trunc(bill.subtotal * 0.10, 2) else 0',
-      ],
-      ['bill.gst', 'compute', 'trunc((bill.subtotal - bill.discount) * 0.17, 2)'],
-      ['medicine.qty', 'effect', 'medicine.qty - bill_item.qty'],
-    ]);
-    expect(found).toEqual(['bill.discount', 'bill.gst', 'medicine.qty']);
-    expect(r.rules[1]).toMatchObject({ id: 'bill-gst', en: 'the bill.gst rule', ur: '' });
-    expect(r.rules[1]!.evidence).toEqual(['bill-small', 'bill-discount', 'bill-5000']);
-    // The other values (subtotal, total, the bill line's price and amount) had no fitting rule.
-    expect(r.unexplained).toEqual(
-      expect.arrayContaining([
-        'bill.subtotal',
-        'bill.total',
-        'bill_item.amount',
-        'bill_item.price',
-      ]),
-    );
+    const rule = (t: string) => r.rules.find((x) => x.target === t);
+    expect(rule('bill.discount')).toMatchObject({
+      kind: 'compute',
+      expression: 'if bill.subtotal > 5000 then trunc(bill.subtotal * 0.10, 2) else 0',
+    });
+    expect(rule('bill.gst')).toMatchObject({
+      id: 'bill-gst',
+      kind: 'compute',
+      expression: 'trunc((bill.subtotal - bill.discount) * 0.17, 2)',
+      // The model's reason is the rule's English.
+      en: 'the bill.gst rule',
+      ur: '',
+    });
+    expect(rule('medicine.qty')).toMatchObject({
+      kind: 'effect',
+      expression: 'medicine.qty - bill_item.qty',
+    });
+    expect(found).toEqual(expect.arrayContaining(['bill.discount', 'bill.gst', 'medicine.qty']));
+    expect(rule('bill.gst')!.evidence).toEqual(['bill-small', 'bill-discount', 'bill-5000']);
+    // The values the model proposed nothing that fits for get the enumerator's rules: the total.
+    expect(rule('bill.total')).toMatchObject({
+      expression: 'bill.subtotal - bill.discount + bill.gst',
+      en: 'The bill total is bill.subtotal - bill.discount + bill.gst.',
+    });
     expect(logs.some((m) => m.startsWith('bill.gst = trunc'))).toBe(true);
   });
 
-  it('a model answer that never fits the schema leaves that value unexplained', async () => {
+  it('a model answer that never fits the schema still leaves the enumerator’s rule', async () => {
     const { llm } = model({ 'bill.gst': 'bad' });
-    const r = await inferRules(llm, ENTITIES, RUNS, { maxTargets: 3 });
-    expect(r.targets).toBe(3);
-    expect(r.unexplained).toContain('bill.gst');
-    expect(r.rules).toEqual([]);
+    const logs: string[] = [];
+    const r = await inferRules(llm, ENTITIES, RUNS, { log: (m) => void logs.push(m) });
+    expect(logs.some((m) => /bill\.gst: the model gave no usable candidates/.test(m))).toBe(true);
+    expect(r.rules.find((x) => x.target === 'bill.gst')).toMatchObject({
+      expression: 'trunc((bill.subtotal - bill.discount) * 0.17, 2)',
+      en: 'The bill gst is trunc((bill.subtotal - bill.discount) * 0.17, 2).',
+    });
   });
 
   it('looks at no more than maxTargets values, and says so', async () => {

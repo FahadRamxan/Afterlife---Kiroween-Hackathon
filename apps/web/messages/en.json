@@ -72,7 +72,7 @@
     "recordedApp": "Watch a recorded run of {name}",
     "recordedHint": "Fast: replays a real run of this app, saved earlier. Labelled as recorded.",
     "score": {
-      "noModel": "Archaeology score: {recovered} of {known} hidden rules recovered ({exact} exact), without a language model.",
+      "noModel": "Archaeology score: {recovered} of {known} hidden rules recovered ({exact} exact), without a language model, from a recorded run of the real app and the bills it was probed with.",
       "model": "Archaeology score: {recovered} of {known} hidden rules recovered ({exact} exact), with {mode}."
     }
   },
