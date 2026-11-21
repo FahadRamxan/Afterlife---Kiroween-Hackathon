@@ -179,6 +179,31 @@ export const SHIFA_REFERENCE_SOUL: Soul = {
         },
         { entity: 'medicine', kind: 'update', fields: ['QTY'] },
       ],
+      // The bill as the NEW BILL screen showed it before F2 (bill.c: draw_bill, draw_line and
+      // show_totals), with the number and date the old app gave it when it saved.
+      receipt: {
+        header: [
+          { label: 'BILL NO', ref: 'bill.BILL_NO' },
+          { label: 'DATE', ref: 'bill.BILL_DATE' },
+          { label: 'Customer', ref: 'bill.CUST_ID', blank: 'WALK-IN' },
+          { label: '', ref: 'customer.NAME' },
+        ],
+        columns: [
+          { label: '#', ref: '#' },
+          { label: 'CODE', ref: 'bill-item.CODE' },
+          { label: 'NAME', ref: 'medicine.NAME' },
+          { label: 'BATCH', ref: 'medicine.BATCH' },
+          { label: 'PRICE', ref: 'bill-item.PRICE' },
+          { label: 'QTY', ref: 'bill-item.QTY' },
+          { label: 'AMOUNT', ref: 'bill-item.AMOUNT' },
+        ],
+        totals: [
+          { label: 'SUBTOTAL', ref: 'bill.SUBTOTAL' },
+          { label: 'DISCOUNT 10%', ref: 'bill.DISCOUNT' },
+          { label: 'GST 17%', ref: 'bill.GST' },
+          { label: 'TOTAL', ref: 'bill.TOTAL' },
+        ],
+      },
     },
     {
       id: 'add-customer',

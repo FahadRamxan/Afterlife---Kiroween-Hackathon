@@ -391,7 +391,13 @@
       "bill": "(bill {record})",
       "done": "Checked"
     },
-    "close": "Close"
+    "close": "Close",
+    "receipt": {
+      "title": "Receipt",
+      "print": "Print receipt",
+      "whatsapp": "Send on WhatsApp",
+      "pdf": "Download PDF"
+    }
   },
   "verify": {
     "title": "Verify a certificate",

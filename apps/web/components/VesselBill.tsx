@@ -1,11 +1,18 @@
 'use client';
 import type { DbfField, DbfRecord, DbfValue } from '@afterlife/dbf';
 import { Button, Card, cn } from '@afterlife/ui';
-import { actionForm, type ActionResult, type Vessel } from '@afterlife/vessel';
+import {
+  actionForm,
+  receiptOf,
+  type ActionResult,
+  type Receipt,
+  type Vessel,
+} from '@afterlife/vessel';
 import { useTranslations } from 'next-intl';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useWord } from '../lib/use-word';
 import { displayValue, money, searchRecords } from '../lib/vessel-views';
+import { VesselReceipt } from './VesselReceipt';
 
 type Line = Record<string, string>;
 
@@ -46,6 +53,8 @@ export function VesselBill({
   const [query, setQuery] = useState('');
   const [preview, setPreview] = useState<ActionResult | null>(null);
   const [done, setDone] = useState<{ key: string; total: string } | null>(null);
+  // The receipt of the bill just saved (Prompt 61), until the next bill is started.
+  const [receipt, setReceipt] = useState<Receipt | null>(null);
   const [busy, setBusy] = useState(false);
   const [generation, setGeneration] = useState(0);
   // The line just added or added to: scrolled into view, above the sticky totals card on a phone
@@ -111,6 +120,7 @@ export function VesselBill({
     setTouched((x) => ({ line: at >= 0 ? at : lines.length, n: (x?.n ?? 0) + 1 }));
     setQuery('');
     setDone(null);
+    setReceipt(null);
   }
   const setLine = (i: number, patch: Line) =>
     setLines(lines.map((l, j) => (j === i ? { ...l, ...patch } : l)));
@@ -126,6 +136,8 @@ export function VesselBill({
       key: key ? String(r.record[key] ?? '') : '',
       total: total ? money(r.record[total.name]) : '',
     });
+    const paper = await receiptOf(vessel.soul, actionId, r, vessel.store);
+    setReceipt(paper.rows.length || paper.totals.length ? paper : null);
     setLines([]);
     setValues({});
     setPreview(null);
@@ -154,6 +166,7 @@ export function VesselBill({
             : t('savedRecord', { name: word(form.header.entity.name), key: done.key })}
         </p>
       ) : null}
+      {done && receipt ? <VesselReceipt receipt={receipt} /> : null}
 
       {headerLink ? (
         <div className="space-y-1">

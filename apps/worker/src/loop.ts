@@ -33,7 +33,15 @@ type LoopOptions = {
   log?: (line: string) => void;
   /** The recorded run of an app, for projects in demo mode (default: recorded/<app>.json). */
   recordingFor?: (app: string) => Recording | null;
+  /**
+   * Jobs of one type run at once (default JOB_CONCURRENCY). The emulators are a pool of their
+   * own, so a recorded run (which needs none) does not wait behind a live possession.
+   */
+  concurrency?: number;
 };
+
+/** Jobs of one type the worker runs at once, by default. */
+export const JOB_CONCURRENCY = 4;
 
 export class StepTimeout extends Error {
   override name = 'StepTimeout';
@@ -221,7 +229,11 @@ export async function startJobLoop(o: LoopOptions): Promise<JobLoop> {
   for (const type of JOB_TYPES)
     await o.boss.work(
       type,
-      { batchSize: 1, pollingIntervalSeconds: o.pollingIntervalSeconds ?? 2 },
+      {
+        batchSize: 1,
+        localConcurrency: o.concurrency ?? JOB_CONCURRENCY,
+        pollingIntervalSeconds: o.pollingIntervalSeconds ?? 2,
+      },
       async ([job]) => (job ? runJob(o, type, job) : undefined),
     );
   return {

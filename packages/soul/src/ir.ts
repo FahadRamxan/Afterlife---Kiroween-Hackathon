@@ -60,6 +60,28 @@ export const ScreenSchema = z.object({
   navigation: z.array(z.object({ keys: Keys, to: Fingerprint })),
 });
 
+/**
+ * One line of a receipt layout (Prompt 61): the label the old app showed, and what it shows:
+ * `entity-id.FIELD` (`bill.SUBTOTAL`, `medicine.NAME` through the line's link), or `#` for the
+ * line number.
+ */
+const ReceiptItemSchema = z.object({
+  label: z.string().max(40),
+  ref: z.union([z.literal('#'), z.string().regex(/^[a-z][a-z0-9-]*\.[A-Za-z_][A-Za-z0-9_]*$/)]),
+  /** What the old app showed when the field was blank (a walk-in customer: WALK-IN). */
+  blank: z.string().max(40).optional(),
+});
+
+/**
+ * What an action's receipt shows, in the old app's order (Prompt 61): header lines, a column per
+ * line field, then the totals. From the screen the old app was on when the record was saved.
+ */
+export const ReceiptSchema = z.object({
+  header: z.array(ReceiptItemSchema).max(20),
+  columns: z.array(ReceiptItemSchema).max(20),
+  totals: z.array(ReceiptItemSchema).max(20),
+});
+
 export const ActionSchema = z.object({
   id: Id,
   /** The screen it starts on. */
@@ -74,6 +96,8 @@ export const ActionSchema = z.object({
       fields: z.array(FieldName),
     }),
   ),
+  /** The receipt it gives (Prompt 61); none for an action that prints nothing. */
+  receipt: ReceiptSchema.optional(),
 });
 
 export const RuleSchema = z.object({
@@ -182,6 +206,13 @@ export const SoulSchema = SoulObject.superRefine((s, ctx) => {
         if (!fieldsOf(e.entity).has(f))
           issue(['actions', i, 'effects', j], `${f} is not a field of ${e.entity}`);
     });
+    for (const part of ['header', 'columns', 'totals'] as const)
+      a.receipt?.[part].forEach((x, j) => {
+        if (x.ref === '#') return;
+        const [id, field] = x.ref.split('.') as [string, string];
+        if (!fieldsOf(id).has(field))
+          issue(['actions', i, 'receipt', part, j], `${x.ref} is not an entity field`);
+      });
   });
   s.rules.forEach((r, i) => {
     if (r.kind !== 'validate' && !r.target)
@@ -199,6 +230,7 @@ export type Soul = z.infer<typeof SoulSchema>;
 export type Entity = z.infer<typeof EntitySchema>;
 export type Screen = z.infer<typeof ScreenSchema>;
 export type Action = z.infer<typeof ActionSchema>;
+export type ReceiptLayout = z.infer<typeof ReceiptSchema>;
 export type Rule = z.infer<typeof RuleSchema>;
 
 /** Object keys in a fixed order, so the same Soul is always the same text (diffs, hashes). */

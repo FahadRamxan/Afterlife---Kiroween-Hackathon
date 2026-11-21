@@ -6,9 +6,10 @@
 // Deterministic: no model.
 import type { DbfValue, SnapshotDiff } from '@afterlife/dbf';
 import { parseKeys, printKeys } from '@afterlife/emulator';
-import type { ScreenModel } from '@afterlife/screen';
-import { expandMacro, type Action, type Entity } from '@afterlife/soul';
+import { ScreenModelSchema, type ScreenModel } from '@afterlife/screen';
+import { expandMacro, type Action, type Entity, type ReceiptLayout } from '@afterlife/soul';
 import { activeField } from '../possessor/actions';
+import { inferReceipt } from './receipt';
 
 /** One step of possession, as inferActions needs it. */
 export type ActionStep = {
@@ -21,6 +22,8 @@ export type ActionStep = {
   /** The label of the field the keys were typed into ("Code"), or null when none was waiting. */
   field: string | null;
   dbfDiff: SnapshotDiff;
+  /** What the screen the keys were pressed on showed, when it was kept (its receipt layout). */
+  model?: ScreenModel;
 };
 
 type ScreenRecordLike = { fingerprint: string; text?: string[]; model?: ScreenModel | null };
@@ -38,6 +41,7 @@ export function stepFromObservation(o: {
   const before = o.screenBefore as ScreenRecordLike;
   const after = o.screenAfter as ScreenRecordLike;
   const f = before.model ? activeField(before.model, before.text) : null;
+  const model = ScreenModelSchema.safeParse(before.model);
   return {
     id: o.id,
     keys: o.keys,
@@ -45,6 +49,8 @@ export function stepFromObservation(o: {
     after: { fingerprint: after.fingerprint, title: titleOf(after) },
     field: f?.label ?? null,
     dbfDiff: o.dbfDiff as SnapshotDiff,
+    // Only a whole screen model: a stored row may keep less (an older run, a test's sketch).
+    ...(model.success ? { model: model.data } : {}),
   };
 }
 
@@ -105,7 +111,7 @@ function split(keys: string): { typed: string; rest: string } | null {
 }
 
 /** A typed value matches what was stored: the same text (the app may upper-case it), or number. */
-function sameValue(typed: string, stored: DbfValue | undefined): boolean {
+export function sameValue(typed: string, stored: DbfValue | undefined): boolean {
   const a = typed.trim();
   const b = str(stored);
   if (a.toUpperCase() === b.toUpperCase()) return true;
@@ -113,7 +119,7 @@ function sameValue(typed: string, stored: DbfValue | undefined): boolean {
   return false;
 }
 
-type Shape = {
+export type Shape = {
   header: Entity;
   lines: Entity | null;
   record: Record<string, DbfValue>;
@@ -122,7 +128,7 @@ type Shape = {
 };
 
 /** What a save wrote: the record of its own (no link to another inserted one), and its lines. */
-function shapeOf(diff: SnapshotDiff, entities: Entity[]): Shape | null {
+export function shapeOf(diff: SnapshotDiff, entities: Entity[]): Shape | null {
   const byFile = new Map(entities.map((e) => [e.file.toUpperCase(), e]));
   const inserted = Object.entries(diff.tables)
     .filter(([, t]) => t.inserted.length)
@@ -270,7 +276,11 @@ const fieldsOf = (e: Entity, names: Iterable<string>) => {
  * after the save before it); of all the saves of one kind, the shortest macro that explains its
  * keys is kept. A kind of save no macro explains is still an action, with the save's own keys.
  */
-export function inferActions(steps: ActionStep[], entities: Entity[]): Action[] {
+export function inferActions(
+  steps: ActionStep[],
+  entities: Entity[],
+  opts: { tables?: Record<string, { values: Record<string, DbfValue> }[]> } = {},
+): Action[] {
   type Group = {
     key: string;
     title: string;
@@ -280,6 +290,7 @@ export function inferActions(steps: ActionStep[], entities: Entity[]): Action[] 
     records: Set<string>;
     lineFields: Set<string>;
     updates: Map<string, { entity: Entity; fields: Set<string> }>;
+    receipts: ReceiptLayout[];
   };
   const groups: Group[] = [];
   steps.forEach((save, i) => {
@@ -298,9 +309,13 @@ export function inferActions(steps: ActionStep[], entities: Entity[]): Action[] 
         records: new Set(),
         lineFields: new Set(),
         updates: new Map(),
+        receipts: [],
       };
       groups.push(g);
     }
+    // The bill as the screen showed it when it was saved (Prompt 61).
+    const receipt = save.model ? inferReceipt(save.model, shape, entities, opts.tables) : null;
+    if (receipt) g.receipts.push(receipt);
     for (const f of Object.keys(shape.record)) g.records.add(f);
     if (!g.shape.lines && shape.lines) g.shape = shape;
     for (const r of shape.lineRecords) for (const f of Object.keys(r)) g.lineFields.add(f);
@@ -342,6 +357,7 @@ export function inferActions(steps: ActionStep[], entities: Entity[]): Action[] 
     for (let n = 2; used.has(id) || !/^[a-z]/.test(id); n++) id = `${base}-${n}`.slice(0, 48);
     used.add(id);
     const best = [...g.macros].sort((a, b) => a.macro.length - b.macro.length)[0];
+    const receipt = mergeReceipts(g.receipts);
     const title = g.title.charAt(0).toUpperCase() + g.title.slice(1).toLowerCase();
     return {
       id,
@@ -368,6 +384,25 @@ export function inferActions(steps: ActionStep[], entities: Entity[]): Action[] 
           fields: fieldsOf(u.entity, u.fields),
         })),
       ],
+      ...(receipt ? { receipt } : {}),
     };
   });
+}
+
+/**
+ * One layout from the saves of one kind: the one that shows the most (a customer's bill shows
+ * their name), with what the others showed for a blank field (a walk-in bill's WALK-IN).
+ */
+function mergeReceipts(all: ReceiptLayout[]): ReceiptLayout | null {
+  const size = (r: ReceiptLayout) => r.header.length + r.columns.length + r.totals.length;
+  const base = [...all].sort((a, b) => size(b) - size(a))[0];
+  if (!base) return null;
+  const blanks = new Map<string, string>();
+  for (const r of all) for (const x of r.header) if (x.blank) blanks.set(x.ref, x.blank);
+  return {
+    ...base,
+    header: base.header.map((x) =>
+      x.blank || !blanks.has(x.ref) ? x : { ...x, blank: blanks.get(x.ref)! },
+    ),
+  };
 }

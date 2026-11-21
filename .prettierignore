@@ -11,3 +11,5 @@ apps/web/public/js-dos/
 **/__golden__/**
 # Written by pnpm soul:spec --example; tests/soul-spec-example.test.ts keeps it current.
 docs/examples/
+# Vitest file snapshots, compared byte for byte (the receipt's HTML, Prompt 61).
+**/__snapshots__/

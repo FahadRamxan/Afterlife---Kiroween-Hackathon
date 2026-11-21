@@ -25,6 +25,15 @@ export {
   type VesselOptions,
 } from './runtime';
 export { ValueError, blank, parseInput, toDbfValue } from './values';
+export {
+  RECEIPT_WIDTH,
+  receiptLayout,
+  receiptOf,
+  receiptPdf,
+  receiptText,
+  receiptWhatsApp,
+  type Receipt,
+} from './receipt';
 export { seedStore, tablesFromBundle } from './seed';
 export {
   MemoryOutbox,

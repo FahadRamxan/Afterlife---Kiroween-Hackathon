@@ -1,6 +1,6 @@
 {
   "app": "shifa",
-  "recordedAt": "2026-11-21T11:16:42.015Z",
+  "recordedAt": "2026-11-21T19:36:42.464Z",
   "source": "pnpm pipeline:record",
   "steps": [
     {
@@ -337,7 +337,7 @@
             "level": "info",
             "message": "Booting Shifa Medical Store in headless js-dos"
           },
-          "afterMs": 18
+          "afterMs": 20
         },
         {
           "type": "screen",
@@ -433,7 +433,7 @@
             ],
             "fingerprint": "fp_1eb0f03756fc7646"
           },
-          "afterMs": 754
+          "afterMs": 965
         },
         {
           "type": "log",
@@ -441,7 +441,7 @@
             "level": "info",
             "message": "First screen: SHIFA MEDICAL STORE  v2.3         MAIN MENU                           15/07/98"
           },
-          "afterMs": 765
+          "afterMs": 967
         },
         {
           "type": "log",
@@ -449,12 +449,12 @@
             "level": "info",
             "message": "Exploring. No language model is set up, so field values come from the data files."
           },
-          "afterMs": 766
+          "afterMs": 968
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-4616-767f-b420-581db383479e",
+            "id": "01a1ff9a-f0db-7ed1-a9a3-bd2a88625056",
             "to": "NEW BILL",
             "from": "MAIN MENU",
             "keys": "1",
@@ -472,7 +472,7 @@
             "fingerprint": "fp_55dbc4ac877fc59a",
             "fromFingerprint": "fp_1eb0f03756fc7646"
           },
-          "afterMs": 1391
+          "afterMs": 1653
         },
         {
           "type": "screen",
@@ -565,7 +565,7 @@
             ],
             "fingerprint": "fp_55dbc4ac877fc59a"
           },
-          "afterMs": 1436
+          "afterMs": 1707
         },
         {
           "type": "log",
@@ -573,12 +573,12 @@
             "level": "info",
             "message": "New screen: NEW BILL"
           },
-          "afterMs": 1439
+          "afterMs": 1708
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-4881-73b0-93ce-ffe9ec90d430",
+            "id": "01a1ff9a-f376-7319-8d27-8d42f88f1b88",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "{Enter}",
@@ -596,7 +596,7 @@
             "fingerprint": "fp_1ea84e74e2cd7cec",
             "fromFingerprint": "fp_55dbc4ac877fc59a"
           },
-          "afterMs": 1958
+          "afterMs": 2321
         },
         {
           "type": "screen",
@@ -625,7 +625,7 @@
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "11f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1111111111111111111111111",
                 "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111f1f1f1f1f1f1f1f11111111111111111111111e1e1e1e1111111111111111111111111",
-                "11f1f1f1f1f111077777777777111111f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f111777777777777111111f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "3303030303030303030333330303030303330303330303030303330303030303030303030303333303030303030303330303030333030303333303030303030303030303333333333333333333333333"
@@ -657,10 +657,7 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4164642020456e746572206f6e20626c616e6b20636f64653d46696e697368202046333d45646974206c6173742071747920204573633d43616e63656c202020202020202020202020"
               ],
-              "cursor": {
-                "col": 7,
-                "row": 21
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -692,7 +689,7 @@
             ],
             "fingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 2007
+          "afterMs": 2367
         },
         {
           "type": "log",
@@ -700,12 +697,12 @@
             "level": "info",
             "message": "New screen: NEW BILL"
           },
-          "afterMs": 2009
+          "afterMs": 2369
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-4d2c-791a-91ec-83bf4e2d1d0c",
+            "id": "01a1ff9a-f86c-7e4b-9206-31987b7d7c2c",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "PAN500{Enter}",
@@ -723,7 +720,7 @@
             "fingerprint": "fp_2a7d3d5d7718825b",
             "fromFingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 3054
+          "afterMs": 3590
         },
         {
           "type": "screen",
@@ -816,7 +813,7 @@
             ],
             "fingerprint": "fp_2a7d3d5d7718825b"
           },
-          "afterMs": 3098
+          "afterMs": 3636
         },
         {
           "type": "log",
@@ -824,12 +821,12 @@
             "level": "info",
             "message": "New screen: NEW BILL"
           },
-          "afterMs": 3100
+          "afterMs": 3638
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-4fe2-7fc9-a8d1-12a632efdeee",
+            "id": "01a1ff9a-fb5c-7427-a71b-238d69dd6711",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "1{Enter}",
@@ -847,7 +844,7 @@
             "fingerprint": "fp_1ea84e74e2cd7cec",
             "fromFingerprint": "fp_2a7d3d5d7718825b"
           },
-          "afterMs": 3690
+          "afterMs": 4343
         },
         {
           "type": "screen",
@@ -876,7 +873,7 @@
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "11f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1111111111111111111111111",
                 "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111f1f1f1f1f1f1f1f111111111111111111111e1e1e1e1e1111111111111111111111111",
-                "11f1f1f1f1f111777777777777111111f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f111077777777777111111f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "3303030303030303030333330303030303330303330303030303330303030303030303030303333303030303030303330303030333030303333303030303030303030303333333333333333333333333"
@@ -908,7 +905,10 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4164642020456e746572206f6e20626c616e6b20636f64653d46696e697368202046333d45646974206c6173742071747920204573633d43616e63656c202020202020202020202020"
               ],
-              "cursor": null,
+              "cursor": {
+                "col": 7,
+                "row": 21
+              },
               "cellWidth": 8
             },
             "text": [
@@ -940,12 +940,12 @@
             ],
             "fingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 3734
+          "afterMs": 4396
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-5220-7c46-96d2-fdac1760e1fa",
+            "id": "01a1ff9a-fdca-739d-9bb4-b6de24752d62",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "{Enter}",
@@ -963,7 +963,7 @@
             "fingerprint": "fp_5f38d2cc24c87fd0",
             "fromFingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 4217
+          "afterMs": 4965
         },
         {
           "type": "screen",
@@ -1056,7 +1056,7 @@
             ],
             "fingerprint": "fp_5f38d2cc24c87fd0"
           },
-          "afterMs": 4260
+          "afterMs": 5027
         },
         {
           "type": "log",
@@ -1064,12 +1064,12 @@
             "level": "info",
             "message": "New screen: NEW BILL"
           },
-          "afterMs": 4263
+          "afterMs": 5030
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-5460-767a-8650-b4a0837d426a",
+            "id": "01a1ff9b-0070-702b-b062-61e16dfdced1",
             "to": "NEW BILL",
             "diff": {
               "tables": {
@@ -1165,7 +1165,7 @@
             "fingerprint": "fp_5f38d2cc24c87fd0",
             "fromFingerprint": "fp_5f38d2cc24c87fd0"
           },
-          "afterMs": 4745
+          "afterMs": 5642
         },
         {
           "type": "screen",
@@ -1258,7 +1258,7 @@
             ],
             "fingerprint": "fp_5f38d2cc24c87fd0"
           },
-          "afterMs": 4787
+          "afterMs": 5689
         },
         {
           "type": "log",
@@ -1266,12 +1266,12 @@
             "level": "info",
             "message": "F2=Save bill changed BILLITEM.DBF, BILLS.DBF, MEDICINE.DBF"
           },
-          "afterMs": 4790
+          "afterMs": 5695
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-56e7-72f8-9aea-cc3f5525f114",
+            "id": "01a1ff9b-0302-73f6-868e-2b78cce4449a",
             "to": "MAIN MENU",
             "from": "NEW BILL",
             "keys": "{Esc}",
@@ -1289,7 +1289,7 @@
             "fingerprint": "fp_1eb0f03756fc7646",
             "fromFingerprint": "fp_5f38d2cc24c87fd0"
           },
-          "afterMs": 5339
+          "afterMs": 6300
         },
         {
           "type": "screen",
@@ -1382,12 +1382,12 @@
             ],
             "fingerprint": "fp_1eb0f03756fc7646"
           },
-          "afterMs": 5381
+          "afterMs": 6346
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-5928-7fef-bb6e-b3c2ac0bf7db",
+            "id": "01a1ff9b-05a5-7857-89ee-d86d221a73a4",
             "to": "STOCK",
             "from": "MAIN MENU",
             "keys": "2",
@@ -1405,7 +1405,7 @@
             "fingerprint": "fp_94f36efd8f8e0a33",
             "fromFingerprint": "fp_1eb0f03756fc7646"
           },
-          "afterMs": 5868
+          "afterMs": 6975
         },
         {
           "type": "screen",
@@ -1498,7 +1498,7 @@
             ],
             "fingerprint": "fp_94f36efd8f8e0a33"
           },
-          "afterMs": 5915
+          "afterMs": 7042
         },
         {
           "type": "log",
@@ -1506,12 +1506,12 @@
             "level": "info",
             "message": "New screen: STOCK"
           },
-          "afterMs": 5919
+          "afterMs": 7044
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-5bc6-7ec0-a314-81b783581b7d",
+            "id": "01a1ff9b-0854-7407-ba35-a8a62f684e01",
             "to": "STOCK",
             "from": "STOCK",
             "keys": "{PgDn}",
@@ -1529,7 +1529,7 @@
             "fingerprint": "fp_94f36efd8f8e0a33",
             "fromFingerprint": "fp_94f36efd8f8e0a33"
           },
-          "afterMs": 6480
+          "afterMs": 7663
         },
         {
           "type": "screen",
@@ -1622,12 +1622,12 @@
             ],
             "fingerprint": "fp_94f36efd8f8e0a33"
           },
-          "afterMs": 6525
+          "afterMs": 7743
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-5e61-73b3-88d2-f35bc83c384c",
+            "id": "01a1ff9b-0af5-7f95-9c1c-ae056b4d7b7d",
             "to": "STOCK",
             "from": "STOCK",
             "keys": "{PgUp}",
@@ -1645,7 +1645,7 @@
             "fingerprint": "fp_94f36efd8f8e0a33",
             "fromFingerprint": "fp_94f36efd8f8e0a33"
           },
-          "afterMs": 7091
+          "afterMs": 8334
         },
         {
           "type": "screen",
@@ -1738,12 +1738,12 @@
             ],
             "fingerprint": "fp_94f36efd8f8e0a33"
           },
-          "afterMs": 7135
+          "afterMs": 8407
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-6097-706d-9ee6-cf299738aee5",
+            "id": "01a1ff9b-0dc1-7915-aa78-f2183395f2ad",
             "to": "MAIN MENU",
             "from": "STOCK",
             "keys": "{Esc}",
@@ -1761,7 +1761,7 @@
             "fingerprint": "fp_1eb0f03756fc7646",
             "fromFingerprint": "fp_94f36efd8f8e0a33"
           },
-          "afterMs": 7611
+          "afterMs": 9050
         },
         {
           "type": "screen",
@@ -1854,12 +1854,12 @@
             ],
             "fingerprint": "fp_1eb0f03756fc7646"
           },
-          "afterMs": 7653
+          "afterMs": 9108
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-6322-7c92-9b97-6f3f85307ae7",
+            "id": "01a1ff9b-106f-7ef9-9740-ae23cb8b3113",
             "to": "CUSTOMERS",
             "from": "MAIN MENU",
             "keys": "3",
@@ -1877,7 +1877,7 @@
             "fingerprint": "fp_7ea2aa4052052a22",
             "fromFingerprint": "fp_1eb0f03756fc7646"
           },
-          "afterMs": 8210
+          "afterMs": 9735
         },
         {
           "type": "screen",
@@ -1970,7 +1970,7 @@
             ],
             "fingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 8253
+          "afterMs": 9790
         },
         {
           "type": "log",
@@ -1978,12 +1978,12 @@
             "level": "info",
             "message": "New screen: CUSTOMERS"
           },
-          "afterMs": 8256
+          "afterMs": 9793
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-65ad-78ac-ae59-113d7f077511",
+            "id": "01a1ff9b-1315-74fd-8823-6fd0295f61a5",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "A",
@@ -2001,7 +2001,7 @@
             "fingerprint": "fp_7be8a1aa4ae94c62",
             "fromFingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 8804
+          "afterMs": 10414
         },
         {
           "type": "screen",
@@ -2097,7 +2097,7 @@
             ],
             "fingerprint": "fp_7be8a1aa4ae94c62"
           },
-          "afterMs": 8846
+          "afterMs": 10491
         },
         {
           "type": "log",
@@ -2105,12 +2105,12 @@
             "level": "info",
             "message": "New screen: CUSTOMERS"
           },
-          "afterMs": 8848
+          "afterMs": 10493
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-6dec-75fa-ae91-4e520e778579",
+            "id": "01a1ff9b-1bf4-78f0-9a20-91d497c17cad",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "AFTERLIFE TEST{Enter}",
@@ -2128,7 +2128,7 @@
             "fingerprint": "fp_489573eaff6713b0",
             "fromFingerprint": "fp_7be8a1aa4ae94c62"
           },
-          "afterMs": 10741
+          "afterMs": 12682
         },
         {
           "type": "screen",
@@ -2221,7 +2221,7 @@
             ],
             "fingerprint": "fp_489573eaff6713b0"
           },
-          "afterMs": 10783
+          "afterMs": 12738
         },
         {
           "type": "log",
@@ -2229,12 +2229,12 @@
             "level": "info",
             "message": "New screen: CUSTOMERS"
           },
-          "afterMs": 10785
+          "afterMs": 12741
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-74f0-7beb-9f41-40356eac2d44",
+            "id": "01a1ff9b-2343-717a-972d-44cb77fa1190",
             "to": "CUSTOMERS",
             "diff": {
               "tables": {
@@ -2279,7 +2279,7 @@
             "fingerprint": "fp_7ea2aa4052052a22",
             "fromFingerprint": "fp_489573eaff6713b0"
           },
-          "afterMs": 15114
+          "afterMs": 14552
         },
         {
           "type": "screen",
@@ -2372,7 +2372,7 @@
             ],
             "fingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 15159
+          "afterMs": 14598
         },
         {
           "type": "log",
@@ -2380,12 +2380,12 @@
             "level": "info",
             "message": "Phone = 051-0000000 changed CUSTOMER.DBF"
           },
-          "afterMs": 15161
+          "afterMs": 14600
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-7789-7f21-a508-6b82e552315c",
+            "id": "01a1ff9b-25dd-73e7-86e0-15d3d2eb8c82",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "{PgDn}",
@@ -2403,7 +2403,7 @@
             "fingerprint": "fp_7ea2aa4052052a22",
             "fromFingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 15725
+          "afterMs": 15217
         },
         {
           "type": "screen",
@@ -2496,12 +2496,12 @@
             ],
             "fingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 15768
+          "afterMs": 15279
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-7a0e-767b-ab6c-735600a62008",
+            "id": "01a1ff9b-2851-7851-8fea-6a1c1fabc574",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "{PgUp}",
@@ -2519,12 +2519,12 @@
             "fingerprint": "fp_7ea2aa4052052a22",
             "fromFingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 16315
+          "afterMs": 15845
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-7c67-71d1-848b-e78c9de66aa9",
+            "id": "01a1ff9b-2ac6-7a15-b356-e4028885c2b4",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "A",
@@ -2542,7 +2542,7 @@
             "fingerprint": "fp_7be8a1aa4ae94c62",
             "fromFingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 16866
+          "afterMs": 16476
         },
         {
           "type": "screen",
@@ -2638,12 +2638,12 @@
             ],
             "fingerprint": "fp_7be8a1aa4ae94c62"
           },
-          "afterMs": 16908
+          "afterMs": 16548
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-7ee9-7c75-ad36-f7f9a51ba7db",
+            "id": "01a1ff9b-2d81-7704-8da2-d0ae2a700692",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "{Enter}",
@@ -2667,7 +2667,7 @@
             "fingerprint": "fp_7ea2aa4052052a22",
             "fromFingerprint": "fp_7be8a1aa4ae94c62"
           },
-          "afterMs": 17457
+          "afterMs": 17174
         },
         {
           "type": "screen",
@@ -2760,7 +2760,7 @@
             ],
             "fingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 17501
+          "afterMs": 17248
         },
         {
           "type": "log",
@@ -2768,12 +2768,12 @@
             "level": "info",
             "message": "The app said: NAME REQUIRED"
           },
-          "afterMs": 17503
+          "afterMs": 17250
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-8170-78ad-b8f4-21bdf5435567",
+            "id": "01a1ff9b-302a-7ed4-9b35-3435b808d609",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "A",
@@ -2797,7 +2797,7 @@
             "fingerprint": "fp_7be8a1aa4ae94c62",
             "fromFingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 18048
+          "afterMs": 17854
         },
         {
           "type": "screen",
@@ -2890,7 +2890,7 @@
             ],
             "fingerprint": "fp_7be8a1aa4ae94c62"
           },
-          "afterMs": 18089
+          "afterMs": 17936
         },
         {
           "type": "log",
@@ -2898,12 +2898,12 @@
             "level": "info",
             "message": "The app said: NAME REQUIRED"
           },
-          "afterMs": 18091
+          "afterMs": 17939
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-8409-7180-b468-618b5adade21",
+            "id": "01a1ff9b-32d7-718f-98f7-324963185fda",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "{Enter}",
@@ -2927,7 +2927,7 @@
             "fingerprint": "fp_7ea2aa4052052a22",
             "fromFingerprint": "fp_7be8a1aa4ae94c62"
           },
-          "afterMs": 18660
+          "afterMs": 18539
         },
         {
           "type": "screen",
@@ -3020,7 +3020,7 @@
             ],
             "fingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 18703
+          "afterMs": 18605
         },
         {
           "type": "log",
@@ -3028,12 +3028,12 @@
             "level": "info",
             "message": "The app said: NAME REQUIRED"
           },
-          "afterMs": 18705
+          "afterMs": 18608
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-8685-76de-9304-09648f088581",
+            "id": "01a1ff9b-3580-793e-b358-c50d52bd46da",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "A",
@@ -3057,7 +3057,7 @@
             "fingerprint": "fp_7be8a1aa4ae94c62",
             "fromFingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 19241
+          "afterMs": 19217
         },
         {
           "type": "screen",
@@ -3085,7 +3085,7 @@
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f11111777777777777777777777777777777777777777777777777771111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f11111077777777777777777777777777777777777777777777777771111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "11f1f1f1f1f1f111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "11f1f1f1f111f111f1f111f1111111f111f1f1f1f1f1f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1144f4f4f4f444f4f4f4f4f4f4f4f44411111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -3118,7 +3118,10 @@
                 "20204e414d452052455155495245442020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e65787420204573633d43616e63656c202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020"
               ],
-              "cursor": null,
+              "cursor": {
+                "col": 8,
+                "row": 20
+              },
               "cellWidth": 8
             },
             "text": [
@@ -3150,7 +3153,7 @@
             ],
             "fingerprint": "fp_7be8a1aa4ae94c62"
           },
-          "afterMs": 19282
+          "afterMs": 19300
         },
         {
           "type": "log",
@@ -3158,12 +3161,12 @@
             "level": "info",
             "message": "The app said: NAME REQUIRED"
           },
-          "afterMs": 19284
+          "afterMs": 19302
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-9308-72a1-8907-f1520e4d5108",
+            "id": "01a1ff9b-42bc-7169-b1ac-38fe1db0a2d3",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "WWWWWWWWWWWWWWWWWWWWWWWWW{Enter}",
@@ -3187,7 +3190,7 @@
             "fingerprint": "fp_489573eaff6713b0",
             "fromFingerprint": "fp_7be8a1aa4ae94c62"
           },
-          "afterMs": 22179
+          "afterMs": 22602
         },
         {
           "type": "screen",
@@ -3283,7 +3286,7 @@
             ],
             "fingerprint": "fp_489573eaff6713b0"
           },
-          "afterMs": 22221
+          "afterMs": 22656
         },
         {
           "type": "log",
@@ -3291,12 +3294,12 @@
             "level": "info",
             "message": "The app said: NAME REQUIRED"
           },
-          "afterMs": 22223
+          "afterMs": 22658
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-954c-70e7-b95f-dfa0a95f1c51",
+            "id": "01a1ff9b-4539-7a72-89f9-0a343ed1d494",
             "to": "CUSTOMERS",
             "diff": {
               "tables": {
@@ -3347,7 +3350,7 @@
             "fingerprint": "fp_7ea2aa4052052a22",
             "fromFingerprint": "fp_489573eaff6713b0"
           },
-          "afterMs": 22711
+          "afterMs": 23241
         },
         {
           "type": "screen",
@@ -3440,7 +3443,7 @@
             ],
             "fingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 22756
+          "afterMs": 23310
         },
         {
           "type": "log",
@@ -3448,12 +3451,12 @@
             "level": "info",
             "message": "Enter=Next changed CUSTOMER.DBF"
           },
-          "afterMs": 22758
+          "afterMs": 23312
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-97db-7dd8-8170-58c8a24e97fb",
+            "id": "01a1ff9b-47d6-74bd-b3ec-2305c46d0659",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "A",
@@ -3477,7 +3480,7 @@
             "fingerprint": "fp_7be8a1aa4ae94c62",
             "fromFingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 23309
+          "afterMs": 23908
         },
         {
           "type": "screen",
@@ -3570,12 +3573,12 @@
             ],
             "fingerprint": "fp_7be8a1aa4ae94c62"
           },
-          "afterMs": 23349
+          "afterMs": 23984
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-a022-7e86-871a-dcd5d9852e6a",
+            "id": "01a1ff9b-5086-7433-830d-e77853608030",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "AFTERLIFE TEST{Enter}",
@@ -3599,7 +3602,7 @@
             "fingerprint": "fp_489573eaff6713b0",
             "fromFingerprint": "fp_7be8a1aa4ae94c62"
           },
-          "afterMs": 25251
+          "afterMs": 26139
         },
         {
           "type": "screen",
@@ -3695,12 +3698,12 @@
             ],
             "fingerprint": "fp_489573eaff6713b0"
           },
-          "afterMs": 25295
+          "afterMs": 26188
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-a2ac-75b9-9127-61907f3306c0",
+            "id": "01a1ff9b-52fd-719a-ae17-eda8187a4952",
             "to": "CUSTOMERS",
             "diff": {
               "tables": {
@@ -3751,7 +3754,7 @@
             "fingerprint": "fp_7ea2aa4052052a22",
             "fromFingerprint": "fp_489573eaff6713b0"
           },
-          "afterMs": 25846
+          "afterMs": 26770
         },
         {
           "type": "screen",
@@ -3844,7 +3847,7 @@
             ],
             "fingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 25891
+          "afterMs": 26818
         },
         {
           "type": "log",
@@ -3852,12 +3855,12 @@
             "level": "info",
             "message": "Phone = (blank) changed CUSTOMER.DBF"
           },
-          "afterMs": 25894
+          "afterMs": 26820
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-a54f-7bf0-867f-1783eb364b85",
+            "id": "01a1ff9b-5570-7533-9e06-7f8b9030bd11",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "A",
@@ -3881,7 +3884,7 @@
             "fingerprint": "fp_7be8a1aa4ae94c62",
             "fromFingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 26467
+          "afterMs": 27400
         },
         {
           "type": "screen",
@@ -3909,7 +3912,7 @@
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f11111077777777777777777777777777777777777777777777777771111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f11111777777777777777777777777777777777777777777777777771111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "11f1f1f1f1f1f111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "11f1f1f1f111f111f1f111f1111111f1f111f1f1f1f1f1f1f1f1f11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111e1e1e1e1e1e1e1e111e1e1e1e1e111e1e1e1e1e111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -3942,10 +3945,7 @@
                 "2020435553544f4d455220433030313120414444454420202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e65787420204573633d43616e63656c202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020"
               ],
-              "cursor": {
-                "col": 8,
-                "row": 20
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -3977,12 +3977,12 @@
             ],
             "fingerprint": "fp_7be8a1aa4ae94c62"
           },
-          "afterMs": 26511
+          "afterMs": 27475
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-ad31-74ff-a68a-a586b50a3bc1",
+            "id": "01a1ff9b-5e30-74cc-bfad-e85cbfbe1868",
             "to": "CUSTOMERS",
             "from": "CUSTOMERS",
             "keys": "AFTERLIFE TEST{Enter}",
@@ -4006,7 +4006,7 @@
             "fingerprint": "fp_489573eaff6713b0",
             "fromFingerprint": "fp_7be8a1aa4ae94c62"
           },
-          "afterMs": 28315
+          "afterMs": 29639
         },
         {
           "type": "screen",
@@ -4102,12 +4102,12 @@
             ],
             "fingerprint": "fp_489573eaff6713b0"
           },
-          "afterMs": 28357
+          "afterMs": 29716
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-b4b8-7868-af78-6658f9c92a16",
+            "id": "01a1ff9b-65e4-747d-ace3-72524d468d0e",
             "to": "CUSTOMERS",
             "diff": {
               "tables": {
@@ -4158,7 +4158,7 @@
             "fingerprint": "fp_7ea2aa4052052a22",
             "fromFingerprint": "fp_489573eaff6713b0"
           },
-          "afterMs": 30082
+          "afterMs": 31613
         },
         {
           "type": "screen",
@@ -4251,7 +4251,7 @@
             ],
             "fingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 30124
+          "afterMs": 31697
         },
         {
           "type": "log",
@@ -4259,12 +4259,12 @@
             "level": "info",
             "message": "Phone = 999999999999 (max-width) changed CUSTOMER.DBF"
           },
-          "afterMs": 30126
+          "afterMs": 31699
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-b73f-7a33-8e08-860238e257a7",
+            "id": "01a1ff9b-6890-7170-a3e7-e5dbfb96c720",
             "to": "MAIN MENU",
             "from": "CUSTOMERS",
             "keys": "{Esc}",
@@ -4288,7 +4288,7 @@
             "fingerprint": "fp_1eb0f03756fc7646",
             "fromFingerprint": "fp_7ea2aa4052052a22"
           },
-          "afterMs": 30676
+          "afterMs": 32298
         },
         {
           "type": "screen",
@@ -4381,12 +4381,12 @@
             ],
             "fingerprint": "fp_1eb0f03756fc7646"
           },
-          "afterMs": 30717
+          "afterMs": 32377
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-b9ba-7622-80c2-ba6e5f0bd7d3",
+            "id": "01a1ff9b-6b3f-72be-82d6-9957431a6d25",
             "to": "DAILY REPORT",
             "from": "MAIN MENU",
             "keys": "4",
@@ -4410,7 +4410,7 @@
             "fingerprint": "fp_cc08e4ae3fda6e48",
             "fromFingerprint": "fp_1eb0f03756fc7646"
           },
-          "afterMs": 31257
+          "afterMs": 32983
         },
         {
           "type": "screen",
@@ -4503,7 +4503,7 @@
             ],
             "fingerprint": "fp_cc08e4ae3fda6e48"
           },
-          "afterMs": 31298
+          "afterMs": 33066
         },
         {
           "type": "log",
@@ -4511,12 +4511,12 @@
             "level": "info",
             "message": "New screen: DAILY REPORT"
           },
-          "afterMs": 31299
+          "afterMs": 33068
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-bc39-73ad-87b3-419065f6cc94",
+            "id": "01a1ff9b-6dc8-77f7-869d-8a16ed5cd7e5",
             "to": "MAIN MENU",
             "from": "DAILY REPORT",
             "keys": "{Esc}",
@@ -4540,7 +4540,7 @@
             "fingerprint": "fp_1eb0f03756fc7646",
             "fromFingerprint": "fp_cc08e4ae3fda6e48"
           },
-          "afterMs": 31845
+          "afterMs": 33634
         },
         {
           "type": "screen",
@@ -4566,7 +4566,7 @@
                 "111111111111111111111111111111111111111111111111111111f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111f1f1f1f1f1f1f111f1111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111f1f1f1f1f1f1f11111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -4601,10 +4601,7 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20312d352053656c65637420202020284329203139393820536869666120536f66747761726520486f7573652c20526177616c70696e6469202020202020202020202020202020202020202020202020"
               ],
-              "cursor": {
-                "col": 40,
-                "row": 18
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -4636,12 +4633,12 @@
             ],
             "fingerprint": "fp_1eb0f03756fc7646"
           },
-          "afterMs": 31886
+          "afterMs": 33700
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-beac-7964-83ca-9f01a351720b",
+            "id": "01a1ff9b-7047-7079-bbd2-5ea49f6431dc",
             "to": "NEW BILL",
             "from": "MAIN MENU",
             "keys": "1",
@@ -4665,7 +4662,7 @@
             "fingerprint": "fp_55dbc4ac877fc59a",
             "fromFingerprint": "fp_1eb0f03756fc7646"
           },
-          "afterMs": 32417
+          "afterMs": 34271
         },
         {
           "type": "screen",
@@ -4675,7 +4672,7 @@
               "attrs": [
                 "33f3f3f3f3f333f3f3f3f3f3f3f333f3f3f3f3f33333f3f3f3f333333333333333333333f3f3f333f3f3f3f3333333333333333333333333333333333333333333333333333333f3f3f3f3f3f3f3f333",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f1f1f1f111f1f111f1f1f1f1f1f111f111f1f1f1f1f1f1f1f1f111777777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f1f1f1f111f1f111f1f1f1f1f1f111f111f1f1f1f1f1f1f1f1f111077777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -4726,7 +4723,10 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d436f6e74696e756520204573633d4261636b20746f206d656e752020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020"
               ],
-              "cursor": null,
+              "cursor": {
+                "col": 32,
+                "row": 2
+              },
               "cellWidth": 8
             },
             "text": [
@@ -4758,12 +4758,12 @@
             ],
             "fingerprint": "fp_55dbc4ac877fc59a"
           },
-          "afterMs": 32458
+          "afterMs": 34347
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-c126-7b05-9c35-396ca61e8c9f",
+            "id": "01a1ff9b-72e6-7362-b165-45c1f06b7085",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "{Enter}",
@@ -4787,134 +4787,7 @@
             "fingerprint": "fp_1ea84e74e2cd7cec",
             "fromFingerprint": "fp_55dbc4ac877fc59a"
           },
-          "afterMs": 33000
-        },
-        {
-          "type": "screen",
-          "payload": {
-            "grid": {
-              "rows": 25,
-              "attrs": [
-                "33f3f3f3f3f333f3f3f3f3f3f3f333f3f3f3f3f33333f3f3f3f333333333333333333333f3f3f333f3f3f3f3333333333333333333333333333333333333333333333333333333f3f3f3f3f3f3f3f333",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f1f1f1f1f111e1e1e1e1e1e1e11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111e111e1e1e1e1111111e1e1e1e11111111111111111111111111111111111e1e1e1e1e11111111111111111e1e1e1e1e1111111e1e1e1111111111111e1e1e1e1e1e1111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1111111111111111111111111",
-                "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111f1f1f1f1f1f1f1f11111111111111111111111e1e1e1e1111111111111111111111111",
-                "11f1f1f1f1f111777777777777111111f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "3303030303030303030333330303030303330303330303030303330303030303030303030303333303030303030303330303030333030303333303030303030303030303333333333333333333333333"
-              ],
-              "codes": [
-                "205348494641204d45444943414c2053544f5245202076322e33202020202020202020204e45572042494c4c20202020202020202020202020202020202020202020202020202031352f30372f393820",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "20437573746f6d65723a2057414c4b2d494e2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "20202320434f44452020204e414d452020202020202020202020202020202020424154434820202020202020205052494345202020515459202020202020414d4f554e54202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "20c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4202020202020202020202020",
-                "202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020535542544f54414c2020202020202020202020302e3030202020202020202020202020",
-                "20436f64653a202020202020202020205174793a202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "20456e7465723d4164642020456e746572206f6e20626c616e6b20636f64653d46696e697368202046333d45646974206c6173742071747920204573633d43616e63656c202020202020202020202020"
-              ],
-              "cursor": null,
-              "cellWidth": 8
-            },
-            "text": [
-              " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
-              "                                                                                ",
-              " Customer: WALK-IN                                                              ",
-              "                                                                                ",
-              "  # CODE   NAME                 BATCH        PRICE   QTY      AMOUNT            ",
-              "                                                                                ",
-              "                                                                                ",
-              "                                                                                ",
-              "                                                                                ",
-              "                                                                                ",
-              "                                                                                ",
-              "                                                                                ",
-              "                                                                                ",
-              "                                                                                ",
-              "                                                                                ",
-              "                                                                                ",
-              "                                                                                ",
-              "                                                                                ",
-              "                                                                                ",
-              " ───────────────────────────────────────────────────────────────────            ",
-              "                                             SUBTOTAL           0.00            ",
-              " Code:          Qty:                                                            ",
-              "                                                                                ",
-              "                                                                                ",
-              " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
-            ],
-            "fingerprint": "fp_1ea84e74e2cd7cec"
-          },
-          "afterMs": 33043
-        },
-        {
-          "type": "observation",
-          "payload": {
-            "id": "01a1fdd1-c3b4-7403-a855-ecb8841ffddf",
-            "to": "NEW BILL",
-            "from": "NEW BILL",
-            "keys": "{F3}",
-            "kind": "explore",
-            "step": 36,
-            "label": "F3=Edit last qty",
-            "saves": 5,
-            "errors": ["NO LINE TO EDIT"],
-            "guided": 0,
-            "titles": 5,
-            "changed": [],
-            "refused": [
-              {
-                "step": 19,
-                "text": "NAME REQUIRED",
-                "label": "Enter=Next"
-              },
-              {
-                "step": 36,
-                "text": "NO LINE TO EDIT",
-                "label": "F3=Edit last qty"
-              }
-            ],
-            "screens": 10,
-            "newScreen": false,
-            "fingerprint": "fp_1ea84e74e2cd7cec",
-            "fromFingerprint": "fp_1ea84e74e2cd7cec"
-          },
-          "afterMs": 33599
+          "afterMs": 34943
         },
         {
           "type": "screen",
@@ -4945,7 +4818,7 @@
                 "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111f1f1f1f1f1f1f1f11111111111111111111111e1e1e1e1111111111111111111111111",
                 "11f1f1f1f1f111077777777777111111f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "1144f4f444f4f4f4f444f4f444f4f4f4f4441111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "3303030303030303030333330303030303330303330303030303330303030303030303030303333303030303030303330303030333030303333303030303030303030303333333333333333333333333"
               ],
               "codes": [
@@ -4972,7 +4845,7 @@
                 "202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020535542544f54414c2020202020202020202020302e3030202020202020202020202020",
                 "20436f64653a202020202020202020205174793a202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
-                "20204e4f204c494e4520544f2045444954202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4164642020456e746572206f6e20626c616e6b20636f64653d46696e697368202046333d45646974206c6173742071747920204573633d43616e63656c202020202020202020202020"
               ],
               "cursor": {
@@ -5005,12 +4878,139 @@
               "                                             SUBTOTAL           0.00            ",
               " Code:          Qty:                                                            ",
               "                                                                                ",
+              "                                                                                ",
+              " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
+            ],
+            "fingerprint": "fp_1ea84e74e2cd7cec"
+          },
+          "afterMs": 35003
+        },
+        {
+          "type": "observation",
+          "payload": {
+            "id": "01a1ff9b-757c-78ff-b8ee-2331335e7b1b",
+            "to": "NEW BILL",
+            "from": "NEW BILL",
+            "keys": "{F3}",
+            "kind": "explore",
+            "step": 36,
+            "label": "F3=Edit last qty",
+            "saves": 5,
+            "errors": ["NO LINE TO EDIT"],
+            "guided": 0,
+            "titles": 5,
+            "changed": [],
+            "refused": [
+              {
+                "step": 19,
+                "text": "NAME REQUIRED",
+                "label": "Enter=Next"
+              },
+              {
+                "step": 36,
+                "text": "NO LINE TO EDIT",
+                "label": "F3=Edit last qty"
+              }
+            ],
+            "screens": 10,
+            "newScreen": false,
+            "fingerprint": "fp_1ea84e74e2cd7cec",
+            "fromFingerprint": "fp_1ea84e74e2cd7cec"
+          },
+          "afterMs": 35604
+        },
+        {
+          "type": "screen",
+          "payload": {
+            "grid": {
+              "rows": 25,
+              "attrs": [
+                "33f3f3f3f3f333f3f3f3f3f3f3f333f3f3f3f3f33333f3f3f3f333333333333333333333f3f3f333f3f3f3f3333333333333333333333333333333333333333333333333333333f3f3f3f3f3f3f3f333",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f1f1f1f1f111e1e1e1e1e1e1e11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111e111e1e1e1e1111111e1e1e1e11111111111111111111111111111111111e1e1e1e1e11111111111111111e1e1e1e1e1111111e1e1e1111111111111e1e1e1e1e1e1111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1111111111111111111111111",
+                "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111f1f1f1f1f1f1f1f11111111111111111111111e1e1e1e1111111111111111111111111",
+                "11f1f1f1f1f111777777777777111111f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "1144f4f444f4f4f4f444f4f444f4f4f4f4441111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "3303030303030303030333330303030303330303330303030303330303030303030303030303333303030303030303330303030333030303333303030303030303030303333333333333333333333333"
+              ],
+              "codes": [
+                "205348494641204d45444943414c2053544f5245202076322e33202020202020202020204e45572042494c4c20202020202020202020202020202020202020202020202020202031352f30372f393820",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "20437573746f6d65723a2057414c4b2d494e2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "20202320434f44452020204e414d452020202020202020202020202020202020424154434820202020202020205052494345202020515459202020202020414d4f554e54202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "20c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4202020202020202020202020",
+                "202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020535542544f54414c2020202020202020202020302e3030202020202020202020202020",
+                "20436f64653a202020202020202020205174793a202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "20204e4f204c494e4520544f2045444954202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
+                "20456e7465723d4164642020456e746572206f6e20626c616e6b20636f64653d46696e697368202046333d45646974206c6173742071747920204573633d43616e63656c202020202020202020202020"
+              ],
+              "cursor": null,
+              "cellWidth": 8
+            },
+            "text": [
+              " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
+              "                                                                                ",
+              " Customer: WALK-IN                                                              ",
+              "                                                                                ",
+              "  # CODE   NAME                 BATCH        PRICE   QTY      AMOUNT            ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              " ───────────────────────────────────────────────────────────────────            ",
+              "                                             SUBTOTAL           0.00            ",
+              " Code:          Qty:                                                            ",
+              "                                                                                ",
               "  NO LINE TO EDIT                                                               ",
               " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
             ],
             "fingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 33641
+          "afterMs": 35676
         },
         {
           "type": "log",
@@ -5018,12 +5018,12 @@
             "level": "info",
             "message": "The app said: NO LINE TO EDIT"
           },
-          "afterMs": 33644
+          "afterMs": 35678
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-c8bd-76b2-8f04-781e35bbcee0",
+            "id": "01a1ff9b-7a84-788d-804a-b85c8d0ed7ef",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "ZZZ999{Enter}",
@@ -5057,7 +5057,7 @@
             "fingerprint": "fp_1ea84e74e2cd7cec",
             "fromFingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 34780
+          "afterMs": 36893
         },
         {
           "type": "screen",
@@ -5153,7 +5153,7 @@
             ],
             "fingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 34822
+          "afterMs": 36976
         },
         {
           "type": "log",
@@ -5161,12 +5161,12 @@
             "level": "info",
             "message": "The app said: MEDICINE NOT FOUND"
           },
-          "afterMs": 34824
+          "afterMs": 36978
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-cda7-7753-99a9-9cb84dfae6ae",
+            "id": "01a1ff9b-7fb4-76e1-819a-d1fb2739af5e",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "INS100{Enter}",
@@ -5200,7 +5200,7 @@
             "fingerprint": "fp_2a7d3d5d7718825b",
             "fromFingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 35933
+          "afterMs": 38221
         },
         {
           "type": "screen",
@@ -5293,7 +5293,7 @@
             ],
             "fingerprint": "fp_2a7d3d5d7718825b"
           },
-          "afterMs": 35974
+          "afterMs": 38284
         },
         {
           "type": "log",
@@ -5301,12 +5301,12 @@
             "level": "info",
             "message": "The app said: MEDICINE NOT FOUND"
           },
-          "afterMs": 35976
+          "afterMs": 38286
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-d039-76c1-a6bd-bb125b02d176",
+            "id": "01a1ff9b-824e-7429-a55e-c0fd154a937a",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "{Enter}",
@@ -5340,7 +5340,7 @@
             "fingerprint": "fp_1ea84e74e2cd7cec",
             "fromFingerprint": "fp_2a7d3d5d7718825b"
           },
-          "afterMs": 36539
+          "afterMs": 38884
         },
         {
           "type": "screen",
@@ -5433,12 +5433,12 @@
             ],
             "fingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 36579
+          "afterMs": 38953
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-d53e-7e87-80db-5c1e5d4efb01",
+            "id": "01a1ff9b-877b-7361-ae67-356eab9d97e7",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "PAN500{Enter}",
@@ -5472,7 +5472,7 @@
             "fingerprint": "fp_2a7d3d5d7718825b",
             "fromFingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 37714
+          "afterMs": 40210
         },
         {
           "type": "screen",
@@ -5565,12 +5565,12 @@
             ],
             "fingerprint": "fp_2a7d3d5d7718825b"
           },
-          "afterMs": 37758
+          "afterMs": 40288
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-d7cb-78a6-ad5d-e927ab1aafb4",
+            "id": "01a1ff9b-8a0c-7c28-9a21-8a2f29987cbc",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "{F3}",
@@ -5604,7 +5604,7 @@
             "fingerprint": "fp_1ea84e74e2cd7cec",
             "fromFingerprint": "fp_2a7d3d5d7718825b"
           },
-          "afterMs": 38313
+          "afterMs": 40865
         },
         {
           "type": "screen",
@@ -5697,12 +5697,12 @@
             ],
             "fingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 38358
+          "afterMs": 40952
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-dcdc-7db8-8506-a716e76f2440",
+            "id": "01a1ff9b-8f66-7a90-aa3e-de9fb70f0f39",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "PAN500{Enter}",
@@ -5736,7 +5736,7 @@
             "fingerprint": "fp_2a7d3d5d7718825b",
             "fromFingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 39501
+          "afterMs": 42237
         },
         {
           "type": "screen",
@@ -5829,12 +5829,12 @@
             ],
             "fingerprint": "fp_2a7d3d5d7718825b"
           },
-          "afterMs": 39543
+          "afterMs": 42303
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-dfdd-7409-9085-df48d6f1224f",
+            "id": "01a1ff9b-9278-7c81-967b-7727a2fda9f7",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "0{Enter}",
@@ -5868,7 +5868,7 @@
             "fingerprint": "fp_1ea84e74e2cd7cec",
             "fromFingerprint": "fp_2a7d3d5d7718825b"
           },
-          "afterMs": 40208
+          "afterMs": 43021
         },
         {
           "type": "screen",
@@ -5897,7 +5897,7 @@
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "11f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1f1111111111111111111111111",
                 "111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111f1f1f1f1f1f1f1f11111111111111111111111e1e1e1e1111111111111111111111111",
-                "11f1f1f1f1f111077777777777111111f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f111777777777777111111f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "3303030303030303030333330303030303330303330303030303330303030303030303030303333303030303030303330303030333030303333303030303030303030303333333333333333333333333"
@@ -5929,10 +5929,7 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4164642020456e746572206f6e20626c616e6b20636f64653d46696e697368202046333d45646974206c6173742071747920204573633d43616e63656c202020202020202020202020"
               ],
-              "cursor": {
-                "col": 7,
-                "row": 21
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -5964,12 +5961,12 @@
             ],
             "fingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 40251
+          "afterMs": 43086
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-e497-76e1-82fb-7cdb5c064813",
+            "id": "01a1ff9b-97ba-7a1b-a1ba-76eb1346ed43",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "PAN500{Enter}",
@@ -6008,7 +6005,7 @@
             "fingerprint": "fp_1ea84e74e2cd7cec",
             "fromFingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 41318
+          "afterMs": 44368
         },
         {
           "type": "screen",
@@ -6101,7 +6098,7 @@
             ],
             "fingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 41361
+          "afterMs": 44440
         },
         {
           "type": "log",
@@ -6109,12 +6106,12 @@
             "level": "info",
             "message": "The app said: ALREADY IN BILL"
           },
-          "afterMs": 41364
+          "afterMs": 44443
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-e729-7d08-8a44-771eeebdea5f",
+            "id": "01a1ff9b-9a6c-744c-aa38-9a6d6e28fd85",
             "to": "NEW BILL",
             "from": "NEW BILL",
             "keys": "{Enter}",
@@ -6153,7 +6150,7 @@
             "fingerprint": "fp_13b4744aa65ba2df",
             "fromFingerprint": "fp_1ea84e74e2cd7cec"
           },
-          "afterMs": 41918
+          "afterMs": 45053
         },
         {
           "type": "screen",
@@ -6246,7 +6243,7 @@
             ],
             "fingerprint": "fp_13b4744aa65ba2df"
           },
-          "afterMs": 41959
+          "afterMs": 45137
         },
         {
           "type": "log",
@@ -6254,7 +6251,7 @@
             "level": "info",
             "message": "New screen: NEW BILL"
           },
-          "afterMs": 41961
+          "afterMs": 45139
         },
         {
           "type": "log",
@@ -6262,12 +6259,12 @@
             "level": "info",
             "message": "The app said: ALREADY IN BILL"
           },
-          "afterMs": 41963
+          "afterMs": 45140
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-e964-7393-8045-e65958536a23",
+            "id": "01a1ff9b-9d1f-7aee-a384-6d0a6c598978",
             "to": "NEW BILL",
             "diff": {
               "tables": {
@@ -6372,7 +6369,7 @@
             "fingerprint": "fp_13b4744aa65ba2df",
             "fromFingerprint": "fp_13b4744aa65ba2df"
           },
-          "afterMs": 42442
+          "afterMs": 45744
         },
         {
           "type": "screen",
@@ -6465,7 +6462,7 @@
             ],
             "fingerprint": "fp_13b4744aa65ba2df"
           },
-          "afterMs": 42484
+          "afterMs": 45820
         },
         {
           "type": "log",
@@ -6473,12 +6470,12 @@
             "level": "info",
             "message": "F2=Save bill changed BILLITEM.DBF, BILLS.DBF"
           },
-          "afterMs": 42486
+          "afterMs": 45822
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fdd1-eb9a-725e-aa14-cb9764855745",
+            "id": "01a1ff9b-9fd3-7fa8-b0c8-7bab044063e0",
             "to": "MAIN MENU",
             "from": "NEW BILL",
             "keys": "{Esc}",
@@ -6517,7 +6514,7 @@
             "fingerprint": "fp_1eb0f03756fc7646",
             "fromFingerprint": "fp_13b4744aa65ba2df"
           },
-          "afterMs": 42961
+          "afterMs": 46436
         },
         {
           "type": "screen",
@@ -6613,7 +6610,7 @@
             ],
             "fingerprint": "fp_1eb0f03756fc7646"
           },
-          "afterMs": 43001
+          "afterMs": 46504
         },
         {
           "type": "log",
@@ -6621,7 +6618,7 @@
             "level": "info",
             "message": "Possession ended (explored): 5 screens (11 screen states), 47 actions, 6 that changed data"
           },
-          "afterMs": 43019
+          "afterMs": 46521
         }
       ]
     },
@@ -6647,7 +6644,7 @@
             "level": "info",
             "message": "BILLITEM.DBF: key BILL_NO + LINE, BILL_NO refers to bill, CODE refers to medicine"
           },
-          "afterMs": 12
+          "afterMs": 14
         },
         {
           "type": "log",
@@ -6655,7 +6652,7 @@
             "level": "info",
             "message": "BILLS.DBF: key BILL_NO, counter BILL_NO YYMM-####, CUST_ID refers to customer"
           },
-          "afterMs": 13
+          "afterMs": 15
         },
         {
           "type": "log",
@@ -6663,7 +6660,7 @@
             "level": "info",
             "message": "CUSTOMER.DBF: key CUST_ID, counter CUST_ID C####"
           },
-          "afterMs": 14
+          "afterMs": 17
         },
         {
           "type": "log",
@@ -6671,7 +6668,7 @@
             "level": "info",
             "message": "MEDICINE.DBF: key CODE"
           },
-          "afterMs": 15
+          "afterMs": 19
         },
         {
           "type": "log",
@@ -6679,7 +6676,7 @@
             "level": "info",
             "message": "Action \"Save a bill\" on fp_55dbc4ac877fc59a: insert bill, insert bill-item, update medicine, keys {@CUST_ID}{Enter}{lines}{#CODE}{Enter}{#QTY}{Enter}{/lines}{Enter}{F2}"
           },
-          "afterMs": 19
+          "afterMs": 30
         },
         {
           "type": "log",
@@ -6687,7 +6684,7 @@
             "level": "info",
             "message": "Action \"Add a customer\" on fp_7ea2aa4052052a22: insert customer, keys A{@NAME}{Enter}{@PHONE}{Enter}"
           },
-          "afterMs": 20
+          "afterMs": 34
         },
         {
           "type": "log",
@@ -6695,7 +6692,7 @@
             "level": "warn",
             "message": "No language model is set up on this worker (LLM_PROVIDER=bedrock, with AWS credentials): the rules are found among short expressions over the fields, each checked against every observation"
           },
-          "afterMs": 22
+          "afterMs": 37
         },
         {
           "type": "log",
@@ -6703,7 +6700,7 @@
             "level": "info",
             "message": "Probing the old app: Try a bill subtotal of 1. Try a bill subtotal of exactly 12.5 and of 13.5. Try a bill total of 1. Try a bill total of exactly 14.62 and of 15.62. Try a bill subtotal of 1000, 5000, 10000: bill.discount was always 0."
           },
-          "afterMs": 70
+          "afterMs": 127
         },
         {
           "type": "log",
@@ -6711,7 +6708,7 @@
             "level": "info",
             "message": "Probe bill.subtotal = 12.5: typed PAN500 x 1 into the old app, which saved it"
           },
-          "afterMs": 7202
+          "afterMs": 5349
         },
         {
           "type": "log",
@@ -6719,7 +6716,7 @@
             "level": "info",
             "message": "Probe bill.subtotal = 1000: typed PAN500 x 80 into the old app, which saved it"
           },
-          "afterMs": 11842
+          "afterMs": 10647
         },
         {
           "type": "log",
@@ -6727,7 +6724,7 @@
             "level": "info",
             "message": "Probe bill.subtotal = 5000: typed INS100 x 7, ZAN150 x 10 into the old app, which saved it"
           },
-          "afterMs": 17827
+          "afterMs": 17948
         },
         {
           "type": "log",
@@ -6735,7 +6732,7 @@
             "level": "info",
             "message": "Probe bill.subtotal = 10000: typed VEN100 x 30, INS100 x 11 into the old app, which saved it"
           },
-          "afterMs": 24133
+          "afterMs": 25348
         },
         {
           "type": "log",
@@ -6743,7 +6740,7 @@
             "level": "info",
             "message": "Probing the old app: Try a bill subtotal of 5001. Try a bill subtotal of 10001. Try a bill gst of exactly 850 and of 851. Try a bill gst of exactly 1530 and of 1531. Try a bill total of exactly 5850 and of 5851. Try a bill total of exactly 10530 and of 10531. Try a bill gst of 1. Try a bill gst of exactly 2.12 and of 3.12."
           },
-          "afterMs": 24277
+          "afterMs": 25488
         },
         {
           "type": "log",
@@ -6751,7 +6748,7 @@
             "level": "info",
             "message": "Probe bill.subtotal = 5001: typed AUG625 x 29, IRO001 x 6 into the old app, which saved it"
           },
-          "afterMs": 30496
+          "afterMs": 32968
         },
         {
           "type": "log",
@@ -6759,7 +6756,7 @@
             "level": "info",
             "message": "Probe bill.subtotal = 10001: typed AUG625 x 59, AMO500 x 7 into the old app, which saved it"
           },
-          "afterMs": 39273
+          "afterMs": 40240
         },
         {
           "type": "log",
@@ -6767,7 +6764,7 @@
             "level": "info",
             "message": "Probing the old app: Try a bill subtotal of 5002."
           },
-          "afterMs": 39463
+          "afterMs": 40579
         },
         {
           "type": "log",
@@ -6775,7 +6772,7 @@
             "level": "info",
             "message": "Probe bill.subtotal = 5002: typed CAL500 x 22, RIS001 x 25 into the old app, which saved it"
           },
-          "afterMs": 45675
+          "afterMs": 48087
         },
         {
           "type": "rule_found",
@@ -6790,7 +6787,7 @@
             "expression": "today",
             "observations": 9
           },
-          "afterMs": 45849
+          "afterMs": 48324
         },
         {
           "type": "log",
@@ -6798,7 +6795,7 @@
             "level": "info",
             "message": "bill.bill_date = today: explains all 9 values in 9 observations (confidence 82%)"
           },
-          "afterMs": 45851
+          "afterMs": 48326
         },
         {
           "type": "rule_found",
@@ -6813,7 +6810,7 @@
             "expression": "medicine.price",
             "observations": 9
           },
-          "afterMs": 45852
+          "afterMs": 48327
         },
         {
           "type": "log",
@@ -6821,7 +6818,7 @@
             "level": "info",
             "message": "bill_item.price = medicine.price: explains all 15 values in 9 observations (confidence 82%)"
           },
-          "afterMs": 45853
+          "afterMs": 48328
         },
         {
           "type": "rule_found",
@@ -6830,16 +6827,13 @@
             "probes": [],
             "ruleId": "medicine-qty",
             "target": "medicine.qty",
-            "alsoFit": [
-              "trunc((bill_item.qty - medicine.qty) * -1, 2)",
-              "round((bill_item.qty - medicine.qty) * -1, 2)"
-            ],
+            "alsoFit": [],
             "candidates": 600,
             "confidence": 0.8,
             "expression": "medicine.qty - bill_item.qty",
             "observations": 8
           },
-          "afterMs": 45854
+          "afterMs": 48329
         },
         {
           "type": "log",
@@ -6847,7 +6841,7 @@
             "level": "info",
             "message": "medicine.qty = medicine.qty - bill_item.qty: explains all 13 values in 8 observations (confidence 80%)"
           },
-          "afterMs": 45855
+          "afterMs": 48330
         },
         {
           "type": "rule_found",
@@ -6862,7 +6856,7 @@
             "expression": "bill_item.qty * bill_item.price",
             "observations": 9
           },
-          "afterMs": 45855
+          "afterMs": 48331
         },
         {
           "type": "log",
@@ -6870,7 +6864,7 @@
             "level": "info",
             "message": "bill_item.amount = bill_item.qty * bill_item.price: explains all 15 values in 9 observations (confidence 82%)"
           },
-          "afterMs": 45856
+          "afterMs": 48332
         },
         {
           "type": "rule_found",
@@ -6884,12 +6878,12 @@
               "bill.total - bill.gst + bill.discount",
               "sum(items, x => x.qty * x.price)"
             ],
-            "candidates": 183,
+            "candidates": 209,
             "confidence": 0.82,
             "expression": "sum(items, x => x.amount)",
             "observations": 9
           },
-          "afterMs": 45857
+          "afterMs": 48333
         },
         {
           "type": "log",
@@ -6897,7 +6891,7 @@
             "level": "info",
             "message": "bill.subtotal = sum(items, x => x.amount): explains all 9 values in 9 observations (confidence 82%)"
           },
-          "afterMs": 45858
+          "afterMs": 48334
         },
         {
           "type": "rule_found",
@@ -6918,7 +6912,7 @@
             "expression": "if bill.subtotal > 5000 then trunc(bill.subtotal * 0.1, 2) else 0",
             "observations": 9
           },
-          "afterMs": 45859
+          "afterMs": 48335
         },
         {
           "type": "log",
@@ -6926,7 +6920,7 @@
             "level": "info",
             "message": "bill.discount = if bill.subtotal > 5000 then trunc(bill.subtotal * 0.1, 2) else 0: explains all 9 values in 9 observations (confidence 82%)"
           },
-          "afterMs": 45860
+          "afterMs": 48336
         },
         {
           "type": "rule_found",
@@ -6953,12 +6947,12 @@
               "if bill.total > 0 then trunc((bill.discount - bill.subtotal) * -0.17, 2) else 0",
               "if bill.total >= 14.62 then trunc((bill.discount - bill.subtotal) * -0.17, 2) else 0"
             ],
-            "candidates": 151,
+            "candidates": 191,
             "confidence": 0.75,
             "expression": "trunc((bill.subtotal - bill.discount) * 0.17, 2)",
             "observations": 9
           },
-          "afterMs": 45861
+          "afterMs": 48337
         },
         {
           "type": "log",
@@ -6966,7 +6960,7 @@
             "level": "info",
             "message": "bill.gst = trunc((bill.subtotal - bill.discount) * 0.17, 2): explains all 9 values in 9 observations (confidence 75%)"
           },
-          "afterMs": 45862
+          "afterMs": 48338
         },
         {
           "type": "rule_found",
@@ -6993,12 +6987,12 @@
               "if bill.gst > 0 then trunc((bill.discount - bill.subtotal) * -1.17, 2) else 0",
               "if bill.gst >= 2.12 then trunc((bill.discount - bill.subtotal) * -1.17, 2) else 0"
             ],
-            "candidates": 181,
+            "candidates": 189,
             "confidence": 0.75,
             "expression": "bill.subtotal - bill.discount + bill.gst",
             "observations": 9
           },
-          "afterMs": 45863
+          "afterMs": 48339
         },
         {
           "type": "log",
@@ -7006,7 +7000,7 @@
             "level": "info",
             "message": "bill.total = bill.subtotal - bill.discount + bill.gst: explains all 9 values in 9 observations (confidence 75%)"
           },
-          "afterMs": 45864
+          "afterMs": 48339
         },
         {
           "type": "soul_updated",
@@ -7023,7 +7017,7 @@
             "foreignKeys": 3,
             "unexplained": []
           },
-          "afterMs": 45872
+          "afterMs": 48347
         }
       ]
     },
@@ -7062,7 +7056,7 @@
   ],
   "observations": [
     {
-      "id": "01a1fdd1-4616-767f-b420-581db383479e",
+      "id": "01a1ff9a-f0db-7ed1-a9a3-bd2a88625056",
       "seq": 0,
       "keys": "1",
       "screenBefore": {
@@ -7135,7 +7129,10 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 32,
+          "row": 2
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -7143,11 +7140,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 552,
+      "durationMs": 523,
       "stable": true
     },
     {
-      "id": "01a1fdd1-4881-73b0-93ce-ffe9ec90d430",
+      "id": "01a1ff9a-f376-7319-8d27-8d42f88f1b88",
       "seq": 1,
       "keys": "{Enter}",
       "screenBefore": {
@@ -7231,11 +7228,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 488,
+      "durationMs": 541,
       "stable": true
     },
     {
-      "id": "01a1fdd1-4d2c-791a-91ec-83bf4e2d1d0c",
+      "id": "01a1ff9a-f86c-7e4b-9206-31987b7d7c2c",
       "seq": 2,
       "keys": "PAN500{Enter}",
       "screenBefore": {
@@ -7319,11 +7316,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1073,
+      "durationMs": 1154,
       "stable": true
     },
     {
-      "id": "01a1fdd1-4fe2-7fc9-a8d1-12a632efdeee",
+      "id": "01a1ff9a-fb5c-7427-a71b-238d69dd6711",
       "seq": 3,
       "keys": "1{Enter}",
       "screenBefore": {
@@ -7407,11 +7404,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 581,
+      "durationMs": 643,
       "stable": true
     },
     {
-      "id": "01a1fdd1-5220-7c46-96d2-fdac1760e1fa",
+      "id": "01a1ff9a-fdca-739d-9bb4-b6de24752d62",
       "seq": 4,
       "keys": "{Enter}",
       "screenBefore": {
@@ -7495,11 +7492,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 460,
+      "durationMs": 499,
       "stable": true
     },
     {
-      "id": "01a1fdd1-5460-767a-8650-b4a0837d426a",
+      "id": "01a1ff9b-0070-702b-b062-61e16dfdced1",
       "seq": 5,
       "keys": "{F2}",
       "screenBefore": {
@@ -7652,11 +7649,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 461,
+      "durationMs": 534,
       "stable": true
     },
     {
-      "id": "01a1fdd1-56e7-72f8-9aea-cc3f5525f114",
+      "id": "01a1ff9b-0302-73f6-868e-2b78cce4449a",
       "seq": 6,
       "keys": "{Esc}",
       "screenBefore": {
@@ -7737,11 +7734,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 530,
+      "durationMs": 514,
       "stable": true
     },
     {
-      "id": "01a1fdd1-5928-7fef-bb6e-b3c2ac0bf7db",
+      "id": "01a1ff9b-05a5-7857-89ee-d86d221a73a4",
       "seq": 7,
       "keys": "2",
       "screenBefore": {
@@ -7822,11 +7819,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 465,
+      "durationMs": 551,
       "stable": true
     },
     {
-      "id": "01a1fdd1-5bc6-7ec0-a314-81b783581b7d",
+      "id": "01a1ff9b-0854-7407-ba35-a8a62f684e01",
       "seq": 8,
       "keys": "{PgDn}",
       "screenBefore": {
@@ -7907,11 +7904,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 541,
+      "durationMs": 545,
       "stable": true
     },
     {
-      "id": "01a1fdd1-5e61-73b3-88d2-f35bc83c384c",
+      "id": "01a1ff9b-0af5-7f95-9c1c-ae056b4d7b7d",
       "seq": 9,
       "keys": "{PgUp}",
       "screenBefore": {
@@ -7992,11 +7989,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 551,
+      "durationMs": 517,
       "stable": true
     },
     {
-      "id": "01a1fdd1-6097-706d-9ee6-cf299738aee5",
+      "id": "01a1ff9b-0dc1-7915-aa78-f2183395f2ad",
       "seq": 10,
       "keys": "{Esc}",
       "screenBefore": {
@@ -8077,11 +8074,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 454,
+      "durationMs": 548,
       "stable": true
     },
     {
-      "id": "01a1fdd1-6322-7c92-9b97-6f3f85307ae7",
+      "id": "01a1ff9b-106f-7ef9-9740-ae23cb8b3113",
       "seq": 11,
       "keys": "3",
       "screenBefore": {
@@ -8162,11 +8159,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 538,
+      "durationMs": 522,
       "stable": true
     },
     {
-      "id": "01a1fdd1-65ad-78ac-ae59-113d7f077511",
+      "id": "01a1ff9b-1315-74fd-8823-6fd0295f61a5",
       "seq": 12,
       "keys": "A",
       "screenBefore": {
@@ -8250,11 +8247,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 540,
+      "durationMs": 530,
       "stable": true
     },
     {
-      "id": "01a1fdd1-6dec-75fa-ae91-4e520e778579",
+      "id": "01a1ff9b-1bf4-78f0-9a20-91d497c17cad",
       "seq": 13,
       "keys": "AFTERLIFE TEST{Enter}",
       "screenBefore": {
@@ -8338,11 +8335,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1999,
+      "durationMs": 2114,
       "stable": true
     },
     {
-      "id": "01a1fdd1-74f0-7beb-9f41-40356eac2d44",
+      "id": "01a1ff9b-2343-717a-972d-44cb77fa1190",
       "seq": 14,
       "keys": "051-0000000{Enter}",
       "screenBefore": {
@@ -8444,11 +8441,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1686,
+      "durationMs": 1724,
       "stable": true
     },
     {
-      "id": "01a1fdd1-7789-7f21-a508-6b82e552315c",
+      "id": "01a1ff9b-25dd-73e7-86e0-15d3d2eb8c82",
       "seq": 15,
       "keys": "{PgDn}",
       "screenBefore": {
@@ -8529,11 +8526,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 552,
+      "durationMs": 528,
       "stable": true
     },
     {
-      "id": "01a1fdd1-7a0e-767b-ab6c-735600a62008",
+      "id": "01a1ff9b-2851-7851-8fea-6a1c1fabc574",
       "seq": 16,
       "keys": "{PgUp}",
       "screenBefore": {
@@ -8614,11 +8611,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 537,
+      "durationMs": 495,
       "stable": true
     },
     {
-      "id": "01a1fdd1-7c67-71d1-848b-e78c9de66aa9",
+      "id": "01a1ff9b-2ac6-7a15-b356-e4028885c2b4",
       "seq": 17,
       "keys": "A",
       "screenBefore": {
@@ -8702,11 +8699,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 543,
+      "durationMs": 563,
       "stable": true
     },
     {
-      "id": "01a1fdd1-7ee9-7c75-ad36-f7f9a51ba7db",
+      "id": "01a1ff9b-2d81-7704-8da2-d0ae2a700692",
       "seq": 18,
       "keys": "{Enter}",
       "screenBefore": {
@@ -8790,11 +8787,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 530,
+      "durationMs": 539,
       "stable": true
     },
     {
-      "id": "01a1fdd1-8170-78ad-b8f4-21bdf5435567",
+      "id": "01a1ff9b-302a-7ed4-9b35-3435b808d609",
       "seq": 19,
       "keys": "A",
       "screenBefore": {
@@ -8867,10 +8864,7 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": {
-          "col": 8,
-          "row": 20
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -8878,11 +8872,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 538,
+      "durationMs": 513,
       "stable": true
     },
     {
-      "id": "01a1fdd1-8409-7180-b468-618b5adade21",
+      "id": "01a1ff9b-32d7-718f-98f7-324963185fda",
       "seq": 20,
       "keys": "{Enter}",
       "screenBefore": {
@@ -8919,10 +8913,7 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": {
-          "col": 8,
-          "row": 20
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_7ea2aa4052052a22",
@@ -8966,11 +8957,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 546,
+      "durationMs": 514,
       "stable": true
     },
     {
-      "id": "01a1fdd1-8685-76de-9304-09648f088581",
+      "id": "01a1ff9b-3580-793e-b358-c50d52bd46da",
       "seq": 21,
       "keys": "A",
       "screenBefore": {
@@ -9043,7 +9034,10 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 8,
+          "row": 20
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -9051,11 +9045,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 526,
+      "durationMs": 534,
       "stable": true
     },
     {
-      "id": "01a1fdd1-9308-72a1-8907-f1520e4d5108",
+      "id": "01a1ff9b-42bc-7169-b1ac-38fe1db0a2d3",
       "seq": 22,
       "keys": "WWWWWWWWWWWWWWWWWWWWWWWWW{Enter}",
       "screenBefore": {
@@ -9092,7 +9086,10 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 8,
+          "row": 20
+        }
       },
       "screenAfter": {
         "fingerprint": "fp_489573eaff6713b0",
@@ -9128,7 +9125,10 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 8,
+          "row": 21
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -9136,11 +9136,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 3088,
+      "durationMs": 3240,
       "stable": true
     },
     {
-      "id": "01a1fdd1-954c-70e7-b95f-dfa0a95f1c51",
+      "id": "01a1ff9b-4539-7a72-89f9-0a343ed1d494",
       "seq": 23,
       "keys": "{Enter}",
       "screenBefore": {
@@ -9177,7 +9177,10 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 8,
+          "row": 21
+        }
       },
       "screenAfter": {
         "fingerprint": "fp_7ea2aa4052052a22",
@@ -9242,11 +9245,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 461,
+      "durationMs": 518,
       "stable": true
     },
     {
-      "id": "01a1fdd1-97db-7dd8-8170-58c8a24e97fb",
+      "id": "01a1ff9b-47d6-74bd-b3ec-2305c46d0659",
       "seq": 24,
       "keys": "A",
       "screenBefore": {
@@ -9319,10 +9322,7 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": {
-          "col": 8,
-          "row": 20
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -9330,11 +9330,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 538,
+      "durationMs": 496,
       "stable": true
     },
     {
-      "id": "01a1fdd1-a022-7e86-871a-dcd5d9852e6a",
+      "id": "01a1ff9b-5086-7433-830d-e77853608030",
       "seq": 25,
       "keys": "AFTERLIFE TEST{Enter}",
       "screenBefore": {
@@ -9371,10 +9371,7 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": {
-          "col": 8,
-          "row": 20
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_489573eaff6713b0",
@@ -9410,7 +9407,10 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 8,
+          "row": 21
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -9418,11 +9418,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 2005,
+      "durationMs": 2076,
       "stable": true
     },
     {
-      "id": "01a1fdd1-a2ac-75b9-9127-61907f3306c0",
+      "id": "01a1ff9b-52fd-719a-ae17-eda8187a4952",
       "seq": 26,
       "keys": "{Enter}",
       "screenBefore": {
@@ -9459,7 +9459,10 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 8,
+          "row": 21
+        }
       },
       "screenAfter": {
         "fingerprint": "fp_7ea2aa4052052a22",
@@ -9524,11 +9527,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 542,
+      "durationMs": 513,
       "stable": true
     },
     {
-      "id": "01a1fdd1-a54f-7bf0-867f-1783eb364b85",
+      "id": "01a1ff9b-5570-7533-9e06-7f8b9030bd11",
       "seq": 27,
       "keys": "A",
       "screenBefore": {
@@ -9601,10 +9604,7 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": {
-          "col": 8,
-          "row": 20
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -9612,11 +9612,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 554,
+      "durationMs": 503,
       "stable": true
     },
     {
-      "id": "01a1fdd1-ad31-74ff-a68a-a586b50a3bc1",
+      "id": "01a1ff9b-5e30-74cc-bfad-e85cbfbe1868",
       "seq": 28,
       "keys": "AFTERLIFE TEST{Enter}",
       "screenBefore": {
@@ -9653,10 +9653,7 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": {
-          "col": 8,
-          "row": 20
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_489573eaff6713b0",
@@ -9692,7 +9689,10 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 8,
+          "row": 21
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -9700,11 +9700,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1906,
+      "durationMs": 2093,
       "stable": true
     },
     {
-      "id": "01a1fdd1-b4b8-7868-af78-6658f9c92a16",
+      "id": "01a1ff9b-65e4-747d-ace3-72524d468d0e",
       "seq": 29,
       "keys": "999999999999{Enter}",
       "screenBefore": {
@@ -9741,7 +9741,10 @@
             "name": "CUSTOMERS"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 8,
+          "row": 21
+        }
       },
       "screenAfter": {
         "fingerprint": "fp_7ea2aa4052052a22",
@@ -9806,11 +9809,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1820,
+      "durationMs": 1821,
       "stable": true
     },
     {
-      "id": "01a1fdd1-b73f-7a33-8e08-860238e257a7",
+      "id": "01a1ff9b-6890-7170-a3e7-e5dbfb96c720",
       "seq": 30,
       "keys": "{Esc}",
       "screenBefore": {
@@ -9891,11 +9894,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 532,
+      "durationMs": 535,
       "stable": true
     },
     {
-      "id": "01a1fdd1-b9ba-7622-80c2-ba6e5f0bd7d3",
+      "id": "01a1ff9b-6b3f-72be-82d6-9957431a6d25",
       "seq": 31,
       "keys": "4",
       "screenBefore": {
@@ -9976,11 +9979,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 533,
+      "durationMs": 514,
       "stable": true
     },
     {
-      "id": "01a1fdd1-bc39-73ad-87b3-419065f6cc94",
+      "id": "01a1ff9b-6dc8-77f7-869d-8a16ed5cd7e5",
       "seq": 32,
       "keys": "{Esc}",
       "screenBefore": {
@@ -10053,7 +10056,10 @@
             "name": "MAIN MENU"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 40,
+          "row": 18
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -10061,11 +10067,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 528,
+      "durationMs": 501,
       "stable": true
     },
     {
-      "id": "01a1fdd1-beac-7964-83ca-9f01a351720b",
+      "id": "01a1ff9b-7047-7079-bbd2-5ea49f6431dc",
       "seq": 33,
       "keys": "1",
       "screenBefore": {
@@ -10102,7 +10108,10 @@
             "name": "MAIN MENU"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 40,
+          "row": 18
+        }
       },
       "screenAfter": {
         "fingerprint": "fp_55dbc4ac877fc59a",
@@ -10138,7 +10147,10 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 32,
+          "row": 2
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -10146,11 +10158,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 523,
+      "durationMs": 486,
       "stable": true
     },
     {
-      "id": "01a1fdd1-c126-7b05-9c35-396ca61e8c9f",
+      "id": "01a1ff9b-72e6-7362-b165-45c1f06b7085",
       "seq": 34,
       "keys": "{Enter}",
       "screenBefore": {
@@ -10187,7 +10199,10 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 32,
+          "row": 2
+        }
       },
       "screenAfter": {
         "fingerprint": "fp_1ea84e74e2cd7cec",
@@ -10223,10 +10238,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 7,
-          "row": 21
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -10234,11 +10246,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 523,
+      "durationMs": 510,
       "stable": true
     },
     {
-      "id": "01a1fdd1-c3b4-7403-a855-ecb8841ffddf",
+      "id": "01a1ff9b-757c-78ff-b8ee-2331335e7b1b",
       "seq": 35,
       "keys": "{F3}",
       "screenBefore": {
@@ -10314,10 +10326,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 7,
-          "row": 21
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -10325,11 +10334,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 541,
+      "durationMs": 510,
       "stable": true
     },
     {
-      "id": "01a1fdd1-c8bd-76b2-8f04-781e35bbcee0",
+      "id": "01a1ff9b-7a84-788d-804a-b85c8d0ed7ef",
       "seq": 36,
       "keys": "ZZZ999{Enter}",
       "screenBefore": {
@@ -10366,10 +10375,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 7,
-          "row": 21
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_1ea84e74e2cd7cec",
@@ -10416,11 +10422,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1175,
+      "durationMs": 1148,
       "stable": true
     },
     {
-      "id": "01a1fdd1-cda7-7753-99a9-9cb84dfae6ae",
+      "id": "01a1ff9b-7fb4-76e1-819a-d1fb2739af5e",
       "seq": 37,
       "keys": "INS100{Enter}",
       "screenBefore": {
@@ -10496,7 +10502,10 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 21,
+          "row": 21
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -10504,11 +10513,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1153,
+      "durationMs": 1156,
       "stable": true
     },
     {
-      "id": "01a1fdd1-d039-76c1-a6bd-bb125b02d176",
+      "id": "01a1ff9b-824e-7429-a55e-c0fd154a937a",
       "seq": 38,
       "keys": "{Enter}",
       "screenBefore": {
@@ -10592,11 +10601,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 546,
+      "durationMs": 506,
       "stable": true
     },
     {
-      "id": "01a1fdd1-d53e-7e87-80db-5c1e5d4efb01",
+      "id": "01a1ff9b-877b-7361-ae67-356eab9d97e7",
       "seq": 39,
       "keys": "PAN500{Enter}",
       "screenBefore": {
@@ -10680,11 +10689,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1180,
+      "durationMs": 1169,
       "stable": true
     },
     {
-      "id": "01a1fdd1-d7cb-78a6-ad5d-e927ab1aafb4",
+      "id": "01a1ff9b-8a0c-7c28-9a21-8a2f29987cbc",
       "seq": 40,
       "keys": "{F3}",
       "screenBefore": {
@@ -10768,11 +10777,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 534,
+      "durationMs": 510,
       "stable": true
     },
     {
-      "id": "01a1fdd1-dcdc-7db8-8506-a716e76f2440",
+      "id": "01a1ff9b-8f66-7a90-aa3e-de9fb70f0f39",
       "seq": 41,
       "keys": "PAN500{Enter}",
       "screenBefore": {
@@ -10809,10 +10818,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 7,
-          "row": 21
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_2a7d3d5d7718825b",
@@ -10856,11 +10862,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1180,
+      "durationMs": 1186,
       "stable": true
     },
     {
-      "id": "01a1fdd1-dfdd-7409-9085-df48d6f1224f",
+      "id": "01a1ff9b-9278-7c81-967b-7727a2fda9f7",
       "seq": 42,
       "keys": "0{Enter}",
       "screenBefore": {
@@ -10944,11 +10950,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 655,
+      "durationMs": 628,
       "stable": true
     },
     {
-      "id": "01a1fdd1-e497-76e1-82fb-7cdb5c064813",
+      "id": "01a1ff9b-97ba-7a1b-a1ba-76eb1346ed43",
       "seq": 43,
       "keys": "PAN500{Enter}",
       "screenBefore": {
@@ -11024,10 +11030,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 7,
-          "row": 21
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -11035,11 +11038,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1099,
+      "durationMs": 1185,
       "stable": true
     },
     {
-      "id": "01a1fdd1-e729-7d08-8a44-771eeebdea5f",
+      "id": "01a1ff9b-9a6c-744c-aa38-9a6d6e28fd85",
       "seq": 44,
       "keys": "{Enter}",
       "screenBefore": {
@@ -11120,11 +11123,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 546,
+      "durationMs": 508,
       "stable": true
     },
     {
-      "id": "01a1fdd1-e964-7393-8045-e65958536a23",
+      "id": "01a1ff9b-9d1f-7aee-a384-6d0a6c598978",
       "seq": 45,
       "keys": "{F2}",
       "screenBefore": {
@@ -11265,11 +11268,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 462,
+      "durationMs": 504,
       "stable": true
     },
     {
-      "id": "01a1fdd1-eb9a-725e-aa14-cb9764855745",
+      "id": "01a1ff9b-9fd3-7fa8-b0c8-7bab044063e0",
       "seq": 46,
       "keys": "{Esc}",
       "screenBefore": {
@@ -11342,7 +11345,10 @@
             "name": "MAIN MENU"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 40,
+          "row": 18
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -11350,11 +11356,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 457,
+      "durationMs": 534,
       "stable": true
     },
     {
-      "id": "01a1fdd2-0068-7e1b-9aa0-9e299666ff87",
+      "id": "01a1ff9b-b6d9-7356-acf5-462edda8d565",
       "seq": 47,
       "keys": "{Enter}",
       "screenBefore": {
@@ -11391,10 +11397,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 32,
-          "row": 2
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_1ea84e74e2cd7cec",
@@ -11438,11 +11441,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 568,
+      "durationMs": 553,
       "stable": true
     },
     {
-      "id": "01a1fdd2-006b-7271-be32-85ba9db6c10f",
+      "id": "01a1ff9b-b6dc-786a-8dab-f05464b2e3c2",
       "seq": 48,
       "keys": "PAN500{Enter}",
       "screenBefore": {
@@ -11515,10 +11518,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 21,
-          "row": 21
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -11526,11 +11526,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1180,
+      "durationMs": 1195,
       "stable": true
     },
     {
-      "id": "01a1fdd2-006e-724d-a0bb-a9f94092f948",
+      "id": "01a1ff9b-b6de-78be-b023-bb3c7f6e0308",
       "seq": 49,
       "keys": "1{Enter}",
       "screenBefore": {
@@ -11614,11 +11614,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 559,
+      "durationMs": 633,
       "stable": true
     },
     {
-      "id": "01a1fdd2-0071-76d1-a238-127e2f49189e",
+      "id": "01a1ff9b-b6e0-7c17-ae87-99de0226c9e0",
       "seq": 50,
       "keys": "{Enter}",
       "screenBefore": {
@@ -11699,11 +11699,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 465,
+      "durationMs": 532,
       "stable": true
     },
     {
-      "id": "01a1fdd2-0074-71f7-911a-70a4b63dca67",
+      "id": "01a1ff9b-b6e2-733d-af3d-f91974221778",
       "seq": 51,
       "keys": "{F2}",
       "screenBefore": {
@@ -11856,11 +11856,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 534,
+      "durationMs": 487,
       "stable": true
     },
     {
-      "id": "01a1fdd2-1432-74de-a421-ff5cf975388a",
+      "id": "01a1ff9b-cb79-7add-b1d1-bfb0980598f5",
       "seq": 52,
       "keys": "{Enter}",
       "screenBefore": {
@@ -11941,11 +11941,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 461,
+      "durationMs": 513,
       "stable": true
     },
     {
-      "id": "01a1fdd2-1435-7a9a-a5b9-a60c314bdc84",
+      "id": "01a1ff9b-cb7c-718f-b1ec-00fe8faa4eb6",
       "seq": 53,
       "keys": "PAN500{Enter}",
       "screenBefore": {
@@ -12029,11 +12029,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1143,
+      "durationMs": 1199,
       "stable": true
     },
     {
-      "id": "01a1fdd2-1437-7e8f-9d31-09c988865d5d",
+      "id": "01a1ff9b-cb7d-7658-aa42-dc6aab6329c0",
       "seq": 54,
       "keys": "80{Enter}",
       "screenBefore": {
@@ -12109,7 +12109,10 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 7,
+          "row": 21
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -12117,11 +12120,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 686,
+      "durationMs": 762,
       "stable": true
     },
     {
-      "id": "01a1fdd2-1439-7d65-b06e-0165060353a8",
+      "id": "01a1ff9b-cb7f-78ac-945f-c5a7871f14df",
       "seq": 55,
       "keys": "{Enter}",
       "screenBefore": {
@@ -12202,11 +12205,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 478,
+      "durationMs": 527,
       "stable": true
     },
     {
-      "id": "01a1fdd2-143c-7fe0-911e-87d0f0907674",
+      "id": "01a1ff9b-cb84-7785-b00c-403fd389ce0b",
       "seq": 56,
       "keys": "{F2}",
       "screenBefore": {
@@ -12359,11 +12362,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 484,
+      "durationMs": 509,
       "stable": true
     },
     {
-      "id": "01a1fdd2-2db1-7df5-a71d-6d576b3f85b5",
+      "id": "01a1ff9b-e7f9-7f6d-8442-3060339f8cec",
       "seq": 57,
       "keys": "{Enter}",
       "screenBefore": {
@@ -12400,10 +12403,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 32,
-          "row": 2
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_1ea84e74e2cd7cec",
@@ -12447,11 +12447,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 461,
+      "durationMs": 538,
       "stable": true
     },
     {
-      "id": "01a1fdd2-2db4-773c-8dae-c0b255953f7c",
+      "id": "01a1ff9b-e7fc-7609-8ba4-c754db6960ec",
       "seq": 58,
       "keys": "INS100{Enter}",
       "screenBefore": {
@@ -12488,10 +12488,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 7,
-          "row": 21
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_2a7d3d5d7718825b",
@@ -12538,11 +12535,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1090,
+      "durationMs": 1163,
       "stable": true
     },
     {
-      "id": "01a1fdd2-2db6-75ac-a5d3-9345e2828e38",
+      "id": "01a1ff9b-e7fe-7808-b412-c5a3a898844d",
       "seq": 59,
       "keys": "7{Enter}",
       "screenBefore": {
@@ -12579,7 +12576,10 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 21,
+          "row": 21
+        }
       },
       "screenAfter": {
         "fingerprint": "fp_1ea84e74e2cd7cec",
@@ -12615,10 +12615,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 7,
-          "row": 21
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -12626,11 +12623,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 592,
+      "durationMs": 622,
       "stable": true
     },
     {
-      "id": "01a1fdd2-2db8-73b6-a59d-73a7837b34ac",
+      "id": "01a1ff9b-e7ff-74fa-916c-2f93e299bf9a",
       "seq": 60,
       "keys": "ZAN150{Enter}",
       "screenBefore": {
@@ -12706,7 +12703,10 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 21,
+          "row": 21
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -12714,11 +12714,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1139,
+      "durationMs": 1215,
       "stable": true
     },
     {
-      "id": "01a1fdd2-2dba-780b-878b-449e4310c4b0",
+      "id": "01a1ff9b-e800-7a6a-819f-b652ec98208e",
       "seq": 61,
       "keys": "10{Enter}",
       "screenBefore": {
@@ -12791,10 +12791,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 7,
-          "row": 21
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -12802,11 +12799,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 666,
+      "durationMs": 727,
       "stable": true
     },
     {
-      "id": "01a1fdd2-2dbc-7543-b90a-7294374e8c68",
+      "id": "01a1ff9b-e802-76c6-8b54-f3b1221cd332",
       "seq": 62,
       "keys": "{Enter}",
       "screenBefore": {
@@ -12843,10 +12840,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 7,
-          "row": 21
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_b2400c9fa5559de5",
@@ -12890,11 +12884,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 458,
+      "durationMs": 518,
       "stable": true
     },
     {
-      "id": "01a1fdd2-2dbe-741a-89fd-5736fe1e4960",
+      "id": "01a1ff9b-e803-79b3-a1a6-4edf7ac63074",
       "seq": 63,
       "keys": "{F2}",
       "screenBefore": {
@@ -13072,11 +13066,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 455,
+      "durationMs": 535,
       "stable": true
     },
     {
-      "id": "01a1fdd2-4889-7bee-b254-861f0e0af52b",
+      "id": "01a1ff9c-04e5-72c2-a51d-bd1f8efcae2d",
       "seq": 64,
       "keys": "{Enter}",
       "screenBefore": {
@@ -13113,10 +13107,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 32,
-          "row": 2
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_1ea84e74e2cd7cec",
@@ -13160,11 +13151,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 543,
+      "durationMs": 522,
       "stable": true
     },
     {
-      "id": "01a1fdd2-488d-7413-b80e-6b9e1db7fa8e",
+      "id": "01a1ff9c-04e7-723b-a528-a9bd013b00c2",
       "seq": 65,
       "keys": "VEN100{Enter}",
       "screenBefore": {
@@ -13248,11 +13239,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1095,
+      "durationMs": 1185,
       "stable": true
     },
     {
-      "id": "01a1fdd2-4890-75af-b10f-9fb0fb33bf59",
+      "id": "01a1ff9c-04e8-7058-9963-db097c372132",
       "seq": 66,
       "keys": "30{Enter}",
       "screenBefore": {
@@ -13336,11 +13327,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 731,
+      "durationMs": 728,
       "stable": true
     },
     {
-      "id": "01a1fdd2-4892-7f73-b87d-f6ee81063f30",
+      "id": "01a1ff9c-04ea-7637-9b69-0013f6ef803a",
       "seq": 67,
       "keys": "INS100{Enter}",
       "screenBefore": {
@@ -13424,11 +13415,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1127,
+      "durationMs": 1161,
       "stable": true
     },
     {
-      "id": "01a1fdd2-4895-7969-960f-b8fde4b4faf7",
+      "id": "01a1ff9c-04eb-7021-b6c5-2d595758562e",
       "seq": 68,
       "keys": "11{Enter}",
       "screenBefore": {
@@ -13504,7 +13495,10 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 7,
+          "row": 21
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -13512,11 +13506,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 706,
+      "durationMs": 728,
       "stable": true
     },
     {
-      "id": "01a1fdd2-4898-723a-b67f-df4a688b6d0c",
+      "id": "01a1ff9c-04ec-7123-91c1-990079f517b0",
       "seq": 69,
       "keys": "{Enter}",
       "screenBefore": {
@@ -13597,11 +13591,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 509,
+      "durationMs": 544,
       "stable": true
     },
     {
-      "id": "01a1fdd2-489b-7e22-93de-b93e371c8602",
+      "id": "01a1ff9c-04ed-7938-8180-53b9f2a9f995",
       "seq": 70,
       "keys": "{F2}",
       "screenBefore": {
@@ -13779,11 +13773,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 477,
+      "durationMs": 541,
       "stable": true
     },
     {
-      "id": "01a1fdd2-63ae-7732-b561-94099dc100d0",
+      "id": "01a1ff9c-22ae-769c-8e2f-a7407bca30be",
       "seq": 71,
       "keys": "{Enter}",
       "screenBefore": {
@@ -13864,11 +13858,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 485,
+      "durationMs": 536,
       "stable": true
     },
     {
-      "id": "01a1fdd2-63b1-7078-b353-2f12792d0dd4",
+      "id": "01a1ff9c-22b0-7cfe-b2eb-e4428065e527",
       "seq": 72,
       "keys": "AUG625{Enter}",
       "screenBefore": {
@@ -13952,11 +13946,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1117,
+      "durationMs": 1210,
       "stable": true
     },
     {
-      "id": "01a1fdd2-63b3-79fb-9eab-62ebd6f45007",
+      "id": "01a1ff9c-22b2-7599-b6ba-26b5b46cc4cc",
       "seq": 73,
       "keys": "29{Enter}",
       "screenBefore": {
@@ -14032,7 +14026,10 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 7,
+          "row": 21
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -14040,11 +14037,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 710,
+      "durationMs": 758,
       "stable": true
     },
     {
-      "id": "01a1fdd2-63b4-7f0b-a03a-68b4e0ed924b",
+      "id": "01a1ff9c-22b3-78ff-bb08-82cc1bcf2327",
       "seq": 74,
       "keys": "IRO001{Enter}",
       "screenBefore": {
@@ -14117,10 +14114,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 21,
-          "row": 21
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -14128,11 +14122,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1087,
+      "durationMs": 1175,
       "stable": true
     },
     {
-      "id": "01a1fdd2-63b6-7377-8bdf-ad575f33bf2c",
+      "id": "01a1ff9c-22b5-7d3c-bef4-4577353eb3ae",
       "seq": 75,
       "keys": "6{Enter}",
       "screenBefore": {
@@ -14216,11 +14210,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 558,
+      "durationMs": 643,
       "stable": true
     },
     {
-      "id": "01a1fdd2-63b8-7a37-aa54-f3fd18d9734a",
+      "id": "01a1ff9c-22b6-7974-a4e9-d1045013b4e2",
       "seq": 76,
       "keys": "{Enter}",
       "screenBefore": {
@@ -14257,10 +14251,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 7,
-          "row": 21
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_32ca8d0370c0aaf4",
@@ -14304,11 +14295,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 468,
+      "durationMs": 546,
       "stable": true
     },
     {
-      "id": "01a1fdd2-63ba-794b-a2b9-bd2f98e03892",
+      "id": "01a1ff9c-22b7-7d14-9792-1815c1c8fdc0",
       "seq": 77,
       "keys": "{F2}",
       "screenBefore": {
@@ -14486,11 +14477,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 465,
+      "durationMs": 562,
       "stable": true
     },
     {
-      "id": "01a1fdd2-7d71-74d4-bd50-facb872106de",
+      "id": "01a1ff9c-3f15-765d-b09f-b69181bf53a7",
       "seq": 78,
       "keys": "{Enter}",
       "screenBefore": {
@@ -14527,10 +14518,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 32,
-          "row": 2
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_1ea84e74e2cd7cec",
@@ -14574,11 +14562,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 458,
+      "durationMs": 511,
       "stable": true
     },
     {
-      "id": "01a1fdd2-7d73-7a17-9242-5725cec522f4",
+      "id": "01a1ff9c-3f17-7c81-8168-032430d1cf5b",
       "seq": 79,
       "keys": "AUG625{Enter}",
       "screenBefore": {
@@ -14651,10 +14639,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 21,
-          "row": 21
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -14662,11 +14647,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1098,
+      "durationMs": 1179,
       "stable": true
     },
     {
-      "id": "01a1fdd2-7d75-7697-8584-57d2d6dbfe42",
+      "id": "01a1ff9c-3f19-798a-b9d4-d7f0ce3f40f1",
       "seq": 80,
       "keys": "59{Enter}",
       "screenBefore": {
@@ -14703,58 +14688,12 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 21,
+          "row": 21
+        }
       },
       "screenAfter": {
-        "fingerprint": "fp_1ea84e74e2cd7cec",
-        "text": [
-          " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
-          "                                                                                ",
-          " Customer: WALK-IN                                                              ",
-          "                                                                                ",
-          "  # CODE   NAME                 BATCH        PRICE   QTY      AMOUNT            ",
-          "  1 AUG625 AUGMENTIN 625MG      A98020      165.00    59     9735.00            ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          " ───────────────────────────────────────────────────────────────────            ",
-          "                                             SUBTOTAL        9735.00            ",
-          " Code:          Qty:                                                            ",
-          "                                                                                ",
-          "                                                                                ",
-          " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
-        ],
-        "model": {
-          "title": {
-            "name": "NEW BILL"
-          }
-        },
-        "cursor": null
-      },
-      "dbfDiff": {
-        "tables": {},
-        "unchanged": ["BILLITEM.DBF", "BILLS.DBF", "CUSTOMER.DBF", "MEDICINE.DBF"],
-        "addedTables": [],
-        "removedTables": []
-      },
-      "durationMs": 691,
-      "stable": true
-    },
-    {
-      "id": "01a1fdd2-7d77-7aed-b353-9b173efb54fd",
-      "seq": 81,
-      "keys": "AMO500{Enter}",
-      "screenBefore": {
         "fingerprint": "fp_1ea84e74e2cd7cec",
         "text": [
           " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
@@ -14793,7 +14732,105 @@
           "row": 21
         }
       },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["BILLITEM.DBF", "BILLS.DBF", "CUSTOMER.DBF", "MEDICINE.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 752,
+      "stable": true
+    },
+    {
+      "id": "01a1ff9c-3f1a-7edc-afd7-c4c09e152616",
+      "seq": 81,
+      "keys": "AMO500{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_1ea84e74e2cd7cec",
+        "text": [
+          " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
+          "                                                                                ",
+          " Customer: WALK-IN                                                              ",
+          "                                                                                ",
+          "  # CODE   NAME                 BATCH        PRICE   QTY      AMOUNT            ",
+          "  1 AUG625 AUGMENTIN 625MG      A98020      165.00    59     9735.00            ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " ───────────────────────────────────────────────────────────────────            ",
+          "                                             SUBTOTAL        9735.00            ",
+          " Code:          Qty:                                                            ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
+        ],
+        "model": {
+          "title": {
+            "name": "NEW BILL"
+          }
+        },
+        "cursor": null
+      },
       "screenAfter": {
+        "fingerprint": "fp_2a7d3d5d7718825b",
+        "text": [
+          " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
+          "                                                                                ",
+          " Customer: WALK-IN                                                              ",
+          "                                                                                ",
+          "  # CODE   NAME                 BATCH        PRICE   QTY      AMOUNT            ",
+          "  1 AUG625 AUGMENTIN 625MG      A98020      165.00    59     9735.00            ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " ───────────────────────────────────────────────────────────────────            ",
+          "                                             SUBTOTAL        9735.00            ",
+          " Code: AMO500   Qty:        AMOXIL 500MG                                        ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
+        ],
+        "model": {
+          "title": {
+            "name": "NEW BILL"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["BILLITEM.DBF", "BILLS.DBF", "CUSTOMER.DBF", "MEDICINE.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 1199,
+      "stable": true
+    },
+    {
+      "id": "01a1ff9c-3f1b-7c82-b6b3-3aa46f97b440",
+      "seq": 82,
+      "keys": "7{Enter}",
+      "screenBefore": {
         "fingerprint": "fp_2a7d3d5d7718825b",
         "text": [
           " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
@@ -14832,55 +14869,6 @@
           "row": 21
         }
       },
-      "dbfDiff": {
-        "tables": {},
-        "unchanged": ["BILLITEM.DBF", "BILLS.DBF", "CUSTOMER.DBF", "MEDICINE.DBF"],
-        "addedTables": [],
-        "removedTables": []
-      },
-      "durationMs": 1094,
-      "stable": true
-    },
-    {
-      "id": "01a1fdd2-7d79-7960-addd-b1a8485d8174",
-      "seq": 82,
-      "keys": "7{Enter}",
-      "screenBefore": {
-        "fingerprint": "fp_2a7d3d5d7718825b",
-        "text": [
-          " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
-          "                                                                                ",
-          " Customer: WALK-IN                                                              ",
-          "                                                                                ",
-          "  # CODE   NAME                 BATCH        PRICE   QTY      AMOUNT            ",
-          "  1 AUG625 AUGMENTIN 625MG      A98020      165.00    59     9735.00            ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          " ───────────────────────────────────────────────────────────────────            ",
-          "                                             SUBTOTAL        9735.00            ",
-          " Code: AMO500   Qty:        AMOXIL 500MG                                        ",
-          "                                                                                ",
-          "                                                                                ",
-          " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
-        ],
-        "model": {
-          "title": {
-            "name": "NEW BILL"
-          }
-        },
-        "cursor": null
-      },
       "screenAfter": {
         "fingerprint": "fp_1ea84e74e2cd7cec",
         "text": [
@@ -14926,11 +14914,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 562,
+      "durationMs": 615,
       "stable": true
     },
     {
-      "id": "01a1fdd2-7d7c-7264-a395-e151cc43094b",
+      "id": "01a1ff9c-3f1d-7cf0-8afd-767acf426279",
       "seq": 83,
       "keys": "{Enter}",
       "screenBefore": {
@@ -14967,10 +14955,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 7,
-          "row": 21
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_8e478a10cb62da1a",
@@ -15014,11 +14999,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 475,
+      "durationMs": 513,
       "stable": true
     },
     {
-      "id": "01a1fdd2-7d7e-7a9a-9f87-c5ec00bd967d",
+      "id": "01a1ff9c-3f1e-7a20-84ec-b60efb6815ad",
       "seq": 84,
       "keys": "{F2}",
       "screenBefore": {
@@ -15196,11 +15181,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 545,
+      "durationMs": 522,
       "stable": true
     },
     {
-      "id": "01a1fdd2-98b9-77df-be5e-1ba44e5b6388",
+      "id": "01a1ff9c-5db6-71cc-86c2-4bca2f477f02",
       "seq": 85,
       "keys": "{Enter}",
       "screenBefore": {
@@ -15237,10 +15222,7 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": {
-          "col": 32,
-          "row": 2
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_1ea84e74e2cd7cec",
@@ -15284,11 +15266,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 460,
+      "durationMs": 557,
       "stable": true
     },
     {
-      "id": "01a1fdd2-98bc-7b21-b4f9-a296349e7009",
+      "id": "01a1ff9c-5db8-7cf4-99d5-188bcaba30b8",
       "seq": 86,
       "keys": "CAL500{Enter}",
       "screenBefore": {
@@ -15372,11 +15354,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1089,
+      "durationMs": 1190,
       "stable": true
     },
     {
-      "id": "01a1fdd2-98be-7928-82f8-2d91c388d1c3",
+      "id": "01a1ff9c-5dba-7904-91c6-b95311654533",
       "seq": 87,
       "keys": "22{Enter}",
       "screenBefore": {
@@ -15413,58 +15395,12 @@
             "name": "NEW BILL"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 21,
+          "row": 21
+        }
       },
       "screenAfter": {
-        "fingerprint": "fp_1ea84e74e2cd7cec",
-        "text": [
-          " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
-          "                                                                                ",
-          " Customer: WALK-IN                                                              ",
-          "                                                                                ",
-          "  # CODE   NAME                 BATCH        PRICE   QTY      AMOUNT            ",
-          "  1 CAL500 CALPOL SYRUP 60ML    C98007       28.50    22      627.00            ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          " ───────────────────────────────────────────────────────────────────            ",
-          "                                             SUBTOTAL         627.00            ",
-          " Code:          Qty:                                                            ",
-          "                                                                                ",
-          "                                                                                ",
-          " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
-        ],
-        "model": {
-          "title": {
-            "name": "NEW BILL"
-          }
-        },
-        "cursor": null
-      },
-      "dbfDiff": {
-        "tables": {},
-        "unchanged": ["BILLITEM.DBF", "BILLS.DBF", "CUSTOMER.DBF", "MEDICINE.DBF"],
-        "addedTables": [],
-        "removedTables": []
-      },
-      "durationMs": 672,
-      "stable": true
-    },
-    {
-      "id": "01a1fdd2-98c1-75d2-b165-999157332f9e",
-      "seq": 88,
-      "keys": "RIS001{Enter}",
-      "screenBefore": {
         "fingerprint": "fp_1ea84e74e2cd7cec",
         "text": [
           " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
@@ -15503,7 +15439,105 @@
           "row": 21
         }
       },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["BILLITEM.DBF", "BILLS.DBF", "CUSTOMER.DBF", "MEDICINE.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 754,
+      "stable": true
+    },
+    {
+      "id": "01a1ff9c-5dbc-7e6b-b79f-ea1e1aa290cf",
+      "seq": 88,
+      "keys": "RIS001{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_1ea84e74e2cd7cec",
+        "text": [
+          " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
+          "                                                                                ",
+          " Customer: WALK-IN                                                              ",
+          "                                                                                ",
+          "  # CODE   NAME                 BATCH        PRICE   QTY      AMOUNT            ",
+          "  1 CAL500 CALPOL SYRUP 60ML    C98007       28.50    22      627.00            ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " ───────────────────────────────────────────────────────────────────            ",
+          "                                             SUBTOTAL         627.00            ",
+          " Code:          Qty:                                                            ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
+        ],
+        "model": {
+          "title": {
+            "name": "NEW BILL"
+          }
+        },
+        "cursor": null
+      },
       "screenAfter": {
+        "fingerprint": "fp_2a7d3d5d7718825b",
+        "text": [
+          " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
+          "                                                                                ",
+          " Customer: WALK-IN                                                              ",
+          "                                                                                ",
+          "  # CODE   NAME                 BATCH        PRICE   QTY      AMOUNT            ",
+          "  1 CAL500 CALPOL SYRUP 60ML    C98007       28.50    22      627.00            ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " ───────────────────────────────────────────────────────────────────            ",
+          "                                             SUBTOTAL         627.00            ",
+          " Code: RIS001   Qty:        RISEK 40MG                                          ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
+        ],
+        "model": {
+          "title": {
+            "name": "NEW BILL"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["BILLITEM.DBF", "BILLS.DBF", "CUSTOMER.DBF", "MEDICINE.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 1156,
+      "stable": true
+    },
+    {
+      "id": "01a1ff9c-5dbd-7e2c-a3c1-cc8dc6fa760a",
+      "seq": 89,
+      "keys": "25{Enter}",
+      "screenBefore": {
         "fingerprint": "fp_2a7d3d5d7718825b",
         "text": [
           " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
@@ -15542,105 +15576,7 @@
           "row": 21
         }
       },
-      "dbfDiff": {
-        "tables": {},
-        "unchanged": ["BILLITEM.DBF", "BILLS.DBF", "CUSTOMER.DBF", "MEDICINE.DBF"],
-        "addedTables": [],
-        "removedTables": []
-      },
-      "durationMs": 1103,
-      "stable": true
-    },
-    {
-      "id": "01a1fdd2-98c4-73a3-9ca5-0c87d27ab773",
-      "seq": 89,
-      "keys": "25{Enter}",
-      "screenBefore": {
-        "fingerprint": "fp_2a7d3d5d7718825b",
-        "text": [
-          " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
-          "                                                                                ",
-          " Customer: WALK-IN                                                              ",
-          "                                                                                ",
-          "  # CODE   NAME                 BATCH        PRICE   QTY      AMOUNT            ",
-          "  1 CAL500 CALPOL SYRUP 60ML    C98007       28.50    22      627.00            ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          " ───────────────────────────────────────────────────────────────────            ",
-          "                                             SUBTOTAL         627.00            ",
-          " Code: RIS001   Qty:        RISEK 40MG                                          ",
-          "                                                                                ",
-          "                                                                                ",
-          " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
-        ],
-        "model": {
-          "title": {
-            "name": "NEW BILL"
-          }
-        },
-        "cursor": null
-      },
       "screenAfter": {
-        "fingerprint": "fp_1ea84e74e2cd7cec",
-        "text": [
-          " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
-          "                                                                                ",
-          " Customer: WALK-IN                                                              ",
-          "                                                                                ",
-          "  # CODE   NAME                 BATCH        PRICE   QTY      AMOUNT            ",
-          "  1 CAL500 CALPOL SYRUP 60ML    C98007       28.50    22      627.00            ",
-          "  2 RIS001 RISEK 40MG           K98015      175.00    25     4375.00            ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          " ───────────────────────────────────────────────────────────────────            ",
-          "                                             SUBTOTAL        5002.00            ",
-          " Code:          Qty:                                                            ",
-          "                                                                                ",
-          "                                                                                ",
-          " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
-        ],
-        "model": {
-          "title": {
-            "name": "NEW BILL"
-          }
-        },
-        "cursor": null
-      },
-      "dbfDiff": {
-        "tables": {},
-        "unchanged": ["BILLITEM.DBF", "BILLS.DBF", "CUSTOMER.DBF", "MEDICINE.DBF"],
-        "addedTables": [],
-        "removedTables": []
-      },
-      "durationMs": 673,
-      "stable": true
-    },
-    {
-      "id": "01a1fdd2-98c6-7211-accc-6d9a841f3fc5",
-      "seq": 90,
-      "keys": "{Enter}",
-      "screenBefore": {
         "fingerprint": "fp_1ea84e74e2cd7cec",
         "text": [
           " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
@@ -15678,6 +15614,55 @@
           "col": 7,
           "row": 21
         }
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["BILLITEM.DBF", "BILLS.DBF", "CUSTOMER.DBF", "MEDICINE.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 727,
+      "stable": true
+    },
+    {
+      "id": "01a1ff9c-5dbf-7a06-a11f-54b9f2690f77",
+      "seq": 90,
+      "keys": "{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_1ea84e74e2cd7cec",
+        "text": [
+          " SHIFA MEDICAL STORE  v2.3          NEW BILL                           15/07/98 ",
+          "                                                                                ",
+          " Customer: WALK-IN                                                              ",
+          "                                                                                ",
+          "  # CODE   NAME                 BATCH        PRICE   QTY      AMOUNT            ",
+          "  1 CAL500 CALPOL SYRUP 60ML    C98007       28.50    22      627.00            ",
+          "  2 RIS001 RISEK 40MG           K98015      175.00    25     4375.00            ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " ───────────────────────────────────────────────────────────────────            ",
+          "                                             SUBTOTAL        5002.00            ",
+          " Code:          Qty:                                                            ",
+          "                                                                                ",
+          "                                                                                ",
+          " Enter=Add  Enter on blank code=Finish  F3=Edit last qty  Esc=Cancel            "
+        ],
+        "model": {
+          "title": {
+            "name": "NEW BILL"
+          }
+        },
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_32ca8d0370c0aaf4",
@@ -15721,11 +15706,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 565,
+      "durationMs": 532,
       "stable": true
     },
     {
-      "id": "01a1fdd2-98c8-7a26-b881-6748159bd412",
+      "id": "01a1ff9c-5dc0-7db5-807d-80a28435c810",
       "seq": 91,
       "keys": "{F2}",
       "screenBefore": {
@@ -15903,7 +15888,7 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 559,
+      "durationMs": 527,
       "stable": true
     }
   ],
@@ -15920,15 +15905,15 @@
         "kind": "compute",
         "target": "bill.bill_date",
         "evidence": [
-          "01a1fdd1-5460-767a-8650-b4a0837d426a",
-          "01a1fdd1-e964-7393-8045-e65958536a23",
-          "01a1fdd2-0074-71f7-911a-70a4b63dca67",
-          "01a1fdd2-143c-7fe0-911e-87d0f0907674",
-          "01a1fdd2-2dbe-741a-89fd-5736fe1e4960",
-          "01a1fdd2-489b-7e22-93de-b93e371c8602",
-          "01a1fdd2-63ba-794b-a2b9-bd2f98e03892",
-          "01a1fdd2-7d7e-7a9a-9f87-c5ec00bd967d",
-          "01a1fdd2-98c8-7a26-b881-6748159bd412"
+          "01a1ff9b-0070-702b-b062-61e16dfdced1",
+          "01a1ff9b-9d1f-7aee-a384-6d0a6c598978",
+          "01a1ff9b-b6e2-733d-af3d-f91974221778",
+          "01a1ff9b-cb84-7785-b00c-403fd389ce0b",
+          "01a1ff9b-e803-79b3-a1a6-4edf7ac63074",
+          "01a1ff9c-04ed-7938-8180-53b9f2a9f995",
+          "01a1ff9c-22b7-7d14-9792-1815c1c8fdc0",
+          "01a1ff9c-3f1e-7a20-84ec-b60efb6815ad",
+          "01a1ff9c-5dc0-7db5-807d-80a28435c810"
         ],
         "confidence": 0.82,
         "expression": "today"
@@ -15940,15 +15925,15 @@
         "kind": "compute",
         "target": "bill_item.price",
         "evidence": [
-          "01a1fdd1-5460-767a-8650-b4a0837d426a",
-          "01a1fdd1-e964-7393-8045-e65958536a23",
-          "01a1fdd2-0074-71f7-911a-70a4b63dca67",
-          "01a1fdd2-143c-7fe0-911e-87d0f0907674",
-          "01a1fdd2-2dbe-741a-89fd-5736fe1e4960",
-          "01a1fdd2-489b-7e22-93de-b93e371c8602",
-          "01a1fdd2-63ba-794b-a2b9-bd2f98e03892",
-          "01a1fdd2-7d7e-7a9a-9f87-c5ec00bd967d",
-          "01a1fdd2-98c8-7a26-b881-6748159bd412"
+          "01a1ff9b-0070-702b-b062-61e16dfdced1",
+          "01a1ff9b-9d1f-7aee-a384-6d0a6c598978",
+          "01a1ff9b-b6e2-733d-af3d-f91974221778",
+          "01a1ff9b-cb84-7785-b00c-403fd389ce0b",
+          "01a1ff9b-e803-79b3-a1a6-4edf7ac63074",
+          "01a1ff9c-04ed-7938-8180-53b9f2a9f995",
+          "01a1ff9c-22b7-7d14-9792-1815c1c8fdc0",
+          "01a1ff9c-3f1e-7a20-84ec-b60efb6815ad",
+          "01a1ff9c-5dc0-7db5-807d-80a28435c810"
         ],
         "confidence": 0.82,
         "expression": "medicine.price"
@@ -15960,14 +15945,14 @@
         "kind": "effect",
         "target": "medicine.qty",
         "evidence": [
-          "01a1fdd1-5460-767a-8650-b4a0837d426a",
-          "01a1fdd2-0074-71f7-911a-70a4b63dca67",
-          "01a1fdd2-143c-7fe0-911e-87d0f0907674",
-          "01a1fdd2-2dbe-741a-89fd-5736fe1e4960",
-          "01a1fdd2-489b-7e22-93de-b93e371c8602",
-          "01a1fdd2-63ba-794b-a2b9-bd2f98e03892",
-          "01a1fdd2-7d7e-7a9a-9f87-c5ec00bd967d",
-          "01a1fdd2-98c8-7a26-b881-6748159bd412"
+          "01a1ff9b-0070-702b-b062-61e16dfdced1",
+          "01a1ff9b-b6e2-733d-af3d-f91974221778",
+          "01a1ff9b-cb84-7785-b00c-403fd389ce0b",
+          "01a1ff9b-e803-79b3-a1a6-4edf7ac63074",
+          "01a1ff9c-04ed-7938-8180-53b9f2a9f995",
+          "01a1ff9c-22b7-7d14-9792-1815c1c8fdc0",
+          "01a1ff9c-3f1e-7a20-84ec-b60efb6815ad",
+          "01a1ff9c-5dc0-7db5-807d-80a28435c810"
         ],
         "confidence": 0.8,
         "expression": "medicine.qty - bill_item.qty"
@@ -15979,15 +15964,15 @@
         "kind": "compute",
         "target": "bill_item.amount",
         "evidence": [
-          "01a1fdd1-5460-767a-8650-b4a0837d426a",
-          "01a1fdd1-e964-7393-8045-e65958536a23",
-          "01a1fdd2-0074-71f7-911a-70a4b63dca67",
-          "01a1fdd2-143c-7fe0-911e-87d0f0907674",
-          "01a1fdd2-2dbe-741a-89fd-5736fe1e4960",
-          "01a1fdd2-489b-7e22-93de-b93e371c8602",
-          "01a1fdd2-63ba-794b-a2b9-bd2f98e03892",
-          "01a1fdd2-7d7e-7a9a-9f87-c5ec00bd967d",
-          "01a1fdd2-98c8-7a26-b881-6748159bd412"
+          "01a1ff9b-0070-702b-b062-61e16dfdced1",
+          "01a1ff9b-9d1f-7aee-a384-6d0a6c598978",
+          "01a1ff9b-b6e2-733d-af3d-f91974221778",
+          "01a1ff9b-cb84-7785-b00c-403fd389ce0b",
+          "01a1ff9b-e803-79b3-a1a6-4edf7ac63074",
+          "01a1ff9c-04ed-7938-8180-53b9f2a9f995",
+          "01a1ff9c-22b7-7d14-9792-1815c1c8fdc0",
+          "01a1ff9c-3f1e-7a20-84ec-b60efb6815ad",
+          "01a1ff9c-5dc0-7db5-807d-80a28435c810"
         ],
         "confidence": 0.82,
         "expression": "bill_item.qty * bill_item.price"
@@ -15999,15 +15984,15 @@
         "kind": "compute",
         "target": "bill.subtotal",
         "evidence": [
-          "01a1fdd1-5460-767a-8650-b4a0837d426a",
-          "01a1fdd1-e964-7393-8045-e65958536a23",
-          "01a1fdd2-0074-71f7-911a-70a4b63dca67",
-          "01a1fdd2-143c-7fe0-911e-87d0f0907674",
-          "01a1fdd2-2dbe-741a-89fd-5736fe1e4960",
-          "01a1fdd2-489b-7e22-93de-b93e371c8602",
-          "01a1fdd2-63ba-794b-a2b9-bd2f98e03892",
-          "01a1fdd2-7d7e-7a9a-9f87-c5ec00bd967d",
-          "01a1fdd2-98c8-7a26-b881-6748159bd412"
+          "01a1ff9b-0070-702b-b062-61e16dfdced1",
+          "01a1ff9b-9d1f-7aee-a384-6d0a6c598978",
+          "01a1ff9b-b6e2-733d-af3d-f91974221778",
+          "01a1ff9b-cb84-7785-b00c-403fd389ce0b",
+          "01a1ff9b-e803-79b3-a1a6-4edf7ac63074",
+          "01a1ff9c-04ed-7938-8180-53b9f2a9f995",
+          "01a1ff9c-22b7-7d14-9792-1815c1c8fdc0",
+          "01a1ff9c-3f1e-7a20-84ec-b60efb6815ad",
+          "01a1ff9c-5dc0-7db5-807d-80a28435c810"
         ],
         "confidence": 0.82,
         "expression": "sum(items, x => x.amount)"
@@ -16019,15 +16004,15 @@
         "kind": "compute",
         "target": "bill.discount",
         "evidence": [
-          "01a1fdd1-5460-767a-8650-b4a0837d426a",
-          "01a1fdd1-e964-7393-8045-e65958536a23",
-          "01a1fdd2-0074-71f7-911a-70a4b63dca67",
-          "01a1fdd2-143c-7fe0-911e-87d0f0907674",
-          "01a1fdd2-2dbe-741a-89fd-5736fe1e4960",
-          "01a1fdd2-489b-7e22-93de-b93e371c8602",
-          "01a1fdd2-63ba-794b-a2b9-bd2f98e03892",
-          "01a1fdd2-7d7e-7a9a-9f87-c5ec00bd967d",
-          "01a1fdd2-98c8-7a26-b881-6748159bd412"
+          "01a1ff9b-0070-702b-b062-61e16dfdced1",
+          "01a1ff9b-9d1f-7aee-a384-6d0a6c598978",
+          "01a1ff9b-b6e2-733d-af3d-f91974221778",
+          "01a1ff9b-cb84-7785-b00c-403fd389ce0b",
+          "01a1ff9b-e803-79b3-a1a6-4edf7ac63074",
+          "01a1ff9c-04ed-7938-8180-53b9f2a9f995",
+          "01a1ff9c-22b7-7d14-9792-1815c1c8fdc0",
+          "01a1ff9c-3f1e-7a20-84ec-b60efb6815ad",
+          "01a1ff9c-5dc0-7db5-807d-80a28435c810"
         ],
         "confidence": 0.82,
         "expression": "if bill.subtotal > 5000 then trunc(bill.subtotal * 0.1, 2) else 0"
@@ -16039,15 +16024,15 @@
         "kind": "compute",
         "target": "bill.gst",
         "evidence": [
-          "01a1fdd1-5460-767a-8650-b4a0837d426a",
-          "01a1fdd1-e964-7393-8045-e65958536a23",
-          "01a1fdd2-0074-71f7-911a-70a4b63dca67",
-          "01a1fdd2-143c-7fe0-911e-87d0f0907674",
-          "01a1fdd2-2dbe-741a-89fd-5736fe1e4960",
-          "01a1fdd2-489b-7e22-93de-b93e371c8602",
-          "01a1fdd2-63ba-794b-a2b9-bd2f98e03892",
-          "01a1fdd2-7d7e-7a9a-9f87-c5ec00bd967d",
-          "01a1fdd2-98c8-7a26-b881-6748159bd412"
+          "01a1ff9b-0070-702b-b062-61e16dfdced1",
+          "01a1ff9b-9d1f-7aee-a384-6d0a6c598978",
+          "01a1ff9b-b6e2-733d-af3d-f91974221778",
+          "01a1ff9b-cb84-7785-b00c-403fd389ce0b",
+          "01a1ff9b-e803-79b3-a1a6-4edf7ac63074",
+          "01a1ff9c-04ed-7938-8180-53b9f2a9f995",
+          "01a1ff9c-22b7-7d14-9792-1815c1c8fdc0",
+          "01a1ff9c-3f1e-7a20-84ec-b60efb6815ad",
+          "01a1ff9c-5dc0-7db5-807d-80a28435c810"
         ],
         "confidence": 0.75,
         "expression": "trunc((bill.subtotal - bill.discount) * 0.17, 2)"
@@ -16059,15 +16044,15 @@
         "kind": "compute",
         "target": "bill.total",
         "evidence": [
-          "01a1fdd1-5460-767a-8650-b4a0837d426a",
-          "01a1fdd1-e964-7393-8045-e65958536a23",
-          "01a1fdd2-0074-71f7-911a-70a4b63dca67",
-          "01a1fdd2-143c-7fe0-911e-87d0f0907674",
-          "01a1fdd2-2dbe-741a-89fd-5736fe1e4960",
-          "01a1fdd2-489b-7e22-93de-b93e371c8602",
-          "01a1fdd2-63ba-794b-a2b9-bd2f98e03892",
-          "01a1fdd2-7d7e-7a9a-9f87-c5ec00bd967d",
-          "01a1fdd2-98c8-7a26-b881-6748159bd412"
+          "01a1ff9b-0070-702b-b062-61e16dfdced1",
+          "01a1ff9b-9d1f-7aee-a384-6d0a6c598978",
+          "01a1ff9b-b6e2-733d-af3d-f91974221778",
+          "01a1ff9b-cb84-7785-b00c-403fd389ce0b",
+          "01a1ff9b-e803-79b3-a1a6-4edf7ac63074",
+          "01a1ff9c-04ed-7938-8180-53b9f2a9f995",
+          "01a1ff9c-22b7-7d14-9792-1815c1c8fdc0",
+          "01a1ff9c-3f1e-7a20-84ec-b60efb6815ad",
+          "01a1ff9c-5dc0-7db5-807d-80a28435c810"
         ],
         "confidence": 0.75,
         "expression": "bill.subtotal - bill.discount + bill.gst"
@@ -16095,7 +16080,72 @@
             "entity": "medicine",
             "fields": ["QTY"]
           }
-        ]
+        ],
+        "receipt": {
+          "header": [
+            {
+              "ref": "bill.BILL_NO",
+              "label": "BILL NO"
+            },
+            {
+              "ref": "bill.BILL_DATE",
+              "label": "DATE"
+            },
+            {
+              "ref": "bill.CUST_ID",
+              "blank": "WALK-IN",
+              "label": "Customer"
+            }
+          ],
+          "totals": [
+            {
+              "ref": "bill.SUBTOTAL",
+              "label": "SUBTOTAL"
+            },
+            {
+              "ref": "bill.DISCOUNT",
+              "label": "DISCOUNT 10%"
+            },
+            {
+              "ref": "bill.GST",
+              "label": "GST 17%"
+            },
+            {
+              "ref": "bill.TOTAL",
+              "label": "TOTAL"
+            }
+          ],
+          "columns": [
+            {
+              "ref": "#",
+              "label": "#"
+            },
+            {
+              "ref": "bill-item.CODE",
+              "label": "CODE"
+            },
+            {
+              "ref": "medicine.NAME",
+              "label": "NAME"
+            },
+            {
+              "ref": "medicine.BATCH",
+              "label": "BATCH"
+            },
+            {
+              "ref": "bill-item.PRICE",
+              "label": "PRICE"
+            },
+            {
+              "ref": "bill-item.QTY",
+              "label": "QTY"
+            },
+            {
+              "ref": "bill-item.AMOUNT",
+              "label": "AMOUNT"
+            }
+          ]
+        }
       },
       {
         "id": "add-customer",
@@ -16389,9 +16439,9 @@
     ],
     "provenance": {
       "note": "Entities from the data files; 2 actions and 8 rules, each rule checked against every observation (14 probes run in the old app).",
-      "createdAt": "2026-11-21T11:15:55.909Z",
+      "createdAt": "2026-11-21T19:35:52.100Z",
       "createdBy": "archaeologist",
-      "projectId": "01a1fdd1-3e42-7fec-b159-ff2c6f7631a2",
+      "projectId": "01a1ff9a-e881-712d-ae70-7c566b4f1462",
       "observationCount": 54
     },
     "schemaVersion": 1
