@@ -9,7 +9,7 @@ import {
   type SyncItem,
 } from '@afterlife/vessel';
 import { describe, expect, it } from 'vitest';
-import { PhoneError, startPhone, syncPhone, type Phone } from './vessel-phone';
+import { PhoneError, oneAtATime, startPhone, syncPhone, type Phone } from './vessel-phone';
 
 const bundle = new Uint8Array(readFileSync(resolve(__dirname, '../public/graveyard/shifa.jsdos')));
 const API = 'http://api';
@@ -139,5 +139,34 @@ describe('the Vessel on the phone', () => {
     await syncPhone(b, { ...opts, files: FILES });
     const pan = (await b.store.records('MEDICINE.DBF')).find((r) => r.values.CODE === 'PAN500')!;
     expect(pan.values.QTY).toBe('235');
+  });
+});
+
+describe('oneAtATime', () => {
+  it('a sync asked for while one is on its way starts when that one ends, even if it failed', async () => {
+    const queue = oneAtATime();
+    const log: string[] = [];
+    let open: () => void = () => undefined;
+    const first = queue(
+      () =>
+        new Promise<string>((resolve, reject) => {
+          log.push('first starts');
+          open = () => {
+            log.push('first ends');
+            reject(new Error('the network went'));
+          };
+          void resolve;
+        }),
+    );
+    const second = queue(async () => {
+      log.push('second starts');
+      return 'sent';
+    });
+    await Promise.resolve();
+    expect(log).toEqual(['first starts']);
+    open();
+    await expect(first).rejects.toThrow('the network went');
+    expect(await second).toBe('sent');
+    expect(log).toEqual(['first starts', 'first ends', 'second starts']);
   });
 });

@@ -112,6 +112,10 @@ Prompts 61 to 100 are `todo`.
 
 README updated at Prompts 20, 30, 40, 50 and 60 (counts, coverage, status). Update this file in the same commit as each prompt.
 
+## Review of 51 to 60 (fix/review-51-60)
+
+Fahad's review (rated the batch 8/10). Three bugs fixed, with 5 new tests, two of which failed on the old code: the server's first sync of a project filled its records twice when two syncs came at once and refused (so lost) the sale, and one sale sent twice at once could be replayed twice (now one transaction under a per-project advisory lock); the phone could run two syncs at once (now `oneAtATime`); two lines of one medicine were each checked against the stored stock, so 200 + 100 against 240 was sold (now each line is checked against what the earlier lines left). README: the nightly Crew job is marked planned, not set up; a "What works today, and what does not yet" section; the score text says it counts keys and counters. Findings for Kiro, done before Prompt 61: actions inferred from the observations, probes run by the Possessor, rules without a model, ALREADY IN BILL, the model table by family, screen states grouped by title, and small UI fixes.
+
 ## Open steps (need a person, outside the repo)
 
 - [ ] Prompt 43: open `docs/examples/shifa-kiro-spec` as a folder in Kiro and check the spec (requirements, design, tasks) and the steering file show correctly.

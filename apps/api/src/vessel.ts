@@ -14,6 +14,7 @@ import {
   inArray,
   isNull,
   latestSoulRow,
+  sql,
   vesselSync,
   type Db,
 } from '@afterlife/db';
@@ -83,8 +84,8 @@ export class PgVesselStore implements VesselStore {
   }
 
   /** The project's records, seeded from the old app's data files the first time. */
-  private async store(projectId: string, soul: Soul): Promise<PgEntityStore> {
-    const store = new PgEntityStore(this.db, projectId);
+  private async store(db: Db, projectId: string, soul: Soul): Promise<PgEntityStore> {
+    const store = new PgEntityStore(db, projectId);
     if ((await store.files()).length) return store;
     const p = await this.project(projectId);
     const bundle = p ? this.bundleFor(p) : null;
@@ -99,9 +100,22 @@ export class PgVesselStore implements VesselStore {
 
   async sync(projectId: string, items: SyncItem[]) {
     const soul = await this.soul(projectId);
-    const store = await this.store(projectId, soul);
+    // One sync at a time for a project, in one transaction. Without it, two requests at once (the
+    // phone retrying while its first try is still on the way, or two phones coming online) both
+    // found no records and seeded them over each other, so a sale was refused for good and left
+    // the phone's outbox; and the same sale could be replayed twice before either was written.
+    return this.db.transaction(async (tx) => {
+      await tx.execute(
+        sql`SELECT pg_advisory_xact_lock(hashtext(${`vessel-sync:${projectId}`}::text))`,
+      );
+      return this.syncLocked(tx as unknown as Db, projectId, soul, items);
+    });
+  }
+
+  private async syncLocked(db: Db, projectId: string, soul: Soul, items: SyncItem[]) {
+    const store = await this.store(db, projectId, soul);
     const done = items.length
-      ? await this.db
+      ? await db
           .select({ id: vesselSync.id, result: vesselSync.result, projectId: vesselSync.projectId })
           .from(vesselSync)
           .where(
@@ -137,7 +151,7 @@ export class PgVesselStore implements VesselStore {
           if (!(e instanceof ConflictError) || attempt === 4) throw e;
         }
       }
-      const inserted = await this.db
+      const inserted = await db
         .insert(vesselSync)
         .values({
           id: item.id,
@@ -151,7 +165,7 @@ export class PgVesselStore implements VesselStore {
         .returning({ id: vesselSync.id });
       if (!inserted.length) {
         // A second request with the same sale got here first; it has been applied once.
-        const [row] = await this.db
+        const [row] = await db
           .select({ result: vesselSync.result })
           .from(vesselSync)
           .where(eq(vesselSync.id, item.id));

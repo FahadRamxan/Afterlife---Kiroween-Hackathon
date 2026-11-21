@@ -532,11 +532,28 @@ export function createVessel(soul: Soul, store: EntityStore, opts: VesselOptions
     }
     if (refused.length) return { ok: false, refused };
 
-    // The records it changes (the stock of each medicine), one line after another.
+    // The records it changes (the stock of each medicine), one line after another. Each line is
+    // checked again against the record as the lines before it left it: two lines of one medicine
+    // cannot sell more than its stock between them. (Shifa itself refuses a second line of the same
+    // medicine, ALREADY IN BILL, but a Soul without that rule must still not sell stock it lacks.)
     const changed = new Map<
       string,
       { entity: Entity; recno: number; before: Values; after: Values }
     >();
+    const rechecked = new Set<string>();
+    const recheck = (entity: Entity, env: Env, i: number) => {
+      if (perform.validate === false) return;
+      const name = ruleName(entity.id);
+      for (const val of p.validations) {
+        if (!val.perLine || !refs(val.ast).some((r) => r[0] === name)) continue;
+        const k = `${val.rule.id}:${i}`;
+        if (rechecked.has(k)) continue;
+        rechecked.add(k);
+        const ok = run(val.rule, val.ast, env, i);
+        if (ok !== undefined && ok !== true)
+          refused.push({ message: val.rule.en, rule: val.rule.id, line: i + 1 });
+      }
+    };
     const linkTo = (entity: Entity, values: Values, links: Link[]) => {
       const l = links.find((x) => x.entity.id === entity.id);
       if (!l) return -1;
@@ -560,6 +577,7 @@ export function createVessel(soul: Soul, store: EntityStore, opts: VesselOptions
         changed.set(k, c);
         const env = envFor(i);
         env[ruleName(x.entity.id)] = recordEnv(x.entity, c.after);
+        if (i !== undefined) recheck(x.entity, env, i);
         const v = run(x.rule, x.ast, env, i);
         if (v === undefined) continue;
         try {

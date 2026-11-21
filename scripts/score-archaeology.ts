@@ -113,7 +113,7 @@ export function readmeBlock(file: ScoreFile): string {
     lines.push(
       '',
       mode === NO_MODEL
-        ? '**Without a language model** (entities and counters only: the rules need a model):'
+        ? '**Without a language model** (only keys and counters are recovered; the calculations need a model):'
         : `**With ${mode}:**`,
       '',
     );
