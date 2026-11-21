@@ -158,10 +158,44 @@ describe('what the app refuses (and then nothing changes)', () => {
     expect(await refuse({ lines: [] })).toEqual([{ message: 'Bill needs at least one bill line' }]);
   });
 
+  it('two lines of one medicine cannot sell more than its stock between them', async () => {
+    // PAN500 has 240: 200 and then 100 would leave -60. (The old app does not take a second line of
+    // one medicine at all, ALREADY IN BILL; this Soul has no such rule, so the stock rule decides.)
+    expect(
+      await refuse({
+        lines: [
+          { CODE: 'PAN500', QTY: '200' },
+          { CODE: 'PAN500', QTY: '100' },
+        ],
+      }),
+    ).toEqual([
+      {
+        message: 'A quantity larger than the stock is refused when the item is added.',
+        rule: 'qty-over-stock-refused',
+        line: 2,
+      },
+    ]);
+  });
+
   it('a value the app works out cannot be typed', async () => {
     expect(
       await refuse({ values: { TOTAL: '1.00' }, lines: [{ CODE: 'PAN500', QTY: '1' }] }),
     ).toEqual([{ message: 'TOTAL is worked out by the app, not typed', field: 'TOTAL' }]);
+  });
+});
+
+describe('two lines of one medicine', () => {
+  it('that fit its stock together are taken, and the stock goes down by both', async () => {
+    const { v, store } = await vessel();
+    const r = await v.performAction('save-bill', {
+      lines: [
+        { CODE: 'PAN500', QTY: '200' },
+        { CODE: 'PAN500', QTY: '40' },
+      ],
+    });
+    expect(r.ok).toBe(true);
+    const pan = (await store.records('MEDICINE.DBF')).find((x) => x.values.CODE === 'PAN500');
+    expect(String(pan?.values.QTY)).toBe('0');
   });
 });
 

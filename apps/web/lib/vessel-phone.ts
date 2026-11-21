@@ -100,6 +100,20 @@ export type Synced = {
   pulled: boolean;
 };
 
+/**
+ * Runs the jobs given to it one after another, never two at once: a sync asked for while one is on
+ * its way (a bill saved, the network back) starts when that one ends, so the same outbox is not
+ * sent twice at the same time.
+ */
+export function oneAtATime() {
+  let last: Promise<unknown> = Promise.resolve();
+  return <T>(job: () => Promise<T>): Promise<T> => {
+    const run = last.then(job, job);
+    last = run.catch(() => undefined);
+    return run;
+  };
+}
+
 /** Sends the outbox; then, with nothing left to send, takes the server's records. */
 export async function syncPhone(
   phone: Phone,

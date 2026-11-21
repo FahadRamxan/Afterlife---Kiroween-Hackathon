@@ -55,10 +55,10 @@ GitHub Actions is off for this repo, so every check runs locally. The workflow f
 2. **commit-msg**: commitlint, Conventional Commits.
 3. **pre-push**: `pnpm verify` (lint, typecheck, unit and property tests, Playwright e2e). A red test means nothing is pushed.
 4. **Before merging a PR**: `pnpm ci:local`. It also runs every property test with `FC_NUM_RUNS=2000`, Playwright against the production build, and the API and worker Docker builds with a smoke test.
-5. **Nightly**: a Kiro Crew scheduled job runs `pnpm ci:local` on `main` and sends the result.
+5. **Nightly** (planned, not set up yet): a Kiro Crew scheduled job will run `pnpm ci:local` on its own clone of `main` and send the result.
 6. **After a deploy**: `pnpm smoke:prod <url>`.
 
-Current counts: 1718 unit and property tests in 169 files (integration and Postgres tests included), and 136 Playwright tests (Prompt 60). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
+Current counts: 1723 unit and property tests in 169 files (integration and Postgres tests included), and 136 Playwright tests (Prompt 60). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
 
 ## Coverage
 
@@ -75,7 +75,7 @@ As of Prompt 60. The code covered grew by a third since Prompt 50 (the Archaeolo
 
 ## Status
 
-Prompts 1 to 60 are merged, with a review round after every ten up to 50. For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
+Prompts 1 to 60 are merged, with a review round after every ten. The review of 51 to 60 fixed three bugs in the reborn app's sync and stock checks (two syncs at once could lose a sale; a phone could send its outbox twice at once; two lines of one medicine could sell more than the stock). For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
 
 - **1 to 10, foundation:** the monorepo, steering and hooks, the Haunted Ledger design system, the app shell (English and Urdu), the deploy skeleton.
 - **11 to 21, the Graveyard and data:** the DOS toolchain, three sample dead apps (Shifa Medical Store, Iqra School Fees, Barkat Kiryana Ledger) with their legacy bugs, the Graveyard page, the `.DBF` reader, writer, snapshot, diff and viewer, and the DBF inspector API behind the upload card.
@@ -91,7 +91,11 @@ Prompts 1 to 60 are merged, with a review round after every ten up to 50. For Pr
 - **53 to 57, the Archaeologist:** entities, keys, foreign keys and counters from the data files; the model proposes 3 to 5 candidate rules per value written; every candidate is checked against every observation and only the simplest that explains all of them is kept, with probes when a threshold was never tried ("Try a bill subtotal of exactly 5000 and of 5001."); a score against each sample's hidden rules; and rules that light a candle and write themselves in on the Soul tab.
 - **58 to 60, the Vessel:** the runtime that runs a Soul (fields from rules, counters, parent keys and line positions; effects as DBF diffs; Shifa's scripted bills give exactly the real app's diffs), stores in memory, IndexedDB and Postgres; the reborn app at `/vessel/<id>` (the old menu as a bottom bar or a sidebar, a search-as-you-type picker, a running total, Urdu labels); and offline-first: bills saved on the phone with no network, synced when it is back, stock conflicts listed for the owner.
 
-Possession explores for real: on Shifa it finds 11 screens in about 50 actions, saves bills and customers, and finds what the app refuses. The archaeology step stores the entities, and with a language model it proposes and checks the rules (there is no model on this machine, so the recorded runs have entities only). The reborn app runs the reference Soul our team wrote from the C source; the rebirth, undertake, prove and exorcise steps still say "not built yet (Prompt N)" and are marked skipped, never done.
+### What works today, and what does not yet
+
+- **Works:** possession explores for real (on Shifa, 47 actions find 11 screen states, 6 data changes and 4 of the app's refusals). The Possession Theater, the rule check, the live rule animation, and the reborn app all work in the browser. The reborn app matches the 1998 app to the paisa (8 insulin: 5,200.00, 520.00 off, GST 795.60, total 5,475.60), in English and Urdu, and offline.
+- **Not yet:** a live raise does not reach the reborn app on its own. The Archaeologist finds the entities, but it writes no actions, and without a language model it writes no rules. The reborn app and its e2e tests run the reference Soul our team wrote from the C source. The rebirth, undertake, prove and exorcise steps still say "not built yet (Prompt N)" and are marked skipped, never done.
+- **Next:** before Prompt 61, the Archaeologist infers the actions from the observations, runs its probes in the old app, and finds simple rules without a model. Then Prompts 61 to 80: receipts, export, the Surgeon, the Undertaker, the Oracle and the certificate, the Exorcist, and Ghost Twin.
 
 `/design` boots the real Shifa EXE in js-dos: you can press keys, record what an action changed in the data files, and replay it from a fresh state. Details are in [docs/progress.md](docs/progress.md).
 
@@ -101,7 +105,7 @@ Each sample app hides its business rules in its manifest (`knownRules`, with the
 
 <!-- archaeology-score:start -->
 
-**Without a language model** (entities and counters only: the rules need a model):
+**Without a language model** (only keys and counters are recovered; the calculations need a model):
 
 - Afterlife recovered 2 of 7 hidden rules in Shifa Medical Store (2 exact). Precision 100%, recall 29%.
 - Afterlife recovered 1 of 6 hidden rules in Iqra School Fees (1 exact). Precision 100%, recall 17%.

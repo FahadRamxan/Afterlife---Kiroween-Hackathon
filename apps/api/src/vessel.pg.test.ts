@@ -90,6 +90,36 @@ describe('POST /api/projects/:id/vessel/sync', () => {
     expect(await stock(id, 'INS100')).toBe('6');
   });
 
+  it('the same bill sent twice at once (a retry while the first is on its way) is applied once', async () => {
+    const id = await shifa();
+    const p = await phone();
+    await p.v.performAction('save-bill', insulin('2'));
+    const items = await p.outbox.pending();
+    const [a, b] = await Promise.all([sync(id, items), sync(id, items)]);
+    expect(a.json()).toEqual(b.json());
+    const bills = (await app.inject(`/api/projects/${id}/vessel/records`))
+      .json()
+      .files['BILLS.DBF'].filter((r: { values: { BILL_NO: string } }) =>
+        r.values.BILL_NO.startsWith('9807-'),
+      );
+    expect(bills).toHaveLength(1);
+    expect(await stock(id, 'INS100')).toBe('10');
+  });
+
+  it('two phones come online at once for the first sync: both sales stand, none is lost', async () => {
+    const id = await shifa();
+    const a = await phone();
+    const b = await phone();
+    await a.v.performAction('save-bill', insulin('2'));
+    await b.v.performAction('save-bill', insulin('3'));
+    const [ra, rb] = await Promise.all([
+      sync(id, await a.outbox.pending()),
+      sync(id, await b.outbox.pending()),
+    ]);
+    expect([ra.json().results[0].ok, rb.json().results[0].ok]).toEqual([true, true]);
+    expect(await stock(id, 'INS100')).toBe('7');
+  });
+
   it('two phones sold the same insulin: both sales stand, and the second is on the review list until reviewed', async () => {
     const id = await shifa();
     const a = await phone();

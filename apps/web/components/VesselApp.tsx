@@ -6,7 +6,14 @@ import { openPhone } from '@afterlife/vessel/indexeddb';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useWord } from '../lib/use-word';
-import { PhoneError, reviewed, startPhone, syncPhone, type Synced } from '../lib/vessel-phone';
+import {
+  PhoneError,
+  oneAtATime,
+  reviewed,
+  startPhone,
+  syncPhone,
+  type Synced,
+} from '../lib/vessel-phone';
 import { vesselViews, type VesselView } from '../lib/vessel-views';
 import { EmptyState } from './EmptyState';
 import { PageShell } from './PageShell';
@@ -83,22 +90,29 @@ export function VesselApp({ projectId }: { projectId: string }) {
     if (phone.current) setWaiting((await phone.current.outbox.pending()).length);
   }, []);
 
-  const doSync = useCallback(async () => {
-    if (!phone.current || !API || state.phase !== 'ready') return;
-    setSyncing(true);
-    try {
-      const r = await syncPhone(phone.current, {
-        api: API,
-        projectId,
-        files: state.soul.entities.map((e) => e.file),
-      });
-      setSync(r);
-      if (r.pulled) setDataVersion((n) => n + 1);
-    } finally {
-      setSyncing(false);
-      await countWaiting();
-    }
-  }, [projectId, state, countWaiting]);
+  // One sync at a time: a bill saved while a sync is on its way waits for it, so the outbox is not
+  // sent twice at once.
+  const queue = useRef(oneAtATime());
+  const doSync = useCallback(
+    () =>
+      queue.current(async () => {
+        if (!phone.current || !API || state.phase !== 'ready') return;
+        setSyncing(true);
+        try {
+          const r = await syncPhone(phone.current, {
+            api: API,
+            projectId,
+            files: state.soul.entities.map((e) => e.file),
+          });
+          setSync(r);
+          if (r.pulled) setDataVersion((n) => n + 1);
+        } finally {
+          setSyncing(false);
+          await countWaiting();
+        }
+      }),
+    [projectId, state, countWaiting],
+  );
 
   useEffect(() => {
     let alive = true;
