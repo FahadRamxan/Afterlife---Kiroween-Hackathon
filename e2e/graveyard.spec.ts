@@ -44,7 +44,7 @@ test.describe('/graveyard', () => {
     for (const [i, app] of apps.entries()) {
       const s = SCORES['no-model']!.find((x) => x.app === app.id)!.score;
       await expect(stones.nth(i).getByTestId('archaeology-score')).toHaveText(
-        `Archaeology score: ${s.recovered} of ${s.known} hidden rules recovered (${s.exact} exact), without a language model.`,
+        `Archaeology score: ${s.recovered} of ${s.known} hidden rules recovered (${s.exact} exact), without a language model, from a recorded run of the real app and the bills it was probed with.`,
       );
     }
   });

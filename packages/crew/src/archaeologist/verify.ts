@@ -6,6 +6,7 @@
 // exactly 5000 and 5001") and checks again. The model never decides: this code does.
 import type { DbfValue } from '@afterlife/dbf';
 import {
+  DslDate,
   dslDate,
   evaluate,
   parseExpr,
@@ -24,6 +25,8 @@ export type VerifyEntity = {
   key?: string[];
   counters?: { field: string }[];
   fields?: Entity['fields'];
+  /** Links to other entities: a bill's lines are the records that link to it. */
+  foreignKeys?: Entity['foreignKeys'];
 };
 
 /** The rule target of an effect: "bill.gst". */
@@ -71,11 +74,20 @@ function asRecord(entity: VerifyEntity | undefined, rec: Record<string, string>)
  *   went down). A table with several and no link is left out;
  * - `today`, the app's date, when known.
  */
+export type VerifyOptions = {
+  today?: string;
+  /**
+   * The app's own records, by data file (MEDICINE.DBF): a record an action points at but did not
+   * write (the medicine a bill line names) is looked up here, with what the action changed on top.
+   */
+  tables?: Record<string, { values: Record<string, DbfValue> }[]>;
+};
+
 export function envFor(
   effect: Effect,
   observation: EffectObservation,
   entities: VerifyEntity[],
-  opts: { today?: string } = {},
+  opts: VerifyOptions = {},
 ): Env {
   const byFile = new Map(entities.map((e) => [e.file.toUpperCase(), e]));
   const own = byFile.get(effect.file.toUpperCase());
@@ -84,6 +96,24 @@ export function envFor(
   else record[effect.field] = effect.before ?? '';
   const env: Env = { [ruleName(effect.entity)]: asRecord(own, record) };
   const ownKey = (own?.key ?? []).map((k) => effect.record[k.toLowerCase()]).filter(Boolean);
+  // Its lines: the records of a table that links to it, inserted by the same action with its key
+  // (a bill's lines), as `items`, the name the Vessel gives them (sum(items, x => x.amount)).
+  for (const [file, t] of Object.entries(observation.dbfDiff.tables)) {
+    const e = byFile.get(file.toUpperCase());
+    const fk = e?.foreignKeys?.find(
+      (f) => f.references.entity === effect.entity && f.fields.length === 1,
+    );
+    if (!e || !fk || !t.inserted.length) continue;
+    const ref = effect.record[fk.references.fields[0]!.toLowerCase()];
+    const mine = t.inserted.filter((r) => text(r.values[fk.fields[0]!]) === ref);
+    if (ref && mine.length)
+      env.items = mine.map((r) =>
+        asRecord(
+          e,
+          Object.fromEntries(Object.entries(r.values).map(([k, v]) => [k.toLowerCase(), text(v)])),
+        ),
+      );
+  }
   for (const [file, t] of Object.entries(observation.dbfDiff.tables)) {
     if (file.toUpperCase() === effect.file.toUpperCase()) continue;
     const e = byFile.get(file.toUpperCase());
@@ -97,13 +127,47 @@ export function envFor(
         ...Object.fromEntries(u.changes.map((c) => [c.field.toLowerCase(), text(c.after)])),
       })),
     ];
-    const linked =
-      rows.length === 1
+    // The record this one points at (a line's medicine, by CODE), else the one that holds this
+    // record's key, else the only one.
+    const fk = own?.foreignKeys?.find(
+      (f) => f.references.entity === e?.id && f.fields.length === 1,
+    );
+    const ref = fk ? effect.record[fk.fields[0]!.toLowerCase()] : undefined;
+    const pointed = ref
+      ? rows.filter((r) => r[fk!.references.fields[0]!.toLowerCase()] === ref)
+      : [];
+    const linked = pointed.length
+      ? pointed
+      : rows.length === 1
         ? rows
         : rows.filter((r) => ownKey.length && ownKey.every((k) => Object.values(r).includes(k!)));
-    if (linked.length === 1) env[id] = asRecord(e, linked[0]!);
+    if (linked.length === 1) env[id] = asRecord(e, { ...lookup(file, fk, ref), ...linked[0]! });
   }
-  if (opts.today) env.today = dslDate(opts.today.slice(0, 10));
+  // Records it points at that the action did not touch: from the app's own data.
+  for (const fk of own?.foreignKeys ?? []) {
+    const e = entities.find((x) => x.id === fk.references.entity);
+    if (!e || fk.fields.length !== 1) continue;
+    const id = ruleName(e.id);
+    const ref = effect.record[fk.fields[0]!.toLowerCase()];
+    if (env[id] || !ref) continue;
+    const found = lookup(e.file, fk, ref);
+    if (Object.keys(found).length) env[id] = asRecord(e, found);
+  }
+  function lookup(
+    file: string,
+    fk: { references: { fields: string[] } } | undefined,
+    ref: string | undefined,
+  ): Record<string, string> {
+    if (!fk || !ref) return {};
+    const field = fk.references.fields[0]!;
+    const rec = opts.tables?.[file.toUpperCase()]?.find((r) => text(r.values[field]) === ref);
+    if (!rec) return {};
+    return Object.fromEntries(
+      Object.entries(rec.values).map(([k, v]) => [k.toLowerCase(), text(v)]),
+    );
+  }
+  const today = observation.today ?? opts.today;
+  if (today) env.today = dslDate(today.slice(0, 10));
   return env;
 }
 
@@ -117,6 +181,8 @@ function run(ast: Expr, env: Env): { value: string | null; error?: string } {
   try {
     const v = evaluate(ast, env);
     if (isDecimal(v)) return { value: v.toString() };
+    // A date, as a DBF stores it.
+    if (v instanceof DslDate) return { value: v.iso.replace(/-/g, '') };
     return {
       value: null,
       error: `gives ${typeof v === 'boolean' ? 'true or false' : 'no number'}`,
@@ -243,7 +309,7 @@ export function verifyCandidates(
   candidates: string[],
   observations: EffectObservation[],
   entities: VerifyEntity[],
-  opts: { today?: string } = {},
+  opts: VerifyOptions = {},
 ): Verification {
   const byId = new Map(observations.map((o) => [o.id, o]));
   const effects = effectsOf(observations, entities).filter((e) => targetOf(e) === target);
@@ -303,14 +369,23 @@ export function verifyCandidates(
   for (const c of pool) for (const t of thresholds(c.ast!)) marks.set(`${t.field} ${t.value}`, t);
   let covered = 0;
   const probes: RuleProbe[] = [];
+  // A threshold some fitting rules have and others not (> 5000 against >= 10000) tells them apart:
+  // just over it is asked for, unless it was tried. One they all share tells nothing.
+  const inFits = new Map<string, number>();
+  for (const c of fits)
+    for (const k of new Set(thresholds(c.ast!).map((t) => `${t.field} ${t.value}`)))
+      inFits.set(k, (inFits.get(k) ?? 0) + 1);
+  const telling = (k: string) => (inFits.get(k) ?? 0) > 0 && inFits.get(k)! < fits.length;
   for (const t of marks.values()) {
     const s = sides(envs, t);
     covered += (Number(s.below) + Number(s.on) + Number(s.above)) / 3;
-    if (!(s.below && s.on && s.above)) {
-      const just = new D(t.value).plus(1).toString();
-      const values = [t.value, just];
+    const just = new D(t.value).plus(1).toString();
+    const values = [t.value, just];
+    const tried = (v: string) => envs.some((env) => fieldValue(env, t.field)?.eq(new D(v)));
+    if (!(s.below && s.on && s.above))
       probes.push({ target, field: t.field, values, text: probeText(t.field, values) });
-    }
+    else if (telling(`${t.field} ${t.value}`) && !(tried(t.value) && tried(just)))
+      probes.push({ target, field: t.field, values, text: probeText(t.field, values) });
   }
   const coverage = marks.size ? covered / marks.size : 1;
   const best = fits[0];

@@ -17,14 +17,13 @@ test.describe('pipeline', () => {
   test('a live raise runs the six steps in order: possess explores, the rest say they are not built yet', async ({
     page,
   }) => {
-    test.setTimeout(120_000);
+    // Archaeology types its probe bills into the real old app too (review of 51-60, finding 3).
+    test.setTimeout(240_000);
     const id = await raise(page, 'Raise Shifa Medical Store');
     const steps = page.getByTestId('steps');
     await expect(steps.getByRole('progressbar')).toHaveAccessibleName(
       '6 of 6 steps run, 4 of them skipped',
-      {
-        timeout: 90_000,
-      },
+      { timeout: 180_000 },
     );
     // Possession explores (Prompt 48); archaeology finds the entities (Prompt 53).
     await expect(page.getByTestId('step-possess')).toHaveAttribute('data-status', 'done');

@@ -178,9 +178,14 @@ export {
   type Verification,
   type VerifyEntity,
 } from './archaeologist/verify';
+export { MAX_ENUMERATED, enumerateCandidates } from './archaeologist/enumerate';
+export { PLANS_PER_VALUE, planProbe, probePlanner, type ProbePlan } from './archaeologist/probes';
 export {
+  EXPLORE_VALUES,
   MAX_RULE_TARGETS,
+  chooseInLayers,
   inferRules,
+  type ProbeRun,
   type InferOptions,
   type Inferred,
 } from './archaeologist/infer';

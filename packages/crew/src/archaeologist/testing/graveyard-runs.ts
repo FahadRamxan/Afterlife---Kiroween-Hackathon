@@ -82,8 +82,15 @@ export function graveyardRun(
     if (d.inserted.length || d.updated.length || d.deleted.length) tables[`${f}.DBF`] = d;
   }
   const keysFile = new URL(`${app}/scenarios/${scenario}.keys`, ROOT);
+  // The DOS clock it ran at: its own (y2k-sells-expired.time), or the app's.
+  const timeFile = new URL(`${app}/scenarios/${scenario}.time`, ROOT);
+  const manifest = JSON.parse(readFileSync(new URL(`${app}/manifest.json`, ROOT), 'utf8')) as {
+    dosTime?: string;
+  };
+  const today = existsSync(timeFile) ? readFileSync(timeFile, 'latin1').trim() : manifest.dosTime;
   return {
     id: scenario,
+    ...(today ? { today: today.slice(0, 10) } : {}),
     keys: existsSync(keysFile) ? readFileSync(keysFile, 'latin1') : '',
     screenBefore: {},
     dbfDiff: { tables, unchanged: [], addedTables: [], removedTables: [] },
@@ -127,12 +134,23 @@ export function graveyardHidden(app: string): HiddenRule[] {
 }
 
 /** Every scripted scenario of an app as an observation, records matched by the entities' keys. */
-export function graveyardEvidence(app: string, entities: VerifyEntity[]): ScoreEvidence {
+export function graveyardEvidence(
+  app: string,
+  entities: VerifyEntity[],
+  today?: string,
+): ScoreEvidence {
   const keys: Record<string, string | null> = {};
-  for (const e of entities) keys[e.file.replace(/\.DBF$/i, '').toUpperCase()] = e.key?.[0] ?? null;
+  // A key of two fields (a bill line's BILL_NO + LINE) is diffed by record number, as before.
+  for (const e of entities)
+    keys[e.file.replace(/\.DBF$/i, '').toUpperCase()] = e.key?.length === 1 ? e.key[0]! : null;
+  // The runs start from the seed records: a bill line's medicine is looked up in them.
+  const tables = Object.fromEntries(
+    graveyardTables(app).map((f) => [`${f}.DBF`, readCsv(`${app}/seed/${f}.csv`).records]),
+  );
   return {
     observations: graveyardScenarios(app).map((s) => graveyardRun(app, s, keys)),
     entities,
+    options: { tables, ...(today ? { today } : {}) },
   };
 }
 

@@ -105,11 +105,11 @@ Each sample app hides its business rules in its manifest (`knownRules`, with the
 
 <!-- archaeology-score:start -->
 
-**Without a language model** (only keys and counters are recovered; the calculations need a model):
+**Without a language model** (keys and counters from the data, and rules found by listing short expressions over the recorded observations, probes included, and keeping those that explain every one):
 
-- Afterlife recovered 2 of 7 hidden rules in Shifa Medical Store (2 exact). Precision 100%, recall 29%.
+- Afterlife recovered 5 of 7 hidden rules in Shifa Medical Store (4 exact). Precision 100%, recall 71%.
 - Afterlife recovered 1 of 6 hidden rules in Iqra School Fees (1 exact). Precision 100%, recall 17%.
-- Afterlife recovered 1 of 5 hidden rules in Barkat Kiryana Ledger (1 exact). Precision 100%, recall 20%.
+- Afterlife recovered 2 of 5 hidden rules in Barkat Kiryana Ledger (1 exact). Precision 100%, recall 40%.
 
 <!-- archaeology-score:end -->
 

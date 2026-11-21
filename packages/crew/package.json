@@ -20,6 +20,7 @@
     "@afterlife/emulator": "workspace:^",
     "@afterlife/screen": "workspace:^",
     "@afterlife/soul": "workspace:^",
+    "@afterlife/vessel": "workspace:^",
     "@aws-sdk/client-bedrock-runtime": "^3.1172.0",
     "decimal.js": "^10.6.0",
     "zod": "^4.6.7"

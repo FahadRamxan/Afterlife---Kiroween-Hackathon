@@ -1,8 +1,8 @@
 {
   "no-model": {
     "shifa": {
-      "recovered": 2,
-      "exact": 2,
+      "recovered": 5,
+      "exact": 4,
       "known": 7
     },
     "iqra": {
@@ -11,7 +11,7 @@
       "known": 6
     },
     "barkat": {
-      "recovered": 1,
+      "recovered": 2,
       "exact": 1,
       "known": 5
     }

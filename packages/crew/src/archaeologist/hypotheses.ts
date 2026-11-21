@@ -20,6 +20,8 @@ export type EffectObservation = {
     };
   };
   dbfDiff: SnapshotDiff;
+  /** The app's date when this was observed, if not the run's (a scenario run in January 2000). */
+  today?: string;
 };
 
 export type Effect = {
@@ -51,7 +53,13 @@ const lower = (values: Record<string, DbfValue>) =>
  */
 export function effectsOf(
   observations: EffectObservation[],
-  entities: { id: string; file: string; key?: string[]; counters?: { field: string }[] }[],
+  entities: {
+    id: string;
+    file: string;
+    key?: string[];
+    counters?: { field: string }[];
+    fields?: { name: string; type: string }[];
+  }[],
 ): Effect[] {
   const out: Effect[] = [];
   for (const o of observations)
@@ -59,10 +67,14 @@ export function effectsOf(
       const e = entities.find((x) => x.file.toUpperCase() === file.toUpperCase());
       if (!e) continue;
       const skip = new Set([...(e.key ?? []), ...(e.counters ?? []).map((c) => c.field)]);
+      const types = new Map((e.fields ?? []).map((f) => [f.name, f.type]));
       for (const r of t.inserted)
         for (const [name, v] of Object.entries(r.values)) {
           const after = text(v);
-          if (skip.has(name) || !NUMBER.test(after) || !after.includes('.')) continue;
+          if (skip.has(name)) continue;
+          // A date the action wrote (a bill's date): its rule is usually `today`.
+          const date = types.get(name) === 'D' && /^\d{8}$/.test(after);
+          if (!date && (!NUMBER.test(after) || !after.includes('.'))) continue;
           out.push({
             observation: o.id,
             file,

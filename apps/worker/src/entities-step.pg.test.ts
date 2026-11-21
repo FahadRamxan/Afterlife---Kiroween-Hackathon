@@ -33,15 +33,16 @@ const screen = (title: string, fp: string) => ({
   cursor: null,
 });
 
-async function saves() {
+/** A bill and a new customer; with `second`, another bill of two medicines after them. */
+async function saves(second = false) {
   const before = Object.fromEntries(
     FILES.map((f) => [f, new Uint8Array(readFileSync(resolve(DIST, f)))]),
   );
-  const plus = (file: string, values: Record<string, string>) => {
+  const plus = (file: string, ...rows: Record<string, string>[]) => {
     const d = readDbf(before[file]!);
     return writeDbf({
       fields: d.fields,
-      records: [...d.records, { deleted: false, values }],
+      records: [...d.records, ...rows.map((values) => ({ deleted: false, values }))],
       lastUpdate: { year: 1998, month: 7, day: 15 },
     });
   };
@@ -73,12 +74,39 @@ async function saves() {
       PHONE: '051-4567890',
     }),
   };
+  const bill2 = {
+    ...before,
+    'BILLS.DBF': plus('BILLS.DBF', {
+      BILL_NO: '9807-0002',
+      BILL_DATE: '19980715',
+      CUST_ID: '',
+      SUBTOTAL: '47.30',
+      DISCOUNT: '0.00',
+      GST: '8.04',
+      TOTAL: '55.34',
+    }),
+    'BILLITEM.DBF': plus(
+      'BILLITEM.DBF',
+      {
+        BILL_NO: '9807-0002',
+        LINE: '1',
+        CODE: 'PAN500',
+        QTY: '3',
+        PRICE: '12.50',
+        AMOUNT: '37.50',
+      },
+      { BILL_NO: '9807-0002', LINE: '2', CODE: 'FLA400', QTY: '1', PRICE: '9.80', AMOUNT: '9.80' },
+    ),
+  };
   return [
     { keys: '{F2}', diff: diffSnapshots(await snapshot(before), await snapshot(bill)) },
     {
       keys: '0514567890{Enter}',
       diff: diffSnapshots(await snapshot(before), await snapshot(cust)),
     },
+    ...(second
+      ? [{ keys: '{F2}', diff: diffSnapshots(await snapshot(before), await snapshot(bill2)) }]
+      : []),
   ];
 }
 
@@ -97,13 +125,13 @@ function ctx(projectId: string) {
   return { c, events };
 }
 
-async function shifaProject() {
+async function shifaProject(second = false) {
   const [p] = await t.db
     .insert(projects)
     .values({ name: 'Shifa', source: 'graveyard', sourceApp: 'shifa' })
     .returning();
   let seq = 0;
-  for (const s of await saves())
+  for (const s of await saves(second))
     await t.db.insert(observations).values({
       projectId: p!.id,
       seq: seq++,
@@ -162,7 +190,9 @@ describe('the entities step (Prompt 53)', () => {
     const [row] = await t.db.select().from(souls).where(eq(souls.projectId, p!.id));
     const soul = SoulSchema.parse(row!.ir);
     expect(soul.provenance).toMatchObject({ createdBy: 'archaeologist', observationCount: 2 });
-    expect(soul.rules).toEqual([]);
+    // With no model and one bill (25.00 = 2 x 12.50), only the date is told apart: many short
+    // expressions give each amount, so none is kept until another bill (review 51-60).
+    expect(soul.rules.map((x) => [x.target, x.expression])).toEqual([['bill.bill_date', 'today']]);
     // The actions the observations show: the bill saved and the customer added.
     expect(soul.actions.map((x) => [x.id, x.effects.map((e) => `${e.kind} ${e.entity}`)])).toEqual([
       ['save-bill', ['insert bill', 'insert bill-item']],
@@ -182,7 +212,7 @@ describe('the entities step (Prompt 53)', () => {
     }
     expect(events.find(([type]) => type === 'soul_updated')?.[1]).toMatchObject({
       version: 1,
-      reason: 'entities',
+      reason: 'rules',
     });
     const logs = events
       .filter(([x]) => x === 'log')
@@ -192,21 +222,33 @@ describe('the entities step (Prompt 53)', () => {
     );
   });
 
-  it('without a model it stores the entities only, and says why', async () => {
-    const p = await shifaProject();
+  it('without a model it finds the rules among short expressions, and says so', async () => {
+    const p = await shifaProject(true);
     const { c, events } = ctx(p.id);
     const r = await entitiesStep({ db: t.db, bundleFor: () => bundle, llm: null })(c);
-    expect(r).toMatchObject({ status: 'done', output: { rules: 0 } });
+    expect(r).toMatchObject({ status: 'done', output: { probed: 0 } });
     expect(events).toContainEqual(['log', { message: NO_RULE_MODEL }]);
+    const [row] = await t.db.select().from(souls).where(eq(souls.projectId, p.id));
+    const rule = (x: string) =>
+      SoulSchema.parse(row!.ir).rules.find((y) => y.target === x)?.expression;
+    // Two bills under 5,000: the rules they show.
+    expect(rule('bill.bill_date')).toBe('today');
+    expect(rule('bill.discount')).toBe('0');
+    expect(rule('bill.gst')).toBe('trunc(bill.subtotal * 0.17, 2)');
+    expect(rule('bill.subtotal')).toBe('sum(items, x => x.amount)');
+    expect(rule('bill_item.price')).toBe('medicine.price');
+    expect(rule('bill_item.amount')).toBe('bill_item.qty * bill_item.price');
+    const found = events.filter(([x]) => x === 'rule_found');
+    expect(found.length).toBe((r as { output: { rules: number } }).output.rules);
   });
 
   it('with a model, each value gets candidates, and only a rule that explains every observation is kept (Prompt 55)', async () => {
-    const p = await shifaProject();
+    const p = await shifaProject(true);
     // The model's candidates per value; for the others it proposes rules that do not fit.
     const proposals: Record<string, string[]> = {
       'bill.gst': [
         'round(bill.subtotal * 0.18, 2)',
-        'trunc((bill.subtotal - bill.discount) * 0.17, 2)',
+        'trunc(bill.subtotal * 0.17, 2)',
         'trunc(bill.subtotal * 0.16, 2)',
       ],
       'bill.discount': ['trunc(bill.subtotal * 0.10, 2)', '0', 'bill.subtotal'],
@@ -221,26 +263,24 @@ describe('the entities step (Prompt 53)', () => {
     });
     const { c, events } = ctx(p.id);
     const r = await entitiesStep({ db: t.db, bundleFor: () => bundle, llm: client })(c);
-    expect(r).toMatchObject({ status: 'done', output: { rules: 2 } });
+    expect(r).toMatchObject({ status: 'done' });
     const [row] = await t.db.select().from(souls).where(eq(souls.projectId, p.id));
     const soul = SoulSchema.parse(row!.ir);
-    const [obs] = await t.db
+    const [obs, , obs2] = await t.db
       .select({ id: observations.id })
       .from(observations)
       .where(eq(observations.projectId, p.id))
       .orderBy(observations.seq);
-    expect(soul.rules.map((x) => [x.target, x.expression])).toEqual([
-      ['bill.discount', '0'],
-      ['bill.gst', 'trunc((bill.subtotal - bill.discount) * 0.17, 2)'],
-    ]);
     const gst = soul.rules.find((x) => x.target === 'bill.gst')!;
+    // The model's candidate fits; its reason is the rule's English.
+    expect(gst.expression).toBe('trunc(bill.subtotal * 0.17, 2)');
     expect(gst).toMatchObject({ id: 'bill-gst', kind: 'compute', en: 'bill.gst rule', ur: '' });
-    expect(gst.evidence).toEqual([obs!.id]);
+    expect(gst.evidence).toEqual([obs!.id, obs2!.id]);
     expect(gst.confidence).toBeGreaterThan(0);
     // One rule_found event per rule kept, and every model call logged for "Show your work".
     expect(
       events.filter(([x]) => x === 'rule_found').map(([, e]) => (e as { target: string }).target),
-    ).toEqual(['bill.discount', 'bill.gst']);
+    ).toEqual(soul.rules.map((x) => x.target));
     const calls = await t.db.select().from(llmCalls).where(eq(llmCalls.projectId, p.id));
     expect(calls.length).toBe(client.requests.length);
     expect(calls.every((x) => x.agent === 'archaeologist')).toBe(true);

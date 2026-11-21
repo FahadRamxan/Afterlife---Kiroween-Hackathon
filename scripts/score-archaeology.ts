@@ -1,10 +1,12 @@
 // Archaeology scoring (Prompt 56): what the Archaeologist recovers of each sample app's hidden
 // rules (manifest.json `knownRules`, with the truth our team wrote from the C source).
 //
-// For each sample: the entities from the app's data files and its recorded possession
-// (apps/worker/recorded), then, with a model set up (LLM_PROVIDER=bedrock), the rules the model
-// proposes and the deterministic check keeps. The Soul is scored against the hidden truth, with the
-// app's scripted scenario runs (samples/graveyard/fixtures) as the evidence for equivalence.
+// For each sample: the entities from the app's data files and its recorded run
+// (apps/worker/recorded: possession, and the probes the Archaeologist had typed into the old app),
+// then the rules: short expressions the enumerator lists, plus, with a model set up
+// (LLM_PROVIDER=bedrock), the model's candidates; the deterministic check keeps only those that
+// explain every observation. The Soul is scored against the hidden truth, with the app's scripted
+// scenario runs (samples/graveyard/fixtures) as the evidence for equivalence.
 //
 // Usage: pnpm score:archaeology           print the scores
 //        pnpm score:archaeology --write   also update docs/archaeology-score.json and the README
@@ -36,18 +38,25 @@ const README = path.join(ROOT, 'README.md');
 /** What the Graveyard page shows: the numbers only, no hidden rule ids or texts. */
 export const WEB_SCORE_FILE = path.join(ROOT, 'apps', 'web', 'lib', 'archaeology-score.json');
 export const SAMPLES = ['shifa', 'iqra', 'barkat'] as const;
-/** The score when no model is set up: entities and counters only. */
+/** The score when no model is set up: entities, counters and the enumerated rules. */
 export const NO_MODEL = 'no-model';
 
 export type SampleScore = { app: string; name: string; observations: number; score: Score };
 export type ScoreFile = Record<string, SampleScore[]>;
 
-/** The observations of an app's recorded possession: each action that changed its data. */
-export function recordedObservations(app: string): EffectObservation[] {
-  const rec = JSON.parse(
+type Recording = {
+  steps: { step: string; events: { type: string; payload: Record<string, unknown> }[] }[];
+  observations?: { id: string; keys: string; dbfDiff: SnapshotDiff }[];
+};
+
+const recording = (app: string) =>
+  JSON.parse(
     readFileSync(path.join(ROOT, 'apps', 'worker', 'recorded', `${app}.json`), 'utf8'),
-  ) as { steps: { step: string; events: { type: string; payload: Record<string, unknown> }[] }[] };
-  const possess = rec.steps.find((s) => s.step === 'possess');
+  ) as Recording;
+
+/** The observations of an app's recorded possession: each key step, with what it changed. */
+export function recordedObservations(app: string): EffectObservation[] {
+  const possess = recording(app).steps.find((s) => s.step === 'possess');
   return (possess?.events ?? [])
     .filter((e) => e.type === 'observation' && e.payload.diff)
     .map((e, i) => ({
@@ -58,7 +67,20 @@ export function recordedObservations(app: string): EffectObservation[] {
     }));
 }
 
-/** A sample's data files, its recorded possession and the entities found in them. */
+/**
+ * Every observation of the recorded run, as the Archaeologist saw it: possession, then the probes
+ * it had typed into the old app. Possession's alone when the recording kept no observations.
+ */
+export function recordedRun(app: string): EffectObservation[] {
+  const kept = recording(app).observations;
+  if (!kept?.length) return recordedObservations(app);
+  return kept.map((o) => ({ id: o.id, keys: o.keys, screenBefore: {}, dbfDiff: o.dbfDiff }));
+}
+
+/**
+ * A sample's data files, its recorded run and the entities found in it. As in the pipeline, the
+ * entities come from possession (the probes come after them, each in a freshly booted app).
+ */
 export async function sampleInputs(app: string) {
   const manifest = JSON.parse(
     readFileSync(path.join(ROOT, 'samples', 'graveyard', app, 'manifest.json'), 'utf8'),
@@ -71,35 +93,33 @@ export async function sampleInputs(app: string) {
       file: f.toUpperCase(),
       table: readDbf(new Uint8Array(readFileSync(path.join(dist, f)))),
     }));
-  const observations = recordedObservations(app);
   const entities = await detectEntities(
     tables,
-    observations.map((o) => o.dbfDiff),
+    recordedObservations(app).map((o) => o.dbfDiff),
   );
-  return { manifest, tables, observations, entities };
+  return { manifest, tables, observations: recordedRun(app), entities };
 }
 
 export async function scoreSample(app: string, llm: LlmClient | null): Promise<SampleScore> {
-  const { manifest, observations, entities } = await sampleInputs(app);
-  const rules = llm
-    ? (
-        await inferRules(
-          new CrewLlm({
-            client: llm,
-            log: new MemoryLlmCallLog(),
-            projectId: `score-${app}`,
-            budgetTokens: 400_000,
-          }),
-          entities,
-          observations,
-          { today: manifest.dosTime },
-        )
-      ).rules
-    : [];
+  const { manifest, tables, observations, entities } = await sampleInputs(app);
+  const crew = llm
+    ? new CrewLlm({
+        client: llm,
+        log: new MemoryLlmCallLog(),
+        projectId: `score-${app}`,
+        budgetTokens: 400_000,
+      })
+    : null;
+  // As the pipeline runs it: the app's own records for lookups (a bill line's medicine).
+  const records = Object.fromEntries(tables.map((t) => [t.file, t.table.records]));
+  const { rules } = await inferRules(crew, entities, observations, {
+    today: manifest.dosTime,
+    tables: records,
+  });
   const score = scoreSoul(
     graveyardHidden(app),
     { rules, entities },
-    graveyardEvidence(app, entities),
+    graveyardEvidence(app, entities, manifest.dosTime),
   );
   return { app, name: manifest.name, observations: observations.length, score };
 }
@@ -119,7 +139,7 @@ export function readmeBlock(file: ScoreFile): string {
     lines.push(
       '',
       mode === NO_MODEL
-        ? '**Without a language model** (only keys and counters are recovered; the calculations need a model):'
+        ? '**Without a language model** (keys and counters from the data, and rules found by listing short expressions over the recorded observations, probes included, and keeping those that explain every one):'
         : `**With ${mode}:**`,
       '',
     );

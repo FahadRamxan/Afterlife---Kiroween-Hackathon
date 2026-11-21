@@ -23,6 +23,7 @@
     "@afterlife/emulator": "workspace:^",
     "@afterlife/screen": "workspace:^",
     "@afterlife/soul": "workspace:^",
+    "@afterlife/vessel": "workspace:^",
     "fflate": "^0.8.3",
     "js-dos": "8.5.4",
     "pg-boss": "^12.38.2",
