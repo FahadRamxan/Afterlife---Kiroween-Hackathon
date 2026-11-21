@@ -44,6 +44,13 @@ export class ScreenGraph {
     else this.edges.set(id, { from, to, keys, count: 1 });
   }
 
+  /**
+   * The screens by title: one screen (NEW BILL) has several states, each its own fingerprint (a
+   * line added, a message shown). Review of 51-60, finding 6.
+   */
+  titles(): number {
+    return new Set([...this.nodes.values()].map((n) => n.title)).size;
+  }
   edgeList(): GraphEdge[] {
     return [...this.edges.values()];
   }

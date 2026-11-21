@@ -118,7 +118,7 @@ describe('possess (the Possessor, Prompt 48)', () => {
       'Exploring. No language model is set up, so field values come from the data files.',
     );
     expect(logs.at(-1)).toMatch(
-      /^Possession ended \(explored\): \d+ screens, \d+ actions, \d+ that changed data$/,
+      /^Possession ended \(explored\): \d+ screens \(\d+ screen states\), \d+ actions, \d+ that changed data$/,
     );
   });
 

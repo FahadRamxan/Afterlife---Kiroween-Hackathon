@@ -23,6 +23,15 @@ describe('ScreenGraph', () => {
     });
   });
 
+  it('counts screens by title: states of one screen are one screen (review of 51-60, finding 6)', () => {
+    const g = new ScreenGraph('menu', 'MAIN MENU');
+    g.visit('bill', 'NEW BILL', 1);
+    g.visit('bill+line', 'NEW BILL', 2);
+    g.visit('bill+msg', 'NEW BILL', 3);
+    g.visit('stock', 'STOCK', 4);
+    expect(g.nodes.size).toBe(5);
+    expect(g.titles()).toBe(3);
+  });
   it('finds the shortest key path to the nearest wanted screen', () => {
     const g = new ScreenGraph('m', 'M');
     g.edge('m', 'a', '1');

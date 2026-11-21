@@ -40,11 +40,13 @@ test('watching a possession: the counters go up, the graph fills in, data flies 
   await expect
     .poll(() => count(page, 'stat-screens'), { timeout: 60_000 })
     .toBeGreaterThan(firstScreens);
-  // The screen graph: a node per screen found, the current one lit.
+  // The screen graph: a node per screen found (its states grouped under it), the current one lit.
+  // Two screens (MAIN MENU, NEW BILL) while the bill is still being made: the thoughts below show
+  // only the newest steps.
   const graph = panel.getByTestId('screen-graph');
   await expect
     .poll(async () => Number(await graph.getAttribute('data-nodes')), { timeout: 60_000 })
-    .toBeGreaterThanOrEqual(4);
+    .toBeGreaterThanOrEqual(2);
   await expect(graph.locator('[data-testid="graph-node"][data-current="true"]')).toHaveCount(1);
   await expect(graph.locator('.react-flow__node').first()).toBeVisible();
   // What the agent is doing, one plain line at a time.
@@ -56,6 +58,16 @@ test('watching a possession: the counters go up, the graph fills in, data flies 
   await expect(card).toContainText('BILLS.DBF', { timeout: 90_000 });
   await expect(card.getByRole('grid', { name: /BILLS\.DBF/ })).toBeVisible();
   await expect(card.getByText('inserted').first()).toBeVisible();
+  // Review of 51-60, finding 6 (checked last: the thoughts above show only the newest
+  // steps): states of one screen (a bill with a line typed) are one node, and
+  // the counter says screens and states apart.
+  await expect(
+    graph.locator('[data-testid="graph-node"]').filter({ hasText: /^NEW BILL · \d+ states$/ }),
+  ).toHaveCount(1, { timeout: 60_000 });
+  await expect
+    .poll(async () => Number(await graph.getAttribute('data-nodes')), { timeout: 60_000 })
+    .toBeGreaterThanOrEqual(4);
+  await expect(panel.getByTestId('stat-screens')).toHaveText(/^\d+ screens found \(\d+ states\)$/);
   await page.request.delete(`${API}/api/projects/${id}`);
 });
 

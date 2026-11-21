@@ -99,7 +99,11 @@ test.describe('rule discovery', () => {
     );
     const counts = await apiCounts(page, projectId);
     expect(counts.rules).toBe(SHIFA_REFERENCE_SOUL.rules.length);
-    await expect(page.getByTestId('exhumed-banner')).toHaveText(banner(counts));
+    // The reference Soul was written by a person: its rules are not said to be exhumed (review of
+    // 51-60, finding 7).
+    await expect(page.getByTestId('exhumed-banner')).toHaveText(
+      `${counts.rules} rules written by our team (the reference Soul), not exhumed from the observations`,
+    );
 
     await page.request.delete(`${API}/api/projects/${projectId}`);
   });

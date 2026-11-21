@@ -29,19 +29,29 @@ const obs = (
 });
 
 describe('theaterGraph', () => {
-  it('a node per screen in the order found, an edge per move, and the newest screen lit', () => {
+  it('a node per screen title in the order found, with its states; an edge per move; the newest screen lit', () => {
     const g = theaterGraph([
       obs({ step: 1, keys: '1', to: 'NEW BILL', fingerprint: 'fp_bill', newScreen: true }),
+      // A line typed on the bill: another state of NEW BILL, not another screen (review 51-60).
       obs({
         step: 2,
-        keys: '{Esc}',
+        keys: 'PAN500{Enter}',
         from: 'NEW BILL',
         fromFingerprint: 'fp_bill',
+        to: 'NEW BILL',
+        fingerprint: 'fp_bill_line',
+        newScreen: true,
+      }),
+      obs({
+        step: 3,
+        keys: '{Esc}',
+        from: 'NEW BILL',
+        fromFingerprint: 'fp_bill_line',
         to: 'MAIN MENU',
       }),
-      obs({ step: 3, keys: '2', to: 'STOCK', fingerprint: 'fp_stock', newScreen: true }),
+      obs({ step: 4, keys: '2', to: 'STOCK', fingerprint: 'fp_stock', newScreen: true }),
       obs({
-        step: 4,
+        step: 5,
         keys: '{PgDn}',
         from: 'STOCK',
         fromFingerprint: 'fp_stock',
@@ -49,17 +59,17 @@ describe('theaterGraph', () => {
         fingerprint: 'fp_stock',
       }),
     ]);
-    expect(g.nodes.map((n) => [n.id, n.title, n.order])).toEqual([
-      ['fp_menu', 'MAIN MENU', 0],
-      ['fp_bill', 'NEW BILL', 1],
-      ['fp_stock', 'STOCK', 2],
+    expect(g.nodes.map((n) => [n.id, n.title, n.order, n.states])).toEqual([
+      ['screen:MAIN MENU', 'MAIN MENU', 0, 1],
+      ['screen:NEW BILL', 'NEW BILL', 1, 2],
+      ['screen:STOCK', 'STOCK', 2, 1],
     ]);
     expect(g.nodes.map((n) => n.current)).toEqual([false, false, true]);
     // A key that stays on its screen is not an edge between screens.
     expect(g.edges.map((e) => [e.source, e.target, e.label])).toEqual([
-      ['fp_menu', 'fp_bill', '1'],
-      ['fp_bill', 'fp_menu', '{Esc}'],
-      ['fp_menu', 'fp_stock', '2'],
+      ['screen:MAIN MENU', 'screen:NEW BILL', '1'],
+      ['screen:NEW BILL', 'screen:MAIN MENU', '{Esc}'],
+      ['screen:MAIN MENU', 'screen:STOCK', '2'],
     ]);
   });
 
@@ -81,6 +91,43 @@ describe('theaterGraph', () => {
             expect(ids.has(e.target)).toBe(true);
             expect(e.source).not.toBe(e.target);
           }
+        },
+      ),
+    );
+  });
+});
+
+describe('theaterGraph, screens by title (review of 51-60, finding 6)', () => {
+  it('one node per title, and its states add up to the fingerprints seen (invariant)', () => {
+    const fp = fc.constantFrom('fp_a', 'fp_b', 'fp_c', 'fp_d', 'fp_e');
+    const title = fc.constantFrom('MAIN MENU', 'NEW BILL', 'STOCK', '');
+    fc.assert(
+      fc.property(
+        fc.record({
+          fp_a: title,
+          fp_b: title,
+          fp_c: title,
+          fp_d: title,
+          fp_e: title,
+        }),
+        fc.array(fc.tuple(fp, fp), { minLength: 1, maxLength: 30 }),
+        (titles, moves) => {
+          const g = theaterGraph(
+            moves.map(([a, b], i) =>
+              obs({
+                step: i + 1,
+                fromFingerprint: a,
+                from: titles[a],
+                fingerprint: b,
+                to: titles[b],
+              }),
+            ),
+          );
+          const seen = new Set(moves.flat());
+          const named = new Set([...seen].map((f) => titles[f].trim() || '(no title)'));
+          expect(g.nodes.map((n) => n.title).sort()).toEqual([...named].sort());
+          expect(g.nodes.reduce((sum, n) => sum + n.states, 0)).toBe(seen.size);
+          expect(g.nodes.filter((n) => n.current)).toHaveLength(1);
         },
       ),
     );

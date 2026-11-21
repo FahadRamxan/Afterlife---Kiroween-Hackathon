@@ -94,3 +94,37 @@ describe('messages', () => {
     expect(found(urT, 1).replace('1 DBF', '4 DBF')).not.toBe(found(urT, 4));
   });
 });
+
+describe('wording from the review of 51-60 (findings 6 and 7)', () => {
+  const t = createTranslator({ locale: 'en', messages: en, namespace: 'raise' });
+  it('screens and their states are counted apart', () => {
+    expect(t('live.possession.screens', { n: 5, states: 11 })).toBe('5 screens found (11 states)');
+    expect(t('live.possession.screens', { n: 1, states: 1 })).toBe('1 screen found (1 state)');
+    expect(t('live.possession.states', { n: 11 })).toBe('11 screen states found');
+    expect(t('live.theater.states', { title: 'NEW BILL', n: 4 })).toBe('NEW BILL · 4 states');
+  });
+  it('one node is "1 node"', () => {
+    expect(t('soul.check.explains', { explained: 1, total: 1, nodes: 1 })).toBe(
+      'Explains 1 of 1 value · 1 node',
+    );
+    expect(
+      t('soul.check.selectedDetail', {
+        effects: 1,
+        observations: 1,
+        nodes: 1,
+        confidence: 33,
+        coverage: 100,
+      }),
+    ).toContain('. 1 node. Confidence');
+  });
+  it('rules a person wrote are not said to be exhumed', () => {
+    expect(t('soul.written', { rules: 8, by: 'reference' })).toBe(
+      '8 rules written by our team (the reference Soul), not exhumed from the observations',
+    );
+    expect(t('soul.written', { rules: 1, by: 'owner' })).toBe(
+      '1 rule set by the owner, not exhumed from the observations',
+    );
+    const u = createTranslator({ locale: 'ur', messages: ur, namespace: 'raise' });
+    expect(u('soul.written', { rules: 8, by: 'reference' })).toContain('8');
+  });
+});

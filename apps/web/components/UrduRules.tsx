@@ -44,6 +44,8 @@ export function UrduRules({
           ? t('queued')
           : null;
   const busy = status !== null;
+  // No rules: nothing to say about their Urdu (not "Every rule is in Urdu").
+  if (!soul.rules.length) return null;
   return (
     <div data-testid="urdu-rules" className="mt-2 space-y-2 text-sm">
       <p data-testid="urdu-missing">{missing ? t('missing', { count: missing }) : t('all')}</p>

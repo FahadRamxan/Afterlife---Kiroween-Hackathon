@@ -220,6 +220,7 @@ export function possessApp(deps: {
               : {}),
             ...(o.hint ? { hint: o.hint } : {}),
             screens: o.totals.screens,
+            titles: o.totals.titles,
             saves: o.totals.saves,
             guided: o.totals.guided,
             refused: o.totals.refused,
@@ -254,12 +255,13 @@ export function possessApp(deps: {
     // Kept, and added to what earlier runs found (Prompt 52).
     const kept = db ? await saveGraph(db, ctx.projectId, result.graph) : result.graph;
     await ctx.log(
-      `Possession ended (${result.stoppedBecause}): ${result.screens} screens, ${result.steps} actions, ${result.saves} that changed data`,
+      `Possession ended (${result.stoppedBecause}): ${result.titles} screens (${result.screens} screen states), ${result.steps} actions, ${result.saves} that changed data`,
     );
     return {
       status: 'done',
       output: {
         screens: result.screens,
+        titles: result.titles,
         steps: result.steps,
         saves: result.saves,
         stoppedBecause: result.stoppedBecause,

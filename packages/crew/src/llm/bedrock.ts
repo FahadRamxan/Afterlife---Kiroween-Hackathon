@@ -77,19 +77,53 @@ export function toBedrockMessages(messages: LlmMessage[]): BedrockMessage[] {
   }));
 }
 
+const STRICT: LlmCapabilities = { forcedToolChoice: false, temperature: false };
+const NO_TEMPERATURE: LlmCapabilities = { forcedToolChoice: true, temperature: false };
+
 /**
- * What a Claude model on Bedrock accepts. Sonnet 5.5, and the Claude models after it, answer 400
- * to a forced tool choice and to any temperature (Anthropic's Sonnet 5.5 migration guide); Sonnet
- * 4.5 and Sonnet 5 take both.
+ * What each Claude family on Bedrock accepts, by version (review of 51-60, finding 5). A row
+ * covers versions from `from` up to, not including, `to`. Sonnet 5.5 and the models after it
+ * answer 400 to a forced tool choice and to any temperature; Fable 5.1 and 5.2 to both as well;
+ * Sonnet 5, Opus 4.7 to 5 to a temperature only. Older models take both.
+ */
+export const BEDROCK_MODEL_TABLE: {
+  family: string;
+  from: string;
+  to: string;
+  capabilities: LlmCapabilities;
+}[] = [
+  { family: 'sonnet', from: '0', to: '5', capabilities: FULL_CAPABILITIES },
+  { family: 'sonnet', from: '5', to: '5.5', capabilities: NO_TEMPERATURE },
+  { family: 'opus', from: '0', to: '4.7', capabilities: FULL_CAPABILITIES },
+  { family: 'opus', from: '4.7', to: '5.5', capabilities: NO_TEMPERATURE },
+  { family: 'haiku', from: '0', to: '5', capabilities: FULL_CAPABILITIES },
+  { family: 'fable', from: '5.1', to: '5.3', capabilities: STRICT },
+];
+
+/** Compares a version with one written "4.7": major first, then minor (5.10 is after 5.9). */
+const compare = ([major, minor]: [number, number], v: string) => {
+  const [a, b = '0'] = v.split('.');
+  return major - Number(a) || minor - Number(b);
+};
+
+/**
+ * What a model on Bedrock accepts, from {@link BEDROCK_MODEL_TABLE}. A model the table does not
+ * know (a newer version, another family, not Claude) is treated as strict: auto tool choice and no
+ * temperature, which every model takes (the runtime's repair loop handles a missing tool call).
  */
 export function bedrockCapabilities(model: string): LlmCapabilities {
-  const m = /claude-[a-z]+-(\d+)(?:-(\d{1,2}))?(?=[-:.]|$)/.exec(model);
-  if (!m) return FULL_CAPABILITIES;
-  const major = Number(m[1]);
-  // "4-5-20250929": the minor is 5; a date after it is not a version.
-  const minor = m[2] ? Number(m[2]) : 0;
-  const strict = major > 5 || (major === 5 && minor >= 5);
-  return strict ? { forcedToolChoice: false, temperature: false } : FULL_CAPABILITIES;
+  // "claude-sonnet-4-5-20250929" (family first), or "claude-3-5-sonnet-20240620" (Claude 3).
+  // In both, "4-5-20250929": the minor is 5; a date after it is not a version.
+  const named = /claude-([a-z]+)-(\d+)(?:-(\d{1,2}))?(?=[-:.@]|$)/.exec(model);
+  const old = /claude-(\d+)(?:-(\d{1,2}))?-([a-z]+)(?=[-:.@]|$)/.exec(model);
+  if (!named && !old) return STRICT;
+  const family = named ? named[1]! : old![3]!;
+  const [major, minor] = named ? [named[2], named[3]] : [old![1], old![2]];
+  const version: [number, number] = [Number(major), minor ? Number(minor) : 0];
+  const row = BEDROCK_MODEL_TABLE.find(
+    (r) => r.family === family && compare(version, r.from) >= 0 && compare(version, r.to) < 0,
+  );
+  return row ? row.capabilities : STRICT;
 }
 
 export function toBedrockInput(

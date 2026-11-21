@@ -36,29 +36,62 @@ export function theaterObservations(events: LiveEvent[]): TheaterObservation[] {
   return out;
 }
 
-export type GraphNode = { id: string; title: string; order: number; current: boolean };
+/** A screen, with how many states of it were seen (NEW BILL with a line added is a state). */
+export type GraphNode = {
+  id: string;
+  title: string;
+  order: number;
+  current: boolean;
+  states: number;
+};
 export type GraphEdge = { id: string; source: string; target: string; label: string };
 
-/** The screen graph so far: nodes in the order found, the newest one current; moves as edges. */
+const NO_TITLE = '(no title)';
+
+/**
+ * The screen graph so far (review of 51-60, finding 6): one node per screen title, in the order
+ * found, with the states seen of it (its fingerprints); the one the Possessor is on now current;
+ * the keys that led from one screen to another as edges (a move within a screen is not one).
+ */
 export function theaterGraph(events: LiveEvent[]): { nodes: GraphNode[]; edges: GraphEdge[] } {
-  const nodes = new Map<string, GraphNode>();
+  const nodes = new Map<string, GraphNode & { prints: Set<string> }>();
   const edges = new Map<string, GraphEdge>();
-  const node = (id: string, title: string) => {
-    if (!nodes.has(id)) nodes.set(id, { id, title, order: nodes.size, current: false });
+  const node = (fingerprint: string, title: string) => {
+    const name = title.trim() || NO_TITLE;
+    const id = `screen:${name}`;
+    const n = nodes.get(id) ?? {
+      id,
+      title: name,
+      order: nodes.size,
+      current: false,
+      states: 0,
+      prints: new Set<string>(),
+    };
+    n.prints.add(fingerprint);
+    n.states = n.prints.size;
+    nodes.set(id, n);
+    return id;
   };
   let current: string | null = null;
   for (const o of theaterObservations(events)) {
     if (!o.fromFingerprint || !o.fingerprint) continue;
-    node(o.fromFingerprint, o.from);
-    node(o.fingerprint, o.to);
-    current = o.fingerprint;
-    if (o.fromFingerprint === o.fingerprint) continue;
-    const id = `${o.fromFingerprint}->${o.fingerprint}`;
-    if (!edges.has(id))
-      edges.set(id, { id, source: o.fromFingerprint, target: o.fingerprint, label: o.keys });
+    const from = node(o.fromFingerprint, o.from);
+    const to = node(o.fingerprint, o.to);
+    current = to;
+    if (from === to) continue;
+    const id = `${from}->${to}`;
+    if (!edges.has(id)) edges.set(id, { id, source: from, target: to, label: o.keys });
   }
-  for (const n of nodes.values()) n.current = n.id === current;
-  return { nodes: [...nodes.values()], edges: [...edges.values()] };
+  return {
+    nodes: [...nodes.values()].map((n) => ({
+      id: n.id,
+      title: n.title,
+      order: n.order,
+      states: n.states,
+      current: n.id === current,
+    })),
+    edges: [...edges.values()],
+  };
 }
 
 /** What the Possessor is doing, in one plain line. */

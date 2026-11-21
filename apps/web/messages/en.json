@@ -133,7 +133,8 @@
       },
       "possession": {
         "title": "What the Possessor has found",
-        "screens": "{n, plural, one {# screen} other {# screens}} found",
+        "screens": "{n, plural, one {# screen} other {# screens}} found ({states, plural, one {# state} other {# states}})",
+        "states": "{n, plural, one {# screen state} other {# screen states}} found",
         "actions": "{n, plural, one {# action} other {# actions}} tried",
         "changes": "{n, plural, one {# data change} other {# data changes}} seen",
         "recent": "Latest steps",
@@ -153,6 +154,7 @@
       },
       "theater": {
         "graph": "Screens found, and the keys between them",
+        "states": "{title} · {n} states",
         "thinking": "What the Possessor is doing",
         "changed": "Data changed at step {step}:",
         "onlyChanged": "Only the records that changed, from the old app’s own data files."
@@ -248,11 +250,11 @@
         "candidates": "Candidate rules, one per line (up to 10)",
         "run": "{count, plural, one {Check against # observation} other {Check against # observations}}",
         "selected": "Selected rule",
-        "selectedDetail": "Explains {effects, plural, one {the # value} other {all # values}} in {observations, plural, one {# observation} other {# observations}}. {nodes} nodes. Confidence {confidence}%, threshold coverage {coverage}%.",
+        "selectedDetail": "Explains {effects, plural, one {the # value} other {all # values}} in {observations, plural, one {# observation} other {# observations}}. {nodes, plural, one {# node} other {# nodes}}. Confidence {confidence}%, threshold coverage {coverage}%.",
         "none": "{count, plural, one {No candidate explains the # value.} other {No candidate explains all # values.}}",
         "noEffects": "The old app never wrote this value.",
         "notARule": "Not a rule: {message}",
-        "explains": "Explains {explained} of {total, plural, one {# value} other {# values}} · {nodes} nodes",
+        "explains": "Explains {explained} of {total, plural, one {# value} other {# values}} · {nodes, plural, one {# node} other {# nodes}}",
         "chosen": "simplest, chosen",
         "alsoFits": "also fits, not chosen",
         "miss": "The old app wrote {expected}; this gives {got}",
@@ -261,6 +263,7 @@
       },
       "fresh": "Just exhumed",
       "exhumed": "{rules, plural, one {# rule} other {# rules}} exhumed from {observations, plural, one {# observation} other {# observations}}",
+      "written": "{rules, plural, one {# rule} other {# rules}} {by, select, reference {written by our team (the reference Soul)} other {set by the owner}}, not exhumed from the observations",
       "evidenceShown": "The observations this rule rests on",
       "evidenceThumb": "Evidence {n}: keys {keys}",
       "vessel": {

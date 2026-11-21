@@ -5,6 +5,7 @@ import { EmptyState } from '../../../components/EmptyState';
 import { PageShell } from '../../../components/PageShell';
 import { VesselApp } from '../../../components/VesselApp';
 import { isProjectId } from '../../../lib/projects';
+import { vesselTitle } from '../../../lib/vessel-views';
 
 export async function generateMetadata({
   params,
@@ -12,12 +13,15 @@ export async function generateMetadata({
   params: Promise<{ projectId: string }>;
 }): Promise<Metadata> {
   const { projectId } = await params;
+  const t = await getTranslations('vessel');
+  const title = vesselTitle(t('title'));
   return isProjectId(projectId)
     ? {
+        title,
         manifest: `/vessel/${projectId}/manifest.webmanifest`,
         appleWebApp: { capable: true, title: 'Vessel' },
       }
-    : {};
+    : { title };
 }
 
 export const viewport: Viewport = { themeColor: colors.graveyard };

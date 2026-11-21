@@ -1,6 +1,6 @@
 {
   "app": "iqra",
-  "recordedAt": "2026-11-21T05:01:47.104Z",
+  "recordedAt": "2026-11-21T11:17:09.978Z",
   "source": "pnpm pipeline:record",
   "steps": [
     {
@@ -25,19 +25,13 @@
             {
               "to": "fp_7bfa02f2fb1aa86e",
               "from": "fp_5604084b6493e1fe",
-              "keys": "{Enter}",
-              "count": 1
-            },
-            {
-              "to": "fp_7bfa02f2fb1aa86e",
-              "from": "fp_7bfa02f2fb1aa86e",
-              "keys": "{Enter}",
-              "count": 1
-            },
-            {
-              "to": "fp_7bfa02f2fb1aa86e",
-              "from": "fp_7bfa02f2fb1aa86e",
               "keys": "032001{Enter}",
+              "count": 1
+            },
+            {
+              "to": "fp_7bfa02f2fb1aa86e",
+              "from": "fp_7bfa02f2fb1aa86e",
+              "keys": "{Enter}",
               "count": 1
             },
             {
@@ -128,7 +122,7 @@
               "to": "fp_ccbb9ac2eb2c1722",
               "from": "fp_ccbb9ac2eb2c1722",
               "keys": "S0001{Enter}",
-              "count": 3
+              "count": 4
             },
             {
               "to": "fp_ccbb9ac2eb2c1722",
@@ -152,7 +146,7 @@
             },
             {
               "title": "COLLECT FEE",
-              "visits": 10,
+              "visits": 11,
               "firstSeen": 1,
               "fingerprint": "fp_ccbb9ac2eb2c1722"
             },
@@ -164,32 +158,32 @@
             },
             {
               "title": "COLLECT FEE",
-              "visits": 3,
+              "visits": 2,
               "firstSeen": 3,
               "fingerprint": "fp_7bfa02f2fb1aa86e"
             },
             {
               "title": "COLLECT FEE",
               "visits": 1,
-              "firstSeen": 6,
+              "firstSeen": 5,
               "fingerprint": "fp_38f58572972cfc62"
             },
             {
               "title": "STUDENTS",
               "visits": 3,
-              "firstSeen": 8,
+              "firstSeen": 7,
               "fingerprint": "fp_817582cfc70747d0"
             },
             {
               "title": "FEE SCHEDULE",
               "visits": 1,
-              "firstSeen": 12,
+              "firstSeen": 11,
               "fingerprint": "fp_df5b10f3562a797d"
             },
             {
               "title": "TODAY'S RECEIPTS",
               "visits": 1,
-              "firstSeen": 14,
+              "firstSeen": 13,
               "fingerprint": "fp_4f6957f46c6a00bc"
             }
           ]
@@ -206,17 +200,18 @@
           "steps": 0,
           "seances": 0
         },
+        "titles": 5,
         "values": "data",
         "refused": [
           {
-            "step": 17,
+            "step": 16,
             "text": "STUDENT NOT FOUND",
             "label": "Enter=Next"
           }
         ],
         "screens": 8,
         "firstChange": {
-          "PAYMENT.DBF:inserted": 6
+          "PAYMENT.DBF:inserted": 5
         },
         "keptScreens": 8,
         "stoppedBecause": "explored"
@@ -228,7 +223,7 @@
             "level": "info",
             "message": "Booting Iqra School Fees in headless js-dos"
           },
-          "afterMs": 11
+          "afterMs": 12
         },
         {
           "type": "screen",
@@ -321,7 +316,7 @@
             ],
             "fingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 840
+          "afterMs": 744
         },
         {
           "type": "log",
@@ -329,7 +324,7 @@
             "level": "info",
             "message": "First screen: IQRA SCHOOL FEES 1.1              MAIN MENU                         12-03-2001"
           },
-          "afterMs": 852
+          "afterMs": 747
         },
         {
           "type": "log",
@@ -337,12 +332,12 @@
             "level": "info",
             "message": "Exploring. No language model is set up, so field values come from the data files."
           },
-          "afterMs": 853
+          "afterMs": 749
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-0d7a-77a8-a5e2-4b5ff23a0033",
+            "id": "01a1fdd2-bec1-7ec0-a5fd-136b140c2def",
             "to": "COLLECT FEE",
             "from": "MAIN MENU",
             "keys": "{Enter}",
@@ -352,6 +347,7 @@
             "saves": 0,
             "errors": [],
             "guided": 0,
+            "titles": 2,
             "changed": [],
             "refused": [],
             "screens": 2,
@@ -359,7 +355,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 1485
+          "afterMs": 1324
         },
         {
           "type": "screen",
@@ -452,7 +448,7 @@
             ],
             "fingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 1531
+          "afterMs": 1372
         },
         {
           "type": "log",
@@ -460,12 +456,12 @@
             "level": "info",
             "message": "New screen: COLLECT FEE"
           },
-          "afterMs": 1538
+          "afterMs": 1377
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-122e-73a4-8369-7f0ce9687e38",
+            "id": "01a1fdd2-c33f-7312-b92a-47276a77876c",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "S0001{Enter}",
@@ -475,6 +471,7 @@
             "saves": 0,
             "errors": [],
             "guided": 0,
+            "titles": 2,
             "changed": [],
             "refused": [],
             "screens": 3,
@@ -482,7 +479,7 @@
             "fingerprint": "fp_5604084b6493e1fe",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 2590
+          "afterMs": 2377
         },
         {
           "type": "screen",
@@ -578,7 +575,7 @@
             ],
             "fingerprint": "fp_5604084b6493e1fe"
           },
-          "afterMs": 2640
+          "afterMs": 2427
         },
         {
           "type": "log",
@@ -586,21 +583,22 @@
             "level": "info",
             "message": "New screen: COLLECT FEE"
           },
-          "afterMs": 2643
+          "afterMs": 2429
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-14b4-7539-b76d-a34d0a4d0ceb",
+            "id": "01a1fdd2-c7fb-7ff2-b5fb-d5f356d87ee5",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
-            "keys": "{Enter}",
+            "keys": "032001{Enter}",
             "kind": "explore",
             "step": 3,
-            "label": "Enter=Next",
+            "label": "Fee month (MMYYYY) = 032001",
             "saves": 0,
             "errors": [],
             "guided": 0,
+            "titles": 2,
             "changed": [],
             "refused": [],
             "screens": 4,
@@ -608,7 +606,7 @@
             "fingerprint": "fp_7bfa02f2fb1aa86e",
             "fromFingerprint": "fp_5604084b6493e1fe"
           },
-          "afterMs": 3181
+          "afterMs": 3487
         },
         {
           "type": "screen",
@@ -701,7 +699,7 @@
             ],
             "fingerprint": "fp_7bfa02f2fb1aa86e"
           },
-          "afterMs": 3228
+          "afterMs": 3533
         },
         {
           "type": "log",
@@ -709,12 +707,12 @@
             "level": "info",
             "message": "New screen: COLLECT FEE"
           },
-          "afterMs": 3231
+          "afterMs": 3535
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-1721-7a0d-8e2f-71638be37842",
+            "id": "01a1fdd2-ca42-74b8-88c8-e26c3401577f",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "{Enter}",
@@ -724,6 +722,7 @@
             "saves": 0,
             "errors": [],
             "guided": 0,
+            "titles": 2,
             "changed": [],
             "refused": [],
             "screens": 4,
@@ -731,34 +730,12 @@
             "fingerprint": "fp_7bfa02f2fb1aa86e",
             "fromFingerprint": "fp_7bfa02f2fb1aa86e"
           },
-          "afterMs": 3751
+          "afterMs": 4022
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-1c00-7260-9782-7f2e173f5d42",
-            "to": "COLLECT FEE",
-            "from": "COLLECT FEE",
-            "keys": "032001{Enter}",
-            "kind": "explore",
-            "step": 5,
-            "label": "Fee month (MMYYYY) = 032001",
-            "saves": 0,
-            "errors": [],
-            "guided": 0,
-            "changed": [],
-            "refused": [],
-            "screens": 4,
-            "newScreen": false,
-            "fingerprint": "fp_7bfa02f2fb1aa86e",
-            "fromFingerprint": "fp_7bfa02f2fb1aa86e"
-          },
-          "afterMs": 4895
-        },
-        {
-          "type": "observation",
-          "payload": {
-            "id": "01a1fc7b-1e4c-7951-b994-ade7bdf57c7a",
+            "id": "01a1fdd2-cc4e-7dd9-9e7e-1e77a9736ba6",
             "to": "COLLECT FEE",
             "diff": {
               "tables": {
@@ -795,11 +772,12 @@
             "from": "COLLECT FEE",
             "keys": "{F2}",
             "kind": "explore",
-            "step": 6,
+            "step": 5,
             "label": "F2=Save receipt",
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 2,
             "changed": ["PAYMENT.DBF"],
             "refused": [],
             "screens": 5,
@@ -807,7 +785,7 @@
             "fingerprint": "fp_38f58572972cfc62",
             "fromFingerprint": "fp_7bfa02f2fb1aa86e"
           },
-          "afterMs": 5433
+          "afterMs": 4503
         },
         {
           "type": "screen",
@@ -900,7 +878,7 @@
             ],
             "fingerprint": "fp_38f58572972cfc62"
           },
-          "afterMs": 5485
+          "afterMs": 4553
         },
         {
           "type": "log",
@@ -908,7 +886,7 @@
             "level": "info",
             "message": "New screen: COLLECT FEE"
           },
-          "afterMs": 5490
+          "afterMs": 4555
         },
         {
           "type": "log",
@@ -916,21 +894,22 @@
             "level": "info",
             "message": "F2=Save receipt changed PAYMENT.DBF"
           },
-          "afterMs": 5492
+          "afterMs": 4556
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-20d1-7f52-9ab5-315dfe0cadc9",
+            "id": "01a1fdd2-ce9a-7493-ad9c-c5c3a9a27111",
             "to": "MAIN MENU",
             "from": "COLLECT FEE",
             "keys": "{Enter}",
             "kind": "explore",
-            "step": 7,
+            "step": 6,
             "label": "Enter=Next",
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 2,
             "changed": [],
             "refused": [],
             "screens": 5,
@@ -938,7 +917,7 @@
             "fingerprint": "fp_7c83f89671c9e84b",
             "fromFingerprint": "fp_38f58572972cfc62"
           },
-          "afterMs": 6023
+          "afterMs": 5041
         },
         {
           "type": "screen",
@@ -1031,21 +1010,22 @@
             ],
             "fingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 6072
+          "afterMs": 5086
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-23e0-7388-8155-4b72710fce94",
+            "id": "01a1fdd2-d162-799c-bb4a-eddb282a48f9",
             "to": "STUDENTS",
             "from": "MAIN MENU",
             "keys": "{Down}{Enter}",
             "kind": "explore",
-            "step": 8,
+            "step": 7,
             "label": "{Down}{Enter} Students",
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 3,
             "changed": [],
             "refused": [],
             "screens": 6,
@@ -1053,7 +1033,7 @@
             "fingerprint": "fp_817582cfc70747d0",
             "fromFingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 6743
+          "afterMs": 5694
         },
         {
           "type": "screen",
@@ -1146,7 +1126,7 @@
             ],
             "fingerprint": "fp_817582cfc70747d0"
           },
-          "afterMs": 6804
+          "afterMs": 5739
         },
         {
           "type": "log",
@@ -1154,21 +1134,22 @@
             "level": "info",
             "message": "New screen: STUDENTS"
           },
-          "afterMs": 6806
+          "afterMs": 5741
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-266e-7925-abed-d2a470314b75",
+            "id": "01a1fdd2-d3c3-7aff-ae26-5bf614fb3e3e",
             "to": "STUDENTS",
             "from": "STUDENTS",
             "keys": "{PgDn}",
             "kind": "explore",
-            "step": 9,
+            "step": 8,
             "label": "PgDn=Next page",
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 3,
             "changed": [],
             "refused": [],
             "screens": 6,
@@ -1176,7 +1157,7 @@
             "fingerprint": "fp_817582cfc70747d0",
             "fromFingerprint": "fp_817582cfc70747d0"
           },
-          "afterMs": 7343
+          "afterMs": 6253
         },
         {
           "type": "screen",
@@ -1269,21 +1250,22 @@
             ],
             "fingerprint": "fp_817582cfc70747d0"
           },
-          "afterMs": 7403
+          "afterMs": 6300
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-28ff-7ad0-a112-0e39e61bb4b7",
+            "id": "01a1fdd2-d612-742d-833d-85d81b164f0e",
             "to": "STUDENTS",
             "from": "STUDENTS",
             "keys": "{PgUp}",
             "kind": "explore",
-            "step": 10,
+            "step": 9,
             "label": "PgUp=Previous page",
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 3,
             "changed": [],
             "refused": [],
             "screens": 6,
@@ -1291,7 +1273,7 @@
             "fingerprint": "fp_817582cfc70747d0",
             "fromFingerprint": "fp_817582cfc70747d0"
           },
-          "afterMs": 7944
+          "afterMs": 6794
         },
         {
           "type": "screen",
@@ -1384,21 +1366,22 @@
             ],
             "fingerprint": "fp_817582cfc70747d0"
           },
-          "afterMs": 7996
+          "afterMs": 6838
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-2b76-794c-a8f3-91cf989ce1e1",
+            "id": "01a1fdd2-d855-70a7-bceb-06387b3a7474",
             "to": "MAIN MENU",
             "from": "STUDENTS",
             "keys": "{Esc}",
             "kind": "back",
-            "step": 11,
+            "step": 10,
             "label": "Esc",
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 3,
             "changed": [],
             "refused": [],
             "screens": 6,
@@ -1406,7 +1389,7 @@
             "fingerprint": "fp_7c83f89671c9e84b",
             "fromFingerprint": "fp_817582cfc70747d0"
           },
-          "afterMs": 11281
+          "afterMs": 7325
         },
         {
           "type": "screen",
@@ -1499,21 +1482,22 @@
             ],
             "fingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 11374
+          "afterMs": 7369
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-2ef4-7b66-8e7e-c7da22f186e8",
+            "id": "01a1fdd2-db7b-77db-b7b1-f9465d210dfa",
             "to": "FEE SCHEDULE",
             "from": "MAIN MENU",
             "keys": "{Down}{Down}{Enter}",
             "kind": "explore",
-            "step": 12,
+            "step": 11,
             "label": "{Down}{Down}{Enter} Fee Schedule",
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 4,
             "changed": [],
             "refused": [],
             "screens": 7,
@@ -1521,7 +1505,7 @@
             "fingerprint": "fp_df5b10f3562a797d",
             "fromFingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 12101
+          "afterMs": 8064
         },
         {
           "type": "screen",
@@ -1614,7 +1598,7 @@
             ],
             "fingerprint": "fp_df5b10f3562a797d"
           },
-          "afterMs": 12151
+          "afterMs": 8109
         },
         {
           "type": "log",
@@ -1622,21 +1606,22 @@
             "level": "info",
             "message": "New screen: FEE SCHEDULE"
           },
-          "afterMs": 12154
+          "afterMs": 8111
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-316c-7423-9059-cdf56284fb4a",
+            "id": "01a1fdd2-ddc1-7567-9400-0549ac03a014",
             "to": "MAIN MENU",
             "from": "FEE SCHEDULE",
             "keys": "{Esc}",
             "kind": "back",
-            "step": 13,
+            "step": 12,
             "label": "Esc",
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 4,
             "changed": [],
             "refused": [],
             "screens": 7,
@@ -1644,7 +1629,7 @@
             "fingerprint": "fp_7c83f89671c9e84b",
             "fromFingerprint": "fp_df5b10f3562a797d"
           },
-          "afterMs": 12679
+          "afterMs": 8597
         },
         {
           "type": "screen",
@@ -1737,21 +1722,22 @@
             ],
             "fingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 12725
+          "afterMs": 8643
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-351d-7776-ac43-f78de5ee3838",
+            "id": "01a1fdd2-e151-7561-bd81-4610c4e3d056",
             "to": "TODAY'S RECEIPTS",
             "from": "MAIN MENU",
             "keys": "{Down}{Down}{Down}{Enter}",
             "kind": "explore",
-            "step": 14,
+            "step": 13,
             "label": "{Down}{Down}{Down}{Enter} Today's Receipts",
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 5,
             "changed": [],
             "refused": [],
             "screens": 8,
@@ -1759,7 +1745,7 @@
             "fingerprint": "fp_4f6957f46c6a00bc",
             "fromFingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 13545
+          "afterMs": 9433
         },
         {
           "type": "screen",
@@ -1852,7 +1838,7 @@
             ],
             "fingerprint": "fp_4f6957f46c6a00bc"
           },
-          "afterMs": 13597
+          "afterMs": 9478
         },
         {
           "type": "log",
@@ -1860,21 +1846,22 @@
             "level": "info",
             "message": "New screen: TODAY'S RECEIPTS"
           },
-          "afterMs": 13599
+          "afterMs": 9480
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-3791-7c0b-a4b9-8a81e38ec136",
+            "id": "01a1fdd2-e384-7082-8a41-4c32761b6947",
             "to": "MAIN MENU",
             "from": "TODAY'S RECEIPTS",
             "keys": "{Esc}",
             "kind": "back",
-            "step": 15,
+            "step": 14,
             "label": "Esc",
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 5,
             "changed": [],
             "refused": [],
             "screens": 8,
@@ -1882,7 +1869,7 @@
             "fingerprint": "fp_7c83f89671c9e84b",
             "fromFingerprint": "fp_4f6957f46c6a00bc"
           },
-          "afterMs": 14121
+          "afterMs": 9950
         },
         {
           "type": "screen",
@@ -1975,21 +1962,22 @@
             ],
             "fingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 14171
+          "afterMs": 9996
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-39f7-7150-b991-e06eb335c592",
+            "id": "01a1fdd2-e5d1-7e17-a6e0-bacecc9acc3c",
             "to": "COLLECT FEE",
             "from": "MAIN MENU",
             "keys": "{Enter}",
             "kind": "walk",
-            "step": 16,
+            "step": 15,
             "label": "walk: {Enter}",
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 5,
             "changed": [],
             "refused": [],
             "screens": 8,
@@ -1997,7 +1985,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 14684
+          "afterMs": 10491
         },
         {
           "type": "screen",
@@ -2007,7 +1995,7 @@
               "attrs": [
                 "33f3f3f3f333f3f3f3f3f3f333f3f3f3f333f3f3f333333333333333333333333333f3f3f3f3f3f3f333f3f3f3333333333333333333333333333333333333333333333333f3f3f3f3f3f3f3f3f3f333",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f1f1f111f1f111f111077777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f1f1f111f1f111f111777777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -2058,10 +2046,7 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e657874202055703d50726576696f7573206669656c64202046323d53617665207265636569707420204573633d4261636b2020202020202020202020202020202020202020202020"
               ],
-              "cursor": {
-                "col": 14,
-                "row": 2
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -2093,25 +2078,26 @@
             ],
             "fingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 14736
+          "afterMs": 10537
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-3c60-77b9-8253-5dd92d327baa",
+            "id": "01a1fdd2-e811-7e9b-9bef-eccbe987c31a",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "{Enter}",
             "kind": "explore",
-            "step": 17,
+            "step": 16,
             "label": "Enter=Next",
             "saves": 1,
             "errors": ["STUDENT NOT FOUND"],
             "guided": 0,
+            "titles": 5,
             "changed": [],
             "refused": [
               {
-                "step": 17,
+                "step": 16,
                 "text": "STUDENT NOT FOUND",
                 "label": "Enter=Next"
               }
@@ -2121,7 +2107,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 15250
+          "afterMs": 11018
         },
         {
           "type": "screen",
@@ -2214,7 +2200,7 @@
             ],
             "fingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 15305
+          "afterMs": 11064
         },
         {
           "type": "log",
@@ -2222,25 +2208,26 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 15307
+          "afterMs": 11066
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-3ef0-7041-ba72-c6dc9a8c5318",
+            "id": "01a1fdd2-ea55-7dea-8cfe-8a2afadd8623",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "{F2}",
             "kind": "explore",
-            "step": 18,
+            "step": 17,
             "label": "F2=Save receipt",
             "saves": 1,
             "errors": ["STUDENT NOT FOUND"],
             "guided": 0,
+            "titles": 5,
             "changed": [],
             "refused": [
               {
-                "step": 17,
+                "step": 16,
                 "text": "STUDENT NOT FOUND",
                 "label": "Enter=Next"
               }
@@ -2250,7 +2237,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 15851
+          "afterMs": 11549
         },
         {
           "type": "log",
@@ -2258,25 +2245,26 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 15855
+          "afterMs": 11551
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-411e-7288-b048-6f7295dfa047",
+            "id": "01a1fdd2-ec63-7da3-8057-713c9583a63c",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "{Up}",
             "kind": "explore",
-            "step": 19,
+            "step": 18,
             "label": "Up=Previous field",
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 5,
             "changed": [],
             "refused": [
               {
-                "step": 17,
+                "step": 16,
                 "text": "STUDENT NOT FOUND",
                 "label": "Enter=Next"
               }
@@ -2286,7 +2274,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 16362
+          "afterMs": 12031
         },
         {
           "type": "screen",
@@ -2296,7 +2284,7 @@
               "attrs": [
                 "33f3f3f3f333f3f3f3f3f3f333f3f3f3f333f3f3f333333333333333333333333333f3f3f3f3f3f3f333f3f3f3333333333333333333333333333333333333333333333333f3f3f3f3f3f3f3f3f3f333",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f1f1f111f1f111f111077777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f1f1f111f1f111f111777777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -2347,10 +2335,7 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e657874202055703d50726576696f7573206669656c64202046323d53617665207265636569707420204573633d4261636b2020202020202020202020202020202020202020202020"
               ],
-              "cursor": {
-                "col": 14,
-                "row": 2
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -2382,25 +2367,26 @@
             ],
             "fingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 16404
+          "afterMs": 12082
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-4598-7936-ba04-83811028da7d",
+            "id": "01a1fdd2-f0bb-7dfb-bbe3-23a00560a737",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "Z9999{Enter}",
             "kind": "explore",
-            "step": 20,
+            "step": 19,
             "label": "Student ID = Z9999 (new-key)",
             "saves": 1,
             "errors": ["STUDENT NOT FOUND"],
             "guided": 0,
+            "titles": 5,
             "changed": [],
             "refused": [
               {
-                "step": 17,
+                "step": 16,
                 "text": "STUDENT NOT FOUND",
                 "label": "Enter=Next"
               }
@@ -2410,7 +2396,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 17413
+          "afterMs": 13050
         },
         {
           "type": "screen",
@@ -2506,7 +2492,7 @@
             ],
             "fingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 17458
+          "afterMs": 13097
         },
         {
           "type": "log",
@@ -2514,12 +2500,49 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 17464
+          "afterMs": 13099
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-4a3c-7bba-a851-9033f412a25f",
+            "id": "01a1fdd2-f572-71ea-a7b5-0da02e570bb3",
+            "to": "COLLECT FEE",
+            "from": "COLLECT FEE",
+            "keys": "S0001{Enter}",
+            "kind": "walk",
+            "step": 20,
+            "label": "walk: S0001{Enter}",
+            "saves": 1,
+            "errors": ["STUDENT NOT FOUND"],
+            "guided": 0,
+            "titles": 5,
+            "changed": [],
+            "refused": [
+              {
+                "step": 16,
+                "text": "STUDENT NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
+            "screens": 8,
+            "newScreen": false,
+            "fingerprint": "fp_ccbb9ac2eb2c1722",
+            "fromFingerprint": "fp_ccbb9ac2eb2c1722"
+          },
+          "afterMs": 16890
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "info",
+            "message": "The app said: STUDENT NOT FOUND"
+          },
+          "afterMs": 16894
+        },
+        {
+          "type": "observation",
+          "payload": {
+            "id": "01a1fdd2-f98c-7c3d-a13c-f70771a44c41",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "S0001{Enter}",
@@ -2529,10 +2552,11 @@
             "saves": 1,
             "errors": ["STUDENT NOT FOUND"],
             "guided": 0,
+            "titles": 5,
             "changed": [],
             "refused": [
               {
-                "step": 17,
+                "step": 16,
                 "text": "STUDENT NOT FOUND",
                 "label": "Enter=Next"
               }
@@ -2542,7 +2566,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 18501
+          "afterMs": 17852
         },
         {
           "type": "log",
@@ -2550,12 +2574,12 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 18502
+          "afterMs": 17854
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-4e95-7fd2-9eb7-5aad6385983e",
+            "id": "01a1fdd2-fdfb-79df-8a7e-cd7d1c62920a",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "S0002{Enter}",
@@ -2565,10 +2589,11 @@
             "saves": 1,
             "errors": ["STUDENT NOT FOUND"],
             "guided": 0,
+            "titles": 5,
             "changed": [],
             "refused": [
               {
-                "step": 17,
+                "step": 16,
                 "text": "STUDENT NOT FOUND",
                 "label": "Enter=Next"
               }
@@ -2578,7 +2603,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 19522
+          "afterMs": 18892
         },
         {
           "type": "log",
@@ -2586,12 +2611,12 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 19524
+          "afterMs": 18893
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-52fe-76f7-95eb-77b07d12f051",
+            "id": "01a1fdd3-0223-7dbb-aba5-6ee7e733b9bc",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "S0001{Enter}",
@@ -2601,10 +2626,11 @@
             "saves": 1,
             "errors": ["STUDENT NOT FOUND"],
             "guided": 0,
+            "titles": 5,
             "changed": [],
             "refused": [
               {
-                "step": 17,
+                "step": 16,
                 "text": "STUDENT NOT FOUND",
                 "label": "Enter=Next"
               }
@@ -2614,7 +2640,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 20557
+          "afterMs": 19871
         },
         {
           "type": "log",
@@ -2622,12 +2648,12 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 20559
+          "afterMs": 19873
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-575a-7615-999e-11fa3628598a",
+            "id": "01a1fdd3-0635-7b12-94e4-25bd6f19c364",
             "to": "COLLECT FEE",
             "from": "COLLECT FEE",
             "keys": "S0001{Enter}",
@@ -2637,10 +2663,11 @@
             "saves": 1,
             "errors": ["STUDENT NOT FOUND"],
             "guided": 0,
+            "titles": 5,
             "changed": [],
             "refused": [
               {
-                "step": 17,
+                "step": 16,
                 "text": "STUDENT NOT FOUND",
                 "label": "Enter=Next"
               }
@@ -2650,7 +2677,7 @@
             "fingerprint": "fp_ccbb9ac2eb2c1722",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 21583
+          "afterMs": 20822
         },
         {
           "type": "log",
@@ -2658,12 +2685,12 @@
             "level": "info",
             "message": "The app said: STUDENT NOT FOUND"
           },
-          "afterMs": 21585
+          "afterMs": 20824
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a1fc7b-5997-7ef6-86c2-9293de7926fc",
+            "id": "01a1fdd3-083c-7df3-a09d-38608276acea",
             "to": "MAIN MENU",
             "from": "COLLECT FEE",
             "keys": "{Esc}",
@@ -2673,10 +2700,11 @@
             "saves": 1,
             "errors": [],
             "guided": 0,
+            "titles": 5,
             "changed": [],
             "refused": [
               {
-                "step": 17,
+                "step": 16,
                 "text": "STUDENT NOT FOUND",
                 "label": "Enter=Next"
               }
@@ -2686,7 +2714,7 @@
             "fingerprint": "fp_7c83f89671c9e84b",
             "fromFingerprint": "fp_ccbb9ac2eb2c1722"
           },
-          "afterMs": 22104
+          "afterMs": 21299
         },
         {
           "type": "screen",
@@ -2779,15 +2807,15 @@
             ],
             "fingerprint": "fp_7c83f89671c9e84b"
           },
-          "afterMs": 22153
+          "afterMs": 21345
         },
         {
           "type": "log",
           "payload": {
             "level": "info",
-            "message": "Possession ended (explored): 8 screens, 25 actions, 1 that changed data"
+            "message": "Possession ended (explored): 5 screens (8 screen states), 25 actions, 1 that changed data"
           },
-          "afterMs": 22171
+          "afterMs": 21361
         }
       ]
     },
@@ -2813,7 +2841,7 @@
             "level": "info",
             "message": "FEES.DBF: no key"
           },
-          "afterMs": 12
+          "afterMs": 11
         },
         {
           "type": "log",
@@ -2821,7 +2849,7 @@
             "level": "info",
             "message": "PAYMENT.DBF: key RECEIPT, counter RECEIPT n+1, STU_ID refers to student"
           },
-          "afterMs": 13
+          "afterMs": 12
         },
         {
           "type": "log",
@@ -2835,7 +2863,7 @@
           "type": "log",
           "payload": {
             "level": "info",
-            "message": "Action \"Add a payment\" on fp_ccbb9ac2eb2c1722: insert payment, keys {@STU_ID}{Enter}{Enter}{Enter}032001{Enter}{F2}"
+            "message": "Action \"Add a payment\" on fp_ccbb9ac2eb2c1722: insert payment, keys {@STU_ID}{Enter}032001{Enter}{Enter}{F2}"
           },
           "afterMs": 17
         },
@@ -2860,7 +2888,7 @@
             "expression": "today",
             "observations": 1
           },
-          "afterMs": 41
+          "afterMs": 42
         },
         {
           "type": "log",
@@ -2868,7 +2896,7 @@
             "level": "info",
             "message": "payment.pay_date = today: explains all 1 values in 1 observations (confidence 33%)"
           },
-          "afterMs": 43
+          "afterMs": 44
         },
         {
           "type": "log",
@@ -2876,7 +2904,7 @@
             "level": "warn",
             "message": "payment.discount: 2 rules fit its one observation, so none is kept yet"
           },
-          "afterMs": 44
+          "afterMs": 45
         },
         {
           "type": "log",
@@ -2884,7 +2912,7 @@
             "level": "warn",
             "message": "payment.fee: 3 rules fit its one observation, so none is kept yet"
           },
-          "afterMs": 46
+          "afterMs": 47
         },
         {
           "type": "log",
@@ -2892,7 +2920,7 @@
             "level": "warn",
             "message": "payment.late_fee: 3 rules fit its one observation, so none is kept yet"
           },
-          "afterMs": 47
+          "afterMs": 48
         },
         {
           "type": "log",
@@ -2900,7 +2928,7 @@
             "level": "warn",
             "message": "payment.total: 3 rules fit its one observation, so none is kept yet"
           },
-          "afterMs": 48
+          "afterMs": 50
         },
         {
           "type": "soul_updated",
@@ -2917,7 +2945,7 @@
             "foreignKeys": 1,
             "unexplained": ["payment.discount", "payment.fee", "payment.late_fee", "payment.total"]
           },
-          "afterMs": 57
+          "afterMs": 59
         }
       ]
     },
@@ -2956,7 +2984,7 @@
   ],
   "observations": [
     {
-      "id": "01a1fc7b-0d7a-77a8-a5e2-4b5ff23a0033",
+      "id": "01a1fdd2-bec1-7ec0-a5fd-136b140c2def",
       "seq": 0,
       "keys": "{Enter}",
       "screenBefore": {
@@ -3029,10 +3057,7 @@
             "name": "COLLECT FEE"
           }
         },
-        "cursor": {
-          "col": 14,
-          "row": 2
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -3040,11 +3065,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 547,
+      "durationMs": 475,
       "stable": true
     },
     {
-      "id": "01a1fc7b-122e-73a4-8369-7f0ce9687e38",
+      "id": "01a1fdd2-c33f-7312-b92a-47276a77876c",
       "seq": 1,
       "keys": "S0001{Enter}",
       "screenBefore": {
@@ -3081,10 +3106,7 @@
             "name": "COLLECT FEE"
           }
         },
-        "cursor": {
-          "col": 14,
-          "row": 2
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_5604084b6493e1fe",
@@ -3120,7 +3142,10 @@
             "name": "COLLECT FEE"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 27,
+          "row": 7
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -3128,13 +3153,13 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1051,
+      "durationMs": 1011,
       "stable": true
     },
     {
-      "id": "01a1fc7b-14b4-7539-b76d-a34d0a4d0ceb",
+      "id": "01a1fdd2-c7fb-7ff2-b5fb-d5f356d87ee5",
       "seq": 2,
-      "keys": "{Enter}",
+      "keys": "032001{Enter}",
       "screenBefore": {
         "fingerprint": "fp_5604084b6493e1fe",
         "text": [
@@ -3216,11 +3241,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 497,
+      "durationMs": 1087,
       "stable": true
     },
     {
-      "id": "01a1fc7b-1721-7a0d-8e2f-71638be37842",
+      "id": "01a1fdd2-ca42-74b8-88c8-e26c3401577f",
       "seq": 3,
       "keys": "{Enter}",
       "screenBefore": {
@@ -3293,10 +3318,7 @@
             "name": "COLLECT FEE"
           }
         },
-        "cursor": {
-          "col": 27,
-          "row": 7
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -3304,97 +3326,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 495,
+      "durationMs": 463,
       "stable": true
     },
     {
-      "id": "01a1fc7b-1c00-7260-9782-7f2e173f5d42",
+      "id": "01a1fdd2-cc4e-7dd9-9e7e-1e77a9736ba6",
       "seq": 4,
-      "keys": "032001{Enter}",
-      "screenBefore": {
-        "fingerprint": "fp_7bfa02f2fb1aa86e",
-        "text": [
-          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
-          "                                                                                ",
-          " Student ID : S0001                                                             ",
-          " Name       : AHMED                                                             ",
-          " Father     : MUHAMMAD ASLAM                                                    ",
-          " Class      : 3               Family     : F001   Child no. 1                   ",
-          "                                                                                ",
-          " Fee month (MMYYYY) : 032001                                                    ",
-          "                                                                                ",
-          "                                                                                ",
-          "          MONTHLY FEE (class 3)            1400.00                              ",
-          "          SIBLING DISCOUNT 15%                0.00                              ",
-          "          LATE FEE (1 WK)                    50.00                              ",
-          "          ────────────────────────────────────────                              ",
-          "          TOTAL                            1450.00                              ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
-        ],
-        "model": {
-          "title": {
-            "name": "COLLECT FEE"
-          }
-        },
-        "cursor": null
-      },
-      "screenAfter": {
-        "fingerprint": "fp_7bfa02f2fb1aa86e",
-        "text": [
-          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
-          "                                                                                ",
-          " Student ID : S0001                                                             ",
-          " Name       : AHMED                                                             ",
-          " Father     : MUHAMMAD ASLAM                                                    ",
-          " Class      : 3               Family     : F001   Child no. 1                   ",
-          "                                                                                ",
-          " Fee month (MMYYYY) : 032001                                                    ",
-          "                                                                                ",
-          "                                                                                ",
-          "          MONTHLY FEE (class 3)            1400.00                              ",
-          "          SIBLING DISCOUNT 15%                0.00                              ",
-          "          LATE FEE (1 WK)                    50.00                              ",
-          "          ────────────────────────────────────────                              ",
-          "          TOTAL                            1450.00                              ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
-        ],
-        "model": {
-          "title": {
-            "name": "COLLECT FEE"
-          }
-        },
-        "cursor": null
-      },
-      "dbfDiff": {
-        "tables": {},
-        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
-        "addedTables": [],
-        "removedTables": []
-      },
-      "durationMs": 1151,
-      "stable": true
-    },
-    {
-      "id": "01a1fc7b-1e4c-7951-b994-ade7bdf57c7a",
-      "seq": 5,
       "keys": "{F2}",
       "screenBefore": {
         "fingerprint": "fp_7bfa02f2fb1aa86e",
@@ -3430,10 +3367,7 @@
             "name": "COLLECT FEE"
           }
         },
-        "cursor": {
-          "col": 27,
-          "row": 7
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_38f58572972cfc62",
@@ -3503,12 +3437,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 509,
+      "durationMs": 461,
       "stable": true
     },
     {
-      "id": "01a1fc7b-20d1-7f52-9ab5-315dfe0cadc9",
-      "seq": 6,
+      "id": "01a1fdd2-ce9a-7493-ad9c-c5c3a9a27111",
+      "seq": 5,
       "keys": "{Enter}",
       "screenBefore": {
         "fingerprint": "fp_38f58572972cfc62",
@@ -3588,12 +3522,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 498,
+      "durationMs": 468,
       "stable": true
     },
     {
-      "id": "01a1fc7b-23e0-7388-8155-4b72710fce94",
-      "seq": 7,
+      "id": "01a1fdd2-d162-799c-bb4a-eddb282a48f9",
+      "seq": 6,
       "keys": "{Down}{Enter}",
       "screenBefore": {
         "fingerprint": "fp_7c83f89671c9e84b",
@@ -3673,12 +3607,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 655,
+      "durationMs": 600,
       "stable": true
     },
     {
-      "id": "01a1fc7b-266e-7925-abed-d2a470314b75",
-      "seq": 8,
+      "id": "01a1fdd2-d3c3-7aff-ae26-5bf614fb3e3e",
+      "seq": 7,
       "keys": "{PgDn}",
       "screenBefore": {
         "fingerprint": "fp_817582cfc70747d0",
@@ -3758,12 +3692,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 497,
+      "durationMs": 489,
       "stable": true
     },
     {
-      "id": "01a1fc7b-28ff-7ad0-a112-0e39e61bb4b7",
-      "seq": 9,
+      "id": "01a1fdd2-d612-742d-833d-85d81b164f0e",
+      "seq": 8,
       "keys": "{PgUp}",
       "screenBefore": {
         "fingerprint": "fp_817582cfc70747d0",
@@ -3843,12 +3777,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 491,
+      "durationMs": 475,
       "stable": true
     },
     {
-      "id": "01a1fc7b-2b76-794c-a8f3-91cf989ce1e1",
-      "seq": 10,
+      "id": "01a1fdd2-d855-70a7-bceb-06387b3a7474",
+      "seq": 9,
       "keys": "{Esc}",
       "screenBefore": {
         "fingerprint": "fp_817582cfc70747d0",
@@ -3928,12 +3862,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 494,
+      "durationMs": 456,
       "stable": true
     },
     {
-      "id": "01a1fc7b-2ef4-7b66-8e7e-c7da22f186e8",
-      "seq": 11,
+      "id": "01a1fdd2-db7b-77db-b7b1-f9465d210dfa",
+      "seq": 10,
       "keys": "{Down}{Down}{Enter}",
       "screenBefore": {
         "fingerprint": "fp_7c83f89671c9e84b",
@@ -4013,12 +3947,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 708,
+      "durationMs": 686,
       "stable": true
     },
     {
-      "id": "01a1fc7b-316c-7423-9059-cdf56284fb4a",
-      "seq": 12,
+      "id": "01a1fdd2-ddc1-7567-9400-0549ac03a014",
+      "seq": 11,
       "keys": "{Esc}",
       "screenBefore": {
         "fingerprint": "fp_df5b10f3562a797d",
@@ -4098,12 +4032,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 491,
+      "durationMs": 464,
       "stable": true
     },
     {
-      "id": "01a1fc7b-351d-7776-ac43-f78de5ee3838",
-      "seq": 13,
+      "id": "01a1fdd2-e151-7561-bd81-4610c4e3d056",
+      "seq": 12,
       "keys": "{Down}{Down}{Down}{Enter}",
       "screenBefore": {
         "fingerprint": "fp_7c83f89671c9e84b",
@@ -4183,12 +4117,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 826,
+      "durationMs": 787,
       "stable": true
     },
     {
-      "id": "01a1fc7b-3791-7c0b-a4b9-8a81e38ec136",
-      "seq": 14,
+      "id": "01a1fdd2-e384-7082-8a41-4c32761b6947",
+      "seq": 13,
       "keys": "{Esc}",
       "screenBefore": {
         "fingerprint": "fp_4f6957f46c6a00bc",
@@ -4268,12 +4202,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 491,
+      "durationMs": 448,
       "stable": true
     },
     {
-      "id": "01a1fc7b-39f7-7150-b991-e06eb335c592",
-      "seq": 15,
+      "id": "01a1fdd2-e5d1-7e17-a6e0-bacecc9acc3c",
+      "seq": 14,
       "keys": "{Enter}",
       "screenBefore": {
         "fingerprint": "fp_7c83f89671c9e84b",
@@ -4353,12 +4287,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 486,
+      "durationMs": 473,
       "stable": true
     },
     {
-      "id": "01a1fc7b-3c60-77b9-8253-5dd92d327baa",
-      "seq": 16,
+      "id": "01a1fdd2-e811-7e9b-9bef-eccbe987c31a",
+      "seq": 15,
       "keys": "{Enter}",
       "screenBefore": {
         "fingerprint": "fp_ccbb9ac2eb2c1722",
@@ -4430,7 +4364,10 @@
             "name": "COLLECT FEE"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 14,
+          "row": 2
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -4438,12 +4375,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 489,
+      "durationMs": 461,
       "stable": true
     },
     {
-      "id": "01a1fc7b-3ef0-7041-ba72-c6dc9a8c5318",
-      "seq": 17,
+      "id": "01a1fdd2-ea55-7dea-8cfe-8a2afadd8623",
+      "seq": 16,
       "keys": "{F2}",
       "screenBefore": {
         "fingerprint": "fp_ccbb9ac2eb2c1722",
@@ -4526,12 +4463,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 514,
+      "durationMs": 466,
       "stable": true
     },
     {
-      "id": "01a1fc7b-411e-7288-b048-6f7295dfa047",
-      "seq": 18,
+      "id": "01a1fdd2-ec63-7da3-8057-713c9583a63c",
+      "seq": 17,
       "keys": "{Up}",
       "screenBefore": {
         "fingerprint": "fp_ccbb9ac2eb2c1722",
@@ -4614,12 +4551,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 484,
+      "durationMs": 458,
       "stable": true
     },
     {
-      "id": "01a1fc7b-4598-7936-ba04-83811028da7d",
-      "seq": 19,
+      "id": "01a1fdd2-f0bb-7dfb-bbe3-23a00560a737",
+      "seq": 18,
       "keys": "Z9999{Enter}",
       "screenBefore": {
         "fingerprint": "fp_ccbb9ac2eb2c1722",
@@ -4702,11 +4639,99 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1020,
+      "durationMs": 997,
       "stable": true
     },
     {
-      "id": "01a1fc7b-4a3c-7bba-a851-9033f412a25f",
+      "id": "01a1fdd2-f572-71ea-a7b5-0da02e570bb3",
+      "seq": 19,
+      "keys": "S0001{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : Z9999                                                             ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": {
+          "col": 18,
+          "row": 2
+        }
+      },
+      "screenAfter": {
+        "fingerprint": "fp_ccbb9ac2eb2c1722",
+        "text": [
+          " IQRA SCHOOL FEES 1.1             COLLECT FEE                        12-03-2001 ",
+          "                                                                                ",
+          " Student ID : Z9999                                                             ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Fee month (MMYYYY) : 032001                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  STUDENT NOT FOUND                                                             ",
+          " Enter=Next  Up=Previous field  F2=Save receipt  Esc=Back                       "
+        ],
+        "model": {
+          "title": {
+            "name": "COLLECT FEE"
+          }
+        },
+        "cursor": null
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["FEES.DBF", "PAYMENT.DBF", "STUDENT.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 1083,
+      "stable": true
+    },
+    {
+      "id": "01a1fdd2-f98c-7c3d-a13c-f70771a44c41",
       "seq": 20,
       "keys": "S0001{Enter}",
       "screenBefore": {
@@ -4790,11 +4815,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1053,
+      "durationMs": 983,
       "stable": true
     },
     {
-      "id": "01a1fc7b-4e95-7fd2-9eb7-5aad6385983e",
+      "id": "01a1fdd2-fdfb-79df-8a7e-cd7d1c62920a",
       "seq": 21,
       "keys": "S0002{Enter}",
       "screenBefore": {
@@ -4878,11 +4903,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1043,
+      "durationMs": 1072,
       "stable": true
     },
     {
-      "id": "01a1fc7b-52fe-76f7-95eb-77b07d12f051",
+      "id": "01a1fdd3-0223-7dbb-aba5-6ee7e733b9bc",
       "seq": 22,
       "keys": "S0001{Enter}",
       "screenBefore": {
@@ -4966,11 +4991,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1051,
+      "durationMs": 999,
       "stable": true
     },
     {
-      "id": "01a1fc7b-575a-7615-999e-11fa3628598a",
+      "id": "01a1fdd3-0635-7b12-94e4-25bd6f19c364",
       "seq": 23,
       "keys": "S0001{Enter}",
       "screenBefore": {
@@ -5043,10 +5068,7 @@
             "name": "COLLECT FEE"
           }
         },
-        "cursor": {
-          "col": 18,
-          "row": 2
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -5054,11 +5076,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1038,
+      "durationMs": 978,
       "stable": true
     },
     {
-      "id": "01a1fc7b-5997-7ef6-86c2-9293de7926fc",
+      "id": "01a1fdd3-083c-7df3-a09d-38608276acea",
       "seq": 24,
       "keys": "{Esc}",
       "screenBefore": {
@@ -5139,7 +5161,7 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 498,
+      "durationMs": 456,
       "stable": true
     }
   ],
@@ -5155,7 +5177,7 @@
         "ur": "",
         "kind": "compute",
         "target": "payment.pay_date",
-        "evidence": ["01a1fc7b-1e4c-7951-b994-ade7bdf57c7a"],
+        "evidence": ["01a1fdd2-cc4e-7dd9-9e7e-1e77a9736ba6"],
         "confidence": 0.33,
         "expression": "today"
       }
@@ -5163,7 +5185,7 @@
     "actions": [
       {
         "id": "add-payment",
-        "keys": "{@STU_ID}{Enter}{Enter}{Enter}032001{Enter}{F2}",
+        "keys": "{@STU_ID}{Enter}032001{Enter}{Enter}{F2}",
         "name": "Add a payment",
         "screen": "fp_ccbb9ac2eb2c1722",
         "effects": [
@@ -5378,9 +5400,9 @@
     ],
     "provenance": {
       "note": "Entities from the data files; 1 actions and 1 rules, each rule checked against every observation.",
-      "createdAt": "2026-11-21T05:01:44.876Z",
+      "createdAt": "2026-11-21T11:17:08.701Z",
       "createdBy": "archaeologist",
-      "projectId": "01a1fc7b-0544-7828-9226-6ea6327357bd",
+      "projectId": "01a1fdd2-b73e-72bf-8db0-6c1102339487",
       "observationCount": 25
     },
     "schemaVersion": 1

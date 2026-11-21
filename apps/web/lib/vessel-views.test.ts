@@ -2,7 +2,24 @@ import type { DbfRecord } from '@afterlife/dbf';
 import { SHIFA_REFERENCE_SOUL } from '@afterlife/soul/examples/shifa';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { displayValue, money, searchRecords, vesselViews, wordKey } from './vessel-views';
+import {
+  displayValue,
+  money,
+  searchRecords,
+  vesselTitle,
+  vesselViews,
+  wordKey,
+} from './vessel-views';
+
+describe('vesselTitle', () => {
+  it('names the reborn app, and the shop once its Soul is open (review of 51-60)', () => {
+    expect(vesselTitle('Reborn app')).toBe('Reborn app · Afterlife');
+    expect(vesselTitle('Reborn app', 'Shifa Medical Store')).toBe(
+      'Shifa Medical Store · Reborn app · Afterlife',
+    );
+    expect(vesselTitle('نئی ایپ', '  ')).toBe('نئی ایپ · Afterlife');
+  });
+});
 
 describe('vesselViews', () => {
   it('the old main menu becomes the app’s navigation: a bill form, then two lists', () => {

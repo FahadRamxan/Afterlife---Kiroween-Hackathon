@@ -9,6 +9,8 @@ import { envFor, type VerifyEntity } from './verify';
 
 /** At most this many candidates for one value. */
 export const MAX_ENUMERATED = 600;
+/** Ratios are worked out from at most this many observations (the biggest bases first). */
+const MAX_RATIO_BASES = 4;
 
 const isDec = (v: unknown): v is Decimal => Decimal.isDecimal(v);
 const num = (s: string) => new Decimal(s);
@@ -66,13 +68,17 @@ function ratios(pairs: { target: Decimal; base: Decimal; observation: string }[]
   const usable = pairs.filter((p) => !p.base.isZero() && !p.target.isZero());
   if (!usable.length) return [];
   const many = new Set(usable.map((p) => p.observation)).size >= 2;
-  // The biggest base gives the most exact ratio.
-  const best = usable.sort((a, b) => b.base.abs().cmp(a.base.abs()))[0]!;
-  const r = best.target.div(best.base);
-  for (const places of [2, 3]) {
-    const c = r.toDecimalPlaces(places, Decimal.ROUND_HALF_UP);
-    if (c.isZero() || c.eq(1)) continue;
-    if (many || (c.sd() <= 2 && c.abs().lt(1))) out.add(tidy(c));
+  // The ratio of each observation, biggest base first: a big base gives the most exact ratio, but
+  // on small amounts truncation spoils it (0.19 of 1.16 is 0.16, the rate 0.17), and the base
+  // whose value came out exact gives it (0.17 of 1.00). The verifier keeps only one that fits all.
+  const sorted = [...usable].sort((a, b) => b.base.abs().cmp(a.base.abs()));
+  for (const p of sorted.slice(0, MAX_RATIO_BASES)) {
+    const r = p.target.div(p.base);
+    for (const places of [2, 3]) {
+      const c = r.toDecimalPlaces(places, Decimal.ROUND_HALF_UP);
+      if (c.isZero() || c.eq(1)) continue;
+      if (many || (c.sd() <= 2 && c.abs().lt(1))) out.add(tidy(c));
+    }
   }
   return [...out];
 }

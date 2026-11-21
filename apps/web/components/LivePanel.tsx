@@ -78,7 +78,11 @@ export function LivePanel({
             <div data-testid="possession-stats" className="text-sm">
               <h3 className="font-semibold">{t('possession.title')}</h3>
               <ul className="mt-1 flex flex-wrap gap-x-4">
-                <li data-testid="stat-screens">{t('possession.screens', { n: stats.screens })}</li>
+                <li data-testid="stat-screens">
+                  {stats.titles === null
+                    ? t('possession.states', { n: stats.screens })
+                    : t('possession.screens', { n: stats.titles, states: stats.screens })}
+                </li>
                 <li data-testid="stat-actions">{t('possession.actions', { n: stats.actions })}</li>
                 <li
                   data-testid="stat-changes"

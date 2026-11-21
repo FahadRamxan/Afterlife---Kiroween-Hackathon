@@ -150,7 +150,13 @@ export function SoulPanel({
                   : 'bg-bone/30',
               )}
             />
-            {t('exhumed', { rules: soul.rules.length, observations: observed })}
+            {/* Only the Archaeologist's rules come from the observations (review of 51-60). */}
+            {soul.provenance.createdBy === 'archaeologist'
+              ? t('exhumed', { rules: soul.rules.length, observations: observed })
+              : t('written', {
+                  rules: soul.rules.length,
+                  by: soul.provenance.createdBy === 'reference' ? 'reference' : 'owner',
+                })}
           </p>
         ) : null}
         <UrduRules projectId={projectId} soul={soul} events={events} />

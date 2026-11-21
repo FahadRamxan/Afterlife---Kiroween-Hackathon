@@ -16,10 +16,16 @@ export function VesselTable({
   fields,
   addActionId,
   onSaved,
+  dataVersion = 0,
 }: {
   vessel: Vessel;
   entity: Entity;
   fields: string[];
+  /**
+   * Bumped when the records change under the list (a save, the server's records): they are read
+   * again, and what the owner typed in Search stays (it was lost when the list was remounted).
+   */
+  dataVersion?: number;
   /** The action that adds a record to this list ("Add a customer"). */
   addActionId?: string;
   onSaved?: () => void | Promise<void>;
@@ -39,7 +45,7 @@ export function VesselTable({
     return () => {
       alive = false;
     };
-  }, [vessel, entity, version]);
+  }, [vessel, entity, version, dataVersion]);
 
   const cols = fields
     .map((f) => entity.fields.find((x) => x.name === f))

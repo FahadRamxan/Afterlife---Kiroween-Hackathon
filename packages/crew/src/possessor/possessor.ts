@@ -38,9 +38,12 @@ export type PossessorObservation = Observation & {
   errors: string[];
   /** What the owner said while doing this, in a séance (guided steps only, Prompt 50). */
   hint?: string;
-  /** So far, this step included: screens found, and actions that changed data. */
+  /** So far, this step included: screen states and screens found, and actions that changed data. */
   totals: {
+    /** Screen states: each fingerprint. */
     screens: number;
+    /** Screens: states grouped by their title. */
+    titles: number;
     saves: number;
     /** Guided steps so far (Prompt 50), and each refusal so far, once (Prompt 49). */
     guided: number;
@@ -56,7 +59,9 @@ export type StopReason = 'explored' | 'idle' | 'budget' | 'stuck' | 'aborted';
 export type PossessResult = {
   graph: ScreenGraphJson;
   steps: number;
+  /** Screen states (fingerprints), and screens (their titles). */
   screens: number;
+  titles: number;
   /** Actions that changed a data file. */
   saves: number;
   stoppedBecause: StopReason;
@@ -182,6 +187,7 @@ export async function possess(
       errors,
       totals: {
         screens: graph.nodes.size,
+        titles: graph.titles(),
         saves,
         guided: (guided += kind === 'guide' ? 1 : 0),
         refused: refused.slice(0, MAX_REFUSED),
@@ -215,6 +221,7 @@ export async function possess(
     graph: graph.toJSON(),
     steps,
     screens: graph.nodes.size,
+    titles: graph.titles(),
     saves,
     stoppedBecause,
     firstChange: Object.fromEntries(seenChanges),
