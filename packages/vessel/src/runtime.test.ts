@@ -147,6 +147,20 @@ describe('what the app refuses (and then nothing changes)', () => {
     ]);
   });
 
+  it('a rule that cannot be worked out says so, marked as the Soul’s error (Prompt 70)', async () => {
+    const broken: Soul = {
+      ...SHIFA,
+      rules: SHIFA.rules.map((r) =>
+        r.id === 'gst-17-truncated' ? { ...r, expression: 'bill.nonsense * 0.17' } : r,
+      ),
+    };
+    const [r] = await refuse({ lines: [{ CODE: 'PAN500', QTY: '1' }] }, broken);
+    expect(r).toMatchObject({ rule: 'gst-17-truncated', error: true });
+    expect(r!.message).toMatch(/nonsense/);
+    // A refusal by the rules is not an error.
+    expect((await refuse({ lines: [{ CODE: 'SEP200', QTY: '1' }] }))[0]!.error).toBeUndefined();
+  });
+
   it('more than the stock, an unknown code, an unknown customer, a bad number, no lines', async () => {
     expect((await refuse({ lines: [{ CODE: 'THY050', QTY: '5' }] }))[0]).toMatchObject({
       rule: 'qty-over-stock-refused',

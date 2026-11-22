@@ -347,6 +347,39 @@
       "notOk": "does not match",
       "rejectedTitle": "Records that could not cross",
       "fix": "Fix"
+    },
+    "proof": {
+      "title": "Old app against the reborn app",
+      "candle": "{done} of {of} proof cases run",
+      "skipped": "{n} cases skipped: the records no longer allowed them (the stock ran out).",
+      "doneSame": "Proof of Soul version {version} done: the reborn app did what the old app did, every time.",
+      "doneDifferent": "Proof of Soul version {version} done: the reborn app did not always do what the old app did.",
+      "seed": "seed {seed}",
+      "difference": "Difference",
+      "different": "Different",
+      "same": "Same",
+      "skippedOne": "Skipped",
+      "shrunk": "Case {index}, shrunk {shrinks} times in {tries} tries, each from a fresh start.",
+      "notReproduced": "Case {index}: it differed only after the cases before it, so it is shown as it was.",
+      "replay": "replay: seed {seed}, path {path}",
+      "none": "nothing",
+      "col": {
+        "table": "Table",
+        "record": "Record",
+        "field": "Field",
+        "old": "Old app",
+        "new": "Reborn app"
+      },
+      "oldSide": "Old app",
+      "newSide": "Reborn app",
+      "oldScreen": "{name}, the old app, after case {index}",
+      "caseLine": "Case {index}",
+      "nothingWritten": {
+        "pass": "It wrote no record.",
+        "fail": "It wrote no record.",
+        "skip": "Skipped: the records no longer allowed this case."
+      },
+      "log": "Cases, newest first"
     }
   },
   "vessel": {

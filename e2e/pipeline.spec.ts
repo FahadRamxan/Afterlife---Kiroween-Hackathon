@@ -39,7 +39,7 @@ test.describe('pipeline', () => {
     for (const s of STEPS.slice(4))
       await expect(page.getByTestId(`step-${s}`)).toHaveAttribute('data-status', 'skipped');
     await expect(page.getByTestId('step-prove')).toContainText(
-      'The prove step is not built yet (Prompt 68)',
+      'The Soul has no actions to prove yet',
     );
     await expect(page.getByTestId('run-mode')).toHaveCount(0);
 
@@ -71,7 +71,8 @@ test.describe('pipeline', () => {
       timeout: 60_000,
     });
     await expect(page.getByTestId('steps').getByRole('progressbar')).toHaveAccessibleName(
-      '6 of 6 steps run, 2 of them skipped',
+      // Only exorcise is left to build (Prompt 73): the recorded run proves the Soul (Prompt 70).
+      '6 of 6 steps run, 1 of them skipped',
       { timeout: 150_000 },
     );
     await expect(page.getByTestId('step-archaeology')).toContainText('Recorded run:');

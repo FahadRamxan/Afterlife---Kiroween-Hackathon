@@ -193,6 +193,47 @@ export const StepStateSchema = z
         }),
       })
       .nullable(),
+    /** The prove step, done (Prompt 70): the proof's counts and its shrunk counterexample. */
+    proof: z
+      .object({
+        soulVersion: z.number().int(),
+        seed: z.number().int(),
+        numRuns: z.number().int(),
+        lanes: z.number().int(),
+        passed: z.number().int(),
+        failed: z.number().int(),
+        skipped: z.number().int(),
+        counterexample: z
+          .object({
+            index: z.number().int(),
+            actionId: z.string(),
+            inputs: z.object({
+              values: z.record(z.string(), z.string()).optional(),
+              lines: z.array(z.record(z.string(), z.string())).optional(),
+            }),
+            seed: z.number().int(),
+            path: z.string(),
+            explanation: z.string(),
+            differences: z.array(
+              z.object({
+                table: z.string(),
+                kind: z.enum(['inserted', 'deleted', 'updated']),
+                record: z.string(),
+                field: z.string().optional(),
+                old: z.string().nullable(),
+                vessel: z.string().nullable(),
+                values: z.record(z.string(), z.string()).optional(),
+              }),
+            ),
+            shrinks: z.number().int(),
+            tries: z.number().int(),
+            reproduced: z.boolean(),
+            old: z.record(z.string(), z.string()).nullable(),
+            vessel: z.record(z.string(), z.string()).nullable(),
+          })
+          .nullable(),
+      })
+      .nullable(),
   })
   .meta({ id: 'StepState' });
 export type StepState = z.infer<typeof StepStateSchema>;

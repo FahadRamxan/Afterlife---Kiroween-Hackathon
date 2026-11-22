@@ -2,6 +2,7 @@
 import { z } from 'zod';
 import type { Failure } from './projects';
 import { CrossingSchema } from './crossing';
+import { ProofSchema } from './proof';
 import type { LiveEvent } from './live';
 
 const StepStateSchema = z.object({
@@ -19,6 +20,8 @@ const StepStateSchema = z.object({
     .default(null),
   /** The undertake step, done: its report (Prompt 66). */
   crossing: CrossingSchema.nullable().default(null),
+  /** The prove step, done: its counts and counterexample (Prompt 70). */
+  proof: ProofSchema.nullable().default(null),
 });
 export type StepState = z.infer<typeof StepStateSchema>;
 

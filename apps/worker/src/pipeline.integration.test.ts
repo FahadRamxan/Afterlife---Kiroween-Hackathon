@@ -1,6 +1,7 @@
 // Prompt 39 "done when": the full pipeline on Shifa in under 10 minutes. The real worker, real
 // pg-boss on Postgres 16, the real Shifa EXE in headless js-dos. Steps whose agent is not built
-// yet end "skipped" and say so; possess explores Shifa (Prompt 48); the case counts are the reduced ones (the proof is Prompt 68).
+// yet end "skipped" and say so; possess explores Shifa (Prompt 48); the Oracle proves the Soul it
+// found on the real app (Prompt 70), with 12 cases here (PROVE_CASES) to keep the run short.
 // real-jsdos: startWorker boots Shifa in its HeadlessPool.
 import { createBoss, eq, listEvents, observations, PIPELINE, projects } from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
@@ -20,6 +21,7 @@ afterAll(() => t.drop());
 
 describe('the pipeline on the real Shifa', () => {
   it('runs possess to exorcise in order and finishes within 10 minutes', async () => {
+    process.env.PROVE_CASES = '12';
     const worker = await startWorker({
       databaseUrl: t.url,
       pollingIntervalSeconds: 0.5,
@@ -62,12 +64,25 @@ describe('the pipeline on the real Shifa', () => {
         .filter((e) => e.type === 'step' && (e.payload as { state: string }).state === 'started')
         .map((e) => (e.payload as { step: string }).step);
       expect(started_).toEqual([...PIPELINE]);
+      // The proof ran on the real app: a case event for each of its cases.
+      const prove = s.steps.find((x) => x.step === 'prove')!;
+      expect(prove.status).toBe('done');
+      const proof = prove.output as {
+        numRuns: number;
+        passed: number;
+        failed: number;
+        skipped: number;
+      };
+      expect(proof.numRuns).toBe(12);
+      expect(proof.passed + proof.failed + proof.skipped).toBe(12);
+      expect(events.filter((e) => e.type === 'proof_case')).toHaveLength(12);
       const screen = events.find((e) => e.type === 'screen')!;
       const grid = fromWire(ScreenWireSchema.parse((screen.payload as { grid: unknown }).grid));
       expect(gridText(grid).join('\n')).toMatch(/SHIFA MEDICAL STORE[\s\S]*MAIN MENU/);
     } finally {
       await boss.stop({ graceful: false });
       await worker.stop();
+      delete process.env.PROVE_CASES;
     }
   });
 });

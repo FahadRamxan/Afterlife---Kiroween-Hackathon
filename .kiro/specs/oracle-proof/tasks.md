@@ -23,10 +23,10 @@ Prompt 67 is task 1, Prompt 68 task 2, Prompt 69 task 3, Prompt 70 task 4.
     - _Requirements: 3.1, 3.2_
   - [x] 3.2 Implement explainDifference
     - _Requirements: 3.3_
-- [ ] 4. The proof run in the app
-  - [ ] 4.1 Implement the prove step and its events
+- [x] 4. The proof run in the app
+  - [x] 4.1 Implement the prove step and its events
     - _Requirements: 4.1_
-  - [ ] 4.2 Add the Proof tab, with an e2e test of a 50-case proof
+  - [x] 4.2 Add the Proof tab, with an e2e test of a 50-case proof
     - _Requirements: 4.2, 4.3_
 
 ## Notes

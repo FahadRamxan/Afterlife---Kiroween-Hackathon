@@ -173,6 +173,24 @@ describe('proveEquivalence', () => {
     expect(skip.old).toBeUndefined();
   });
 
+  it('a reborn app whose rule cannot be worked out differs: it is not a skip', async () => {
+    const broken: Soul = {
+      ...SOUL,
+      rules: SOUL.rules.map((r) =>
+        r.id === 'gst-17-truncated' ? { ...r, expression: 'bill.nonsense * 0.17' } : r,
+      ),
+    };
+    const r = await proveEquivalence(target(broken), {
+      numRuns: 20,
+      seed: 3,
+      ctx,
+      actionId: 'save-bill',
+    });
+    expect(r.skipped).toBe(0);
+    expect(r.failed).toBe(20);
+    expect(r.cases[0]!.reason).toMatch(/^The reborn app could not work it out: .*nonsense/);
+  });
+
   it('an old app that cannot be driven is tried once more from a fresh start, then fails', async () => {
     let calls = 0;
     let resets = 0;

@@ -4,6 +4,7 @@ import type { EventType, JobType } from '@afterlife/db';
 import type { Db } from '@afterlife/db';
 import { entitiesStep } from './entities-step';
 import { graveyardBundle, possessApp, type EmulatorPool } from './possess';
+import { proveStep } from './prove-step';
 import { rebirthStep } from './rebirth-step';
 import { undertakeStep } from './undertake-step';
 import { scanUpload, uploadBundle } from './scan-upload';
@@ -62,6 +63,9 @@ export function defaultRegistry(
     maxActions?: number;
     /** Values typed into each field (POSSESS_PROBES). */
     probesPerField?: number;
+    /** The proof: cases (PROVE_CASES) and old apps at once (PROVE_LANES). */
+    proveCases?: number;
+    proveLanes?: number;
     /** Transcribes séance voice notes (SPEECH_PROVIDER); null: none. */
     speech?: SpeechClient | null;
   } = {},
@@ -104,7 +108,16 @@ export function defaultRegistry(
     undertake: db
       ? undertakeStep({ db, bundleFor })
       : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
-    prove: notBuiltYet('prove', 'Prompt 68'),
+    // The Oracle proves the reborn app against the old app, case by case (Prompts 67 to 70).
+    prove: db
+      ? proveStep({
+          db,
+          bundleFor,
+          ...(deps.pool ? { pool: deps.pool } : {}),
+          ...(deps.proveCases ? { numRuns: deps.proveCases } : {}),
+          ...(deps.proveLanes ? { lanes: deps.proveLanes } : {}),
+        })
+      : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
     exorcise: notBuiltYet('exorcise', 'Prompt 73'),
     'twin-replay': notBuiltYet('twin-replay', 'Prompt 77'),
     'voice-change': notBuiltYet('voice-change', 'Prompt 81'),

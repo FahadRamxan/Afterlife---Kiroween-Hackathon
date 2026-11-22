@@ -144,6 +144,50 @@ describe('the steps of a project', () => {
         reconciliation: { matches: true, lines: report.reconciliation.lines },
       });
       expect(reborn.crossing).toBeNull();
+      // @spec oracle-proof#4.2 The prove step, done: its summary and counterexample for the Proof tab.
+      const cx = {
+        index: 7,
+        actionId: 'save-bill',
+        inputs: { values: { CUST_ID: '' }, lines: [{ CODE: 'PAN500', QTY: '1' }] },
+        seed: 42,
+        path: '7:0',
+        explanation:
+          'Old app charged Rs 2.12 GST, new app charged Rs 2.13, on a bill of Rs 12.50 (PAN500 x 1).',
+        differences: [
+          {
+            table: 'BILLS.DBF',
+            kind: 'inserted',
+            record: 'BILL_NO 9807-0001',
+            field: 'GST',
+            old: '2.12',
+            vessel: '2.13',
+          },
+        ],
+        shrinks: 3,
+        tries: 9,
+        reproduced: true,
+        old: { BILL_NO: '9807-0001', GST: '2.12' },
+        vessel: { BILL_NO: '9807-0001', GST: '2.13' },
+      };
+      const proof = {
+        soulVersion: 2,
+        proofRunId: uuidv7(),
+        seed: 42,
+        numRuns: 50,
+        lanes: 2,
+        passed: 45,
+        failed: 3,
+        skipped: 2,
+        counterexample: cx,
+      };
+      await t.db
+        .insert(pipelineSteps)
+        .values({ projectId: p.id, step: 'prove', status: 'done', output: proof });
+      const proved = (
+        await app.inject({ method: 'GET', url: `/api/projects/${p.id}/steps` })
+      ).json().steps[4];
+      expect(proved.proof).toEqual({ ...proof, proofRunId: undefined });
+      expect(crossed.proof).toBeNull();
       expect(
         (await app.inject({ method: 'GET', url: `/api/projects/${uuidv7()}/steps` })).statusCode,
       ).toBe(404);

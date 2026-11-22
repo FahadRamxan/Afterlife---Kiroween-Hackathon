@@ -160,9 +160,14 @@ export async function proveEquivalence(
       >;
       const attempt = async (c: ProofCase): Promise<Outcome> => {
         const preview = await vessel.previewAction(c.actionId, c.inputs);
-        // The records no longer allow it (the stock ran out): neither side runs it.
-        if (!preview.ok)
-          return { outcome: 'skip', reason: preview.refused.map((r) => r.message).join('; ') };
+        if (!preview.ok) {
+          const why = preview.refused.map((r) => r.message).join('; ');
+          // A rule of the Soul that cannot be worked out is a fault of the reborn app.
+          if (preview.refused.some((r) => r.error))
+            return { outcome: 'fail', reason: `The reborn app could not work it out: ${why}` };
+          // The records no longer allow it (the stock ran out): neither side runs it.
+          return { outcome: 'skip', reason: why };
+        }
         const run = await old.run(c);
         const done = await vessel.performAction(c.actionId, c.inputs);
         const effects = done.ok ? done.effects : NO_EFFECTS;

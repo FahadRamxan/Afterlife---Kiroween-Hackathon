@@ -7,7 +7,7 @@
 // (an expired batch) are left out, so a case is one the owner can finish in both apps.
 import Decimal from 'decimal.js';
 import type { DbfField, DbfRecord, DbfValue } from '@afterlife/dbf';
-import { parseExpr, type Expr, type Soul } from '@afterlife/soul';
+import { isMacro, macroFields, parseExpr, type Expr, type Soul } from '@afterlife/soul';
 import {
   MemoryEntityStore,
   actionForm,
@@ -140,6 +140,25 @@ export async function prepareCases(
     } catch {
       continue; // An action the runtime cannot lay out has no cases (the Surgeon says why).
     }
+    // Only what the action's keys type reaches the old app: a field it fills in itself (a fee, a
+    // kind) or one the keys type as a fixed value gets no value here, or the Vessel would be
+    // given what the old app never was.
+    const typed = isMacro(a.keys) ? macroFields(a.keys) : { record: [], line: [] };
+    form = {
+      ...form,
+      header: {
+        ...form.header,
+        inputs: form.header.inputs.filter((f) => typed.record.includes(f.name)),
+        links: form.header.links.filter((l) => typed.record.includes(l.field)),
+      },
+      line: form.line
+        ? {
+            ...form.line,
+            inputs: form.line.inputs.filter((f) => typed.line.includes(f.name)),
+            links: form.line.links.filter((l) => typed.line.includes(l.field)),
+          }
+        : null,
+    };
     const sample = (f: DbfField) =>
       f.type === 'N' ? '1' : f.type === 'D' ? opts.today.replace(/-/g, '') : 'A';
     const base = Object.fromEntries(

@@ -10,9 +10,15 @@ export const diffStyles: Record<DiffKind, { label: string; className: string }> 
   same: { label: 'No change', className: 'bg-bone text-graveyard' },
 };
 
-export type DiffBadgeProps = { kind: DiffKind; count?: number; className?: string };
+export type DiffBadgeProps = {
+  kind: DiffKind;
+  count?: number;
+  /** Words for the kind in this place ("Difference" in a proof); the colour stays the kind's. */
+  label?: string;
+  className?: string;
+};
 
-export function DiffBadge({ kind, count, className }: DiffBadgeProps) {
+export function DiffBadge({ kind, count, label, className }: DiffBadgeProps) {
   const s = diffStyles[kind];
   return (
     <span
@@ -22,7 +28,7 @@ export function DiffBadge({ kind, count, className }: DiffBadgeProps) {
         className,
       )}
     >
-      {s.label}
+      {label ?? s.label}
       {count !== undefined ? <span>{count}</span> : null}
     </span>
   );
