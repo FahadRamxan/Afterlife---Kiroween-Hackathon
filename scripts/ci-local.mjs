@@ -20,6 +20,8 @@ export function planSteps({ docker }) {
     { name: 'test (FC_NUM_RUNS=2000)', cmd: 'pnpm exec vitest run', env: { FC_NUM_RUNS: '2000' } },
     // CI=1 makes Playwright test the production build (next build && next start).
     { name: 'e2e', cmd: 'pnpm e2e', env: { CI: '1' } },
+    // Prompt 62: Shifa's export, unzipped outside the repo, installs, passes its tests and builds.
+    { name: 'export', cmd: 'pnpm export:check', env: {} },
   ];
   if (docker) {
     steps.push(

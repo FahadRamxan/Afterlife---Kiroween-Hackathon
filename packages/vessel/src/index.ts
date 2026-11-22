@@ -34,6 +34,14 @@ export {
   receiptWhatsApp,
   type Receipt,
 } from './receipt';
+export {
+  EXPORT_VERSIONS,
+  RUNTIME_PACKAGES,
+  buildExport,
+  exportZip,
+  vendorRuntime,
+  type ExportInput,
+} from './export';
 export { seedStore, tablesFromBundle } from './seed';
 export {
   MemoryOutbox,

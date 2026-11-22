@@ -1,3 +1,4 @@
+// @spec code-export#3 The export works on its own (the ci:local step).
 import { spawnSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -15,12 +16,13 @@ describe('pnpm ci:local (review fix)', () => {
     expect(scripts['ci:local']).toBe('node scripts/ci-local.mjs');
   });
 
-  it('runs lint, typecheck, tests (2000 runs), e2e, then the Docker checks, in order', () => {
+  it('runs lint, typecheck, tests (2000 runs), e2e, the export, then the Docker checks', () => {
     expect(planSteps({ docker: true }).map((s) => s.name)).toEqual([
       'lint',
       'typecheck',
       'test (FC_NUM_RUNS=2000)',
       'e2e',
+      'export',
       'docker build api',
       'docker build worker',
       'docker smoke',
@@ -38,6 +40,12 @@ describe('pnpm ci:local (review fix)', () => {
     expect(test.cmd).not.toMatch(/FC_NUM_RUNS=/);
   });
 
+  it('checks the export on its own: install, test and build it outside the repo (Prompt 62)', () => {
+    // @spec code-export#3.1
+    expect(planSteps({ docker: false }).find((s) => s.name === 'export')!.cmd).toBe(
+      'pnpm export:check',
+    );
+  });
   it('runs e2e against the production build, like CI did', () => {
     expect(planSteps({ docker: false }).find((s) => s.name === 'e2e')!.env).toEqual({ CI: '1' });
   });
@@ -48,6 +56,7 @@ describe('pnpm ci:local (review fix)', () => {
       'typecheck',
       'test (FC_NUM_RUNS=2000)',
       'e2e',
+      'export',
     ]);
   });
 
