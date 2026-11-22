@@ -13,8 +13,9 @@
 - `packages/oracle/src/runner.ts`: `proveEquivalence(target, { numRuns, seed, lanes, ... })`, with `OldApp` (an emulator lane) and the Vessel lane.
 - `packages/oracle/src/shrink.ts`: `shrinkFailure(target, failure, { seed })` replays the failing case with fast-check from its seed and path (`fc.check` with `path`), each try from a fresh start (`old.reset()` and a new Vessel), within `SHRINK_TIME_LIMIT_MS` (2 minutes). A case that does not differ from a fresh start is kept as it was (`reproduced: false`).
 - `packages/oracle/src/explain.ts`: `explainDifference(soul, counterexample)`: one sentence, the most telling difference first (the action's own record only one side wrote, then a value on it, then the rest), money in rupees, and the case ("a bill of Rs 5000.06 (PAN500 x 400)").
-- `apps/worker/src/prove-step.ts`: the prove step.
-- `apps/web/components/ProofPanel.tsx`: the Proof tab.
+- `apps/worker/src/prove-step.ts`: the prove step: the newest Soul, the old app's records from its bundle, the Possessor's graph plus the Soul's navigation, `PROVE_CASES` (50) cases on `PROVE_LANES` (2) lanes, seed from the project id; a `proof_case` event per case with running totals (`done`, `failed`, `skipped`; the page keeps only the newest events), the old app's screen and each side's written record; `proof_runs` and `proof_cases` rows; the first difference in effects shrunk (1 minute). Differences are a finding: the step is done. A case whose rule the Vessel cannot work out (a fault of the Soul) is a difference, not a skip.
+- `apps/api/src/pipeline.ts`: the steps API gives the prove step's `proof` (counts and counterexample).
+- `apps/web/components/ProofTab.tsx`, `ProofPanel.tsx`, `apps/web/lib/proof.ts`: the Proof tab.
 
 ## Components and Interfaces
 

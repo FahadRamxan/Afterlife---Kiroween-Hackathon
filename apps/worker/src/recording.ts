@@ -82,6 +82,8 @@ export function loadRecording(app: string): Recording | null {
 
 /** The longest pause kept between replayed events: a recorded run is the fast way through. */
 export const MAX_PAUSE_MS = 1500;
+/** Between the cases of a proof: they tick past (50 cases in about 15 s), as a sped-up run. */
+export const PROOF_CASE_PAUSE_MS = 300;
 
 /** Replays one step of a recording: its events (paced, capped) and its output, marked recorded. */
 export function replayStep(rec: Recording, step: JobType, db?: Db): StepHandler {
@@ -94,7 +96,8 @@ export function replayStep(rec: Recording, step: JobType, db?: Db): StepHandler 
     await ctx.log(`Recorded run from ${rec.recordedAt.slice(0, 10)}: replaying ${step}`);
     let at = 0;
     for (const e of s.events) {
-      const wait = Math.min(Math.max(e.afterMs - at, 0), MAX_PAUSE_MS);
+      const cap = e.type === 'proof_case' ? PROOF_CASE_PAUSE_MS : MAX_PAUSE_MS;
+      const wait = Math.min(Math.max(e.afterMs - at, 0), cap);
       at = e.afterMs;
       if (wait) await new Promise((r) => setTimeout(r, wait));
       if (ctx.signal.aborted) throw ctx.signal.reason;

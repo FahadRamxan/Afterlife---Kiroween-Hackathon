@@ -12,6 +12,7 @@ const pending = (step: string): StepState => ({
   finishedAt: null,
   vessel: null,
   crossing: null,
+  proof: null,
 });
 const SIX = ['possess', 'archaeology', 'rebirth', 'undertake', 'prove', 'exorcise'].map(pending);
 const json = (status: number, body: unknown) =>

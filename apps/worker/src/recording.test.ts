@@ -1,7 +1,13 @@
 import { PIPELINE, SEED_PROJECTS } from '@afterlife/db';
 import { ScreenWireSchema, fromWire, gridText } from '@afterlife/screen';
 import { describe, expect, it } from 'vitest';
-import { MAX_PAUSE_MS, loadRecording, replayStep, type Recording } from './recording';
+import {
+  MAX_PAUSE_MS,
+  PROOF_CASE_PAUSE_MS,
+  loadRecording,
+  replayStep,
+  type Recording,
+} from './recording';
 import type { StepContext } from './registry';
 
 const TITLES: Record<string, RegExp> = {
@@ -80,5 +86,25 @@ describe('replayStep', () => {
       status: 'skipped',
       reason: 'Recorded run: The prove step is not built yet',
     });
+  });
+
+  it('replays a proof’s cases quickly: at most PROOF_CASE_PAUSE_MS between them (Prompt 70)', async () => {
+    const cases: Recording = {
+      ...rec,
+      steps: rec.steps.map((s) => ({
+        ...s,
+        events: Array.from({ length: 10 }, (_, i) => ({
+          type: 'proof_case' as const,
+          payload: { index: i },
+          afterMs: i * 5_000,
+        })),
+      })),
+    };
+    const events: [string, unknown][] = [];
+    const started = Date.now();
+    await replayStep(cases, 'prove')(ctx(events));
+    expect(events.filter(([type]) => type === 'proof_case')).toHaveLength(10);
+    expect(Date.now() - started).toBeLessThan(10 * PROOF_CASE_PAUSE_MS + 1000);
+    expect(PROOF_CASE_PAUSE_MS).toBeLessThan(MAX_PAUSE_MS);
   });
 });

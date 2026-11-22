@@ -110,6 +110,16 @@ describe('DiffBadge', () => {
   });
 });
 
+describe('DiffBadge with its own words', () => {
+  it('keeps the colour of its kind and says the label (a proof difference is red)', () => {
+    const out = html(<DiffBadge kind="deleted" label="Difference" className="no-underline" />);
+    expect(out).toContain('bg-blood');
+    expect(out).toContain('Difference');
+    expect(out).not.toContain('Deleted');
+    expect(out).not.toContain('line-through');
+  });
+});
+
 describe('ProgressCandle', () => {
   it('is an accessible progressbar', () => {
     const out = html(<ProgressCandle value={1284} max={2000} label="Proof cases" />);

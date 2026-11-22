@@ -119,6 +119,19 @@ describe('caseArbitrary', () => {
     expect(seen).toBeGreaterThan(share);
   });
 
+  it('only fields the action’s keys type get a value: the old app works out the rest itself', async () => {
+    // Iqra-like: the macro types the student and a fixed month; FEE and TOTAL are the app's own.
+    const soul = {
+      ...SOUL,
+      actions: SOUL.actions.map((a) =>
+        a.id === 'add-customer' ? { ...a, keys: 'A{@NAME}{Enter}0510000000{Enter}' } : a,
+      ),
+    };
+    const c = await prepareCases(soul, RECORDS, { today: TODAY });
+    for (const x of fc.sample(caseArbitrary(c, 'add-customer'), { numRuns: 50, seed: 3 }))
+      expect(Object.keys(x.inputs.values ?? {})).toEqual(['NAME']);
+  });
+
   it('the same seed gives the same cases (repeatable)', () => {
     fc.assert(
       fc.property(fc.integer(), (seed) => {

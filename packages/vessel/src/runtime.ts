@@ -51,7 +51,14 @@ export type ActionInputs = {
 };
 
 /** Why the action was refused: the rule's own words, which line, which field. */
-export type Refusal = { message: string; rule?: string; line?: number; field?: string };
+export type Refusal = {
+  message: string;
+  rule?: string;
+  line?: number;
+  field?: string;
+  /** The rule could not be worked out (a fault in the Soul), not a refusal by the rules. */
+  error?: true;
+};
 
 export type ActionResult =
   | {
@@ -471,6 +478,7 @@ export function createVessel(soul: Soul, store: EntityStore, opts: VesselOptions
           message: `${rule.en} (${err.message})`,
           rule: rule.id,
           ...(line !== undefined ? { line: line + 1 } : {}),
+          error: true,
         });
         return undefined;
       }
@@ -512,6 +520,7 @@ export function createVessel(soul: Soul, store: EntityStore, opts: VesselOptions
               message: `${o.rule.en} (${err.message})`,
               rule: o.rule.id,
               field: o.field,
+              error: true,
             });
           }
         } else {

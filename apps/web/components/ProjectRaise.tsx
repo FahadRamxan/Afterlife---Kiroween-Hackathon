@@ -7,6 +7,7 @@ import type { RaiseTab } from '../lib/raise-tabs';
 import { useProjectLive } from '../lib/use-project-live';
 import { LivePanel } from './LivePanel';
 import { PageShell } from './PageShell';
+import { ProofTab } from './ProofTab';
 import { RaiseTabs } from './RaiseTabs';
 import { SeanceRecorder } from './SeanceRecorder';
 import { ShowYourWork } from './ShowYourWork';
@@ -126,7 +127,7 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
       </section>
       <RaiseTabs
         initial={initial}
-        ownEmpty={possessing ? ['soul', 'possession'] : ['soul']}
+        ownEmpty={possessing ? ['soul', 'possession', 'proof'] : ['soul', 'proof']}
         panels={
           app
             ? {
@@ -150,6 +151,7 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
                     />
                   </>
                 ),
+                proof: <ProofTab projectId={project.id} name={app.name} events={live.events} />,
               }
             : project.source === 'upload'
               ? {
@@ -157,6 +159,9 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
                   // An uploaded app: the virus scan, then possession, live. (Séances on uploads later.)
                   possession: (
                     <LivePanel events={live.events} status={live.status} name={project.name} />
+                  ),
+                  proof: (
+                    <ProofTab projectId={project.id} name={project.name} events={live.events} />
                   ),
                 }
               : {}

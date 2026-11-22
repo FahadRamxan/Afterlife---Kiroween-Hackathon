@@ -73,6 +73,12 @@ export async function startWorker({
         scanner: scanner ?? scannerFromEnv(process.env),
         llm: llm === undefined ? llmClientFrom(process.env) : llm,
         budgetTokens: budgetTokens ?? tokenBudgetFrom(process.env),
+        ...(Number(process.env.PROVE_CASES) > 0
+          ? { proveCases: Number(process.env.PROVE_CASES) }
+          : {}),
+        ...(Number(process.env.PROVE_LANES) > 0
+          ? { proveLanes: Number(process.env.PROVE_LANES) }
+          : {}),
         ...(Number(process.env.POSSESS_MAX_ACTIONS) > 0
           ? { maxActions: Number(process.env.POSSESS_MAX_ACTIONS) }
           : {}),

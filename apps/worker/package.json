@@ -21,6 +21,7 @@
     "@afterlife/crew": "workspace:^",
     "@afterlife/db": "workspace:^",
     "@afterlife/emulator": "workspace:^",
+    "@afterlife/oracle": "workspace:^",
     "@afterlife/screen": "workspace:^",
     "@afterlife/soul": "workspace:^",
     "@afterlife/vessel": "workspace:^",

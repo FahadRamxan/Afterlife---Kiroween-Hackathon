@@ -46,6 +46,14 @@ export class PgPipeline implements Pipeline {
       const output = (r?.output ?? null) as {
         reason?: unknown;
         recorded?: unknown;
+        soulVersion?: number;
+        seed?: number;
+        numRuns?: number;
+        lanes?: number;
+        passed?: number;
+        failed?: number;
+        skipped?: number;
+        counterexample?: NonNullable<StepState['proof']>['counterexample'];
         published?: unknown;
         actions?: { id: string; name: string; ok: boolean }[];
         tables?: {
@@ -104,6 +112,20 @@ export class PgPipeline implements Pipeline {
                   matches: output.reconciliation.matches,
                   lines: output.reconciliation.lines,
                 },
+              }
+            : null,
+        // The prove step's summary; the cases themselves are its proof_case events.
+        proof:
+          step === 'prove' && r?.status === 'done' && typeof output?.numRuns === 'number'
+            ? {
+                soulVersion: output.soulVersion ?? 0,
+                seed: output.seed ?? 0,
+                numRuns: output.numRuns,
+                lanes: output.lanes ?? 1,
+                passed: output.passed ?? 0,
+                failed: output.failed ?? 0,
+                skipped: output.skipped ?? 0,
+                counterexample: output.counterexample ?? null,
               }
             : null,
       };
