@@ -13,7 +13,15 @@ test('Export downloads the reborn app: the app, its Soul and records, Kiro files
   await page.goto(`/raise/${id}?tab=soul`);
   const link = page.getByRole('link', { name: 'Export the reborn app' });
   await expect(link).toBeVisible({ timeout: 30_000 });
-  const [download] = await Promise.all([page.waitForEvent('download'), link.click()]);
+  // The Soul tab can draw itself again as the project's last events arrive, taking the link with
+  // it mid-click; a click that started no download is tried again.
+  let download!: import('@playwright/test').Download;
+  await expect(async () => {
+    [download] = await Promise.all([
+      page.waitForEvent('download', { timeout: 15_000 }),
+      link.click(),
+    ]);
+  }).toPass({ timeout: 90_000 });
   expect(download.suggestedFilename()).toBe('shifa-reborn.zip');
   const chunks: Buffer[] = [];
   for await (const c of (await download.createReadStream())!) chunks.push(c as Buffer);
