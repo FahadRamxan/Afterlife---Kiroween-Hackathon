@@ -11,6 +11,8 @@
 - `packages/oracle/src/old-app.ts`: `emulatorOldApp(emu, { soul, graph })`: Esc out of a screen the graph does not know, `replayPath` to the action's screen, the macro typed step by step (`keySteps` from `@afterlife/emulator`), the data files diffed from before the first key to after the last.
 - `scripts/proof-shifa.ts`: `pnpm proof:shifa`, a ci:local step.
 - `packages/oracle/src/runner.ts`: `proveEquivalence(target, { numRuns, seed, lanes, ... })`, with `OldApp` (an emulator lane) and the Vessel lane.
+- `packages/oracle/src/shrink.ts`: `shrinkFailure(target, failure, { seed })` replays the failing case with fast-check from its seed and path (`fc.check` with `path`), each try from a fresh start (`old.reset()` and a new Vessel), within `SHRINK_TIME_LIMIT_MS` (2 minutes). A case that does not differ from a fresh start is kept as it was (`reproduced: false`).
+- `packages/oracle/src/explain.ts`: `explainDifference(soul, counterexample)`: one sentence, the most telling difference first (the action's own record only one side wrote, then a value on it, then the rest), money in rupees, and the case ("a bill of Rs 5000.06 (PAN500 x 400)").
 - `apps/worker/src/prove-step.ts`: the prove step.
 - `apps/web/components/ProofPanel.tsx`: the Proof tab.
 
@@ -25,7 +27,7 @@
 ## Data Models
 
 - A proof case result: `{ index, actionId, inputs, outcome: 'pass' | 'fail' | 'skip', old?, vessel?, reason? }`.
-- The counterexample: `{ case, old, vessel, explanation, path }`.
+- The counterexample: `{ actionId, inputs, seed, path, old, vessel, differences, explanation, shrinks, tries, reproduced, interrupted }`.
 
 ## Correctness Properties
 

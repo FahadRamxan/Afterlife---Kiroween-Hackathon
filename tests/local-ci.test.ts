@@ -53,6 +53,8 @@ describe('pnpm ci:local (review fix)', () => {
       'pnpm proof:shifa',
     );
     expect(read('scripts/proof-shifa.ts')).toContain('PROOF_CASES ?? 200');
+    // Prompt 69: and shrinks the first known-bug difference on the real app.
+    expect(read('scripts/proof-shifa.ts')).toContain('shrinkFailure(');
   });
   it('runs e2e against the production build, like CI did', () => {
     expect(planSteps({ docker: false }).find((s) => s.name === 'e2e')!.env).toEqual({ CI: '1' });

@@ -7,6 +7,8 @@
 // 2. The known bug: 60 cases (PROOF_BUG_CASES) from the reference Soul, whose expiry check is the
 //    intended one. The proof must find differences, and every one must be a bill with a batch good
 //    until 2000 or later (the manifest's y2k-expiry): the proof catches what it should, and only that.
+// 3. Shrinking (Prompt 69): the first Y2K difference is shrunk on the real app, each try from a fresh
+//    boot, to a one-line bill of a batch good until 2000 or later, and explained in a sentence.
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,6 +16,7 @@ import { HeadlessPool } from '@afterlife/emulator/headless';
 import {
   emulatorOldApp,
   proveEquivalence,
+  shrinkFailure,
   type CaseResult,
   type OldApp,
   type ProofResult,
@@ -50,38 +53,37 @@ const expiry = new Map(
 const y2kLine = (c: CaseResult) =>
   (c.inputs.lines ?? []).some((l) => (expiry.get(l.CODE ?? '') ?? '') >= '20000101');
 
+const targetOf = (pool: HeadlessPool, soul: Soul) => ({
+  soul,
+  records,
+  today: DOS_TIME.slice(0, 10),
+  withOldApp: <R>(work: (old: OldApp) => Promise<R>) =>
+    pool.use(BUNDLE, (emu) => work(emulatorOldApp(emu, { soul: OLD, graph })), {
+      dosTime: DOS_TIME,
+    }),
+});
+
 async function prove(pool: HeadlessPool, soul: Soul, numRuns: number, label: string) {
   const start = Date.now();
   let done = 0;
-  const r = await proveEquivalence(
-    {
-      soul,
-      records,
-      today: DOS_TIME.slice(0, 10),
-      withOldApp: <R>(work: (old: OldApp) => Promise<R>) =>
-        pool.use(BUNDLE, (emu) => work(emulatorOldApp(emu, { soul: OLD, graph })), {
-          dosTime: DOS_TIME,
-        }),
+  const r = await proveEquivalence(targetOf(pool, soul), {
+    numRuns,
+    seed: SEED,
+    lanes: LANES,
+    onCase: (c) => {
+      done++;
+      const what =
+        c.outcome === 'fail'
+          ? `DIFFERENT ${c.reason ?? JSON.stringify(c.differences)}`
+          : c.outcome === 'skip'
+            ? `skipped (${c.reason})`
+            : 'same';
+      console.log(
+        `${label} case ${String(c.index).padStart(3)} lane ${c.lane} ${c.actionId} ` +
+          `${JSON.stringify(c.inputs)}: ${what} (${c.ms} ms) [${done}/${numRuns}]`,
+      );
     },
-    {
-      numRuns,
-      seed: SEED,
-      lanes: LANES,
-      onCase: (c) => {
-        done++;
-        const what =
-          c.outcome === 'fail'
-            ? `DIFFERENT ${c.reason ?? JSON.stringify(c.differences)}`
-            : c.outcome === 'skip'
-              ? `skipped (${c.reason})`
-              : 'same';
-        console.log(
-          `${label} case ${String(c.index).padStart(3)} lane ${c.lane} ${c.actionId} ` +
-            `${JSON.stringify(c.inputs)}: ${what} (${c.ms} ms) [${done}/${numRuns}]`,
-        );
-      },
-    },
-  );
+  });
   const secs = Math.round((Date.now() - start) / 1000);
   console.log(
     `${label}: seed ${r.seed}, ${r.numRuns} cases on ${r.lanes} lanes, ${r.passed} same, ` +
@@ -109,6 +111,21 @@ async function main() {
         );
       else if (fails.length)
         console.log(`y2k: all ${fails.length} differences are bills with a batch good until 2000+`);
+      if (fails[0]) {
+        const start = Date.now();
+        const cx = await shrinkFailure(targetOf(pool, SHIFA_REFERENCE_SOUL), fails[0], {
+          seed: SEED,
+        });
+        const secs = Math.round((Date.now() - start) / 1000);
+        console.log(
+          `shrink: case ${fails[0].index} to ${JSON.stringify(cx.inputs)} in ${cx.shrinks} shrinks, ` +
+            `${cx.tries} tries from a fresh boot, ${secs} s${cx.interrupted ? ' (time limit)' : ''}`,
+        );
+        console.log(`shrink: ${cx.explanation}`);
+        if (!cx.reproduced) problems.push('the Y2K difference did not show from a fresh start');
+        else if ((cx.inputs.lines ?? []).length !== 1 || !y2kLine({ ...fails[0], ...cx }))
+          problems.push(`the Y2K difference shrank to ${JSON.stringify(cx.inputs)}`);
+      }
     }
   } finally {
     await pool.close();
