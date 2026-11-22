@@ -11,7 +11,9 @@
 - `apps/worker/src/certify.ts`: `issueCertificate(db, {...})`: the checks of Requirement 2, then the payload, signed and stored.
 - `apps/worker/src/prove-step.ts`: calls it after the proof; its output says `certificate: { id } | { reason }`.
 - `apps/api/src/certificates.ts`: `GET /.well-known/afterlife-key`, `GET /api/certificates/:id`; `PgCertificateStore`.
-- `apps/web/components/ProofPanel.tsx`: the certificate line.
+- `apps/web/components/ProofPanel.tsx`: the certificate line, with Download and Verify it.
+- `packages/certificate/src/summary.ts`: `certificateLines(payload)` (the certificate in words) and `certificatePdf(cert, url)` (A4, Courier, written by hand like the receipt's PDF; it carries the URL, the public key and the signature).
+- `apps/web/app/verify/[certId]/page.tsx` and `apps/web/components/VerifyCertificate.tsx`: fetch the certificate's file and the published key, verify in the browser, then the paper (`CertificateFrame`), a QR code of the page (`qrcode`, as SVG) and the PDF. Not valid: a blood panel with the reason. An id that is not a UUID keeps the empty state.
 
 ## Components and Interfaces
 

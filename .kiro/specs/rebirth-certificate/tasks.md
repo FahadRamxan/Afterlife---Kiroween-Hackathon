@@ -20,10 +20,10 @@ Prompt 71 is task 1 and 2, Prompt 72 task 3.
     - _Requirements: 2.4_
   - [x] 2.3 Show it on the Proof tab, with an e2e test that verifies the download
     - _Requirements: 2.5_
-- [ ] 3. The verify page
-  - [ ] 3.1 Add /verify/[certId]: browser verification, paper, seal, QR and PDF
+- [x] 3. The verify page
+  - [x] 3.1 Add /verify/[certId]: browser verification, paper, seal, QR and PDF
     - _Requirements: 3.1, 3.2, 3.3_
-  - [ ] 3.2 e2e: a valid certificate and a tampered one
+  - [x] 3.2 e2e: a valid certificate and a tampered one
     - _Requirements: 3.3_
 
 ## Notes

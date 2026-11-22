@@ -22,3 +22,4 @@ export {
   type SigningKey,
   type Verification,
 } from './certificate';
+export { certificateLines, certificatePdf, type CertificateLine } from './summary';

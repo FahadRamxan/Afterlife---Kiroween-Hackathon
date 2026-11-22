@@ -383,7 +383,8 @@
       "certificate": {
         "issued": "Rebirth Certificate issued: signed with the Afterlife key, so anyone can check it.",
         "download": "Download the certificate",
-        "none": "No Rebirth Certificate yet:"
+        "none": "No Rebirth Certificate yet:",
+        "verify": "Verify it"
       }
     }
   },
@@ -470,7 +471,21 @@
   "verify": {
     "title": "Verify a certificate",
     "emptyTitle": "Certificate not found",
-    "emptyBody": "No certificate with id {certId} exists yet."
+    "emptyBody": "No certificate with id {certId} exists yet.",
+    "checking": "Checking the signature in your browser…",
+    "valid": "Valid: signed with the Afterlife key {keyId}, and checked here in your browser.",
+    "invalid": "Not valid.",
+    "reason": {
+      "malformed": "It is not a Rebirth Certificate as it was issued.",
+      "wrong-key": "It is not signed with the Afterlife key.",
+      "bad-signature": "The signature does not match: the certificate was changed."
+    },
+    "unavailable": "The certificate or the Afterlife key could not be fetched. Try again later.",
+    "paperTitle": "Rebirth Certificate",
+    "qr": "QR code of this page",
+    "qrCaption": "Scan to check it again.",
+    "pdf": "Download the PDF",
+    "file": "Download the certificate file"
   },
   "playground": {
     "title": "Judge Playground",

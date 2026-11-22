@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.sw.json"
   },
   "dependencies": {
+    "@afterlife/certificate": "workspace:^",
     "@afterlife/dbf": "workspace:^",
     "@afterlife/emulator": "workspace:^",
     "@afterlife/screen": "workspace:^",
@@ -25,6 +26,7 @@
     "next": "^15",
     "next-intl": "^4.15.1",
     "postcss": "^8.5.33",
+    "qrcode": "^1.5.4",
     "react": "^19",
     "react-dom": "^19",
     "react-markdown": "^10.1.0",
@@ -34,6 +36,7 @@
   },
   "devDependencies": {
     "@types/node": "^22",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "esbuild": "^0.28.2",
