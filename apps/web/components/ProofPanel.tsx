@@ -96,6 +96,10 @@ export function ProofPanel({
           >
             {t('certificate.download')}
           </a>
+          {' · '}
+          <a href={`/verify/${proof.certificate.id}`} className="text-ectoplasm underline">
+            {t('certificate.verify')}
+          </a>
         </p>
       ) : proof?.certificate.reason ? (
         <p data-testid="proof-certificate" className="text-sm text-bone/70">
