@@ -10,6 +10,7 @@ const pending = (step: string): StepState => ({
   reason: null,
   recorded: false,
   finishedAt: null,
+  vessel: null,
 });
 const SIX = ['possess', 'archaeology', 'rebirth', 'undertake', 'prove', 'exorcise'].map(pending);
 const json = (status: number, body: unknown) =>
@@ -20,6 +21,19 @@ describe('getSteps and rerunStep', () => {
     const f = json(200, { projectId: id, steps: SIX });
     expect(await getSteps('https://a', id, f)).toEqual({ ok: true, steps: SIX });
     expect(f).toHaveBeenCalledWith(`https://a/api/projects/${id}/steps`, expect.anything());
+  });
+
+  it('the rebirth step, done, gives the reborn app; an older API without it gives null', async () => {
+    // @spec surgeon#3.1
+    const vessel = { url: `/vessel/${id}`, actions: [{ id: 'save-bill', name: 'Save a bill' }] };
+    const reborn = SIX.map((x) => (x.step === 'rebirth' ? { ...x, status: 'done', vessel } : x));
+    const r = await getSteps('https://a', id, json(200, { projectId: id, steps: reborn }));
+    expect(r.ok && r.steps[2]!.vessel).toEqual(vessel);
+    const old = SIX.map((x) =>
+      Object.fromEntries(Object.entries(x).filter(([k]) => k !== 'vessel')),
+    );
+    const o = await getSteps('https://a', id, json(200, { projectId: id, steps: old }));
+    expect(o.ok && o.steps.every((x) => x.vessel === null)).toBe(true);
   });
 
   it('a step done in a recorded run is marked recorded by its live event (Prompt 53)', () => {

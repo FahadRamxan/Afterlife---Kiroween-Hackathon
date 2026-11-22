@@ -69,7 +69,31 @@ describe('the steps of a project', () => {
       expect((await run()).statusCode).toBe(409);
       const after = (await app.inject({ method: 'GET', url: `/api/projects/${p.id}/steps` })).json()
         .steps;
-      expect(after[2]).toMatchObject({ step: 'rebirth', status: 'queued' });
+      expect(after[2]).toMatchObject({ step: 'rebirth', status: 'queued', vessel: null });
+      // @spec surgeon#3.1 The rebirth step, done: the reborn app at this project's own URL, with
+      // the actions that passed their smoke tests (also when its output is a recorded run's).
+      await t.db
+        .update(pipelineSteps)
+        .set({
+          status: 'done',
+          output: {
+            url: '/vessel/another-project',
+            published: true,
+            actions: [
+              { id: 'save-bill', name: 'Save a bill', ok: true },
+              { id: 'add-customer', name: 'Add a customer', ok: false },
+            ],
+          },
+        })
+        .where(eq(pipelineSteps.step, 'rebirth'));
+      const reborn = (
+        await app.inject({ method: 'GET', url: `/api/projects/${p.id}/steps` })
+      ).json().steps[2];
+      expect(reborn.vessel).toEqual({
+        url: `/vessel/${p.id}`,
+        actions: [{ id: 'save-bill', name: 'Save a bill' }],
+      });
+      expect(steps[0].vessel).toBeNull();
       expect(
         (await app.inject({ method: 'GET', url: `/api/projects/${uuidv7()}/steps` })).statusCode,
       ).toBe(404);

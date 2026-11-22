@@ -51,8 +51,10 @@ describe('startWorker on Postgres', () => {
       if (status === 'skipped') break;
       await new Promise((r) => setTimeout(r, 200));
     }
-    // The Surgeon is not built yet, so the step is skipped (and says so), not done.
+    // The Surgeon has no Soul to work on yet (Prompt 63): skipped, and says so, not done.
     expect(status).toBe('skipped');
+    const [row] = await t.db.select().from(pipelineSteps).where(eq(pipelineSteps.projectId, p!.id));
+    expect(row!.output).toEqual({ reason: 'This project has no Soul yet' });
 
     await Promise.all([worker.stop(), worker.stop()]);
     expect(lines.filter((l) => l === 'afterlife worker stopped')).toHaveLength(1);

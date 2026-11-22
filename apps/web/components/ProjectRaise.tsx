@@ -100,7 +100,11 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
           {t('project.recorded')}
         </p>
       ) : null}
-      <StepsList projectId={project.id} events={live.events} />
+      <StepsList
+        projectId={project.id}
+        events={live.events}
+        {...(app ? { app: { name: app.name, born: app.born, died: app.died } } : {})}
+      />
       <section aria-labelledby="timeline-heading" className="mt-4">
         <h2 id="timeline-heading" className="text-sm font-semibold">
           {t('project.timeline')}

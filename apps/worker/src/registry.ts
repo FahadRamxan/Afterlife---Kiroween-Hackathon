@@ -4,6 +4,7 @@ import type { EventType, JobType } from '@afterlife/db';
 import type { Db } from '@afterlife/db';
 import { entitiesStep } from './entities-step';
 import { graveyardBundle, possessApp, type EmulatorPool } from './possess';
+import { rebirthStep } from './rebirth-step';
 import { scanUpload, uploadBundle } from './scan-upload';
 import type { VirusScanner } from './scanner';
 import { translateSoulStep } from './translate-soul';
@@ -94,7 +95,10 @@ export function defaultRegistry(
           budgetTokens: deps.budgetTokens ?? DEFAULT_TOKEN_BUDGET,
         })
       : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
-    rebirth: notBuiltYet('rebirth', 'Prompt 63'),
+    // The Surgeon compiles the Soul into the reborn app and publishes it (Prompt 63).
+    rebirth: db
+      ? rebirthStep({ db, bundleFor })
+      : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
     undertake: notBuiltYet('undertake', 'Prompt 64'),
     prove: notBuiltYet('prove', 'Prompt 68'),
     exorcise: notBuiltYet('exorcise', 'Prompt 73'),
