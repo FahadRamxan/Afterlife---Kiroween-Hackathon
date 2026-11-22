@@ -3,6 +3,7 @@
 import type { EventType, JobType } from '@afterlife/db';
 import type { Db } from '@afterlife/db';
 import { entitiesStep } from './entities-step';
+import { exorciseStep } from './exorcise-step';
 import { graveyardBundle, possessApp, type EmulatorPool } from './possess';
 import { proveStep } from './prove-step';
 import { rebirthStep } from './rebirth-step';
@@ -122,7 +123,10 @@ export function defaultRegistry(
           key: deps.certKey ?? null,
         })
       : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
-    exorcise: notBuiltYet('exorcise', 'Prompt 73'),
+    // The Exorcist finds the legacy bugs, probing the old app where it must (Prompt 73).
+    exorcise: db
+      ? exorciseStep({ db, bundleFor, ...(deps.pool ? { pool: deps.pool } : {}) })
+      : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
     'twin-replay': notBuiltYet('twin-replay', 'Prompt 77'),
     'voice-change': notBuiltYet('voice-change', 'Prompt 81'),
     'scan-upload':

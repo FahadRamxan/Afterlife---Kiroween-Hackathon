@@ -40,6 +40,27 @@ export const RuleTruth = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('report') }).strict(),
 ]);
 
+/**
+ * A known bug in a form the Exorcist's score can check (Prompt 73): its smell and the field it is
+ * about. Written by our team from the C source; the Crew never reads it.
+ */
+export const BugTruth = z
+  .object({
+    smell: z.enum([
+      'two-digit-year',
+      'numeric-overflow',
+      'negative-allowed',
+      'date-arithmetic',
+      'rounding',
+      'missing-validation',
+      'duplicate-key',
+      'hardcoded-password',
+      'readable-password',
+    ]),
+    target: Target.optional(),
+  })
+  .strict();
+
 const uniqueIds = (items: { id: string }[]) =>
   new Set(items.map((i) => i.id)).size === items.length;
 
@@ -71,7 +92,11 @@ export const GraveyardManifest = z
       .min(1)
       .refine(uniqueIds, 'rule ids must be unique'),
     knownBugs: z
-      .array(z.object({ ...Evidence, severity: z.enum(['low', 'medium', 'high']) }).strict())
+      .array(
+        z
+          .object({ ...Evidence, severity: z.enum(['low', 'medium', 'high']), truth: BugTruth })
+          .strict(),
+      )
       .min(1)
       .refine(uniqueIds, 'bug ids must be unique'),
   })

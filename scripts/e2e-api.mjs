@@ -123,7 +123,9 @@ const worker = spawn('pnpm', ['--filter', '@afterlife/worker', 'start'], {
   env: {
     ...process.env,
     DATABASE_URL: url,
-    JSDOS_POOL_SIZE: '1',
+    // Two emulators: the certificate tests prove on the real app for a minute or two, and the
+    // other raises must not wait behind them.
+    JSDOS_POOL_SIZE: '2',
     VIRUS_SCANNER: 'eicar-test',
     POSSESS_MAX_ACTIONS: '2',
     // A short proof on the one emulator (a case is about 5 s); recorded runs keep their 50.

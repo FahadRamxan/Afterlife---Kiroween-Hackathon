@@ -1,6 +1,6 @@
 {
   "app": "barkat",
-  "recordedAt": "2026-11-22T12:38:43.311Z",
+  "recordedAt": "2026-11-22T21:15:21.654Z",
   "source": "pnpm pipeline:record",
   "steps": [
     {
@@ -326,7 +326,7 @@
             "level": "info",
             "message": "Booting Barkat Kiryana Ledger in headless js-dos"
           },
-          "afterMs": 11
+          "afterMs": 6
         },
         {
           "type": "screen",
@@ -419,7 +419,7 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 846
+          "afterMs": 700
         },
         {
           "type": "log",
@@ -427,7 +427,7 @@
             "level": "info",
             "message": "First screen: BARKAT KIRYANA LEDGER             MAIN MENU                           20/11/96"
           },
-          "afterMs": 848
+          "afterMs": 702
         },
         {
           "type": "log",
@@ -435,12 +435,12 @@
             "level": "info",
             "message": "Exploring. No language model is set up, so field values come from the data files."
           },
-          "afterMs": 850
+          "afterMs": 703
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-3d59-79f4-b43c-261e8e8c626f",
+            "id": "01a2051c-27f6-7d97-ae3a-a775540a7efe",
             "to": "SALE ON CREDIT",
             "from": "MAIN MENU",
             "keys": "S",
@@ -458,7 +458,7 @@
             "fingerprint": "fp_0976e3f7a144790c",
             "fromFingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 1473
+          "afterMs": 1325
         },
         {
           "type": "screen",
@@ -551,7 +551,7 @@
             ],
             "fingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 1518
+          "afterMs": 1373
         },
         {
           "type": "log",
@@ -559,12 +559,12 @@
             "level": "info",
             "message": "New screen: SALE ON CREDIT"
           },
-          "afterMs": 1520
+          "afterMs": 1375
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-417e-72d8-aa18-a032a8d2729c",
+            "id": "01a2051c-2be0-7c07-88b5-51b9163f3091",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "P001{Enter}",
@@ -582,7 +582,7 @@
             "fingerprint": "fp_5b3ff173a2018705",
             "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 2508
+          "afterMs": 2291
         },
         {
           "type": "screen",
@@ -598,7 +598,7 @@
                 "11f1f1f1f1f11111111111f11111f1f1f1f1f1f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "11f1f1f1f1f1f1f1111111f1111111f1f1f1f1f1f1f1f1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f1f111f1f111f11107777777777777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f1f111f1f111f11177777777777777777711111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "11f1f1f1f1111111111111f11177777777777777777777777777777777777777771111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -643,10 +643,7 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e65787420204573633d4261636b20746f206d656e75202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020"
               ],
-              "cursor": {
-                "col": 13,
-                "row": 8
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -678,7 +675,7 @@
             ],
             "fingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 2572
+          "afterMs": 2338
         },
         {
           "type": "log",
@@ -686,12 +683,12 @@
             "level": "info",
             "message": "New screen: SALE ON CREDIT"
           },
-          "afterMs": 2574
+          "afterMs": 2340
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-4664-7979-b827-ec09cae62c90",
+            "id": "01a2051c-30bf-7c85-a4a3-76fc3d9a9f78",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "100.00{Enter}",
@@ -709,7 +706,7 @@
             "fingerprint": "fp_5b3ff173a2018705",
             "fromFingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 3730
+          "afterMs": 3492
         },
         {
           "type": "screen",
@@ -802,12 +799,12 @@
             ],
             "fingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 3772
+          "afterMs": 3536
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-4a94-7506-970a-1fb0b4576baf",
+            "id": "01a2051c-34e3-7450-b336-a3632c19cb2d",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "TEST{Enter}",
@@ -825,7 +822,7 @@
             "fingerprint": "fp_5b3ff173a2018705",
             "fromFingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 4775
+          "afterMs": 4514
         },
         {
           "type": "screen",
@@ -918,12 +915,12 @@
             ],
             "fingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 4816
+          "afterMs": 4558
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-4d0d-7c4b-8958-145c87512b2e",
+            "id": "01a2051c-370a-7a99-9900-c0e8042c6fe9",
             "to": "SALE ON CREDIT",
             "diff": {
               "tables": {
@@ -996,7 +993,7 @@
             "fingerprint": "fp_5b3ff173a2018705",
             "fromFingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 5394
+          "afterMs": 5045
         },
         {
           "type": "screen",
@@ -1089,7 +1086,7 @@
             ],
             "fingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 5437
+          "afterMs": 5091
         },
         {
           "type": "log",
@@ -1097,12 +1094,12 @@
             "level": "info",
             "message": "Y: SAVE SALE OF RS 100.00 FOR P001? (Y/N) changed LEDGER.DBF, PARTY.DBF"
           },
-          "afterMs": 5439
+          "afterMs": 5093
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-4f89-7def-bd94-074e7e52c3a9",
+            "id": "01a2051c-3991-7852-9f82-e8f3eb9b60a5",
             "to": "MAIN MENU",
             "from": "SALE ON CREDIT",
             "keys": "{Enter}",
@@ -1120,7 +1117,7 @@
             "fingerprint": "fp_bd61968c80f19a0d",
             "fromFingerprint": "fp_5b3ff173a2018705"
           },
-          "afterMs": 6010
+          "afterMs": 5669
         },
         {
           "type": "screen",
@@ -1213,12 +1210,12 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 6051
+          "afterMs": 5710
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-51a8-7201-80ba-035731afd7ec",
+            "id": "01a2051c-3bfd-7122-abab-30f9a076cab3",
             "to": "PAYMENT RECEIVED",
             "from": "MAIN MENU",
             "keys": "P",
@@ -1236,7 +1233,7 @@
             "fingerprint": "fp_17a0efac43955524",
             "fromFingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 6538
+          "afterMs": 6771
         },
         {
           "type": "screen",
@@ -1246,7 +1243,7 @@
               "attrs": [
                 "33f3f3f3f3f3f333f3f3f3f3f3f3f333f3f3f3f3f3f333333333333333333333f3f3f3f3f3f3f333f3f3f3f3f3f3f3f33333333333333333333333333333333333333333333333f3f3f3f3f3f3f3f333",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f111f1f11111f11177777777111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f111f1f11111f11107777777111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -1297,7 +1294,10 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e65787420204573633d4261636b20746f206d656e75202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020"
               ],
-              "cursor": null,
+              "cursor": {
+                "col": 13,
+                "row": 2
+              },
               "cellWidth": 8
             },
             "text": [
@@ -1329,7 +1329,7 @@
             ],
             "fingerprint": "fp_17a0efac43955524"
           },
-          "afterMs": 6582
+          "afterMs": 6819
         },
         {
           "type": "log",
@@ -1337,12 +1337,12 @@
             "level": "info",
             "message": "New screen: PAYMENT RECEIVED"
           },
-          "afterMs": 6585
+          "afterMs": 6821
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-558e-7a3a-93ce-655e9fcc8dc7",
+            "id": "01a2051c-4015-732a-b6d2-c637700132aa",
             "to": "PAYMENT RECEIVED",
             "from": "PAYMENT RECEIVED",
             "keys": "P001{Enter}",
@@ -1360,7 +1360,7 @@
             "fingerprint": "fp_a306c692e7fc1878",
             "fromFingerprint": "fp_17a0efac43955524"
           },
-          "afterMs": 7510
+          "afterMs": 8397
         },
         {
           "type": "screen",
@@ -1453,7 +1453,7 @@
             ],
             "fingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 7552
+          "afterMs": 8442
         },
         {
           "type": "log",
@@ -1461,12 +1461,12 @@
             "level": "info",
             "message": "New screen: PAYMENT RECEIVED"
           },
-          "afterMs": 7555
+          "afterMs": 8445
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-5a55-74ba-b357-93d208947a03",
+            "id": "01a2051c-4508-796d-b023-1faaee7e8018",
             "to": "PAYMENT RECEIVED",
             "from": "PAYMENT RECEIVED",
             "keys": "100.00{Enter}",
@@ -1484,7 +1484,7 @@
             "fingerprint": "fp_a306c692e7fc1878",
             "fromFingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 8702
+          "afterMs": 9620
         },
         {
           "type": "screen",
@@ -1580,12 +1580,12 @@
             ],
             "fingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 8743
+          "afterMs": 9665
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-5e3d-7635-900a-b79e71128dcf",
+            "id": "01a2051c-4932-7163-8f6a-d68a31e37d27",
             "to": "PAYMENT RECEIVED",
             "from": "PAYMENT RECEIVED",
             "keys": "TEST{Enter}",
@@ -1603,7 +1603,7 @@
             "fingerprint": "fp_a306c692e7fc1878",
             "fromFingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 9676
+          "afterMs": 10647
         },
         {
           "type": "screen",
@@ -1696,12 +1696,12 @@
             ],
             "fingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 9717
+          "afterMs": 10689
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-60c2-71b6-9737-f9d103cafdcc",
+            "id": "01a2051c-4bad-7715-ab7b-04385266cec3",
             "to": "PAYMENT RECEIVED",
             "diff": {
               "tables": {
@@ -1779,7 +1779,7 @@
             "fingerprint": "fp_a306c692e7fc1878",
             "fromFingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 10303
+          "afterMs": 11261
         },
         {
           "type": "screen",
@@ -1872,7 +1872,7 @@
             ],
             "fingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 10344
+          "afterMs": 11307
         },
         {
           "type": "log",
@@ -1880,12 +1880,12 @@
             "level": "info",
             "message": "Y: SAVE PAYMENT OF RS 100.00 FOR P001? (Y/N) changed LEDGER.DBF, PARTY.DBF"
           },
-          "afterMs": 10346
+          "afterMs": 11309
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-633c-746a-981b-80f3c6fdb5ec",
+            "id": "01a2051c-4e2f-7af9-b0d1-ff0c45631237",
             "to": "MAIN MENU",
             "from": "PAYMENT RECEIVED",
             "keys": "{Enter}",
@@ -1903,7 +1903,7 @@
             "fingerprint": "fp_bd61968c80f19a0d",
             "fromFingerprint": "fp_a306c692e7fc1878"
           },
-          "afterMs": 10921
+          "afterMs": 11879
         },
         {
           "type": "screen",
@@ -1996,12 +1996,12 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 10962
+          "afterMs": 11922
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-65c8-7bc3-ad02-97e7418290d7",
+            "id": "01a2051c-50a5-74b6-ada5-9f2c27d10404",
             "to": "PARTY LEDGER",
             "from": "MAIN MENU",
             "keys": "L",
@@ -2019,7 +2019,7 @@
             "fingerprint": "fp_43490b7437005d7e",
             "fromFingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 11555
+          "afterMs": 12486
         },
         {
           "type": "screen",
@@ -2115,7 +2115,7 @@
             ],
             "fingerprint": "fp_43490b7437005d7e"
           },
-          "afterMs": 11602
+          "afterMs": 12527
         },
         {
           "type": "log",
@@ -2123,12 +2123,12 @@
             "level": "info",
             "message": "New screen: PARTY LEDGER"
           },
-          "afterMs": 11604
+          "afterMs": 12530
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-6a08-78e1-bee2-c2d9c0cd716e",
+            "id": "01a2051c-54c9-73c7-ae71-47d5db4175ee",
             "to": "PARTY LEDGER",
             "from": "PARTY LEDGER",
             "keys": "P001{Enter}",
@@ -2146,7 +2146,7 @@
             "fingerprint": "fp_c9eeceee7f1768fe",
             "fromFingerprint": "fp_43490b7437005d7e"
           },
-          "afterMs": 12617
+          "afterMs": 13508
         },
         {
           "type": "screen",
@@ -2239,7 +2239,7 @@
             ],
             "fingerprint": "fp_c9eeceee7f1768fe"
           },
-          "afterMs": 12660
+          "afterMs": 13553
         },
         {
           "type": "log",
@@ -2247,12 +2247,12 @@
             "level": "info",
             "message": "New screen: PARTY LEDGER"
           },
-          "afterMs": 12662
+          "afterMs": 13555
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-6c94-70f4-8cbe-71a357b3196d",
+            "id": "01a2051c-5745-74ac-94fd-f78eb542bfc2",
             "to": "MAIN MENU",
             "from": "PARTY LEDGER",
             "keys": "{Esc}",
@@ -2270,7 +2270,7 @@
             "fingerprint": "fp_bd61968c80f19a0d",
             "fromFingerprint": "fp_c9eeceee7f1768fe"
           },
-          "afterMs": 13253
+          "afterMs": 14122
         },
         {
           "type": "screen",
@@ -2363,12 +2363,12 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 13297
+          "afterMs": 14166
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-6ee9-7a4a-8a2d-78b37f2c783f",
+            "id": "01a2051c-5975-7ec0-9cb5-ac4782a45231",
             "to": "BALANCES",
             "from": "MAIN MENU",
             "keys": "B",
@@ -2386,7 +2386,7 @@
             "fingerprint": "fp_c71623c39d41fe7c",
             "fromFingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 13835
+          "afterMs": 14661
         },
         {
           "type": "screen",
@@ -2479,7 +2479,7 @@
             ],
             "fingerprint": "fp_c71623c39d41fe7c"
           },
-          "afterMs": 13889
+          "afterMs": 14710
         },
         {
           "type": "log",
@@ -2487,12 +2487,12 @@
             "level": "info",
             "message": "New screen: BALANCES"
           },
-          "afterMs": 13891
+          "afterMs": 14712
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-717b-75c4-bc4d-b0d40e1c672a",
+            "id": "01a2051c-5c06-7d53-8bf2-2e1546f77248",
             "to": "BALANCES",
             "from": "BALANCES",
             "keys": "{PgDn}",
@@ -2510,7 +2510,7 @@
             "fingerprint": "fp_9657f1420023aa75",
             "fromFingerprint": "fp_c71623c39d41fe7c"
           },
-          "afterMs": 14481
+          "afterMs": 15296
         },
         {
           "type": "screen",
@@ -2603,7 +2603,7 @@
             ],
             "fingerprint": "fp_9657f1420023aa75"
           },
-          "afterMs": 14525
+          "afterMs": 15343
         },
         {
           "type": "log",
@@ -2611,12 +2611,12 @@
             "level": "info",
             "message": "New screen: BALANCES"
           },
-          "afterMs": 14527
+          "afterMs": 15345
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-73ff-75c8-bf9b-f69b34afa211",
+            "id": "01a2051c-5e8f-78b2-b5b0-07c4c0bf26eb",
             "to": "BALANCES",
             "from": "BALANCES",
             "keys": "{PgDn}",
@@ -2634,12 +2634,12 @@
             "fingerprint": "fp_9657f1420023aa75",
             "fromFingerprint": "fp_9657f1420023aa75"
           },
-          "afterMs": 15108
+          "afterMs": 15920
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-7614-75be-a6ff-1cbc81db552b",
+            "id": "01a2051c-60ea-7dc6-9d2d-d4d8bbf4d53c",
             "to": "BALANCES",
             "from": "BALANCES",
             "keys": "{PgUp}",
@@ -2657,7 +2657,7 @@
             "fingerprint": "fp_c71623c39d41fe7c",
             "fromFingerprint": "fp_9657f1420023aa75"
           },
-          "afterMs": 15627
+          "afterMs": 16502
         },
         {
           "type": "screen",
@@ -2750,12 +2750,12 @@
             ],
             "fingerprint": "fp_c71623c39d41fe7c"
           },
-          "afterMs": 15670
+          "afterMs": 16550
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-785a-7bfd-a334-d9f31324da6a",
+            "id": "01a2051c-638b-78b3-8044-2ab37443a1bd",
             "to": "BALANCES",
             "from": "BALANCES",
             "keys": "{PgUp}",
@@ -2773,12 +2773,12 @@
             "fingerprint": "fp_c71623c39d41fe7c",
             "fromFingerprint": "fp_c71623c39d41fe7c"
           },
-          "afterMs": 16196
+          "afterMs": 17150
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-7ac1-788d-b650-caee27bbf153",
+            "id": "01a2051c-65e2-7d41-b3b5-acf101b7c51c",
             "to": "MAIN MENU",
             "from": "BALANCES",
             "keys": "{Esc}",
@@ -2796,7 +2796,7 @@
             "fingerprint": "fp_bd61968c80f19a0d",
             "fromFingerprint": "fp_c71623c39d41fe7c"
           },
-          "afterMs": 16799
+          "afterMs": 17727
         },
         {
           "type": "screen",
@@ -2889,12 +2889,12 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 16840
+          "afterMs": 17768
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-7cf0-7ac9-bee6-88fd6965ee49",
+            "id": "01a2051c-6871-72e1-9558-260037149276",
             "to": "REMINDERS",
             "from": "MAIN MENU",
             "keys": "R",
@@ -2912,7 +2912,7 @@
             "fingerprint": "fp_c696bca7c4790f5e",
             "fromFingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 17343
+          "afterMs": 18359
         },
         {
           "type": "screen",
@@ -3005,7 +3005,7 @@
             ],
             "fingerprint": "fp_c696bca7c4790f5e"
           },
-          "afterMs": 17388
+          "afterMs": 18406
         },
         {
           "type": "log",
@@ -3013,12 +3013,12 @@
             "level": "info",
             "message": "New screen: REMINDERS"
           },
-          "afterMs": 17390
+          "afterMs": 18409
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-7f78-770d-a5ea-327061570200",
+            "id": "01a2051c-6b12-7391-b5b4-2d52f398d63d",
             "to": "REMINDERS",
             "from": "REMINDERS",
             "keys": "{PgDn}",
@@ -3036,7 +3036,7 @@
             "fingerprint": "fp_16f40975009cbcc0",
             "fromFingerprint": "fp_c696bca7c4790f5e"
           },
-          "afterMs": 17975
+          "afterMs": 19011
         },
         {
           "type": "screen",
@@ -3129,7 +3129,7 @@
             ],
             "fingerprint": "fp_16f40975009cbcc0"
           },
-          "afterMs": 18016
+          "afterMs": 19057
         },
         {
           "type": "log",
@@ -3137,12 +3137,12 @@
             "level": "info",
             "message": "New screen: REMINDERS"
           },
-          "afterMs": 18018
+          "afterMs": 19059
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-81f0-7365-9a84-59f12c9a7e71",
+            "id": "01a2051c-6da5-7092-b136-8be8ff9e3bb1",
             "to": "REMINDERS",
             "from": "REMINDERS",
             "keys": "{PgDn}",
@@ -3160,12 +3160,12 @@
             "fingerprint": "fp_16f40975009cbcc0",
             "fromFingerprint": "fp_16f40975009cbcc0"
           },
-          "afterMs": 18592
+          "afterMs": 19642
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-83fa-7791-8713-ea832ba3ee2b",
+            "id": "01a2051c-7002-79f4-9a5f-bf192f22f1d6",
             "to": "REMINDERS",
             "from": "REMINDERS",
             "keys": "{PgUp}",
@@ -3183,7 +3183,7 @@
             "fingerprint": "fp_c696bca7c4790f5e",
             "fromFingerprint": "fp_16f40975009cbcc0"
           },
-          "afterMs": 19104
+          "afterMs": 20225
         },
         {
           "type": "screen",
@@ -3276,12 +3276,12 @@
             ],
             "fingerprint": "fp_c696bca7c4790f5e"
           },
-          "afterMs": 19151
+          "afterMs": 20275
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-863d-7cc6-ae54-ae33ba714250",
+            "id": "01a2051c-7298-7209-b4b0-278ce56089c8",
             "to": "REMINDERS",
             "from": "REMINDERS",
             "keys": "{PgUp}",
@@ -3299,12 +3299,12 @@
             "fingerprint": "fp_c696bca7c4790f5e",
             "fromFingerprint": "fp_c696bca7c4790f5e"
           },
-          "afterMs": 19668
+          "afterMs": 20865
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-88a1-75e4-aa87-7cb9d03f28ab",
+            "id": "01a2051c-74eb-7768-bb73-c8bbbf63e287",
             "to": "MAIN MENU",
             "from": "REMINDERS",
             "keys": "{Esc}",
@@ -3322,7 +3322,7 @@
             "fingerprint": "fp_bd61968c80f19a0d",
             "fromFingerprint": "fp_c696bca7c4790f5e"
           },
-          "afterMs": 21028
+          "afterMs": 21436
         },
         {
           "type": "screen",
@@ -3415,12 +3415,12 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 21075
+          "afterMs": 21478
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-8b19-7bf2-903e-7484fff69610",
+            "id": "01a2051c-7762-76af-a2ef-4c8472b46439",
             "to": "SALE ON CREDIT",
             "from": "MAIN MENU",
             "keys": "S",
@@ -3438,7 +3438,7 @@
             "fingerprint": "fp_0976e3f7a144790c",
             "fromFingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 21647
+          "afterMs": 22046
         },
         {
           "type": "screen",
@@ -3448,7 +3448,7 @@
               "attrs": [
                 "33f3f3f3f3f3f333f3f3f3f3f3f3f333f3f3f3f3f3f33333333333333333333333f3f3f3f333f3f333f3f3f3f3f3f3333333333333333333333333333333333333333333333333f3f3f3f3f3f3f3f333",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
-                "11f1f1f1f1f111f1f11111f11177777777111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
+                "11f1f1f1f1f111f1f11111f11107777777111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
                 "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111",
@@ -3499,7 +3499,10 @@
                 "2020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e65787420204573633d4261636b20746f206d656e75202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020"
               ],
-              "cursor": null,
+              "cursor": {
+                "col": 13,
+                "row": 2
+              },
               "cellWidth": 8
             },
             "text": [
@@ -3531,12 +3534,12 @@
             ],
             "fingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 21686
+          "afterMs": 22091
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-8d9c-72bc-93be-49f726539e89",
+            "id": "01a2051c-79de-7bd7-8f5b-4ca5ff447f7e",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "{Enter}",
@@ -3560,7 +3563,7 @@
             "fingerprint": "fp_0976e3f7a144790c",
             "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 22279
+          "afterMs": 22660
         },
         {
           "type": "screen",
@@ -3656,7 +3659,7 @@
             ],
             "fingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 22321
+          "afterMs": 22702
         },
         {
           "type": "log",
@@ -3664,12 +3667,12 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 22323
+          "afterMs": 22704
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-91ca-7034-9067-af7f7fd35ec8",
+            "id": "01a2051c-7dfa-7a0f-a64f-dd0206855aa9",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "Z999{Enter}",
@@ -3693,7 +3696,7 @@
             "fingerprint": "fp_0976e3f7a144790c",
             "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 23327
+          "afterMs": 23672
         },
         {
           "type": "screen",
@@ -3754,10 +3757,7 @@
                 "20205041525459204e4f5420464f554e44202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020",
                 "20456e7465723d4e65787420204573633d4261636b20746f206d656e75202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020202020"
               ],
-              "cursor": {
-                "col": 16,
-                "row": 2
-              },
+              "cursor": null,
               "cellWidth": 8
             },
             "text": [
@@ -3789,7 +3789,7 @@
             ],
             "fingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 23369
+          "afterMs": 23714
         },
         {
           "type": "log",
@@ -3797,12 +3797,12 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 23371
+          "afterMs": 23718
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-96e6-76c6-bc5c-9ee78bea397d",
+            "id": "01a2051c-82d3-797f-8921-8d6e16af5220",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "100.00{Enter}",
@@ -3826,7 +3826,7 @@
             "fingerprint": "fp_0976e3f7a144790c",
             "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 24613
+          "afterMs": 24867
         },
         {
           "type": "log",
@@ -3834,12 +3834,12 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 24615
+          "afterMs": 24869
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-9aeb-7cbd-ae68-709cc8082ed1",
+            "id": "01a2051c-86b2-7b7e-a29f-28944fc5588e",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "P002{Enter}",
@@ -3863,7 +3863,7 @@
             "fingerprint": "fp_0976e3f7a144790c",
             "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 25621
+          "afterMs": 25822
         },
         {
           "type": "log",
@@ -3871,12 +3871,12 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 25622
+          "afterMs": 25824
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-9ef1-7bcb-b833-9a46e72352c0",
+            "id": "01a2051c-8aa2-7746-a17d-0cb5d9d63311",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "P001{Enter}",
@@ -3900,7 +3900,7 @@
             "fingerprint": "fp_0976e3f7a144790c",
             "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 26629
+          "afterMs": 26793
         },
         {
           "type": "log",
@@ -3908,91 +3908,17 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 26632
+          "afterMs": 26797
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-a2e4-7fce-8148-5b4c520ecedf",
-            "to": "SALE ON CREDIT",
-            "from": "SALE ON CREDIT",
-            "keys": "0.00{Enter}",
-            "kind": "explore",
-            "step": 34,
-            "label": "Amount Rs = 0.00 (zero)",
-            "saves": 2,
-            "errors": ["PARTY NOT FOUND"],
-            "guided": 0,
-            "titles": 6,
-            "changed": [],
-            "refused": [
-              {
-                "step": 29,
-                "text": "PARTY NOT FOUND",
-                "label": "Enter=Next"
-              }
-            ],
-            "screens": 11,
-            "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c",
-            "fromFingerprint": "fp_0976e3f7a144790c"
-          },
-          "afterMs": 27622
-        },
-        {
-          "type": "log",
-          "payload": {
-            "level": "info",
-            "message": "The app said: PARTY NOT FOUND"
-          },
-          "afterMs": 27623
-        },
-        {
-          "type": "observation",
-          "payload": {
-            "id": "01a20343-a745-71aa-b189-c004a9b57193",
-            "to": "SALE ON CREDIT",
-            "from": "SALE ON CREDIT",
-            "keys": "-1.00{Enter}",
-            "kind": "explore",
-            "step": 35,
-            "label": "Amount Rs = -1.00 (negative)",
-            "saves": 2,
-            "errors": ["PARTY NOT FOUND"],
-            "guided": 0,
-            "titles": 6,
-            "changed": [],
-            "refused": [
-              {
-                "step": 29,
-                "text": "PARTY NOT FOUND",
-                "label": "Enter=Next"
-              }
-            ],
-            "screens": 11,
-            "newScreen": false,
-            "fingerprint": "fp_0976e3f7a144790c",
-            "fromFingerprint": "fp_0976e3f7a144790c"
-          },
-          "afterMs": 28722
-        },
-        {
-          "type": "log",
-          "payload": {
-            "level": "info",
-            "message": "The app said: PARTY NOT FOUND"
-          },
-          "afterMs": 28724
-        },
-        {
-          "type": "observation",
-          "payload": {
-            "id": "01a20343-ab41-7325-8f67-54c1e60adf18",
+            "id": "01a2051c-8e87-7610-8842-344fc281d7ef",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "P001{Enter}",
             "kind": "walk",
-            "step": 36,
+            "step": 34,
             "label": "walk: P001{Enter}",
             "saves": 2,
             "errors": ["PARTY NOT FOUND"],
@@ -4011,7 +3937,7 @@
             "fingerprint": "fp_0976e3f7a144790c",
             "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 29712
+          "afterMs": 27753
         },
         {
           "type": "log",
@@ -4019,12 +3945,86 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 29714
+          "afterMs": 27757
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-af52-79e8-b2cf-9728a9bb603b",
+            "id": "01a2051c-9273-72fc-92fb-752efcfef3c3",
+            "to": "SALE ON CREDIT",
+            "from": "SALE ON CREDIT",
+            "keys": "0.00{Enter}",
+            "kind": "explore",
+            "step": 35,
+            "label": "Amount Rs = 0.00 (zero)",
+            "saves": 2,
+            "errors": ["PARTY NOT FOUND"],
+            "guided": 0,
+            "titles": 6,
+            "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
+            "screens": 11,
+            "newScreen": false,
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_0976e3f7a144790c"
+          },
+          "afterMs": 28721
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "info",
+            "message": "The app said: PARTY NOT FOUND"
+          },
+          "afterMs": 28724
+        },
+        {
+          "type": "observation",
+          "payload": {
+            "id": "01a2051c-96cb-7b7f-a8da-ea39e9f38d8d",
+            "to": "SALE ON CREDIT",
+            "from": "SALE ON CREDIT",
+            "keys": "-1.00{Enter}",
+            "kind": "explore",
+            "step": 36,
+            "label": "Amount Rs = -1.00 (negative)",
+            "saves": 2,
+            "errors": ["PARTY NOT FOUND"],
+            "guided": 0,
+            "titles": 6,
+            "changed": [],
+            "refused": [
+              {
+                "step": 29,
+                "text": "PARTY NOT FOUND",
+                "label": "Enter=Next"
+              }
+            ],
+            "screens": 11,
+            "newScreen": false,
+            "fingerprint": "fp_0976e3f7a144790c",
+            "fromFingerprint": "fp_0976e3f7a144790c"
+          },
+          "afterMs": 29792
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "info",
+            "message": "The app said: PARTY NOT FOUND"
+          },
+          "afterMs": 29793
+        },
+        {
+          "type": "observation",
+          "payload": {
+            "id": "01a2051c-9ab6-71cf-bea1-3dcd132c701f",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "P001{Enter}",
@@ -4048,7 +4048,7 @@
             "fingerprint": "fp_0976e3f7a144790c",
             "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 30717
+          "afterMs": 30758
         },
         {
           "type": "log",
@@ -4056,12 +4056,12 @@
             "level": "info",
             "message": "The app said: PARTY NOT FOUND"
           },
-          "afterMs": 30718
+          "afterMs": 30762
         },
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-b373-755d-bbd5-f74730944461",
+            "id": "01a2051c-9eaf-7a2c-a21b-64bce8525399",
             "to": "SALE ON CREDIT",
             "from": "SALE ON CREDIT",
             "keys": "P001{Enter}",
@@ -4085,7 +4085,7 @@
             "fingerprint": "fp_0976e3f7a144790c",
             "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 31739
+          "afterMs": 31740
         },
         {
           "type": "log",
@@ -4098,7 +4098,7 @@
         {
           "type": "observation",
           "payload": {
-            "id": "01a20343-b5c0-7a9a-8b8a-62747ad89c78",
+            "id": "01a2051c-a10a-791a-84dd-7cbfc5556b75",
             "to": "MAIN MENU",
             "from": "SALE ON CREDIT",
             "keys": "{Esc}",
@@ -4122,7 +4122,7 @@
             "fingerprint": "fp_bd61968c80f19a0d",
             "fromFingerprint": "fp_0976e3f7a144790c"
           },
-          "afterMs": 32309
+          "afterMs": 32320
         },
         {
           "type": "screen",
@@ -4215,7 +4215,7 @@
             ],
             "fingerprint": "fp_bd61968c80f19a0d"
           },
-          "afterMs": 32350
+          "afterMs": 32364
         },
         {
           "type": "log",
@@ -4223,7 +4223,7 @@
             "level": "info",
             "message": "Possession ended (explored): 6 screens (11 screen states), 39 actions, 2 that changed data"
           },
-          "afterMs": 32366
+          "afterMs": 32379
         }
       ]
     },
@@ -4249,7 +4249,7 @@
             "level": "info",
             "message": "LEDGER.DBF: key ENTRY, counter ENTRY n+1, PARTY_ID refers to party"
           },
-          "afterMs": 12
+          "afterMs": 11
         },
         {
           "type": "log",
@@ -4257,7 +4257,7 @@
             "level": "info",
             "message": "PARTY.DBF: key PARTY_ID"
           },
-          "afterMs": 14
+          "afterMs": 12
         },
         {
           "type": "log",
@@ -4265,7 +4265,7 @@
             "level": "info",
             "message": "Action \"Sale on credit\" on fp_0976e3f7a144790c: insert ledger, update party, keys {@PARTY_ID}{Enter}{@AMOUNT}{Enter}{@NOTE}{Enter}Y"
           },
-          "afterMs": 23
+          "afterMs": 17
         },
         {
           "type": "log",
@@ -4273,7 +4273,7 @@
             "level": "info",
             "message": "Action \"Payment received\" on fp_17a0efac43955524: insert ledger, update party, keys {@PARTY_ID}{Enter}{@AMOUNT}{Enter}{@NOTE}{Enter}Y"
           },
-          "afterMs": 27
+          "afterMs": 19
         },
         {
           "type": "log",
@@ -4281,7 +4281,7 @@
             "level": "warn",
             "message": "No language model is set up on this worker (LLM_PROVIDER=bedrock, with AWS credentials): the rules are found among short expressions over the fields, each checked against every observation"
           },
-          "afterMs": 30
+          "afterMs": 22
         },
         {
           "type": "rule_found",
@@ -4296,7 +4296,7 @@
             "expression": "today",
             "observations": 2
           },
-          "afterMs": 45
+          "afterMs": 33
         },
         {
           "type": "log",
@@ -4304,7 +4304,7 @@
             "level": "info",
             "message": "ledger.tx_date = today: explains all 2 values in 2 observations (confidence 50%)"
           },
-          "afterMs": 46
+          "afterMs": 34
         },
         {
           "type": "rule_found",
@@ -4319,7 +4319,7 @@
             "expression": "today",
             "observations": 1
           },
-          "afterMs": 47
+          "afterMs": 36
         },
         {
           "type": "log",
@@ -4327,7 +4327,7 @@
             "level": "info",
             "message": "party.last_pay = today: explains all 1 values in 1 observations (confidence 33%)"
           },
-          "afterMs": 48
+          "afterMs": 37
         },
         {
           "type": "rule_found",
@@ -4342,7 +4342,7 @@
             "expression": "ledger.balance",
             "observations": 2
           },
-          "afterMs": 49
+          "afterMs": 38
         },
         {
           "type": "log",
@@ -4350,7 +4350,7 @@
             "level": "info",
             "message": "party.balance = ledger.balance: explains all 2 values in 2 observations (confidence 50%)"
           },
-          "afterMs": 51
+          "afterMs": 39
         },
         {
           "type": "log",
@@ -4358,7 +4358,7 @@
             "level": "warn",
             "message": "ledger.amount: no rule explains all 2 values (of 35 candidates)"
           },
-          "afterMs": 51
+          "afterMs": 40
         },
         {
           "type": "log",
@@ -4366,7 +4366,7 @@
             "level": "warn",
             "message": "ledger.balance: 1 rules fit its one observation, so none is kept yet"
           },
-          "afterMs": 53
+          "afterMs": 42
         },
         {
           "type": "soul_updated",
@@ -4383,7 +4383,7 @@
             "foreignKeys": 1,
             "unexplained": ["ledger.amount", "ledger.balance"]
           },
-          "afterMs": 61
+          "afterMs": 50
         }
       ]
     },
@@ -4391,7 +4391,7 @@
       "step": "rebirth",
       "status": "done",
       "output": {
-        "url": "/vessel/01a20343-3599-7722-9220-0abd3e098915",
+        "url": "/vessel/01a2051c-21f7-7d1e-93ab-99030623ae78",
         "rules": {
           "failed": 0,
           "compiled": 3
@@ -4435,7 +4435,7 @@
             "id": "barkat",
             "name": "Barkat Kiryana Ledger"
           },
-          "url": "/vessel/01a20343-3599-7722-9220-0abd3e098915",
+          "url": "/vessel/01a2051c-21f7-7d1e-93ab-99030623ae78",
           "actions": [
             {
               "id": "sale-on-credit",
@@ -4505,7 +4505,7 @@
             "level": "info",
             "message": "Compiled 3 rules of Soul version 1"
           },
-          "afterMs": 13
+          "afterMs": 8
         },
         {
           "type": "log",
@@ -4513,7 +4513,7 @@
             "level": "info",
             "message": "Smoke test \"Sale on credit\": went through (LEDGER.DBF 1)"
           },
-          "afterMs": 14
+          "afterMs": 10
         },
         {
           "type": "log",
@@ -4521,15 +4521,15 @@
             "level": "info",
             "message": "Smoke test \"Payment received\": went through (LEDGER.DBF 1)"
           },
-          "afterMs": 15
+          "afterMs": 11
         },
         {
           "type": "log",
           "payload": {
             "level": "info",
-            "message": "Reborn: 2 actions published at /vessel/01a20343-3599-7722-9220-0abd3e098915"
+            "message": "Reborn: 2 actions published at /vessel/01a2051c-21f7-7d1e-93ab-99030623ae78"
           },
-          "afterMs": 16
+          "afterMs": 12
         }
       ]
     },
@@ -4698,7 +4698,7 @@
             "crossed": 80,
             "rejected": 0
           },
-          "afterMs": 14
+          "afterMs": 15
         },
         {
           "type": "log",
@@ -4706,7 +4706,7 @@
             "level": "info",
             "message": "LEDGER.DBF: 80 records crossed, none rejected"
           },
-          "afterMs": 15
+          "afterMs": 16
         },
         {
           "type": "migration",
@@ -4717,7 +4717,7 @@
             "crossed": 25,
             "rejected": 0
           },
-          "afterMs": 19
+          "afterMs": 22
         },
         {
           "type": "log",
@@ -4725,7 +4725,7 @@
             "level": "info",
             "message": "PARTY.DBF: 25 records crossed, none rejected"
           },
-          "afterMs": 20
+          "afterMs": 24
         },
         {
           "type": "log",
@@ -4733,7 +4733,7 @@
             "level": "info",
             "message": "Reconciled: 8 totals match exactly"
           },
-          "afterMs": 25
+          "afterMs": 29
         }
       ]
     },
@@ -4741,19 +4741,22 @@
       "step": "prove",
       "status": "done",
       "output": {
-        "seed": 27394883,
+        "seed": 27395356,
         "lanes": 2,
         "failed": 50,
         "passed": 0,
         "numRuns": 50,
         "skipped": 0,
-        "proofRunId": "01a20343-bd7f-7cde-ab47-c8ab068d4991",
+        "proofRunId": "01a2051c-a6fd-7419-abef-cb5fe66a31ac",
+        "certificate": {
+          "reason": "50 cases differ from the old app"
+        },
         "soulVersion": 1,
         "counterexample": {
           "old": null,
-          "path": "30:0:0:0",
-          "seed": 27394883,
-          "index": 30,
+          "path": "4:0:0:0",
+          "seed": 27395356,
+          "index": 4,
           "tries": 4,
           "inputs": {
             "values": {
@@ -4797,14 +4800,14 @@
           "type": "log",
           "payload": {
             "level": "info",
-            "message": "Proving Soul version 1: 50 cases on 2 lanes, seed 27394883"
+            "message": "Proving Soul version 1: 50 cases on 2 lanes, seed 27395356"
           },
-          "afterMs": 9
+          "afterMs": 7
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 0,
+            "ms": 1,
             "of": 50,
             "old": null,
             "done": 1,
@@ -4813,9 +4816,9 @@
             "failed": 1,
             "inputs": {
               "values": {
-                "NOTE": "NBPY",
-                "AMOUNT": "2849.77",
-                "PARTY_ID": "P015"
+                "NOTE": "DTMU",
+                "AMOUNT": "3117.76",
+                "PARTY_ID": "P001"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -4824,7 +4827,7 @@
             "skipped": 0,
             "actionId": "payment-received"
           },
-          "afterMs": 206
+          "afterMs": 197
         },
         {
           "type": "proof_case",
@@ -4838,108 +4841,8 @@
             "failed": 2,
             "inputs": {
               "values": {
-                "NOTE": "BS",
-                "AMOUNT": "0.15",
-                "PARTY_ID": "P012"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "payment-received"
-          },
-          "afterMs": 210
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 1,
-            "of": 50,
-            "old": null,
-            "done": 3,
-            "lane": 0,
-            "index": 4,
-            "failed": 3,
-            "inputs": {
-              "values": {
-                "NOTE": "TBPESUPRDY",
-                "AMOUNT": "3336.33",
-                "PARTY_ID": "P022"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "payment-received"
-          },
-          "afterMs": 212
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 0,
-            "of": 50,
-            "old": null,
-            "done": 4,
-            "lane": 0,
-            "index": 6,
-            "failed": 4,
-            "inputs": {
-              "values": {
-                "NOTE": "PRTNU",
-                "AMOUNT": "4706.85",
-                "PARTY_ID": "P016"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "sale-on-credit"
-          },
-          "afterMs": 215
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 1,
-            "of": 50,
-            "old": null,
-            "done": 5,
-            "lane": 0,
-            "index": 8,
-            "failed": 5,
-            "inputs": {
-              "values": {
-                "NOTE": "YBCATGJASHHG",
-                "AMOUNT": "0.05",
-                "PARTY_ID": "P024"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "sale-on-credit"
-          },
-          "afterMs": 217
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 0,
-            "of": 50,
-            "old": null,
-            "done": 6,
-            "lane": 0,
-            "index": 10,
-            "failed": 6,
-            "inputs": {
-              "values": {
-                "NOTE": "CYKPKHNLTR",
-                "AMOUNT": "5576.17",
+                "NOTE": "IWOEGHWAZW",
+                "AMOUNT": "6957.01",
                 "PARTY_ID": "P014"
               }
             },
@@ -4949,254 +4852,29 @@
             "skipped": 0,
             "actionId": "payment-received"
           },
-          "afterMs": 219
+          "afterMs": 200
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 0,
+            "ms": 4680,
             "of": 50,
             "old": null,
-            "done": 7,
+            "done": 3,
             "lane": 0,
-            "index": 12,
-            "failed": 7,
+            "index": 4,
+            "failed": 3,
             "inputs": {
               "values": {
-                "NOTE": "Y",
-                "AMOUNT": "2294.34",
-                "PARTY_ID": "P022"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "payment-received"
-          },
-          "afterMs": 221
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 0,
-            "of": 50,
-            "old": null,
-            "done": 8,
-            "lane": 0,
-            "index": 14,
-            "failed": 8,
-            "inputs": {
-              "values": {
-                "NOTE": "OEUHGUZUDCC",
-                "AMOUNT": "162.19",
-                "PARTY_ID": "P019"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "sale-on-credit"
-          },
-          "afterMs": 223
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 1,
-            "of": 50,
-            "old": null,
-            "done": 9,
-            "lane": 0,
-            "index": 16,
-            "failed": 9,
-            "inputs": {
-              "values": {
-                "NOTE": "KTNOLFSJC",
-                "AMOUNT": "9998.83",
-                "PARTY_ID": "P006"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "payment-received"
-          },
-          "afterMs": 226
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 0,
-            "of": 50,
-            "old": null,
-            "done": 10,
-            "lane": 0,
-            "index": 18,
-            "failed": 10,
-            "inputs": {
-              "values": {
-                "NOTE": "YGWU",
-                "AMOUNT": "1842.00",
-                "PARTY_ID": "P004"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "sale-on-credit"
-          },
-          "afterMs": 228
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 0,
-            "of": 50,
-            "old": null,
-            "done": 11,
-            "lane": 0,
-            "index": 20,
-            "failed": 11,
-            "inputs": {
-              "values": {
-                "NOTE": "YY",
-                "AMOUNT": "624.14",
-                "PARTY_ID": "P017"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "sale-on-credit"
-          },
-          "afterMs": 230
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 1,
-            "of": 50,
-            "old": null,
-            "done": 12,
-            "lane": 0,
-            "index": 22,
-            "failed": 12,
-            "inputs": {
-              "values": {
-                "NOTE": "FBALKUGBA",
-                "AMOUNT": "0.18",
-                "PARTY_ID": "P005"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "payment-received"
-          },
-          "afterMs": 232
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 0,
-            "of": 50,
-            "old": null,
-            "done": 13,
-            "lane": 0,
-            "index": 24,
-            "failed": 13,
-            "inputs": {
-              "values": {
-                "NOTE": "ETLEURBZTJJ",
-                "AMOUNT": "1294.03",
-                "PARTY_ID": "P008"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "sale-on-credit"
-          },
-          "afterMs": 234
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 0,
-            "of": 50,
-            "old": null,
-            "done": 14,
-            "lane": 0,
-            "index": 26,
-            "failed": 14,
-            "inputs": {
-              "values": {
-                "NOTE": "PNGGEA",
-                "AMOUNT": "2013.95",
-                "PARTY_ID": "P017"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "sale-on-credit"
-          },
-          "afterMs": 237
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 0,
-            "of": 50,
-            "old": null,
-            "done": 15,
-            "lane": 0,
-            "index": 28,
-            "failed": 15,
-            "inputs": {
-              "values": {
-                "NOTE": "TZBN",
-                "AMOUNT": "7615.77",
-                "PARTY_ID": "P015"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "sale-on-credit"
-          },
-          "afterMs": 239
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 4624,
-            "of": 50,
-            "old": null,
-            "done": 16,
-            "lane": 0,
-            "index": 30,
-            "failed": 16,
-            "inputs": {
-              "values": {
-                "NOTE": "LBFRW",
-                "AMOUNT": "5800.52",
+                "NOTE": "NCPLI",
+                "AMOUNT": "8785.67",
                 "PARTY_ID": ""
               }
             },
             "screen": [
               " BARKAT KIRYANA LEDGER           SALE ON CREDIT                        20/11/96 ",
               "                                                                                ",
-              " Party ID  : 5800                                                               ",
+              " Party ID  : 8785                                                               ",
               "                                                                                ",
               "                                                                                ",
               "                                                                                ",
@@ -5222,9 +4900,9 @@
             ],
             "vessel": {
               "KIND": "",
-              "NOTE": "LBFRW",
+              "NOTE": "NCPLI",
               "ENTRY": "81",
-              "AMOUNT": "5800.52",
+              "AMOUNT": "8785.67",
               "BALANCE": "",
               "TX_DATE": "19961120",
               "PARTY_ID": ""
@@ -5239,32 +4917,82 @@
                 "table": "LEDGER.DBF",
                 "record": "ENTRY 81",
                 "values": {
-                  "NOTE": "LBFRW",
+                  "NOTE": "NCPLI",
                   "ENTRY": "81",
-                  "AMOUNT": "5800.52",
+                  "AMOUNT": "8785.67",
                   "TX_DATE": "19961120"
                 },
                 "vessel": "written"
               }
             ]
           },
-          "afterMs": 4743
+          "afterMs": 5836
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 1,
+            "ms": 0,
             "of": 50,
             "old": null,
-            "done": 17,
+            "done": 4,
             "lane": 0,
-            "index": 32,
-            "failed": 17,
+            "index": 6,
+            "failed": 4,
             "inputs": {
               "values": {
-                "NOTE": "KSLBRAPRI",
-                "AMOUNT": "3005.19",
-                "PARTY_ID": "P023"
+                "NOTE": "YCD",
+                "AMOUNT": "254.21",
+                "PARTY_ID": "P005"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "sale-on-credit"
+          },
+          "afterMs": 5840
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 0,
+            "of": 50,
+            "old": null,
+            "done": 5,
+            "lane": 0,
+            "index": 8,
+            "failed": 5,
+            "inputs": {
+              "values": {
+                "NOTE": "Z",
+                "AMOUNT": "8661.73",
+                "PARTY_ID": "P025"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "sale-on-credit"
+          },
+          "afterMs": 5842
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 0,
+            "of": 50,
+            "old": null,
+            "done": 6,
+            "lane": 0,
+            "index": 10,
+            "failed": 6,
+            "inputs": {
+              "values": {
+                "NOTE": "AJYJUTOH",
+                "AMOUNT": "5680.47",
+                "PARTY_ID": "P015"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5273,7 +5001,32 @@
             "skipped": 0,
             "actionId": "payment-received"
           },
-          "afterMs": 4747
+          "afterMs": 5845
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 1,
+            "of": 50,
+            "old": null,
+            "done": 7,
+            "lane": 0,
+            "index": 12,
+            "failed": 7,
+            "inputs": {
+              "values": {
+                "NOTE": "YM",
+                "AMOUNT": "1547.01",
+                "PARTY_ID": "P011"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "sale-on-credit"
+          },
+          "afterMs": 5848
         },
         {
           "type": "proof_case",
@@ -5281,14 +5034,14 @@
             "ms": 0,
             "of": 50,
             "old": null,
-            "done": 18,
+            "done": 8,
             "lane": 0,
-            "index": 34,
-            "failed": 18,
+            "index": 14,
+            "failed": 8,
             "inputs": {
               "values": {
-                "NOTE": "F",
-                "AMOUNT": "7473.84",
+                "NOTE": "TJOHPHTCIGL",
+                "AMOUNT": "6193.17",
                 "PARTY_ID": "P009"
               }
             },
@@ -5298,7 +5051,257 @@
             "skipped": 0,
             "actionId": "sale-on-credit"
           },
-          "afterMs": 4750
+          "afterMs": 5850
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 0,
+            "of": 50,
+            "old": null,
+            "done": 9,
+            "lane": 0,
+            "index": 16,
+            "failed": 9,
+            "inputs": {
+              "values": {
+                "NOTE": "FBIHY",
+                "AMOUNT": "4011.20",
+                "PARTY_ID": "P009"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "sale-on-credit"
+          },
+          "afterMs": 5853
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 0,
+            "of": 50,
+            "old": null,
+            "done": 10,
+            "lane": 0,
+            "index": 18,
+            "failed": 10,
+            "inputs": {
+              "values": {
+                "NOTE": "OPH",
+                "AMOUNT": "3092.15",
+                "PARTY_ID": "P019"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "payment-received"
+          },
+          "afterMs": 5856
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 0,
+            "of": 50,
+            "old": null,
+            "done": 11,
+            "lane": 0,
+            "index": 20,
+            "failed": 11,
+            "inputs": {
+              "values": {
+                "NOTE": "YFIT",
+                "AMOUNT": "6626.32",
+                "PARTY_ID": "P021"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "payment-received"
+          },
+          "afterMs": 5859
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 0,
+            "of": 50,
+            "old": null,
+            "done": 12,
+            "lane": 0,
+            "index": 22,
+            "failed": 12,
+            "inputs": {
+              "values": {
+                "NOTE": "GFHKECSI",
+                "AMOUNT": "3195.54",
+                "PARTY_ID": "P007"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "sale-on-credit"
+          },
+          "afterMs": 5862
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 0,
+            "of": 50,
+            "old": null,
+            "done": 13,
+            "lane": 0,
+            "index": 24,
+            "failed": 13,
+            "inputs": {
+              "values": {
+                "NOTE": "EHOEEM",
+                "AMOUNT": "0.19",
+                "PARTY_ID": "P001"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "sale-on-credit"
+          },
+          "afterMs": 5864
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 0,
+            "of": 50,
+            "old": null,
+            "done": 14,
+            "lane": 0,
+            "index": 26,
+            "failed": 14,
+            "inputs": {
+              "values": {
+                "NOTE": "LNUTJFFU",
+                "AMOUNT": "5509.23",
+                "PARTY_ID": "P003"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "sale-on-credit"
+          },
+          "afterMs": 5866
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 1,
+            "of": 50,
+            "old": null,
+            "done": 15,
+            "lane": 0,
+            "index": 28,
+            "failed": 15,
+            "inputs": {
+              "values": {
+                "NOTE": "ELLS",
+                "AMOUNT": "1654.07",
+                "PARTY_ID": "P017"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "payment-received"
+          },
+          "afterMs": 5869
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 1,
+            "of": 50,
+            "old": null,
+            "done": 16,
+            "lane": 0,
+            "index": 30,
+            "failed": 16,
+            "inputs": {
+              "values": {
+                "NOTE": "BZKMT",
+                "AMOUNT": "8751.91",
+                "PARTY_ID": "P012"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "payment-received"
+          },
+          "afterMs": 5871
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 0,
+            "of": 50,
+            "old": null,
+            "done": 17,
+            "lane": 0,
+            "index": 32,
+            "failed": 17,
+            "inputs": {
+              "values": {
+                "NOTE": "KADJ",
+                "AMOUNT": "9998.86",
+                "PARTY_ID": "P020"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "sale-on-credit"
+          },
+          "afterMs": 5874
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 1,
+            "of": 50,
+            "old": null,
+            "done": 18,
+            "lane": 0,
+            "index": 34,
+            "failed": 18,
+            "inputs": {
+              "values": {
+                "NOTE": "IUZ",
+                "AMOUNT": "0.10",
+                "PARTY_ID": "P019"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "payment-received"
+          },
+          "afterMs": 5876
         },
         {
           "type": "proof_case",
@@ -5312,9 +5315,9 @@
             "failed": 19,
             "inputs": {
               "values": {
-                "NOTE": "OAMJWM",
-                "AMOUNT": "4754.07",
-                "PARTY_ID": "P003"
+                "NOTE": "ZH",
+                "AMOUNT": "0.12",
+                "PARTY_ID": "P007"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5323,7 +5326,7 @@
             "skipped": 0,
             "actionId": "sale-on-credit"
           },
-          "afterMs": 4752
+          "afterMs": 5879
         },
         {
           "type": "proof_case",
@@ -5337,18 +5340,18 @@
             "failed": 20,
             "inputs": {
               "values": {
-                "NOTE": "GIASZHT",
-                "AMOUNT": "9866.97",
-                "PARTY_ID": "P007"
+                "NOTE": "DYEBPLIAJRGU",
+                "AMOUNT": "0.04",
+                "PARTY_ID": "P018"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "payment-received"
+            "actionId": "sale-on-credit"
           },
-          "afterMs": 4754
+          "afterMs": 5881
         },
         {
           "type": "proof_case",
@@ -5362,9 +5365,9 @@
             "failed": 21,
             "inputs": {
               "values": {
-                "NOTE": "YSZYTLDSRD",
-                "AMOUNT": "8456.58",
-                "PARTY_ID": "P014"
+                "NOTE": "OJGMPKB",
+                "AMOUNT": "9998.95",
+                "PARTY_ID": "P013"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5373,7 +5376,7 @@
             "skipped": 0,
             "actionId": "sale-on-credit"
           },
-          "afterMs": 4756
+          "afterMs": 5884
         },
         {
           "type": "proof_case",
@@ -5387,9 +5390,9 @@
             "failed": 22,
             "inputs": {
               "values": {
-                "NOTE": "PMDOMUYNMOA",
-                "AMOUNT": "40.69",
-                "PARTY_ID": "P008"
+                "NOTE": "BGYBRBY",
+                "AMOUNT": "6260.56",
+                "PARTY_ID": "P007"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5398,7 +5401,7 @@
             "skipped": 0,
             "actionId": "sale-on-credit"
           },
-          "afterMs": 4757
+          "afterMs": 5887
         },
         {
           "type": "proof_case",
@@ -5412,9 +5415,9 @@
             "failed": 23,
             "inputs": {
               "values": {
-                "NOTE": "ESPCIDIKWAL",
-                "AMOUNT": "0.16",
-                "PARTY_ID": "P015"
+                "NOTE": "OUWJ",
+                "AMOUNT": "5319.33",
+                "PARTY_ID": "P006"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5423,7 +5426,7 @@
             "skipped": 0,
             "actionId": "sale-on-credit"
           },
-          "afterMs": 4759
+          "afterMs": 5889
         },
         {
           "type": "proof_case",
@@ -5437,18 +5440,18 @@
             "failed": 24,
             "inputs": {
               "values": {
-                "NOTE": "C",
-                "AMOUNT": "8357.14",
-                "PARTY_ID": "P018"
+                "NOTE": "FCLEUTHDPOR",
+                "AMOUNT": "0.20",
+                "PARTY_ID": "P024"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "payment-received"
+            "actionId": "sale-on-credit"
           },
-          "afterMs": 4762
+          "afterMs": 5892
         },
         {
           "type": "proof_case",
@@ -5462,18 +5465,18 @@
             "failed": 25,
             "inputs": {
               "values": {
-                "NOTE": "AO",
-                "AMOUNT": "0.17",
-                "PARTY_ID": "P009"
+                "NOTE": "ZZGK",
+                "AMOUNT": "6335.10",
+                "PARTY_ID": "P023"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "payment-received"
+            "actionId": "sale-on-credit"
           },
-          "afterMs": 4764
+          "afterMs": 5894
         },
         {
           "type": "proof_case",
@@ -5487,9 +5490,9 @@
             "failed": 26,
             "inputs": {
               "values": {
-                "NOTE": "CWRKFIGHH",
-                "AMOUNT": "0.18",
-                "PARTY_ID": "P023"
+                "NOTE": "UGTKJJJTZYJ",
+                "AMOUNT": "9794.63",
+                "PARTY_ID": "P019"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5498,7 +5501,7 @@
             "skipped": 0,
             "actionId": "sale-on-credit"
           },
-          "afterMs": 4946
+          "afterMs": 6112
         },
         {
           "type": "proof_case",
@@ -5512,9 +5515,9 @@
             "failed": 27,
             "inputs": {
               "values": {
-                "NOTE": "ZOHIYES",
-                "AMOUNT": "0.15",
-                "PARTY_ID": "P008"
+                "NOTE": "RSSJEOLYTD",
+                "AMOUNT": "1268.36",
+                "PARTY_ID": "P005"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5523,12 +5526,12 @@
             "skipped": 0,
             "actionId": "payment-received"
           },
-          "afterMs": 4948
+          "afterMs": 6115
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 0,
+            "ms": 1,
             "of": 50,
             "old": null,
             "done": 28,
@@ -5537,23 +5540,23 @@
             "failed": 28,
             "inputs": {
               "values": {
-                "NOTE": "TMJG",
-                "AMOUNT": "0.05",
-                "PARTY_ID": "P002"
+                "NOTE": "FCT",
+                "AMOUNT": "0.18",
+                "PARTY_ID": "P014"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "sale-on-credit"
+            "actionId": "payment-received"
           },
-          "afterMs": 4951
+          "afterMs": 6118
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 1,
+            "ms": 0,
             "of": 50,
             "old": null,
             "done": 29,
@@ -5562,8 +5565,8 @@
             "failed": 29,
             "inputs": {
               "values": {
-                "NOTE": "MH",
-                "AMOUNT": "9998.95",
+                "NOTE": "CEZUHB",
+                "AMOUNT": "9998.91",
                 "PARTY_ID": "P009"
               }
             },
@@ -5571,14 +5574,14 @@
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "payment-received"
+            "actionId": "sale-on-credit"
           },
-          "afterMs": 4953
+          "afterMs": 6122
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 0,
+            "ms": 1,
             "of": 50,
             "old": null,
             "done": 30,
@@ -5587,18 +5590,18 @@
             "failed": 30,
             "inputs": {
               "values": {
-                "NOTE": "BCD",
-                "AMOUNT": "9998.81",
-                "PARTY_ID": "P012"
+                "NOTE": "BSGJKWMWRPT",
+                "AMOUNT": "0.15",
+                "PARTY_ID": "P022"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "payment-received"
+            "actionId": "sale-on-credit"
           },
-          "afterMs": 4956
+          "afterMs": 6125
         },
         {
           "type": "proof_case",
@@ -5612,23 +5615,23 @@
             "failed": 31,
             "inputs": {
               "values": {
-                "NOTE": "HCGTRS",
-                "AMOUNT": "0.15",
-                "PARTY_ID": "P023"
+                "NOTE": "A",
+                "AMOUNT": "7638.94",
+                "PARTY_ID": "P013"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "payment-received"
+            "actionId": "sale-on-credit"
           },
-          "afterMs": 4958
+          "afterMs": 6129
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 0,
+            "ms": 1,
             "of": 50,
             "old": null,
             "done": 32,
@@ -5637,9 +5640,9 @@
             "failed": 32,
             "inputs": {
               "values": {
-                "NOTE": "GK",
-                "AMOUNT": "0.18",
-                "PARTY_ID": "P013"
+                "NOTE": "ACJO",
+                "AMOUNT": "386.41",
+                "PARTY_ID": "P010"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5648,7 +5651,7 @@
             "skipped": 0,
             "actionId": "payment-received"
           },
-          "afterMs": 4960
+          "afterMs": 6132
         },
         {
           "type": "proof_case",
@@ -5662,18 +5665,18 @@
             "failed": 33,
             "inputs": {
               "values": {
-                "NOTE": "SPWH",
-                "AMOUNT": "2683.76",
-                "PARTY_ID": "P013"
+                "NOTE": "WCOZGRBF",
+                "AMOUNT": "5126.33",
+                "PARTY_ID": "P015"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "payment-received"
+            "actionId": "sale-on-credit"
           },
-          "afterMs": 4962
+          "afterMs": 6135
         },
         {
           "type": "proof_case",
@@ -5687,23 +5690,23 @@
             "failed": 34,
             "inputs": {
               "values": {
-                "NOTE": "W",
-                "AMOUNT": "113.46",
-                "PARTY_ID": "P015"
+                "NOTE": "UYPUKEZZ",
+                "AMOUNT": "8225.86",
+                "PARTY_ID": "P018"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "payment-received"
+            "actionId": "sale-on-credit"
           },
-          "afterMs": 4964
+          "afterMs": 6138
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 1,
+            "ms": 5244,
             "of": 50,
             "old": null,
             "done": 35,
@@ -5712,23 +5715,72 @@
             "failed": 35,
             "inputs": {
               "values": {
-                "NOTE": "FP",
-                "AMOUNT": "0.02",
-                "PARTY_ID": "P015"
+                "NOTE": "YCIFIHOZUEAB",
+                "AMOUNT": "9998.90",
+                "PARTY_ID": ""
               }
             },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
+            "screen": [
+              " BARKAT KIRYANA LEDGER           SALE ON CREDIT                        20/11/96 ",
+              "                                                                                ",
+              " Party ID  : 9998                                                               ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              " Amount Rs :                                                                    ",
+              " Note      :                                                                    ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "                                                                                ",
+              "  PARTY NOT FOUND                                                               ",
+              " Enter=Next  Esc=Back to menu                                                   "
+            ],
+            "vessel": {
+              "KIND": "",
+              "NOTE": "YCIFIHOZUEAB",
+              "ENTRY": "81",
+              "AMOUNT": "9998.90",
+              "BALANCE": "",
+              "TX_DATE": "19961120",
+              "PARTY_ID": ""
+            },
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "sale-on-credit"
+            "actionId": "sale-on-credit",
+            "differences": [
+              {
+                "old": null,
+                "kind": "inserted",
+                "table": "LEDGER.DBF",
+                "record": "ENTRY 81",
+                "values": {
+                  "NOTE": "YCIFIHOZUEAB",
+                  "ENTRY": "81",
+                  "AMOUNT": "9998.9",
+                  "TX_DATE": "19961120"
+                },
+                "vessel": "written"
+              }
+            ]
           },
-          "afterMs": 4966
+          "afterMs": 11203
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 1,
+            "ms": 0,
             "of": 50,
             "old": null,
             "done": 36,
@@ -5737,9 +5789,9 @@
             "failed": 36,
             "inputs": {
               "values": {
-                "NOTE": "MRHPZHGE",
-                "AMOUNT": "9998.96",
-                "PARTY_ID": "P019"
+                "NOTE": "ARGDTT",
+                "AMOUNT": "9998.98",
+                "PARTY_ID": "P020"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5748,12 +5800,12 @@
             "skipped": 0,
             "actionId": "sale-on-credit"
           },
-          "afterMs": 4968
+          "afterMs": 11206
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 0,
+            "ms": 1,
             "of": 50,
             "old": null,
             "done": 37,
@@ -5762,23 +5814,23 @@
             "failed": 37,
             "inputs": {
               "values": {
-                "NOTE": "LRII",
-                "AMOUNT": "0.13",
-                "PARTY_ID": "P022"
+                "NOTE": "CBFMMEUNTIAS",
+                "AMOUNT": "3128.84",
+                "PARTY_ID": "P023"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "payment-received"
+            "actionId": "sale-on-credit"
           },
-          "afterMs": 4970
+          "afterMs": 11209
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 0,
+            "ms": 1,
             "of": 50,
             "old": null,
             "done": 38,
@@ -5787,9 +5839,9 @@
             "failed": 38,
             "inputs": {
               "values": {
-                "NOTE": "DLKCHEL",
-                "AMOUNT": "4742.82",
-                "PARTY_ID": "P003"
+                "NOTE": "WK",
+                "AMOUNT": "4125.81",
+                "PARTY_ID": "P025"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5798,7 +5850,7 @@
             "skipped": 0,
             "actionId": "payment-received"
           },
-          "afterMs": 4971
+          "afterMs": 11211
         },
         {
           "type": "proof_case",
@@ -5812,9 +5864,9 @@
             "failed": 39,
             "inputs": {
               "values": {
-                "NOTE": "P",
-                "AMOUNT": "8493.55",
-                "PARTY_ID": "P014"
+                "NOTE": "NRGSTUJULFM",
+                "AMOUNT": "4436.46",
+                "PARTY_ID": "P005"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5823,12 +5875,12 @@
             "skipped": 0,
             "actionId": "payment-received"
           },
-          "afterMs": 4974
+          "afterMs": 11214
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 0,
+            "ms": 1,
             "of": 50,
             "old": null,
             "done": 40,
@@ -5837,18 +5889,18 @@
             "failed": 40,
             "inputs": {
               "values": {
-                "NOTE": "BEWDGPRPFYUJ",
-                "AMOUNT": "6401.41",
-                "PARTY_ID": "P014"
+                "NOTE": "DZ",
+                "AMOUNT": "9998.90",
+                "PARTY_ID": "P006"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "payment-received"
+            "actionId": "sale-on-credit"
           },
-          "afterMs": 4976
+          "afterMs": 11216
         },
         {
           "type": "proof_case",
@@ -5862,34 +5914,9 @@
             "failed": 41,
             "inputs": {
               "values": {
-                "NOTE": "AP",
-                "AMOUNT": "1293.68",
-                "PARTY_ID": "P007"
-              }
-            },
-            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
-            "vessel": null,
-            "outcome": "fail",
-            "skipped": 0,
-            "actionId": "sale-on-credit"
-          },
-          "afterMs": 4979
-        },
-        {
-          "type": "proof_case",
-          "payload": {
-            "ms": 1,
-            "of": 50,
-            "old": null,
-            "done": 42,
-            "lane": 1,
-            "index": 33,
-            "failed": 42,
-            "inputs": {
-              "values": {
-                "NOTE": "S",
-                "AMOUNT": "6311.90",
-                "PARTY_ID": "P014"
+                "NOTE": "T",
+                "AMOUNT": "4592.65",
+                "PARTY_ID": "P017"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5898,7 +5925,32 @@
             "skipped": 0,
             "actionId": "payment-received"
           },
-          "afterMs": 4981
+          "afterMs": 11218
+        },
+        {
+          "type": "proof_case",
+          "payload": {
+            "ms": 0,
+            "of": 50,
+            "old": null,
+            "done": 42,
+            "lane": 1,
+            "index": 33,
+            "failed": 42,
+            "inputs": {
+              "values": {
+                "NOTE": "MFFKK",
+                "AMOUNT": "324.95",
+                "PARTY_ID": "P002"
+              }
+            },
+            "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
+            "vessel": null,
+            "outcome": "fail",
+            "skipped": 0,
+            "actionId": "payment-received"
+          },
+          "afterMs": 11220
         },
         {
           "type": "proof_case",
@@ -5912,23 +5964,23 @@
             "failed": 43,
             "inputs": {
               "values": {
-                "NOTE": "C",
-                "AMOUNT": "0.06",
-                "PARTY_ID": "P013"
+                "NOTE": "AMCJWTJ",
+                "AMOUNT": "1864.00",
+                "PARTY_ID": "P011"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "sale-on-credit"
+            "actionId": "payment-received"
           },
-          "afterMs": 4982
+          "afterMs": 11222
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 0,
+            "ms": 1,
             "of": 50,
             "old": null,
             "done": 44,
@@ -5937,9 +5989,9 @@
             "failed": 44,
             "inputs": {
               "values": {
-                "NOTE": "G",
-                "AMOUNT": "7345.10",
-                "PARTY_ID": "P002"
+                "NOTE": "JBACK",
+                "AMOUNT": "0.01",
+                "PARTY_ID": "P020"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5948,7 +6000,7 @@
             "skipped": 0,
             "actionId": "sale-on-credit"
           },
-          "afterMs": 4984
+          "afterMs": 11225
         },
         {
           "type": "proof_case",
@@ -5962,9 +6014,9 @@
             "failed": 45,
             "inputs": {
               "values": {
-                "NOTE": "ATUBPDYHWKEA",
-                "AMOUNT": "8355.65",
-                "PARTY_ID": "P004"
+                "NOTE": "DAY",
+                "AMOUNT": "1854.14",
+                "PARTY_ID": "P005"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5973,7 +6025,7 @@
             "skipped": 0,
             "actionId": "sale-on-credit"
           },
-          "afterMs": 4986
+          "afterMs": 11227
         },
         {
           "type": "proof_case",
@@ -5987,9 +6039,9 @@
             "failed": 46,
             "inputs": {
               "values": {
-                "NOTE": "GRL",
-                "AMOUNT": "9998.96",
-                "PARTY_ID": "P012"
+                "NOTE": "DICOEUA",
+                "AMOUNT": "573.54",
+                "PARTY_ID": "P017"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -5998,12 +6050,12 @@
             "skipped": 0,
             "actionId": "sale-on-credit"
           },
-          "afterMs": 4988
+          "afterMs": 11229
         },
         {
           "type": "proof_case",
           "payload": {
-            "ms": 1,
+            "ms": 0,
             "of": 50,
             "old": null,
             "done": 47,
@@ -6012,18 +6064,18 @@
             "failed": 47,
             "inputs": {
               "values": {
-                "NOTE": "WROFYUOD",
-                "AMOUNT": "2756.58",
-                "PARTY_ID": "P001"
+                "NOTE": "TBO",
+                "AMOUNT": "5990.03",
+                "PARTY_ID": "P018"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "sale-on-credit"
+            "actionId": "payment-received"
           },
-          "afterMs": 4990
+          "afterMs": 11232
         },
         {
           "type": "proof_case",
@@ -6037,9 +6089,9 @@
             "failed": 48,
             "inputs": {
               "values": {
-                "NOTE": "JCMA",
-                "AMOUNT": "7820.71",
-                "PARTY_ID": "P011"
+                "NOTE": "IKEDJARLN",
+                "AMOUNT": "2364.83",
+                "PARTY_ID": "P007"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -6048,7 +6100,7 @@
             "skipped": 0,
             "actionId": "payment-received"
           },
-          "afterMs": 4992
+          "afterMs": 11234
         },
         {
           "type": "proof_case",
@@ -6062,18 +6114,18 @@
             "failed": 49,
             "inputs": {
               "values": {
-                "NOTE": "FJT",
-                "AMOUNT": "4554.82",
-                "PARTY_ID": "P010"
+                "NOTE": "C",
+                "AMOUNT": "2820.77",
+                "PARTY_ID": "P003"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
             "vessel": null,
             "outcome": "fail",
             "skipped": 0,
-            "actionId": "sale-on-credit"
+            "actionId": "payment-received"
           },
-          "afterMs": 4994
+          "afterMs": 11236
         },
         {
           "type": "proof_case",
@@ -6087,9 +6139,9 @@
             "failed": 50,
             "inputs": {
               "values": {
-                "NOTE": "TB",
+                "NOTE": "KUIYBJPGM",
                 "AMOUNT": "0.16",
-                "PARTY_ID": "P014"
+                "PARTY_ID": "P001"
               }
             },
             "reason": "The reborn app could not work it out: The party balance is ledger.balance. (ledger has no field balance)",
@@ -6098,15 +6150,15 @@
             "skipped": 0,
             "actionId": "payment-received"
           },
-          "afterMs": 4997
+          "afterMs": 11238
         },
         {
           "type": "log",
           "payload": {
             "level": "info",
-            "message": "Shrinking case 30, the first difference"
+            "message": "Shrinking case 4, the first difference"
           },
-          "afterMs": 5004
+          "afterMs": 11244
         },
         {
           "type": "log",
@@ -6114,7 +6166,7 @@
             "level": "warn",
             "message": "Counterexample: New app saved a ledger (AMOUNT 0.01, NOTE A) the old app did not."
           },
-          "afterMs": 22113
+          "afterMs": 27721
         },
         {
           "type": "log",
@@ -6122,22 +6174,188 @@
             "level": "warn",
             "message": "50 cases: 0 the same, 50 different, 0 skipped"
           },
-          "afterMs": 22119
+          "afterMs": 27726
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "warn",
+            "message": "No Rebirth Certificate: 50 cases differ from the old app"
+          },
+          "afterMs": 27729
         }
       ]
     },
     {
       "step": "exorcise",
-      "status": "skipped",
+      "status": "done",
       "output": {
-        "reason": "The exorcise step is not built yet (Prompt 73)"
+        "probes": [],
+        "findings": [
+          {
+            "en": "BALANCE is N(8,2), so it holds at most 99999.99. Above that dBASE writes ******** and the value reads back as 0: the whole amount disappears.",
+            "ur": "BALANCE کی فیلڈ N(8,2) ہے، اس لیے اس میں زیادہ سے زیادہ 99999.99 آ سکتے ہیں۔ اس سے اوپر dBASE ******** لکھ دیتا ہے اور رقم صفر پڑھی جاتی ہے: پوری رقم غائب ہو جاتی ہے۔",
+            "code": "numeric-overflow:party.balance",
+            "since": 1996,
+            "smell": "numeric-overflow",
+            "target": "party.balance",
+            "titleEn": "Party balance can overflow its field",
+            "titleUr": "Party کا balance اپنی فیلڈ سے بڑا ہو سکتا ہے",
+            "evidence": [
+              {
+                "ref": "PARTY.DBF#1",
+                "kind": "record",
+                "text": "P001: LIMIT 150000.00 lets BALANCE grow past 99999.99, the most N(8,2) holds (1 record)"
+              },
+              {
+                "ref": "PARTY.DBF#1",
+                "kind": "record",
+                "text": "P001: BALANCE is 98500.00, 98% of the most it holds (99999.99)"
+              }
+            ],
+            "severity": "high"
+          },
+          {
+            "en": "The old app shows TX_DATE with two-digit years. Nothing wrong was seen, but a date after 1999 is easy to misread, and any check made on what is shown would fail.",
+            "ur": "پرانی ایپ TX_DATE کو دو ہندسوں والے سال کے ساتھ دکھاتی ہے۔ کوئی غلطی نہیں دیکھی گئی، لیکن 1999 کے بعد کی تاریخ آسانی سے غلط پڑھی جا سکتی ہے۔",
+            "code": "two-digit-year:ledger.tx_date",
+            "since": 1996,
+            "smell": "two-digit-year",
+            "target": "ledger.tx_date",
+            "titleEn": "Ledger tx_date is shown with two-digit years",
+            "titleUr": "Ledger کی tx_date دو ہندسوں والے سال کے ساتھ دکھائی جاتی ہے",
+            "evidence": [
+              {
+                "ref": "01a2051c-54c9-73c7-ae71-47d5db4175ee",
+                "kind": "observation",
+                "text": "01/10/96 SALE   75000.00 75000.00  PURANA HISAB"
+              },
+              {
+                "ref": "01a2051c-54c9-73c7-ae71-47d5db4175ee",
+                "kind": "observation",
+                "text": "01/10/96 SALE   75000.00 75000.00  PURANA HISAB"
+              },
+              {
+                "ref": "01a2051c-54c9-73c7-ae71-47d5db4175ee",
+                "kind": "observation",
+                "text": "01/10/96 SALE   75000.00 75000.00  PURANA HISAB"
+              },
+              {
+                "ref": "01a2051c-54c9-73c7-ae71-47d5db4175ee",
+                "kind": "observation",
+                "text": "01/10/96 SALE   75000.00 75000.00  PURANA HISAB"
+              },
+              {
+                "ref": "01a2051c-54c9-73c7-ae71-47d5db4175ee",
+                "kind": "observation",
+                "text": "01/10/96 SALE   75000.00 75000.00  PURANA HISAB"
+              }
+            ],
+            "severity": "low"
+          },
+          {
+            "en": "The old app shows LAST_PAY with two-digit years. Nothing wrong was seen, but a date after 1999 is easy to misread, and any check made on what is shown would fail.",
+            "ur": "پرانی ایپ LAST_PAY کو دو ہندسوں والے سال کے ساتھ دکھاتی ہے۔ کوئی غلطی نہیں دیکھی گئی، لیکن 1999 کے بعد کی تاریخ آسانی سے غلط پڑھی جا سکتی ہے۔",
+            "code": "two-digit-year:party.last_pay",
+            "since": 1996,
+            "smell": "two-digit-year",
+            "target": "party.last_pay",
+            "titleEn": "Party last_pay is shown with two-digit years",
+            "titleUr": "Party کی last_pay دو ہندسوں والے سال کے ساتھ دکھائی جاتی ہے",
+            "evidence": [
+              {
+                "ref": "01a2051c-6871-72e1-9558-260037149276",
+                "kind": "observation",
+                "text": "P002 CHAUDHRY RIAZ SB          SADDAR           4160.00  05/10/96"
+              },
+              {
+                "ref": "01a2051c-6871-72e1-9558-260037149276",
+                "kind": "observation",
+                "text": "P003 BAJI SHAMIM               DHOKE RATTA      5340.00  22/10/96"
+              },
+              {
+                "ref": "01a2051c-6871-72e1-9558-260037149276",
+                "kind": "observation",
+                "text": "P005 KHAN SAHIB (PATHAN)       PIRWADHAI        9800.00  25/10/96"
+              },
+              {
+                "ref": "01a2051c-6871-72e1-9558-260037149276",
+                "kind": "observation",
+                "text": "P006 PHUPHO NASREEN            DHOKE RATTA      4360.00  07/10/96"
+              },
+              {
+                "ref": "01a2051c-6871-72e1-9558-260037149276",
+                "kind": "observation",
+                "text": "P007 DOCTOR SAHIB CLINIC       MURREE ROAD      3620.00  12/10/96"
+              }
+            ],
+            "severity": "low"
+          }
+        ],
+        "soulVersion": 1
       },
-      "events": []
+      "events": [
+        {
+          "type": "log",
+          "payload": {
+            "level": "info",
+            "message": "Looking for legacy bugs in Soul version 1: 39 observations, 2 data files"
+          },
+          "afterMs": 13
+        },
+        {
+          "type": "exorcism",
+          "payload": {
+            "code": "numeric-overflow:party.balance",
+            "since": 1996,
+            "smell": "numeric-overflow",
+            "target": "party.balance",
+            "titleEn": "Party balance can overflow its field",
+            "titleUr": "Party کا balance اپنی فیلڈ سے بڑا ہو سکتا ہے",
+            "severity": "high"
+          },
+          "afterMs": 27
+        },
+        {
+          "type": "exorcism",
+          "payload": {
+            "code": "two-digit-year:ledger.tx_date",
+            "since": 1996,
+            "smell": "two-digit-year",
+            "target": "ledger.tx_date",
+            "titleEn": "Ledger tx_date is shown with two-digit years",
+            "titleUr": "Ledger کی tx_date دو ہندسوں والے سال کے ساتھ دکھائی جاتی ہے",
+            "severity": "low"
+          },
+          "afterMs": 30
+        },
+        {
+          "type": "exorcism",
+          "payload": {
+            "code": "two-digit-year:party.last_pay",
+            "since": 1996,
+            "smell": "two-digit-year",
+            "target": "party.last_pay",
+            "titleEn": "Party last_pay is shown with two-digit years",
+            "titleUr": "Party کی last_pay دو ہندسوں والے سال کے ساتھ دکھائی جاتی ہے",
+            "severity": "low"
+          },
+          "afterMs": 32
+        },
+        {
+          "type": "log",
+          "payload": {
+            "level": "warn",
+            "message": "3 legacy bugs found: Party balance can overflow its field (high); Ledger tx_date is shown with two-digit years (low); Party last_pay is shown with two-digit years (low)"
+          },
+          "afterMs": 35
+        }
+      ]
     }
   ],
   "observations": [
     {
-      "id": "01a20343-3d59-79f4-b43c-261e8e8c626f",
+      "id": "01a2051c-27f6-7d97-ae3a-a775540a7efe",
       "seq": 0,
       "keys": "S",
       "screenBefore": {
@@ -6210,10 +6428,7 @@
             "name": "SALE ON CREDIT"
           }
         },
-        "cursor": {
-          "col": 13,
-          "row": 2
-        }
+        "cursor": null
       },
       "dbfDiff": {
         "tables": {},
@@ -6221,11 +6436,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 531,
+      "durationMs": 538,
       "stable": true
     },
     {
-      "id": "01a20343-417e-72d8-aa18-a032a8d2729c",
+      "id": "01a2051c-2be0-7c07-88b5-51b9163f3091",
       "seq": 1,
       "keys": "P001{Enter}",
       "screenBefore": {
@@ -6262,10 +6477,7 @@
             "name": "SALE ON CREDIT"
           }
         },
-        "cursor": {
-          "col": 13,
-          "row": 2
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_5b3ff173a2018705",
@@ -6312,11 +6524,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 940,
+      "durationMs": 888,
       "stable": true
     },
     {
-      "id": "01a20343-4664-7979-b827-ec09cae62c90",
+      "id": "01a2051c-30bf-7c85-a4a3-76fc3d9a9f78",
       "seq": 2,
       "keys": "100.00{Enter}",
       "screenBefore": {
@@ -6400,11 +6612,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1106,
+      "durationMs": 1137,
       "stable": true
     },
     {
-      "id": "01a20343-4a94-7506-970a-1fb0b4576baf",
+      "id": "01a2051c-34e3-7450-b336-a3632c19cb2d",
       "seq": 3,
       "keys": "TEST{Enter}",
       "screenBefore": {
@@ -6485,11 +6697,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 976,
+      "durationMs": 953,
       "stable": true
     },
     {
-      "id": "01a20343-4d0d-7c4b-8958-145c87512b2e",
+      "id": "01a2051c-370a-7a99-9900-c0e8042c6fe9",
       "seq": 4,
       "keys": "Y",
       "screenBefore": {
@@ -6619,11 +6831,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 522,
+      "durationMs": 448,
       "stable": true
     },
     {
-      "id": "01a20343-4f89-7def-bd94-074e7e52c3a9",
+      "id": "01a2051c-3991-7852-9f82-e8f3eb9b60a5",
       "seq": 5,
       "keys": "{Enter}",
       "screenBefore": {
@@ -6704,11 +6916,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 528,
+      "durationMs": 544,
       "stable": true
     },
     {
-      "id": "01a20343-51a8-7201-80ba-035731afd7ec",
+      "id": "01a2051c-3bfd-7122-abab-30f9a076cab3",
       "seq": 6,
       "keys": "P",
       "screenBefore": {
@@ -6789,11 +7001,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 447,
+      "durationMs": 520,
       "stable": true
     },
     {
-      "id": "01a20343-558e-7a3a-93ce-655e9fcc8dc7",
+      "id": "01a2051c-4015-732a-b6d2-c637700132aa",
       "seq": 7,
       "keys": "P001{Enter}",
       "screenBefore": {
@@ -6830,7 +7042,10 @@
             "name": "PAYMENT RECEIVED"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 13,
+          "row": 2
+        }
       },
       "screenAfter": {
         "fingerprint": "fp_a306c692e7fc1878",
@@ -6874,11 +7089,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 889,
+      "durationMs": 937,
       "stable": true
     },
     {
-      "id": "01a20343-5a55-74ba-b357-93d208947a03",
+      "id": "01a2051c-4508-796d-b023-1faaee7e8018",
       "seq": 8,
       "keys": "100.00{Enter}",
       "screenBefore": {
@@ -6951,7 +7166,10 @@
             "name": "PAYMENT RECEIVED"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 13,
+          "row": 9
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -6959,11 +7177,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1121,
+      "durationMs": 1162,
       "stable": true
     },
     {
-      "id": "01a20343-5e3d-7635-900a-b79e71128dcf",
+      "id": "01a2051c-4932-7163-8f6a-d68a31e37d27",
       "seq": 9,
       "keys": "TEST{Enter}",
       "screenBefore": {
@@ -7047,11 +7265,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 899,
+      "durationMs": 964,
       "stable": true
     },
     {
-      "id": "01a20343-60c2-71b6-9737-f9d103cafdcc",
+      "id": "01a2051c-4bad-7715-ab7b-04385266cec3",
       "seq": 10,
       "keys": "Y",
       "screenBefore": {
@@ -7186,11 +7404,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 544,
+      "durationMs": 531,
       "stable": true
     },
     {
-      "id": "01a20343-633c-746a-981b-80f3c6fdb5ec",
+      "id": "01a2051c-4e2f-7af9-b0d1-ff0c45631237",
       "seq": 11,
       "keys": "{Enter}",
       "screenBefore": {
@@ -7271,11 +7489,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 536,
+      "durationMs": 529,
       "stable": true
     },
     {
-      "id": "01a20343-65c8-7bc3-ad02-97e7418290d7",
+      "id": "01a2051c-50a5-74b6-ada5-9f2c27d10404",
       "seq": 12,
       "keys": "L",
       "screenBefore": {
@@ -7359,11 +7577,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 548,
+      "durationMs": 525,
       "stable": true
     },
     {
-      "id": "01a20343-6a08-78e1-bee2-c2d9c0cd716e",
+      "id": "01a2051c-54c9-73c7-ae71-47d5db4175ee",
       "seq": 13,
       "keys": "P001{Enter}",
       "screenBefore": {
@@ -7447,11 +7665,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 981,
+      "durationMs": 954,
       "stable": true
     },
     {
-      "id": "01a20343-6c94-70f4-8cbe-71a357b3196d",
+      "id": "01a2051c-5745-74ac-94fd-f78eb542bfc2",
       "seq": 14,
       "keys": "{Esc}",
       "screenBefore": {
@@ -7532,11 +7750,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 546,
+      "durationMs": 533,
       "stable": true
     },
     {
-      "id": "01a20343-6ee9-7a4a-8a2d-78b37f2c783f",
+      "id": "01a2051c-5975-7ec0-9cb5-ac4782a45231",
       "seq": 15,
       "keys": "B",
       "screenBefore": {
@@ -7617,11 +7835,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 495,
+      "durationMs": 450,
       "stable": true
     },
     {
-      "id": "01a20343-717b-75c4-bc4d-b0d40e1c672a",
+      "id": "01a2051c-5c06-7d53-8bf2-2e1546f77248",
       "seq": 16,
       "keys": "{PgDn}",
       "screenBefore": {
@@ -7702,11 +7920,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 535,
+      "durationMs": 537,
       "stable": true
     },
     {
-      "id": "01a20343-73ff-75c8-bf9b-f69b34afa211",
+      "id": "01a2051c-5e8f-78b2-b5b0-07c4c0bf26eb",
       "seq": 17,
       "keys": "{PgDn}",
       "screenBefore": {
@@ -7787,11 +8005,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 540,
+      "durationMs": 539,
       "stable": true
     },
     {
-      "id": "01a20343-7614-75be-a6ff-1cbc81db552b",
+      "id": "01a2051c-60ea-7dc6-9d2d-d4d8bbf4d53c",
       "seq": 18,
       "keys": "{PgUp}",
       "screenBefore": {
@@ -7872,11 +8090,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 474,
+      "durationMs": 545,
       "stable": true
     },
     {
-      "id": "01a20343-785a-7bfd-a334-d9f31324da6a",
+      "id": "01a2051c-638b-78b3-8044-2ab37443a1bd",
       "seq": 19,
       "keys": "{PgUp}",
       "screenBefore": {
@@ -7957,11 +8175,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 483,
+      "durationMs": 551,
       "stable": true
     },
     {
-      "id": "01a20343-7ac1-788d-b650-caee27bbf153",
+      "id": "01a2051c-65e2-7d41-b3b5-acf101b7c51c",
       "seq": 20,
       "keys": "{Esc}",
       "screenBefore": {
@@ -8042,11 +8260,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 544,
+      "durationMs": 536,
       "stable": true
     },
     {
-      "id": "01a20343-7cf0-7ac9-bee6-88fd6965ee49",
+      "id": "01a2051c-6871-72e1-9558-260037149276",
       "seq": 21,
       "keys": "R",
       "screenBefore": {
@@ -8127,11 +8345,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 457,
+      "durationMs": 555,
       "stable": true
     },
     {
-      "id": "01a20343-7f78-770d-a5ea-327061570200",
+      "id": "01a2051c-6b12-7391-b5b4-2d52f398d63d",
       "seq": 22,
       "keys": "{PgDn}",
       "screenBefore": {
@@ -8212,11 +8430,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 536,
+      "durationMs": 550,
       "stable": true
     },
     {
-      "id": "01a20343-81f0-7365-9a84-59f12c9a7e71",
+      "id": "01a2051c-6da5-7092-b136-8be8ff9e3bb1",
       "seq": 23,
       "keys": "{PgDn}",
       "screenBefore": {
@@ -8297,11 +8515,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 534,
+      "durationMs": 542,
       "stable": true
     },
     {
-      "id": "01a20343-83fa-7791-8713-ea832ba3ee2b",
+      "id": "01a2051c-7002-79f4-9a5f-bf192f22f1d6",
       "seq": 24,
       "keys": "{PgUp}",
       "screenBefore": {
@@ -8382,11 +8600,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 468,
+      "durationMs": 547,
       "stable": true
     },
     {
-      "id": "01a20343-863d-7cc6-ae54-ae33ba714250",
+      "id": "01a2051c-7298-7209-b4b0-278ce56089c8",
       "seq": 25,
       "keys": "{PgUp}",
       "screenBefore": {
@@ -8467,11 +8685,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 465,
+      "durationMs": 548,
       "stable": true
     },
     {
-      "id": "01a20343-88a1-75e4-aa87-7cb9d03f28ab",
+      "id": "01a2051c-74eb-7768-bb73-c8bbbf63e287",
       "seq": 26,
       "keys": "{Esc}",
       "screenBefore": {
@@ -8552,11 +8770,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 548,
+      "durationMs": 531,
       "stable": true
     },
     {
-      "id": "01a20343-8b19-7bf2-903e-7484fff69610",
+      "id": "01a2051c-7762-76af-a2ef-4c8472b46439",
       "seq": 27,
       "keys": "S",
       "screenBefore": {
@@ -8629,7 +8847,10 @@
             "name": "SALE ON CREDIT"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 13,
+          "row": 2
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -8637,11 +8858,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 523,
+      "durationMs": 531,
       "stable": true
     },
     {
-      "id": "01a20343-8d9c-72bc-93be-49f726539e89",
+      "id": "01a2051c-79de-7bd7-8f5b-4ca5ff447f7e",
       "seq": 28,
       "keys": "{Enter}",
       "screenBefore": {
@@ -8678,7 +8899,10 @@
             "name": "SALE ON CREDIT"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 13,
+          "row": 2
+        }
       },
       "screenAfter": {
         "fingerprint": "fp_0976e3f7a144790c",
@@ -8725,11 +8949,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 539,
+      "durationMs": 530,
       "stable": true
     },
     {
-      "id": "01a20343-91ca-7034-9067-af7f7fd35ec8",
+      "id": "01a2051c-7dfa-7a0f-a64f-dd0206855aa9",
       "seq": 29,
       "keys": "Z999{Enter}",
       "screenBefore": {
@@ -8813,11 +9037,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 973,
+      "durationMs": 948,
       "stable": true
     },
     {
-      "id": "01a20343-96e6-76c6-bc5c-9ee78bea397d",
+      "id": "01a2051c-82d3-797f-8921-8d6e16af5220",
       "seq": 30,
       "keys": "100.00{Enter}",
       "screenBefore": {
@@ -8854,10 +9078,7 @@
             "name": "SALE ON CREDIT"
           }
         },
-        "cursor": {
-          "col": 16,
-          "row": 2
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_0976e3f7a144790c",
@@ -8904,11 +9125,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1204,
+      "durationMs": 1136,
       "stable": true
     },
     {
-      "id": "01a20343-9aeb-7cbd-ae68-709cc8082ed1",
+      "id": "01a2051c-86b2-7b7e-a29f-28944fc5588e",
       "seq": 31,
       "keys": "P002{Enter}",
       "screenBefore": {
@@ -8995,12 +9216,103 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 965,
+      "durationMs": 932,
       "stable": true
     },
     {
-      "id": "01a20343-9ef1-7bcb-b833-9a46e72352c0",
+      "id": "01a2051c-8aa2-7746-a17d-0cb5d9d63311",
       "seq": 32,
+      "keys": "P001{Enter}",
+      "screenBefore": {
+        "fingerprint": "fp_0976e3f7a144790c",
+        "text": [
+          " BARKAT KIRYANA LEDGER           SALE ON CREDIT                        20/11/96 ",
+          "                                                                                ",
+          " Party ID  : Z999                                                               ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Amount Rs :                                                                    ",
+          " Note      :                                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  PARTY NOT FOUND                                                               ",
+          " Enter=Next  Esc=Back to menu                                                   "
+        ],
+        "model": {
+          "title": {
+            "name": "SALE ON CREDIT"
+          }
+        },
+        "cursor": {
+          "col": 16,
+          "row": 2
+        }
+      },
+      "screenAfter": {
+        "fingerprint": "fp_0976e3f7a144790c",
+        "text": [
+          " BARKAT KIRYANA LEDGER           SALE ON CREDIT                        20/11/96 ",
+          "                                                                                ",
+          " Party ID  : Z999                                                               ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          " Amount Rs :                                                                    ",
+          " Note      :                                                                    ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "                                                                                ",
+          "  PARTY NOT FOUND                                                               ",
+          " Enter=Next  Esc=Back to menu                                                   "
+        ],
+        "model": {
+          "title": {
+            "name": "SALE ON CREDIT"
+          }
+        },
+        "cursor": {
+          "col": 16,
+          "row": 2
+        }
+      },
+      "dbfDiff": {
+        "tables": {},
+        "unchanged": ["LEDGER.DBF", "PARTY.DBF"],
+        "addedTables": [],
+        "removedTables": []
+      },
+      "durationMs": 946,
+      "stable": true
+    },
+    {
+      "id": "01a2051c-8e87-7610-8842-344fc281d7ef",
+      "seq": 33,
       "keys": "P001{Enter}",
       "screenBefore": {
         "fingerprint": "fp_0976e3f7a144790c",
@@ -9083,12 +9395,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 974,
+      "durationMs": 932,
       "stable": true
     },
     {
-      "id": "01a20343-a2e4-7fce-8148-5b4c520ecedf",
-      "seq": 33,
+      "id": "01a2051c-9273-72fc-92fb-752efcfef3c3",
+      "seq": 34,
       "keys": "0.00{Enter}",
       "screenBefore": {
         "fingerprint": "fp_0976e3f7a144790c",
@@ -9171,12 +9483,12 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 952,
+      "durationMs": 936,
       "stable": true
     },
     {
-      "id": "01a20343-a745-71aa-b189-c004a9b57193",
-      "seq": 34,
+      "id": "01a2051c-96cb-7b7f-a8da-ea39e9f38d8d",
+      "seq": 35,
       "keys": "-1.00{Enter}",
       "screenBefore": {
         "fingerprint": "fp_0976e3f7a144790c",
@@ -9212,7 +9524,10 @@
             "name": "SALE ON CREDIT"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 16,
+          "row": 2
+        }
       },
       "screenAfter": {
         "fingerprint": "fp_0976e3f7a144790c",
@@ -9248,110 +9563,19 @@
             "name": "SALE ON CREDIT"
           }
         },
-        "cursor": {
-          "col": 16,
-          "row": 2
-        }
-      },
-      "dbfDiff": {
-        "tables": {},
-        "unchanged": ["LEDGER.DBF", "PARTY.DBF"],
-        "addedTables": [],
-        "removedTables": []
-      },
-      "durationMs": 1064,
-      "stable": true
-    },
-    {
-      "id": "01a20343-ab41-7325-8f67-54c1e60adf18",
-      "seq": 35,
-      "keys": "P001{Enter}",
-      "screenBefore": {
-        "fingerprint": "fp_0976e3f7a144790c",
-        "text": [
-          " BARKAT KIRYANA LEDGER           SALE ON CREDIT                        20/11/96 ",
-          "                                                                                ",
-          " Party ID  : Z999                                                               ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          " Amount Rs :                                                                    ",
-          " Note      :                                                                    ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "  PARTY NOT FOUND                                                               ",
-          " Enter=Next  Esc=Back to menu                                                   "
-        ],
-        "model": {
-          "title": {
-            "name": "SALE ON CREDIT"
-          }
-        },
         "cursor": null
       },
-      "screenAfter": {
-        "fingerprint": "fp_0976e3f7a144790c",
-        "text": [
-          " BARKAT KIRYANA LEDGER           SALE ON CREDIT                        20/11/96 ",
-          "                                                                                ",
-          " Party ID  : Z999                                                               ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          " Amount Rs :                                                                    ",
-          " Note      :                                                                    ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "                                                                                ",
-          "  PARTY NOT FOUND                                                               ",
-          " Enter=Next  Esc=Back to menu                                                   "
-        ],
-        "model": {
-          "title": {
-            "name": "SALE ON CREDIT"
-          }
-        },
-        "cursor": {
-          "col": 16,
-          "row": 2
-        }
-      },
       "dbfDiff": {
         "tables": {},
         "unchanged": ["LEDGER.DBF", "PARTY.DBF"],
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 961,
+      "durationMs": 1049,
       "stable": true
     },
     {
-      "id": "01a20343-af52-79e8-b2cf-9728a9bb603b",
+      "id": "01a2051c-9ab6-71cf-bea1-3dcd132c701f",
       "seq": 36,
       "keys": "P001{Enter}",
       "screenBefore": {
@@ -9388,10 +9612,7 @@
             "name": "SALE ON CREDIT"
           }
         },
-        "cursor": {
-          "col": 16,
-          "row": 2
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_0976e3f7a144790c",
@@ -9438,11 +9659,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 977,
+      "durationMs": 941,
       "stable": true
     },
     {
-      "id": "01a20343-b373-755d-bbd5-f74730944461",
+      "id": "01a2051c-9eaf-7a2c-a21b-64bce8525399",
       "seq": 37,
       "keys": "P001{Enter}",
       "screenBefore": {
@@ -9479,10 +9700,7 @@
             "name": "SALE ON CREDIT"
           }
         },
-        "cursor": {
-          "col": 16,
-          "row": 2
-        }
+        "cursor": null
       },
       "screenAfter": {
         "fingerprint": "fp_0976e3f7a144790c",
@@ -9518,7 +9736,10 @@
             "name": "SALE ON CREDIT"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 16,
+          "row": 2
+        }
       },
       "dbfDiff": {
         "tables": {},
@@ -9526,11 +9747,11 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 1002,
+      "durationMs": 953,
       "stable": true
     },
     {
-      "id": "01a20343-b5c0-7a9a-8b8a-62747ad89c78",
+      "id": "01a2051c-a10a-791a-84dd-7cbfc5556b75",
       "seq": 38,
       "keys": "{Esc}",
       "screenBefore": {
@@ -9567,7 +9788,10 @@
             "name": "SALE ON CREDIT"
           }
         },
-        "cursor": null
+        "cursor": {
+          "col": 16,
+          "row": 2
+        }
       },
       "screenAfter": {
         "fingerprint": "fp_bd61968c80f19a0d",
@@ -9611,7 +9835,7 @@
         "addedTables": [],
         "removedTables": []
       },
-      "durationMs": 532,
+      "durationMs": 543,
       "stable": true
     }
   ],
@@ -9628,8 +9852,8 @@
         "kind": "compute",
         "target": "ledger.tx_date",
         "evidence": [
-          "01a20343-4d0d-7c4b-8958-145c87512b2e",
-          "01a20343-60c2-71b6-9737-f9d103cafdcc"
+          "01a2051c-370a-7a99-9900-c0e8042c6fe9",
+          "01a2051c-4bad-7715-ab7b-04385266cec3"
         ],
         "confidence": 0.5,
         "expression": "today"
@@ -9640,7 +9864,7 @@
         "ur": "",
         "kind": "effect",
         "target": "party.last_pay",
-        "evidence": ["01a20343-60c2-71b6-9737-f9d103cafdcc"],
+        "evidence": ["01a2051c-4bad-7715-ab7b-04385266cec3"],
         "confidence": 0.33,
         "expression": "today"
       },
@@ -9651,8 +9875,8 @@
         "kind": "effect",
         "target": "party.balance",
         "evidence": [
-          "01a20343-4d0d-7c4b-8958-145c87512b2e",
-          "01a20343-60c2-71b6-9737-f9d103cafdcc"
+          "01a2051c-370a-7a99-9900-c0e8042c6fe9",
+          "01a2051c-4bad-7715-ab7b-04385266cec3"
         ],
         "confidence": 0.5,
         "expression": "ledger.balance"
@@ -9880,9 +10104,9 @@
     ],
     "provenance": {
       "note": "Entities from the data files; 2 actions and 3 rules, each rule checked against every observation.",
-      "createdAt": "2026-11-22T12:38:19.328Z",
+      "createdAt": "2026-11-22T21:14:52.364Z",
       "createdBy": "archaeologist",
-      "projectId": "01a20343-3599-7722-9220-0abd3e098915",
+      "projectId": "01a2051c-21f7-7d1e-93ab-99030623ae78",
       "observationCount": 39
     },
     "schemaVersion": 1

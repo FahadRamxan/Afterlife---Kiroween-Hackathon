@@ -65,7 +65,11 @@
       "id": "balance-overflow-n8-2",
       "text": "BALANCE is N(8,2), so above Rs 99,999.99 it is written as ******** and reads back as 0: the party's whole balance disappears.",
       "severity": "high",
-      "scenarios": ["overflow"]
+      "scenarios": ["overflow"],
+      "truth": {
+        "smell": "numeric-overflow",
+        "target": "party.balance"
+      }
     }
   ]
 }

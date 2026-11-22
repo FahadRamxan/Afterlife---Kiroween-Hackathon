@@ -47,7 +47,7 @@ function writtenRecord(soul: Soul, actionId: string, d: SnapshotDiff | undefined
 }
 
 /** The screen graph the Possessor mapped, with the Soul's own navigation added. */
-function graphOf(soul: Soul, mapped: ScreenGraphJson | null) {
+export function graphOf(soul: Soul, mapped: ScreenGraphJson | null) {
   const nodes = new Map((mapped?.nodes ?? []).map((n) => [n.fingerprint, n]));
   for (const s of soul.screens)
     if (!nodes.has(s.id))
