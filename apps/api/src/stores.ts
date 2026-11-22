@@ -10,6 +10,7 @@ import { PgScreenGraphStore } from './screen-graph';
 import { PgVesselStore } from './vessel';
 import { PgExportStore } from './export';
 import { PgCertificateStore } from './certificates';
+import { PgExorcismStore } from './exorcisms';
 import { PgPipeline } from './pipeline';
 import { PgSoulStore } from './souls';
 import { PgUploadStore } from './uploads';
@@ -62,6 +63,7 @@ export async function openStores(
       vessel: new PgVesselStore(db, (id) => projectStore.get(id)),
       exports: new PgExportStore(db, (id) => projectStore.get(id)),
       certificates: new PgCertificateStore(db),
+      exorcisms: new PgExorcismStore(db),
       live,
       pipeline,
     },

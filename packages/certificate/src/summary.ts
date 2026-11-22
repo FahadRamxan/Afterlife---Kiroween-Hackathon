@@ -21,7 +21,7 @@ export function certificateLines(p: CertificatePayload): CertificateLine[] {
     { label: 'Soul', value: `version ${p.soul.version}, SHA-256 ${p.soul.sha256}` },
     {
       label: 'Proof',
-      value: `${n(p.proof.cases)} cases, ${n(p.proof.passed)} the same, ${n(differ)} ${differ === 1 ? 'difference' : 'differences'}, ${n(p.proof.skipped)} skipped (seed ${p.proof.seed})`,
+      value: `${n(p.proof.cases)} cases, ${n(p.proof.passed)} the same, ${n(differ)} ${differ === 1 ? 'difference' : 'differences'}, ${n(p.proof.skipped)} skipped${p.proof.accepted ? `, ${n(p.proof.accepted)} accepted as fixed` : ''} (seed ${p.proof.seed})`,
     },
     {
       label: 'Data',

@@ -55,6 +55,9 @@ export class PgPipeline implements Pipeline {
         skipped?: number;
         counterexample?: NonNullable<StepState['proof']>['counterexample'];
         certificate?: { id?: string; reason?: string };
+        accepted?: number;
+        reused?: number;
+        acceptedDivergences?: { id: string; text: string }[];
         published?: unknown;
         actions?: { id: string; name: string; ok: boolean }[];
         tables?: {
@@ -128,6 +131,11 @@ export class PgPipeline implements Pipeline {
                 skipped: output.skipped ?? 0,
                 counterexample: output.counterexample ?? null,
                 certificate: output.certificate ?? null,
+                ...(typeof output.accepted === 'number' ? { accepted: output.accepted } : {}),
+                ...(typeof output.reused === 'number' ? { reused: output.reused } : {}),
+                ...(output.acceptedDivergences
+                  ? { acceptedDivergences: output.acceptedDivergences }
+                  : {}),
               }
             : null,
       };

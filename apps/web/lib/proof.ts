@@ -24,6 +24,10 @@ export const ProofSchema = z.object({
   passed: z.number(),
   failed: z.number(),
   skipped: z.number(),
+  /** Prompt 74: cases that differ as the owner's fixes say, and cases kept from the last proof. */
+  accepted: z.number().default(0),
+  reused: z.number().default(0),
+  acceptedDivergences: z.array(z.object({ id: z.string(), text: z.string() })).default([]),
   counterexample: z
     .object({
       index: z.number(),
@@ -55,10 +59,12 @@ const CaseEvent = z.object({
   done: z.number().int().nonnegative(),
   failed: z.number().int().nonnegative(),
   skipped: z.number().int().nonnegative(),
+  accepted: z.number().int().nonnegative().default(0),
+  reused: z.boolean().optional(),
   lane: z.number().int().nonnegative(),
   actionId: z.string(),
   inputs: Inputs,
-  outcome: z.enum(['pass', 'fail', 'skip']),
+  outcome: z.enum(['pass', 'fail', 'skip', 'accepted']),
   reason: z.string().optional(),
   differences: z.array(DifferenceSchema).optional(),
   screen: z.array(z.string()).optional(),
@@ -76,6 +82,7 @@ export type ProofProgress = {
   of: number;
   failed: number;
   skipped: number;
+  accepted: number;
   /** The case just run: the old app's screen after it, and what each side wrote. */
   latest: ProofCaseEvent;
   /** The newest cases first. */
@@ -103,6 +110,7 @@ export function proofProgress(events: LiveEvent[]): ProofProgress | null {
     of: latest.of,
     failed: latest.failed,
     skipped: latest.skipped,
+    accepted: latest.accepted,
     latest,
     cases: cases.slice(-LOG_CASES).reverse(),
   };

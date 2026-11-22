@@ -8,6 +8,7 @@ import {
 } from '@afterlife/certificate';
 import {
   certificates,
+  desc,
   eq,
   exorcisms,
   insertSoulVersion,
@@ -74,7 +75,7 @@ async function setup(
     project: p!,
     soul: soul!,
     run: run!,
-    proof: { numRuns: 50, passed: 48 - failed, failed, skipped: 2 },
+    proof: { numRuns: 50, passed: 48 - failed, failed, skipped: 2, accepted: 0 },
   };
 }
 const issue = (s: Awaited<ReturnType<typeof setup>>, k: SigningKey | null = key) =>
@@ -114,7 +115,15 @@ describe('issueCertificate', () => {
       project: s.project.id,
       app: { name: 'Shifa Medical Store', source: 'graveyard', sourceApp: 'shifa' },
       soul: { version: 1, sha256: await soulSha256(s.soul.ir) },
-      proof: { runId: s.run.id, seed: 1998, cases: 50, passed: 48, failed: 0, skipped: 2 },
+      proof: {
+        runId: s.run.id,
+        seed: 1998,
+        cases: 50,
+        passed: 48,
+        failed: 0,
+        skipped: 2,
+        accepted: 0,
+      },
       reconciliation: { matches: true, lines: LINES },
       acceptedDivergences: [],
       issuer: { keyId: key.keyId },
@@ -128,9 +137,10 @@ describe('issueCertificate', () => {
         projectId: s.project.id,
         code: 'y2k-expiry',
         severity: 'high',
-        titleEn: 'Fixed the Y2K expiry check',
+        titleEn: 'Medicine expiry is compared with two-digit years',
         titleUr: 'x',
-        evidence: [],
+        // The remedy kept when the owner chose: its words name what the reborn app does instead.
+        evidence: { remedy: { fixEn: 'EXPIRY is compared with four-digit years' } },
         decision: 'fix',
         decidedAt: new Date(),
       },
@@ -150,11 +160,73 @@ describe('issueCertificate', () => {
     if (!r.issued) return;
     const [row] = await t.db.select().from(certificates).where(eq(certificates.id, r.id));
     expect((row!.payload as { acceptedDivergences: unknown }).acceptedDivergences).toEqual([
-      { id: 'y2k-expiry', text: 'Fixed the Y2K expiry check' },
+      { id: 'y2k-expiry', text: 'EXPIRY is compared with four-digit years' },
     ]);
   });
 
+  // @spec exorcist#2.2 A fix changes a rule, not the data: the migration of the version before holds.
+  it('a new Soul version that changes only rules is proved on the data migrated for the one before', async () => {
+    const s = await setup();
+    await insertSoulVersion(t.db, s.project.id, (v, parent) => {
+      const soul = numberSoul(
+        { ...SHIFA_AS_IT_RUNS_SOUL, rules: SHIFA_AS_IT_RUNS_SOUL.rules.slice(1) },
+        s.project.id,
+        v,
+        parent,
+      );
+      return { ir: soul, specMarkdown: specRequirements(soul) };
+    });
+    const [v2] = await t.db
+      .select()
+      .from(souls)
+      .where(eq(souls.projectId, s.project.id))
+      .orderBy(desc(souls.version))
+      .limit(1);
+    const r = await issueCertificate(t.db, {
+      project: s.project,
+      soul: { id: v2!.id, version: v2!.version, ir: v2!.ir },
+      run: { id: s.run.id, seed: 1998 },
+      proof: s.proof,
+      key,
+    });
+    expect(r.issued).toBe(true);
+  });
+
+  it('a new Soul version with other data files needs the data migrated again', async () => {
+    const s = await setup();
+    const soul = SHIFA_AS_IT_RUNS_SOUL;
+    const other = {
+      ...soul,
+      entities: soul.entities.map((e, i) => (i ? e : { ...e, name: 'Something else' })),
+    };
+    await insertSoulVersion(t.db, s.project.id, (v, parent) => {
+      const x = numberSoul(other, s.project.id, v, parent);
+      return { ir: x, specMarkdown: specRequirements(x) };
+    });
+    const [v2] = await t.db
+      .select()
+      .from(souls)
+      .where(eq(souls.projectId, s.project.id))
+      .orderBy(desc(souls.version))
+      .limit(1);
+    expect(
+      await issueCertificate(t.db, {
+        project: s.project,
+        soul: { id: v2!.id, version: v2!.version, ir: v2!.ir },
+        run: { id: s.run.id, seed: 1998 },
+        proof: s.proof,
+        key,
+      }),
+    ).toEqual({
+      issued: false,
+      reason:
+        'The data was migrated for Soul version 1, not version 2: run the undertake step again',
+    });
+  });
+
   it('says why none was issued: differences, data not migrated or not reconciled, no key', async () => {
+    // None of these cases issues one.
+    const before = (await t.db.select().from(certificates)).length;
     expect(await issue(await setup({ failed: 9 }))).toEqual({
       issued: false,
       reason: '9 cases differ from the old app',
@@ -180,7 +252,7 @@ describe('issueCertificate', () => {
       issued: false,
       reason: 'This worker has no signing key (CERT_SIGNING_KEY)',
     });
-    expect(await t.db.select().from(certificates)).toHaveLength(2);
+    expect(await t.db.select().from(certificates)).toHaveLength(before);
   });
 
   it('one certificate per proof run: issuing again gives the same one', async () => {
