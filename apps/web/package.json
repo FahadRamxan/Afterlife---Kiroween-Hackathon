@@ -21,6 +21,7 @@
     "@xyflow/react": "^12",
     "fflate": "^0.8.3",
     "js-dos": "8.5.4",
+    "motion": "^14.14.0",
     "next": "^15",
     "next-intl": "^4.15.1",
     "postcss": "^8.5.33",

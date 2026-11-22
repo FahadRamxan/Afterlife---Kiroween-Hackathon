@@ -149,6 +149,13 @@ export const StepStateSchema = z
     /** True when the step replayed a recorded run (demo mode). */
     recorded: z.boolean(),
     finishedAt: z.iso.datetime().nullable(),
+    /** The rebirth step, done (Prompt 63): the reborn app's URL and the actions it published. */
+    vessel: z
+      .object({
+        url: z.string(),
+        actions: z.array(z.object({ id: z.string(), name: z.string() })),
+      })
+      .nullable(),
   })
   .meta({ id: 'StepState' });
 export type StepState = z.infer<typeof StepStateSchema>;

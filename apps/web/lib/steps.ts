@@ -11,6 +11,11 @@ const StepStateSchema = z.object({
   reason: z.string().nullable(),
   recorded: z.boolean(),
   finishedAt: z.string().nullable(),
+  /** The rebirth step, done: the reborn app and the actions it published (Prompt 63). */
+  vessel: z
+    .object({ url: z.string(), actions: z.array(z.object({ id: z.string(), name: z.string() })) })
+    .nullable()
+    .default(null),
 });
 export type StepState = z.infer<typeof StepStateSchema>;
 

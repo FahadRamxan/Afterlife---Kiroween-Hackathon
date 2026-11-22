@@ -4,12 +4,22 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import type { LiveEvent } from '../lib/live';
 import { applyStepEvents, getSteps, rerunStep, type StepState } from '../lib/steps';
+import { RebornCard } from './RebornCard';
 
 const API = process.env.NEXT_PUBLIC_API_URL;
 const SETTLED = new Set(['done', 'skipped', 'failed']);
 
 /** The six pipeline steps: where each one is, why it was skipped, and "Run again" (alone). */
-export function StepsList({ projectId, events }: { projectId: string; events: LiveEvent[] }) {
+export function StepsList({
+  projectId,
+  events,
+  app,
+}: {
+  projectId: string;
+  events: LiveEvent[];
+  /** The dead app, for the tombstone of the reborn moment (Prompt 63). */
+  app?: { name: string; born: number; died: number };
+}) {
   const t = useTranslations('raise.steps');
   const [base, setBase] = useState<StepState[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -29,6 +39,17 @@ export function StepsList({ projectId, events }: { projectId: string; events: Li
 
   // The API's answer, moved along by every live step event since.
   const steps = useMemo(() => (base ? applyStepEvents(base, events) : null), [base, events]);
+  // The rebirth step just finished: what it published comes with the steps, so read them again.
+  const rebirth = steps?.find((s) => s.step === 'rebirth');
+  const needReborn = rebirth?.status === 'done' && !rebirth.vessel;
+  useEffect(() => {
+    if (!needReborn) return;
+    let alive = true;
+    getSteps(API, projectId).then((r) => alive && r.ok && setBase(r.steps));
+    return () => {
+      alive = false;
+    };
+  }, [needReborn, projectId]);
 
   async function again(step: string) {
     setBusy(step);
@@ -109,6 +130,9 @@ export function StepsList({ projectId, events }: { projectId: string; events: Li
         <p role="alert" className="mt-2 text-sm">
           {error}
         </p>
+      ) : null}
+      {rebirth?.status === 'done' && rebirth.vessel ? (
+        <RebornCard reborn={rebirth.vessel} {...(app ? { app } : {})} />
       ) : null}
     </section>
   );

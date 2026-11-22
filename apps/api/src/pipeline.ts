@@ -43,7 +43,12 @@ export class PgPipeline implements Pipeline {
       .where(eq(pipelineSteps.projectId, projectId));
     return PIPELINE.map((step) => {
       const r = rows.find((x) => x.step === step);
-      const output = (r?.output ?? null) as { reason?: unknown; recorded?: unknown } | null;
+      const output = (r?.output ?? null) as {
+        reason?: unknown;
+        recorded?: unknown;
+        published?: unknown;
+        actions?: { id: string; name: string; ok: boolean }[];
+      } | null;
       const reason = typeof output?.reason === 'string' ? output.reason : null;
       return {
         step,
@@ -53,6 +58,16 @@ export class PgPipeline implements Pipeline {
         reason,
         recorded: !!output?.recorded || !!reason?.startsWith('Recorded run'),
         finishedAt: r?.finishedAt?.toISOString() ?? null,
+        // The URL is this project's, also for a recorded run (its output has the recorded one's).
+        vessel:
+          step === 'rebirth' && r?.status === 'done' && output?.published === true
+            ? {
+                url: `/vessel/${projectId}`,
+                actions: (output.actions ?? [])
+                  .filter((a) => a.ok)
+                  .map((a) => ({ id: a.id, name: a.name })),
+              }
+            : null,
       };
     });
   }

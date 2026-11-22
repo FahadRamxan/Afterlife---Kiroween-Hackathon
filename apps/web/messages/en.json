@@ -318,6 +318,11 @@
       },
       "hiddenNote": "This is a real shop's app, so what was sent to the model and what it answered is not shown here. Names and phone numbers are never sent to the model.",
       "hidden": "Not shown: this is a real shop’s app."
+    },
+    "reborn": {
+      "title": "Reborn",
+      "published": "{n, plural, one {# action} other {# actions}} passed the Surgeon’s checks and went live:",
+      "open": "Use the reborn app"
     }
   },
   "vessel": {

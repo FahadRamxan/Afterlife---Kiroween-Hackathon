@@ -214,3 +214,11 @@ export {
   type ScoreEvidence,
   type Truth,
 } from './archaeologist/scoring';
+// The Surgeon: the Soul compiled into the reborn app (Prompt 63).
+export {
+  operate,
+  type CompiledRule,
+  type Operation,
+  type SmokeTest,
+  type VesselConfig,
+} from './surgeon/surgeon';
