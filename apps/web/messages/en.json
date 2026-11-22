@@ -323,6 +323,30 @@
       "title": "Reborn",
       "published": "{n, plural, one {# action} other {# actions}} passed the Surgeon’s checks and went live:",
       "open": "Use the reborn app"
+    },
+    "crossing": {
+      "title": "Data crossing",
+      "phone": "Phone",
+      "moving": "The old app’s records are crossing to the reborn app.",
+      "crossed": "The records have crossed.",
+      "tables": "Tables",
+      "table": "{file}: {crossed} of {of} records crossed",
+      "count": "{crossed} of {of} records crossed",
+      "rejectedCount": "{n} rejected",
+      "matches": "Every total matches exactly: nothing was lost or changed on the way.",
+      "mismatch": "Some totals do not match: see the crosses.",
+      "col": {
+        "table": "Table",
+        "total": "Total",
+        "old": "Old app",
+        "new": "Reborn app",
+        "ok": "Matches"
+      },
+      "all": "All tables",
+      "ok": "matches",
+      "notOk": "does not match",
+      "rejectedTitle": "Records that could not cross",
+      "fix": "Fix"
     }
   },
   "vessel": {

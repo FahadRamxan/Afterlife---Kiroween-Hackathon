@@ -156,6 +156,43 @@ export const StepStateSchema = z
         actions: z.array(z.object({ id: z.string(), name: z.string() })),
       })
       .nullable(),
+    /** The undertake step, done (Prompt 66): what crossed, what was rejected, the reconciliation. */
+    crossing: z
+      .object({
+        tables: z.array(
+          z.object({
+            file: z.string(),
+            entity: z.string(),
+            read: z.number(),
+            deleted: z.number(),
+            migrated: z.number(),
+            rejected: z.number(),
+          }),
+        ),
+        rejected: z.array(
+          z.object({
+            file: z.string(),
+            recno: z.number(),
+            field: z.string(),
+            reason: z.string(),
+            fix: z.string(),
+          }),
+        ),
+        reconciliation: z.object({
+          matches: z.boolean(),
+          lines: z.array(
+            z.object({
+              table: z.string(),
+              total: z.string(),
+              before: z.string(),
+              rejected: z.string(),
+              after: z.string(),
+              ok: z.boolean(),
+            }),
+          ),
+        }),
+      })
+      .nullable(),
   })
   .meta({ id: 'StepState' });
 export type StepState = z.infer<typeof StepStateSchema>;

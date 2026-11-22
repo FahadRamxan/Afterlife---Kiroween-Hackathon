@@ -4,6 +4,8 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useState } from 'react';
 import type { LiveEvent } from '../lib/live';
 import { applyStepEvents, getSteps, rerunStep, type StepState } from '../lib/steps';
+import { crossingProgress } from '../lib/crossing';
+import { DataCrossing } from './DataCrossing';
 import { RebornCard } from './RebornCard';
 
 const API = process.env.NEXT_PUBLIC_API_URL;
@@ -41,7 +43,11 @@ export function StepsList({
   const steps = useMemo(() => (base ? applyStepEvents(base, events) : null), [base, events]);
   // The rebirth step just finished: what it published comes with the steps, so read them again.
   const rebirth = steps?.find((s) => s.step === 'rebirth');
-  const needReborn = rebirth?.status === 'done' && !rebirth.vessel;
+  const undertake = steps?.find((s) => s.step === 'undertake');
+  const needReborn =
+    (rebirth?.status === 'done' && !rebirth.vessel) ||
+    (undertake?.status === 'done' && !undertake.crossing);
+  const progress = useMemo(() => crossingProgress(events), [events]);
   useEffect(() => {
     if (!needReborn) return;
     let alive = true;
@@ -70,70 +76,82 @@ export function StepsList({
   // placeholder that skipped itself.
   const skipped = steps.filter((s) => s.status === 'skipped').length;
   return (
-    <section aria-labelledby="steps-heading" data-testid="steps" className="mt-6">
-      <h2 id="steps-heading" className="text-lg font-semibold">
-        {t('title')}
-      </h2>
-      <ProgressCandle
-        value={settled}
-        max={steps.length}
-        label={t('progress', { settled, total: steps.length, skipped })}
-        className="mt-2 max-w-sm"
-      />
-      <ol className="mt-3 space-y-2">
-        {steps.map((s) => (
-          <li
-            key={s.step}
-            data-testid={`step-${s.step}`}
-            data-status={s.status}
-            className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
-          >
-            <span className="w-28 font-mono" lang="en" dir="ltr">
-              {s.step}
-            </span>
-            <span data-testid="step-status">{t(`status.${s.status}`)}</span>
-            {s.attempts > 1 ? (
-              <span className="text-bone/70">{t('attempts', { n: s.attempts })}</span>
-            ) : null}
-            {s.reason ? (
-              <span className="text-bone/70" lang="en" dir="ltr">
-                {s.reason}
+    <>
+      <section aria-labelledby="steps-heading" data-testid="steps" className="mt-6">
+        <h2 id="steps-heading" className="text-lg font-semibold">
+          {t('title')}
+        </h2>
+        <ProgressCandle
+          value={settled}
+          max={steps.length}
+          label={t('progress', { settled, total: steps.length, skipped })}
+          className="mt-2 max-w-sm"
+        />
+        <ol className="mt-3 space-y-2">
+          {steps.map((s) => (
+            <li
+              key={s.step}
+              data-testid={`step-${s.step}`}
+              data-status={s.status}
+              className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm"
+            >
+              <span className="w-28 font-mono" lang="en" dir="ltr">
+                {s.step}
               </span>
-            ) : null}
-            {/* A step that did its work in a recorded run says so too (product.md: label it). */}
-            {s.recorded && !s.reason ? (
-              <span data-testid="step-recorded" className="text-bone/70">
-                {t('recordedDone')}
-              </span>
-            ) : null}
-            {s.error ? (
-              <span className="text-bone" lang="en" dir="ltr">
-                {s.error}
-              </span>
-            ) : null}
-            {SETTLED.has(s.status) ? (
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                disabled={busy !== null}
-                onClick={() => again(s.step)}
-                aria-label={t('again', { step: s.step })}
-              >
-                {t('againShort')}
-              </Button>
-            ) : null}
-          </li>
-        ))}
-      </ol>
-      {error ? (
-        <p role="alert" className="mt-2 text-sm">
-          {error}
-        </p>
+              <span data-testid="step-status">{t(`status.${s.status}`)}</span>
+              {s.attempts > 1 ? (
+                <span className="text-bone/70">{t('attempts', { n: s.attempts })}</span>
+              ) : null}
+              {s.reason ? (
+                <span className="text-bone/70" lang="en" dir="ltr">
+                  {s.reason}
+                </span>
+              ) : null}
+              {/* A step that did its work in a recorded run says so too (product.md: label it). */}
+              {s.recorded && !s.reason ? (
+                <span data-testid="step-recorded" className="text-bone/70">
+                  {t('recordedDone')}
+                </span>
+              ) : null}
+              {s.error ? (
+                <span className="text-bone" lang="en" dir="ltr">
+                  {s.error}
+                </span>
+              ) : null}
+              {SETTLED.has(s.status) ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  disabled={busy !== null}
+                  onClick={() => again(s.step)}
+                  aria-label={t('again', { step: s.step })}
+                >
+                  {t('againShort')}
+                </Button>
+              ) : null}
+            </li>
+          ))}
+        </ol>
+        {error ? (
+          <p role="alert" className="mt-2 text-sm">
+            {error}
+          </p>
+        ) : null}
+      </section>
+      {/* After the steps, not inside them: each has a progress bar of its own. */}
+      {undertake &&
+      (undertake.status !== 'pending' || progress.length) &&
+      undertake.status !== 'skipped' ? (
+        <DataCrossing
+          running={undertake.status === 'running' || undertake.status === 'queued'}
+          progress={progress}
+          crossing={undertake.status === 'done' ? undertake.crossing : null}
+        />
       ) : null}
       {rebirth?.status === 'done' && rebirth.vessel ? (
         <RebornCard reborn={rebirth.vessel} {...(app ? { app } : {})} />
       ) : null}
-    </section>
+    </>
   );
 }
