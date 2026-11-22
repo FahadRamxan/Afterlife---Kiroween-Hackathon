@@ -19,3 +19,42 @@
     outline-color: var(--color-ectoplasm);
   }
 }
+
+/*
+ * Printing a receipt (Prompt 61): only the receipt's paper, on an 80 mm roll, in black on white
+ * (a thermal printer has no colour). Everything else on the page is hidden, not removed, so the
+ * paper keeps its place in the layout and the page does not reflow while the dialog is open.
+ */
+@media print {
+  @page {
+    size: 80mm auto;
+    margin: 0;
+  }
+  body {
+    background: white;
+  }
+  body * {
+    visibility: hidden;
+  }
+  .vessel-receipt-paper,
+  .vessel-receipt-paper * {
+    visibility: visible;
+  }
+  .vessel-receipt-paper {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 80mm;
+    max-width: none;
+    margin: 0;
+    padding: 4mm;
+    border-radius: 0;
+    background: white;
+    color: black;
+    font-size: 7pt;
+  }
+  .vessel-receipt-paper * {
+    font-size: inherit;
+    color: inherit;
+    border-color: currentColor;
+  }
+}

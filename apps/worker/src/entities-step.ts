@@ -123,15 +123,16 @@ export function entitiesStep(deps: {
       ];
       await ctx.log(`${e.file}: ${parts.join(', ')}`);
     }
-    // What the owner does that writes data: the bill they save, the customer they add.
-    const actions = inferActions(rows.map(stepFromObservation), entities);
+    // The app's own records: a bill line's medicine is looked up in them, and probes priced.
+    const records = Object.fromEntries(tables.map((t) => [t.file, t.table.records]));
+    // What the owner does that writes data: the bill they save, the customer they add, with the
+    // receipt each save's screen showed (Prompt 61).
+    const actions = inferActions(rows.map(stepFromObservation), entities, { tables: records });
     for (const a of actions)
       await ctx.log(
         `Action "${a.name}" on ${a.screen}: ${a.effects.map((e) => `${e.kind} ${e.entity}`).join(', ')}, keys ${a.keys}`,
       );
     const today = ctx.project.dosTime ?? graveyardDosTime(ctx.project);
-    // The app's own records: a bill line's medicine is looked up in them, and probes priced.
-    const records = Object.fromEntries(tables.map((t) => [t.file, t.table.records]));
     const llm = deps.llm
       ? new CrewLlm({
           client: deps.llm,

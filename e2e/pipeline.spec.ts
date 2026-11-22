@@ -50,7 +50,8 @@ test.describe('pipeline', () => {
   test('a recorded run is labelled, replays the real first screen, and every step says recorded', async ({
     page,
   }) => {
-    test.setTimeout(120_000);
+    // The replay is paced like the real run (about 55 s for Shifa's possession and archaeology).
+    test.setTimeout(240_000);
     const id = await raise(page, 'Watch a recorded run of Shifa Medical Store');
     await expect(page.getByTestId('run-mode')).toContainText('Recorded run');
     await expect(page.getByTestId('live-screen')).toContainText('SHIFA MEDICAL STORE', {
@@ -63,7 +64,7 @@ test.describe('pipeline', () => {
     });
     await expect(page.getByTestId('steps').getByRole('progressbar')).toHaveAccessibleName(
       '6 of 6 steps run, 4 of them skipped',
-      { timeout: 60_000 },
+      { timeout: 150_000 },
     );
     await expect(page.getByTestId('step-archaeology')).toContainText('Recorded run:');
     // Prompt 49: the boundary values the Possessor tried, and what the old app refused.

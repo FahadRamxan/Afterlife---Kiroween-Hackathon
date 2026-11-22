@@ -4,7 +4,14 @@ import { expandMacro, type Entity } from '@afterlife/soul';
 import { SHIFA_REFERENCE_SOUL } from '@afterlife/soul/examples/shifa';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { inferActions, labelScore, stepFromEvent, type ActionStep } from './actions';
+import {
+  inferActions,
+  labelScore,
+  stepFromEvent,
+  stepFromObservation,
+  type ActionStep,
+} from './actions';
+import { graveyardRun, graveyardScreen, graveyardTables, readCsv } from './testing/graveyard-runs';
 
 const ENTITIES: Entity[] = SHIFA_REFERENCE_SOUL.entities;
 const NONE: SnapshotDiff = { tables: {}, unchanged: [], addedTables: [], removedTables: [] };
@@ -96,6 +103,8 @@ function bill(lines: { code: string; qty: string; price: string }[], cust = ''):
 }
 
 const reference = SHIFA_REFERENCE_SOUL.actions.find((a) => a.id === 'save-bill')!;
+/** These steps keep no screen (no receipt layout can be read off them): all but the receipt. */
+const { receipt: referenceReceipt, ...referenceAction } = reference;
 
 describe('inferActions', () => {
   it('a saved bill gives the reference Soul’s save-bill: its effects and its key macro', () => {
@@ -106,7 +115,7 @@ describe('inferActions', () => {
       ]),
       ENTITIES,
     );
-    expect({ ...a, screen: undefined }).toEqual({ ...reference, screen: undefined });
+    expect({ ...a, screen: undefined }).toEqual({ ...referenceAction, screen: undefined });
     expect(a!.screen).toBe('fp_bill');
   });
 
@@ -242,6 +251,51 @@ describe('inferActions', () => {
       field: null,
     }));
     expect(inferActions(blind, ENTITIES)[0]).toMatchObject({ id: 'save-bill', keys: '{F2}' });
+  });
+});
+
+describe('inferActions: the receipt layout (Prompt 61)', () => {
+  // @spec vessel-receipts#2.2 The saves' screens give the action's receipt.
+  const KEYS = { BILLS: 'BILL_NO', BILLITEM: null, MEDICINE: 'CODE', CUSTOMER: 'CUST_ID' };
+  const TABLES = Object.fromEntries(
+    graveyardTables('shifa').map((f) => [`${f}.DBF`, readCsv(`shifa/seed/${f}.csv`).records]),
+  );
+  /** The F2 of a scripted Shifa bill, on the TOTALS screen the real app showed. */
+  const save = (scenario: string, model = true): ActionStep => ({
+    id: scenario,
+    keys: '{F2}',
+    screen: { fingerprint: 'fp_bill', title: 'NEW BILL' },
+    after: { fingerprint: 'fp_bill', title: 'NEW BILL' },
+    field: null,
+    dbfDiff: graveyardRun('shifa', scenario, KEYS).dbfDiff,
+    ...(model ? { model: graveyardScreen('shifa', scenario, 'TOTALS') } : {}),
+  });
+
+  it('a customer’s bill and a walk-in’s give exactly the reference Soul’s layout', () => {
+    const [a] = inferActions([save('bill-discount'), save('bill-small')], ENTITIES, {
+      tables: TABLES,
+    });
+    expect(a!.receipt).toEqual(referenceReceipt);
+  });
+
+  it('a stored screen with only part of a model (an older run) is read, and gives no layout', () => {
+    // It crashed the archaeology step once: the model had a title and fields, but no tables.
+    const step = stepFromObservation({
+      id: 'o1',
+      keys: '{F2}',
+      screenBefore: { fingerprint: 'fp_bill', model: { title: { name: 'NEW BILL' }, fields: [] } },
+      screenAfter: { fingerprint: 'fp_bill', model: { title: { name: 'NEW BILL' } } },
+      dbfDiff: graveyardRun('shifa', 'bill-small', KEYS).dbfDiff,
+    });
+    expect(step.model).toBeUndefined();
+    const [a] = inferActions([step], ENTITIES, { tables: TABLES });
+    expect(a!.id).toBe('save-bill');
+    expect(a!.receipt).toBeUndefined();
+  });
+
+  it('saves whose screens were not kept give no layout (the Vessel then uses its default)', () => {
+    const [a] = inferActions([save('bill-discount', false)], ENTITIES, { tables: TABLES });
+    expect(a!.receipt).toBeUndefined();
   });
 });
 

@@ -1,5 +1,6 @@
 export {
   ActionSchema,
+  ReceiptSchema,
   EntityFieldSchema,
   EntitySchema,
   FieldTypeSchema,
@@ -11,6 +12,7 @@ export {
   parseSoul,
   serializeSoul,
   type Action,
+  type ReceiptLayout,
   type Entity,
   type Rule,
   type Screen,

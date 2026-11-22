@@ -1,3 +1,4 @@
+// @spec vessel-receipts#1 The receipt layout in the Soul.
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { soulArbitrary } from './arbitrary';
@@ -81,6 +82,22 @@ describe('the Soul IR', () => {
         (s) => (s.rules[0]!.expression = 'bill.subtotal >'),
         /rules.0.expression: The expression ends too early/,
       ],
+      // @spec vessel-receipts#1.1 A receipt layout must name real fields.
+      [
+        'a receipt column on no field',
+        (s) => s.actions[0]!.receipt!.columns.push({ label: 'COLOUR', ref: 'medicine.COLOUR' }),
+        /medicine.COLOUR is not an entity field/,
+      ],
+      [
+        'a receipt total on no entity',
+        (s) => s.actions[0]!.receipt!.totals.push({ label: 'TIP', ref: 'ghost.TIP' }),
+        /ghost.TIP is not an entity field/,
+      ],
+      [
+        'a receipt reference that is not entity.FIELD',
+        (s) => s.actions[0]!.receipt!.header.push({ label: 'X', ref: 'bill' }),
+        /ref/,
+      ],
       [
         'a field name that is not a dBASE name',
         (s) => (s.entities[0]!.fields[0]!.name = 'name with space'),
@@ -94,6 +111,36 @@ describe('the Soul IR', () => {
         expect(() => parseSoul(JSON.stringify(s))).toThrow(SoulError);
         expect(() => parseSoul(JSON.stringify(s))).toThrow(message);
       });
+  });
+
+  it('the reference Soul keeps the NEW BILL screen as its receipt layout, in its order', () => {
+    // @spec vessel-receipts#1.2 From bill.c: draw_bill, draw_line and show_totals.
+    const r = SHIFA_REFERENCE_SOUL.actions.find((a) => a.id === 'save-bill')!.receipt!;
+    expect(r.header.map((x) => `${x.label} ${x.ref}`)).toEqual([
+      'BILL NO bill.BILL_NO',
+      'DATE bill.BILL_DATE',
+      'Customer bill.CUST_ID',
+      ' customer.NAME',
+    ]);
+    expect(r.columns.map((x) => `${x.label} ${x.ref}`)).toEqual([
+      '# #',
+      'CODE bill-item.CODE',
+      'NAME medicine.NAME',
+      'BATCH medicine.BATCH',
+      'PRICE bill-item.PRICE',
+      'QTY bill-item.QTY',
+      'AMOUNT bill-item.AMOUNT',
+    ]);
+    expect(r.totals.map((x) => `${x.label} ${x.ref}`)).toEqual([
+      'SUBTOTAL bill.SUBTOTAL',
+      'DISCOUNT 10% bill.DISCOUNT',
+      'GST 17% bill.GST',
+      'TOTAL bill.TOTAL',
+    ]);
+    // Adding a customer prints nothing.
+    expect(SHIFA_REFERENCE_SOUL.actions.find((a) => a.id === 'add-customer')!.receipt).toBe(
+      undefined,
+    );
   });
 
   it('parseSoul says why text is not a Soul', () => {

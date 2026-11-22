@@ -110,6 +110,31 @@ describe('the worker job loop on pg-boss', () => {
     expect(job!.state).toBe('completed');
   });
 
+  it('jobs of one type run at once: a recorded run does not wait behind a live one', async () => {
+    // Each possession waits until both have started: one at a time, neither would ever finish.
+    const [a, b] = [await project(), await project()];
+    let started = 0;
+    let release!: () => void;
+    const both = new Promise<void>((r) => (release = r));
+    handlers.possess = async () => {
+      if (++started === 2) release();
+      await Promise.race([
+        both,
+        new Promise((_, no) => setTimeout(() => no(new Error('alone')), 1500)),
+      ]);
+      return { status: 'done', output: {} };
+    };
+    await enqueueStep(boss, t.db, 'possess', { projectId: a });
+    await enqueueStep(boss, t.db, 'possess', { projectId: b });
+    for (const id of [a, b])
+      await until(
+        () => step(id, 'possess'),
+        (s) => s?.status === 'done',
+      );
+    expect((await step(a, 'possess'))!.attempts).toBe(1);
+    expect((await step(b, 'possess'))!.attempts).toBe(1);
+  });
+
   it('retries a failed attempt, and the second attempt completes', async () => {
     const id = await project();
     let calls = 0;
@@ -141,7 +166,12 @@ describe('the worker job loop on pg-boss', () => {
       (s) => s?.status === 'failed',
     );
     expect(s!.error).toMatch(/timed out after 1 s/);
-    const [p] = await t.db.select().from(projects).where(eq(projects.id, id));
+    // The project's status follows the step's, a moment later (the loop writes the step first).
+    const p = await until(
+      async () => (await t.db.select().from(projects).where(eq(projects.id, id)))[0],
+      (p) => p?.status !== 'running',
+      10_000,
+    );
     expect(p!.status).toBe('failed');
   });
 

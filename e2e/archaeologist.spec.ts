@@ -52,5 +52,18 @@ test('a recorded run’s own Soul, found without a model and probed in the old a
   await expect(page.getByTestId('vessel-saved')).toHaveText(
     'Bill 9807-0001 saved. Total Rs 5,475.60.',
   );
+  // Prompt 61: its receipt, in the layout the Archaeologist read off the old NEW BILL screen.
+  const paper = page.getByTestId('receipt-paper');
+  await expect(paper.getByRole('columnheader')).toHaveText([
+    '#',
+    'CODE',
+    'NAME',
+    'BATCH',
+    'PRICE',
+    'QTY',
+    'AMOUNT',
+  ]);
+  await expect(paper).toContainText('INSULIN MIXTARD 10ML');
+  await expect(paper).toContainText('Customer:WALK-IN');
   await page.request.delete(`${API}/api/projects/${id}`);
 });

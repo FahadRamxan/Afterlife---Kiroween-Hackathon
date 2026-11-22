@@ -4,6 +4,7 @@
 // gives the observation the Possessor would have made for that scenario.
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { diffTables, type DbfField, type DbfValue, type SnapshotDiff } from '@afterlife/dbf';
+import { analyzeScreen, gridFromCells, type ScreenModel } from '@afterlife/screen';
 import type { Entity } from '@afterlife/soul';
 import type { EffectObservation } from '../hypotheses';
 import type { HiddenRule, ScoreEvidence } from '../scoring';
@@ -49,6 +50,24 @@ export function readCsv(path: string): Csv {
   return { fields, records };
 }
 
+/**
+ * A screen of a scenario as the old app showed it in DOSBox (a .SCR dump: 25 lines of CP437
+ * bytes, "--ATTR--", 25 lines of hex attributes), read into its ScreenModel.
+ */
+export function graveyardScreen(app: string, scenario: string, name: string): ScreenModel {
+  const lines = readFileSync(
+    new URL(`fixtures/${app}/${scenario}/${name}.SCR`, ROOT),
+    'latin1',
+  ).split(/\r?\n/);
+  const sep = lines.indexOf('--ATTR--');
+  const cells = Array.from({ length: 25 }, (_, row) =>
+    Array.from({ length: 80 }, (_, col) => {
+      const attr = parseInt(lines[sep + 1 + row]!.slice(col * 2, col * 2 + 2), 16);
+      return { code: lines[row]!.charCodeAt(col), fg: attr & 15, bg: attr >> 4 };
+    }),
+  );
+  return analyzeScreen(gridFromCells(cells));
+}
 /** The data files of an app (from its seed folder), upper case without .DBF: BILLS, MEDICINE. */
 export function graveyardTables(app: string): string[] {
   return readdirSync(new URL(`${app}/seed/`, ROOT))

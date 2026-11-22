@@ -20,7 +20,12 @@ const steps = (app: string) => {
     .events.filter((e) => e.type === 'observation')
     .map((e) => stepFromEvent(e.payload));
 };
-const withoutScreen = <T extends { screen: string }>(a: T) => ({ ...a, screen: '' });
+// A recorded event keeps no screen model, so no receipt layout can be read off it (Prompt 61).
+const withoutScreen = <T extends { screen: string; receipt?: unknown }>(a: T) => ({
+  ...a,
+  screen: '',
+  receipt: undefined,
+});
 
 describe('inferActions on the recorded possessions', () => {
   it('Shifa: the reference Soul’s save-bill and add-customer, macros and effects included', () => {
