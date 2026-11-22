@@ -9,7 +9,8 @@ test.describe('rule verification', () => {
   test('checks candidates on a real bill: keeps the truncated GST, asks for a 5000 probe', async ({
     page,
   }) => {
-    test.setTimeout(240_000);
+    // The séance, then possession and archaeology (with its probe bills) on a shared emulator.
+    test.setTimeout(360_000);
     await page.goto('/graveyard');
     await page.getByRole('button', { name: 'Raise Shifa Medical Store' }).click();
     await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
@@ -32,7 +33,12 @@ test.describe('rule verification', () => {
     await expect(seance.getByTestId('seance-saved')).toBeVisible();
 
     // The project's observations: the séance's, and any the live possession made. The bill is the
-    // séance's (possession here stops before it saves one).
+    // séance's (possession here stops before it saves one). Read once archaeology is done: the
+    // possession and the Archaeologist's probe bills are what add observations, so the count no
+    // longer moves while the test reads it.
+    await expect(page.getByTestId('step-archaeology')).toHaveAttribute('data-status', 'done', {
+      timeout: 240_000,
+    });
     const targets = await (
       await page.request.get(`${API}/api/projects/${projectId}/rules/targets`)
     ).json();

@@ -4,7 +4,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
 const API = 'http://localhost:4000';
-const STEPS = ['possess', 'archaeology', 'rebirth', 'undertake', 'prove', 'exorcise'];
 
 async function raise(page: Page, button: string) {
   await page.goto('/graveyard');
@@ -25,7 +24,7 @@ test.describe('pipeline', () => {
     // and the Surgeon has no app to publish yet: rebirth is skipped and says so. The Undertaker
     // still moves the old app's data (Prompt 64).
     await expect(steps.getByRole('progressbar')).toHaveAccessibleName(
-      '6 of 6 steps run, 3 of them skipped',
+      '6 of 6 steps run, 2 of them skipped',
       { timeout: 180_000 },
     );
     // Possession explores (Prompt 48); archaeology finds the entities (Prompt 53).
@@ -36,8 +35,9 @@ test.describe('pipeline', () => {
       'The Soul has no actions yet, so there is no app to publish',
     );
     await expect(page.getByTestId('step-undertake')).toHaveAttribute('data-status', 'done');
-    for (const s of STEPS.slice(4))
-      await expect(page.getByTestId(`step-${s}`)).toHaveAttribute('data-status', 'skipped');
+    await expect(page.getByTestId('step-prove')).toHaveAttribute('data-status', 'skipped');
+    // The Exorcist looks at what possession saw (Prompt 73): done, whatever it finds.
+    await expect(page.getByTestId('step-exorcise')).toHaveAttribute('data-status', 'done');
     await expect(page.getByTestId('step-prove')).toContainText(
       'The Soul has no actions to prove yet',
     );
@@ -71,8 +71,8 @@ test.describe('pipeline', () => {
       timeout: 60_000,
     });
     await expect(page.getByTestId('steps').getByRole('progressbar')).toHaveAccessibleName(
-      // Only exorcise is left to build (Prompt 73): the recorded run proves the Soul (Prompt 70).
-      '6 of 6 steps run, 1 of them skipped',
+      // Every step runs in the recorded run: the proof (Prompt 70) and the Exorcist (Prompt 73) too.
+      '6 of 6 steps run',
       { timeout: 150_000 },
     );
     await expect(page.getByTestId('step-archaeology')).toContainText('Recorded run:');

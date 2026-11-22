@@ -33,7 +33,13 @@ const valid: GraveyardManifestT = {
     },
   ],
   knownBugs: [
-    { id: 'y2k-expiry', text: 'Two-digit year.', severity: 'high', scenarios: ['y2k-blocks-2000'] },
+    {
+      id: 'y2k-expiry',
+      text: 'Two-digit year.',
+      severity: 'high',
+      scenarios: ['y2k-blocks-2000'],
+      truth: { smell: 'two-digit-year', target: 'medicine.expiry' },
+    },
   ],
 };
 
@@ -65,6 +71,15 @@ describe('GraveyardManifest', () => {
     ],
     ['a bad severity', { ...valid, knownBugs: [{ ...valid.knownBugs[0]!, severity: 'meh' }] }],
     ['duplicate rule ids', { ...valid, knownRules: [valid.knownRules[0]!, valid.knownRules[0]!] }],
+    // Prompt 73: every known bug carries its truth for the Exorcist's score, with a known smell.
+    [
+      'a bug with no truth',
+      { ...valid, knownBugs: [{ ...valid.knownBugs[0]!, truth: undefined }] },
+    ],
+    [
+      'a bug with an unknown smell',
+      { ...valid, knownBugs: [{ ...valid.knownBugs[0]!, truth: { smell: 'spooky' } }] },
+    ],
     ['a story longer than 3 lines', { ...valid, story: 'a\nb\nc\nd' }],
   ])('rejects %s', (_label, m) => {
     expect(GraveyardManifest.safeParse(m).success).toBe(false);
@@ -110,7 +125,13 @@ describe('publicEntry', () => {
             },
           ],
           knownBugs: [
-            { id: 'b', text: `SECRET-BUG ${bug}`, severity: 'low' as const, scenarios: ['s'] },
+            {
+              id: 'b',
+              text: `SECRET-BUG ${bug}`,
+              severity: 'low' as const,
+              scenarios: ['s'],
+              truth: { smell: 'rounding' as const },
+            },
           ],
         };
         const json = JSON.stringify(publicEntry(m, []));

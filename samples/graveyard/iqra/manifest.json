@@ -73,7 +73,11 @@
       "id": "late-fee-calendar-weeks",
       "text": "The late fee counts calendar weeks (Monday to Sunday) between the due date and the payment, not days: 1 day late can cost nothing, and 8 days late costs one week instead of two.",
       "severity": "medium",
-      "scenarios": ["late-sunday", "late-8days"]
+      "scenarios": ["late-sunday", "late-8days"],
+      "truth": {
+        "smell": "date-arithmetic",
+        "target": "payment.late_fee"
+      }
     }
   ]
 }

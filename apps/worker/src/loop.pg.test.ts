@@ -223,10 +223,10 @@ describe('the worker job loop on pg-boss', () => {
 
   it('a step that is not built yet is "skipped" with its reason, never "done"', async () => {
     const id = await project();
-    // The Exorcist is not built yet (Prompt 73).
-    await enqueueStep(boss, t.db, 'exorcise', { projectId: id });
+    // Ghost Twin's replay is not built yet (Prompt 77).
+    await enqueueStep(boss, t.db, 'twin-replay', { projectId: id });
     const s = await until(
-      () => step(id, 'exorcise'),
+      () => step(id, 'twin-replay'),
       (s) => s?.status === 'skipped',
     );
     expect(s!.error).toBeNull();

@@ -240,3 +240,5 @@ export {
   type ReconciliationLine,
   type TableTotals,
 } from './undertaker/reconcile';
+// The Exorcist: legacy bugs and flaws, with their evidence (Prompts 73 to 75).
+export * from './exorcist/index';
