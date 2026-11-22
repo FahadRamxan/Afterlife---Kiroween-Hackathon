@@ -46,7 +46,8 @@ const base = (api: string) => api.replace(/\/+$/, '');
 
 /**
  * The Vessel on this phone. Online: the newest Soul, and the first records from the old app's
- * bundle; offline: what the phone kept from last time. Every saved bill goes into the outbox.
+ * bundle (or, for an uploaded app, the server's, migrated by the Undertaker); offline: what the
+ * phone kept from last time. Every saved bill goes into the outbox.
  */
 export async function startPhone(
   phone: Phone,
@@ -71,10 +72,17 @@ export async function startPhone(
       10,
     );
     if (!(await phone.meta.get<boolean>('seeded'))) {
-      if (!app) throw new PhoneError('no-data');
-      const res = await fetcher(app.bundle);
-      if (!res.ok) throw new PhoneError('no-data', `${res.status}`);
-      await seedStore(phone.store, new Uint8Array(await res.arrayBuffer()), s.soul);
+      if (app) {
+        const res = await fetcher(app.bundle);
+        if (!res.ok) throw new PhoneError('no-data', `${res.status}`);
+        await seedStore(phone.store, new Uint8Array(await res.arrayBuffer()), s.soul);
+      } else {
+        // An uploaded app has no bundle here: its first records are the ones the Undertaker
+        // migrated into the server (Prompt 64), or there are none yet.
+        const files = await serverRecords(opts.api, opts.projectId, fetcher);
+        if (!files) throw new PhoneError('no-data');
+        for (const [file, records] of Object.entries(files)) await phone.store.load(file, records);
+      }
       await phone.meta.set('seeded', true);
     }
     kept = { soul: s.soul, version: s.version, today };
@@ -112,6 +120,21 @@ export function oneAtATime() {
     last = run.catch(() => undefined);
     return run;
   };
+}
+
+/** The server's records of the project, by data file, or null when it has none yet. */
+async function serverRecords(
+  api: string | undefined,
+  projectId: string,
+  fetcher: typeof fetch,
+): Promise<Record<string, DbfRecord[]> | null> {
+  if (!api) return null;
+  const r = await fetcher(
+    `${base(api)}/api/projects/${encodeURIComponent(projectId)}/vessel/records`,
+    { cache: 'no-store' },
+  );
+  if (!r.ok) return null;
+  return ((await r.json()) as { files: Record<string, DbfRecord[]> }).files;
 }
 
 /** Sends the outbox; then, with nothing left to send, takes the server's records. */

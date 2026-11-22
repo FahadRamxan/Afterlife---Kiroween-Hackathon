@@ -5,6 +5,7 @@ import type { Db } from '@afterlife/db';
 import { entitiesStep } from './entities-step';
 import { graveyardBundle, possessApp, type EmulatorPool } from './possess';
 import { rebirthStep } from './rebirth-step';
+import { undertakeStep } from './undertake-step';
 import { scanUpload, uploadBundle } from './scan-upload';
 import type { VirusScanner } from './scanner';
 import { translateSoulStep } from './translate-soul';
@@ -99,7 +100,10 @@ export function defaultRegistry(
     rebirth: db
       ? rebirthStep({ db, bundleFor })
       : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
-    undertake: notBuiltYet('undertake', 'Prompt 64'),
+    // The Undertaker moves the old app's data into the reborn app (Prompt 64).
+    undertake: db
+      ? undertakeStep({ db, bundleFor })
+      : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
     prove: notBuiltYet('prove', 'Prompt 68'),
     exorcise: notBuiltYet('exorcise', 'Prompt 73'),
     'twin-replay': notBuiltYet('twin-replay', 'Prompt 77'),
