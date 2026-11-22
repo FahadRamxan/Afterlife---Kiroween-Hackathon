@@ -9,7 +9,17 @@
     "test": "vitest run --passWithNoTests",
     "typecheck": "tsc -p tsconfig.json"
   },
+  "dependencies": {
+    "@afterlife/crew": "workspace:^",
+    "@afterlife/dbf": "workspace:^",
+    "@afterlife/emulator": "workspace:^",
+    "@afterlife/soul": "workspace:^",
+    "@afterlife/vessel": "workspace:^",
+    "decimal.js": "^10.6.0",
+    "fast-check": "^4.10.2"
+  },
   "devDependencies": {
+    "@types/node": "^22",
     "vitest": "^5.1.0"
   }
 }
