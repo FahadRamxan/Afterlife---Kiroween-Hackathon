@@ -18,10 +18,10 @@ Prompt 67 is task 1, Prompt 68 task 2, Prompt 69 task 3, Prompt 70 task 4.
     - _Requirements: 2.1_
   - [x] 2.3 Add pnpm proof:shifa (200 cases on the real Shifa) to ci:local, and catch a changed rule
     - _Requirements: 2.5_
-- [ ] 3. Shrinking and the counterexample
-  - [ ] 3.1 Shrink a failing case with fast-check from its path, each try from a fresh start
+- [x] 3. Shrinking and the counterexample
+  - [x] 3.1 Shrink a failing case with fast-check from its path, each try from a fresh start
     - _Requirements: 3.1, 3.2_
-  - [ ] 3.2 Implement explainDifference
+  - [x] 3.2 Implement explainDifference
     - _Requirements: 3.3_
 - [ ] 4. The proof run in the app
   - [ ] 4.1 Implement the prove step and its events

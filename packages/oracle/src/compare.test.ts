@@ -77,6 +77,7 @@ describe('effectDifferences', () => {
         record: 'BILL_NO 9807-0001',
         old: 'written',
         vessel: null,
+        values: { BILL_NO: '9807-0001', SUBTOTAL: '5000', GST: '850' },
       },
       {
         table: 'MEDICINE.DBF',

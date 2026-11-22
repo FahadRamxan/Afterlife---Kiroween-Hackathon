@@ -17,6 +17,8 @@ export type Difference = {
   /** The value on each side ('' for blank); null when that side has no such record or change. */
   old: string | null;
   vessel: string | null;
+  /** A record only one side wrote or deleted: its values (trimmed, blanks left out). */
+  values?: Record<string, string>;
 };
 
 const NUMBER = /^-?\d+(\.\d+)?$/;
@@ -36,6 +38,13 @@ const EMPTY: TableDiff = {
   updated: [],
   schema: { added: [], removed: [] },
 };
+
+const valuesOf = (r: RecordRef) =>
+  Object.fromEntries(
+    Object.entries(r.values)
+      .map(([k, v]) => [k, normalValue(v)] as const)
+      .filter(([, v]) => v !== ''),
+  );
 
 const changed = (t: TableDiff | undefined) =>
   !!t && (t.inserted.length > 0 || t.deleted.length > 0 || t.updated.length > 0);
@@ -67,20 +76,49 @@ function tableDifferences(table: string, o: TableDiff, v: TableDiff): Difference
     const id = name(r, i);
     const w = vIns.get(id);
     vIns.delete(id);
-    if (!w) out.push({ table, kind: 'inserted', record: id, old: 'written', vessel: null });
+    if (!w)
+      out.push({
+        table,
+        kind: 'inserted',
+        record: id,
+        old: 'written',
+        vessel: null,
+        values: valuesOf(r),
+      });
     else out.push(...recordDifferences(table, 'inserted', id, r.values, w.values));
   });
-  for (const id of vIns.keys())
-    out.push({ table, kind: 'inserted', record: id, old: null, vessel: 'written' });
+  for (const [id, r] of vIns)
+    out.push({
+      table,
+      kind: 'inserted',
+      record: id,
+      old: null,
+      vessel: 'written',
+      values: valuesOf(r),
+    });
   // Deleted: by record number.
-  const vDel = new Set(v.deleted.map((r) => r.recno));
-  const oDel = new Set(o.deleted.map((r) => r.recno));
-  for (const n of oDel)
+  const vDel = new Map(v.deleted.map((r) => [r.recno, r]));
+  const oDel = new Map(o.deleted.map((r) => [r.recno, r]));
+  for (const [n, r] of oDel)
     if (!vDel.has(n))
-      out.push({ table, kind: 'deleted', record: `#${n + 1}`, old: 'deleted', vessel: null });
-  for (const n of vDel)
+      out.push({
+        table,
+        kind: 'deleted',
+        record: `#${n + 1}`,
+        old: 'deleted',
+        vessel: null,
+        values: valuesOf(r),
+      });
+  for (const [n, r] of vDel)
     if (!oDel.has(n))
-      out.push({ table, kind: 'deleted', record: `#${n + 1}`, old: null, vessel: 'deleted' });
+      out.push({
+        table,
+        kind: 'deleted',
+        record: `#${n + 1}`,
+        old: null,
+        vessel: 'deleted',
+        values: valuesOf(r),
+      });
   // Updated: by record number, each changed field's new value (a field one side left alone keeps
   // its old value, so it differs only if the other side changed it to something else).
   const at = (t: TableDiff) => new Map(t.updated.map((u) => [u.beforeRecno, u]));

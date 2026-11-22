@@ -92,7 +92,8 @@ export const RESTART_EVERY = 25;
 export function proofProperty(
   ctx: CaseContext,
   actionId: string | undefined,
-  check: (c: ProofCase) => Promise<void> = async () => {},
+  /** Returns false (or throws) when the case shows a difference. */
+  check: (c: ProofCase) => Promise<boolean | void> = async () => {},
 ) {
   return fc.asyncProperty(caseArbitrary(ctx, actionId), check);
 }
@@ -124,7 +125,13 @@ export async function freshVessel(
   return createVessel(soul, store, { today: () => today });
 }
 
-const NO_EFFECTS: SnapshotDiff = { tables: {}, unchanged: [], addedTables: [], removedTables: [] };
+/** What a refused case did: nothing. */
+export const NO_EFFECTS: SnapshotDiff = {
+  tables: {},
+  unchanged: [],
+  addedTables: [],
+  removedTables: [],
+};
 const message = (e: unknown) => (e instanceof Error ? e.message : String(e));
 
 /** Runs the cases of a proof on the old app and the Vessel, and compares every one. */

@@ -9,7 +9,10 @@ export {
 } from './arbitraries';
 export { effectDifferences, normalValue, sameEffects, type Difference } from './compare';
 export { emulatorOldApp, type EmulatorOldAppOptions } from './old-app';
+export { explainDifference, type Explained } from './explain';
+export { SHRINK_TIME_LIMIT_MS, shrinkFailure, type Counterexample } from './shrink';
 export {
+  NO_EFFECTS,
   RESTART_EVERY,
   freshVessel,
   proofCases,
