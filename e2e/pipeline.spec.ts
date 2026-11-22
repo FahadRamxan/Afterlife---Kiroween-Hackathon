@@ -22,9 +22,10 @@ test.describe('pipeline', () => {
     const id = await raise(page, 'Raise Shifa Medical Store');
     const steps = page.getByTestId('steps');
     // A short possession (2 actions in the e2e worker) saves nothing, so the Soul has no actions
-    // and the Surgeon has no app to publish yet: rebirth is skipped and says so.
+    // and the Surgeon has no app to publish yet: rebirth is skipped and says so. The Undertaker
+    // still moves the old app's data (Prompt 64).
     await expect(steps.getByRole('progressbar')).toHaveAccessibleName(
-      '6 of 6 steps run, 4 of them skipped',
+      '6 of 6 steps run, 3 of them skipped',
       { timeout: 180_000 },
     );
     // Possession explores (Prompt 48); archaeology finds the entities (Prompt 53).
@@ -34,7 +35,8 @@ test.describe('pipeline', () => {
     await expect(page.getByTestId('step-rebirth')).toContainText(
       'The Soul has no actions yet, so there is no app to publish',
     );
-    for (const s of STEPS.slice(3))
+    await expect(page.getByTestId('step-undertake')).toHaveAttribute('data-status', 'done');
+    for (const s of STEPS.slice(4))
       await expect(page.getByTestId(`step-${s}`)).toHaveAttribute('data-status', 'skipped');
     await expect(page.getByTestId('step-prove')).toContainText(
       'The prove step is not built yet (Prompt 68)',
@@ -69,7 +71,7 @@ test.describe('pipeline', () => {
       timeout: 60_000,
     });
     await expect(page.getByTestId('steps').getByRole('progressbar')).toHaveAccessibleName(
-      '6 of 6 steps run, 3 of them skipped',
+      '6 of 6 steps run, 2 of them skipped',
       { timeout: 150_000 },
     );
     await expect(page.getByTestId('step-archaeology')).toContainText('Recorded run:');

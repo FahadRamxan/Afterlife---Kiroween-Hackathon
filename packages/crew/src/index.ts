@@ -222,3 +222,13 @@ export {
   type SmokeTest,
   type VesselConfig,
 } from './surgeon/surgeon';
+// The Undertaker: the old app's data into the reborn app (Prompts 64 to 66).
+export {
+  calendarDay,
+  exportRecord,
+  importRecord,
+  type Typed,
+  type TypedValue,
+  type Unconverted,
+} from './undertaker/convert';
+export { migrate, type MigratedTable, type Migration, type Rejected } from './undertaker/migrate';

@@ -112,6 +112,45 @@ describe('the Vessel on the phone', () => {
       expect(await api.server.records(f)).toEqual(await phone.store.records(f));
   });
 
+  it('an uploaded app (no Graveyard bundle) starts from the records the Undertaker wrote', async () => {
+    // @spec undertaker#2.2
+    const api = await fakeApi();
+    const upload = (async (input: string | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (url.endsWith(`/api/projects/${ID}`))
+        return new Response(
+          JSON.stringify({
+            id: ID,
+            name: 'My shop',
+            source: 'upload',
+            sourceApp: 'shop.zip',
+            dosTime: '1998-07-15 10:00:00',
+            status: 'created',
+            mode: 'live',
+            createdAt: '2026-11-20T00:00:00.000Z',
+          }),
+          { status: 200 },
+        );
+      return api.fetcher(input, init);
+    }) as typeof fetch;
+    const phone = memoryPhone();
+    const { vessel, today } = await startPhone(phone, { api: API, projectId: ID, fetcher: upload });
+    expect(today).toBe('1998-07-15');
+    for (const f of FILES)
+      expect(await phone.store.records(f)).toEqual(await api.server.records(f));
+    expect(
+      (await vessel.performAction('save-bill', { lines: [{ CODE: 'INS100', QTY: '1' }] })).ok,
+    ).toBe(true);
+    // Not undertaken yet: the server has no records, so there is nothing to start from.
+    const empty = (async (input: string | URL, init?: RequestInit) =>
+      String(input).endsWith('/vessel/records')
+        ? new Response('{"error":"NO_RECORDS"}', { status: 404 })
+        : upload(input, init)) as typeof fetch;
+    await expect(
+      startPhone(memoryPhone(), { api: API, projectId: ID, fetcher: empty }),
+    ).rejects.toMatchObject({ reason: 'no-data' });
+  });
+
   it('never opened online: it says so, and a Soul with nothing to do says that', async () => {
     const api = await fakeApi();
     api.state.online = false;
