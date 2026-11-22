@@ -13,10 +13,10 @@ Prompt 73 is task 1, Prompt 74 task 2, Prompt 75 task 3.
     - _Requirements: 1.4_
   - [x] 1.3 Add the exorcise step, and score the three samples against their manifests
     - _Requirements: 1.7_
-- [ ] 2. Keep or fix
-  - [ ] 2.1 Record the decision; Fix writes a new Soul version with the corrected rule
+- [x] 2. Keep or fix
+  - [x] 2.1 Record the decision; Fix writes a new Soul version with the corrected rule
     - _Requirements: 2.1, 2.2_
-  - [ ] 2.2 Re-run the proof of the affected cases, and list the divergence on the certificate
+  - [x] 2.2 Re-run the proof of the affected cases, and list the divergence on the certificate
     - _Requirements: 2.2, 2.3_
 - [ ] 3. The Exorcism tab
   - [ ] 3.1 Ghost cards with Keep and Fix, the dissolve and the counter

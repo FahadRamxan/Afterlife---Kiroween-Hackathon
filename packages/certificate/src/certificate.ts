@@ -37,6 +37,8 @@ export const CertificatePayloadSchema = z.object({
     passed: z.number().int().nonnegative(),
     failed: z.number().int().nonnegative(),
     skipped: z.number().int().nonnegative(),
+    /** Cases that differ only as the owner's fixes say they should (Prompt 74). */
+    accepted: z.number().int().nonnegative(),
   }),
   reconciliation: z.object({ matches: z.boolean(), lines: z.array(ReconciliationLineSchema) }),
   /** Differences from the old app the owner chose (Fix), each named: empty for a strict proof. */

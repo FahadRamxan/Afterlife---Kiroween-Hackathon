@@ -53,6 +53,7 @@ export function ProofPanel({
   const of = proof?.numRuns ?? progress?.of ?? 0;
   const failed = proof?.failed ?? progress?.failed ?? 0;
   const skipped = proof?.skipped ?? progress?.skipped ?? 0;
+  const accepted = proof?.accepted ?? progress?.accepted ?? 0;
   const latest = progress?.latest ?? null;
   const cx = proof?.counterexample ?? null;
   return (
@@ -72,6 +73,26 @@ export function ProofPanel({
             {proofCounter({ done, of, failed })}
           </p>
           {skipped ? <p className="text-sm text-bone/70">{t('skipped', { n: skipped })}</p> : null}
+          {accepted ? (
+            <p data-testid="proof-accepted" className="text-sm text-candle">
+              {t('accepted', { n: accepted })}
+            </p>
+          ) : null}
+          {proof?.reused ? (
+            <p className="text-sm text-bone/70">{t('reused', { n: proof.reused })}</p>
+          ) : null}
+          {proof?.acceptedDivergences.length ? (
+            <ul data-testid="proof-divergences" className="mt-1 text-sm text-bone">
+              {proof.acceptedDivergences.map((d) => (
+                <li key={d.id}>
+                  {t('divergence')}{' '}
+                  <span lang="en" dir="ltr">
+                    {d.text}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
           {proof ? (
             <p data-testid="proof-done" className="text-sm text-bone/70">
               {failed
@@ -206,6 +227,8 @@ export function ProofPanel({
                 </span>
                 {c.outcome === 'fail' ? (
                   <DiffBadge kind="deleted" label={t('different')} className="no-underline" />
+                ) : c.outcome === 'accepted' ? (
+                  <DiffBadge kind="changed" label={t('acceptedOne')} />
                 ) : c.outcome === 'skip' ? (
                   <span className="text-bone/70">{t('skippedOne')}</span>
                 ) : (

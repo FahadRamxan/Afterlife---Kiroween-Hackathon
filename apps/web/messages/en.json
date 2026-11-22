@@ -385,7 +385,11 @@
         "download": "Download the certificate",
         "none": "No Rebirth Certificate yet:",
         "verify": "Verify it"
-      }
+      },
+      "accepted": "{n} cases differ from the old app as the owner chose: accepted divergences.",
+      "reused": "{n} cases kept from the last proof: the change does not touch them.",
+      "divergence": "Accepted divergence:",
+      "acceptedOne": "Fixed"
     }
   },
   "vessel": {

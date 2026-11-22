@@ -4,18 +4,31 @@
 // canonical bytes) and kept in `certificates`, one per proof run.
 import {
   ISSUER,
+  canonicalize,
   signCertificate,
   soulSha256,
   type CertificatePayload,
   type SigningKey,
 } from '@afterlife/certificate';
-import { and, certificates, eq, exorcisms, pipelineSteps, uuidv7, type Db } from '@afterlife/db';
+import {
+  and,
+  certificates,
+  eq,
+  exorcisms,
+  pipelineSteps,
+  souls,
+  uuidv7,
+  type Db,
+} from '@afterlife/db';
+
+/** The data files a Soul describes: a fix changes rules, never these (Prompt 74). */
+const entitiesOf = (ir: unknown) => canonicalize((ir as { entities?: unknown }).entities ?? null);
 
 export type CertifyInput = {
   project: { id: string; name: string; source: string; sourceApp: string };
   soul: { id: string; version: number; ir: unknown };
   run: { id: string; seed: number };
-  proof: { numRuns: number; passed: number; failed: number; skipped: number };
+  proof: { numRuns: number; passed: number; failed: number; skipped: number; accepted: number };
   key: SigningKey | null;
 };
 
@@ -44,7 +57,15 @@ export async function issueCertificate(db: Db, x: CertifyInput): Promise<Certify
   const out = (step?.status === 'done' ? step.output : null) as UndertakeOutput;
   if (!out?.reconciliation)
     return { issued: false, reason: 'The old app’s data has not been migrated yet' };
-  if (out.soulVersion !== x.soul.version)
+  // Data migrated for another version holds when that version's data files are the same.
+  const [migratedFor] =
+    out.soulVersion === x.soul.version
+      ? [{ ir: x.soul.ir }]
+      : await db
+          .select({ ir: souls.ir })
+          .from(souls)
+          .where(and(eq(souls.projectId, x.project.id), eq(souls.version, out.soulVersion ?? -1)));
+  if (!migratedFor || entitiesOf(migratedFor.ir) !== entitiesOf(x.soul.ir))
     return {
       issued: false,
       reason: `The data was migrated for Soul version ${out.soulVersion}, not version ${x.soul.version}: run the undertake step again`,
@@ -54,7 +75,7 @@ export async function issueCertificate(db: Db, x: CertifyInput): Promise<Certify
   if (!x.key) return { issued: false, reason: 'This worker has no signing key (CERT_SIGNING_KEY)' };
   // The differences the owner chose: the Exorcist's fixes (Prompt 74), in the order found.
   const fixed = await db
-    .select({ code: exorcisms.code, text: exorcisms.titleEn })
+    .select({ code: exorcisms.code, title: exorcisms.titleEn, evidence: exorcisms.evidence })
     .from(exorcisms)
     .where(and(eq(exorcisms.projectId, x.project.id), eq(exorcisms.decision, 'fix')))
     .orderBy(exorcisms.createdAt);
@@ -74,6 +95,7 @@ export async function issueCertificate(db: Db, x: CertifyInput): Promise<Certify
       passed: x.proof.passed,
       failed: x.proof.failed,
       skipped: x.proof.skipped,
+      accepted: x.proof.accepted,
     },
     reconciliation: {
       matches: true,
@@ -86,7 +108,11 @@ export async function issueCertificate(db: Db, x: CertifyInput): Promise<Certify
         ok: l.ok,
       })),
     },
-    acceptedDivergences: fixed.map((f) => ({ id: f.code, text: f.text })),
+    // In the words of the fix: what the reborn app does instead of what the old app did.
+    acceptedDivergences: fixed.map((f) => ({
+      id: f.code,
+      text: (f.evidence as { remedy?: { fixEn?: string } } | null)?.remedy?.fixEn || f.title,
+    })),
     issuer: { name: ISSUER, keyId: x.key.keyId },
   };
   const cert = await signCertificate(payload, x.key);

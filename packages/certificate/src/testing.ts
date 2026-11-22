@@ -18,6 +18,7 @@ export async function samplePayload(keyId: string): Promise<CertificatePayload> 
       passed: 188,
       failed: 0,
       skipped: 12,
+      accepted: 0,
     },
     reconciliation: {
       matches: true,

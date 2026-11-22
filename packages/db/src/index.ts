@@ -32,6 +32,6 @@ export {
 } from './jobs';
 export { EVENT_PAYLOADS, emitEvent, lastEvents, listEvents, type ProjectEvent } from './events';
 // The query helpers, from the same drizzle-orm copy as the schema (apps must not mix copies).
-export { and, asc, desc, eq, gt, inArray, isNotNull, isNull, sql } from 'drizzle-orm';
+export { and, asc, desc, eq, gt, inArray, isNotNull, isNull, ne, sql } from 'drizzle-orm';
 export { EVENTS_CHANNEL, listenForEvents, type EventListener } from './listen';
 export { insertSoulVersion, latestSoulRow } from './souls';

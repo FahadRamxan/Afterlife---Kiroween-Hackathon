@@ -5,14 +5,29 @@
 // and explained. The run and its cases are kept in proof_runs and proof_cases (the certificate,
 // Prompt 71, is issued from them). Differences are a finding, not a failure of the step.
 import type { SigningKey } from '@afterlife/certificate';
-import { loadGraph, type ScreenGraphJson } from '@afterlife/crew';
+import { canonicalize } from '@afterlife/certificate';
+import { loadGraph, undoFixes, type ScreenGraphJson, type StoredFinding } from '@afterlife/crew';
 import type { DbfRecord, SnapshotDiff } from '@afterlife/dbf';
-import { and, desc, eq, proofCases, proofRuns, souls, type Db } from '@afterlife/db';
 import {
+  and,
+  asc,
+  desc,
+  eq,
+  exorcisms,
+  ne,
+  proofCases,
+  proofRuns,
+  souls,
+  type Db,
+} from '@afterlife/db';
+import {
+  effectDifferences,
   emulatorOldApp,
+  freshVessel,
   proveEquivalence,
   shrinkFailure,
   type CaseResult,
+  type ProofCase,
   type OldApp,
   type ProofTarget,
 } from '@afterlife/oracle';
@@ -111,6 +126,25 @@ export function proveStep(deps: ProveDeps): StepHandler {
         );
     }
     const target: ProofTarget = { soul, records, today, withOldApp };
+    // The owner's fixes (Prompt 74): with them undone the Soul does what the old app does, so the
+    // Oracle runs it alongside and accepts the differences it explains.
+    const fixes = (
+      await deps.db
+        .select({ code: exorcisms.code, evidence: exorcisms.evidence })
+        .from(exorcisms)
+        .where(and(eq(exorcisms.projectId, ctx.projectId), eq(exorcisms.decision, 'fix')))
+        .orderBy(asc(exorcisms.decidedAt))
+    ).flatMap((x) => {
+      const remedy = (x.evidence as StoredFinding).remedy;
+      return remedy?.fix ? [{ code: x.code, remedy }] : [];
+    });
+    const oldBehaviour = fixes.length
+      ? undoFixes(
+          soul,
+          fixes.map((f) => f.remedy),
+        )
+      : undefined;
+    const acceptedDivergences = fixes.map((f) => ({ id: f.code, text: f.remedy.fixEn }));
     const numRuns = deps.numRuns ?? DEFAULT_PROVE_CASES;
     const lanes = deps.lanes ?? DEFAULT_PROVE_LANES;
     const seed = seedOf(ctx.projectId);
@@ -121,16 +155,19 @@ export function proveStep(deps: ProveDeps): StepHandler {
     await ctx.log(
       `Proving Soul version ${row.version}: ${numRuns} cases on ${lanes} lanes, seed ${seed}`,
     );
+    const reuse = await reuseFrom(deps.db, ctx.projectId, run!.id, seed, soul, target);
+    if (reuse) await ctx.log(`Cases the change does not touch keep the outcome of the last proof`);
     // Running totals ride on every event: the page keeps only the newest events.
-    const tally = { done: 0, failed: 0, skipped: 0 };
+    const tally = { done: 0, failed: 0, skipped: 0, accepted: 0 };
     const save = async (c: CaseResult) => {
       tally.done++;
       if (c.outcome === 'fail') tally.failed++;
       if (c.outcome === 'skip') tally.skipped++;
+      if (c.outcome === 'accepted') tally.accepted++;
       await deps.db.insert(proofCases).values({
         proofRunId: run!.id,
         idx: c.index,
-        input: { actionId: c.actionId, inputs: c.inputs },
+        input: { actionId: c.actionId, inputs: c.inputs, outcome: c.outcome },
         oldOutput: c.old ?? {},
         newOutput: c.vessel ?? {},
         passed: c.outcome !== 'fail',
@@ -144,6 +181,7 @@ export function proveStep(deps: ProveDeps): StepHandler {
         actionId: c.actionId,
         inputs: c.inputs,
         outcome: c.outcome,
+        ...(c.reused ? { reused: true } : {}),
         ...(c.reason ? { reason: c.reason } : {}),
         ...(c.differences ? { differences: c.differences.slice(0, MAX_EVENT_DIFFERENCES) } : {}),
         ...(c.screen ? { screen: c.screen } : {}),
@@ -157,6 +195,8 @@ export function proveStep(deps: ProveDeps): StepHandler {
       seed,
       lanes,
       onCase: save,
+      ...(oldBehaviour ? { oldBehaviour } : {}),
+      ...(reuse ? { reuse } : {}),
       signal: ctx.signal,
     });
     let counterexample = null;
@@ -201,7 +241,9 @@ export function proveStep(deps: ProveDeps): StepHandler {
       })
       .where(eq(proofRuns.id, run!.id));
     await ctx.log(
-      `${r.numRuns} cases: ${r.passed} the same, ${r.failed} different, ${r.skipped} skipped`,
+      `${r.numRuns} cases: ${r.passed} the same, ${r.failed} different, ${r.skipped} skipped` +
+        (r.accepted ? `, ${r.accepted} accepted (the owner's fixes)` : '') +
+        (r.reused ? `; ${r.reused} kept from the last proof` : ''),
       r.failed ? 'warn' : 'info',
     );
     // The Rebirth Certificate (Prompt 71): only when the proof holds on migrated data.
@@ -229,9 +271,82 @@ export function proveStep(deps: ProveDeps): StepHandler {
         passed: r.passed,
         failed: r.failed,
         skipped: r.skipped,
+        accepted: r.accepted,
+        reused: r.reused,
+        acceptedDivergences,
         counterexample,
         certificate: cert.issued ? { id: cert.id } : { reason: cert.reason },
       },
+    };
+  };
+}
+
+/**
+ * The last proof's cases, reused where nothing changed for them (Prompt 74: a fixed rule re-runs
+ * the affected proof cases only). Only from a proof of a Soul with the same data files, with the
+ * same seed; a case is reused when it is the same case, it held then (the same or skipped), and
+ * the Soul then and now do the same with it from a fresh start.
+ */
+async function reuseFrom(
+  db: Db,
+  projectId: string,
+  runId: string,
+  seed: number,
+  soul: Soul,
+  target: ProofTarget,
+): Promise<
+  | ((c: ProofCase, index: number) => Promise<Omit<CaseResult, 'index' | 'lane' | 'ms'> | null>)
+  | null
+> {
+  const [last] = await db
+    .select({ id: proofRuns.id, soulId: proofRuns.soulId, seed: proofRuns.seed })
+    .from(proofRuns)
+    .where(
+      and(
+        eq(proofRuns.projectId, projectId),
+        ne(proofRuns.id, runId),
+        ne(proofRuns.status, 'running'),
+      ),
+    )
+    .orderBy(desc(proofRuns.startedAt))
+    .limit(1);
+  if (!last || last.seed !== seed) return null;
+  const [then] = await db.select({ ir: souls.ir }).from(souls).where(eq(souls.id, last.soulId));
+  const before = then ? SoulSchema.safeParse(then.ir) : null;
+  if (!before?.success || canonicalize(before.data.entities) !== canonicalize(soul.entities))
+    return null;
+  const rows = await db.select().from(proofCases).where(eq(proofCases.proofRunId, last.id));
+  const byIdx = new Map(rows.map((x) => [x.idx, x]));
+  const [was, now] = await Promise.all([
+    freshVessel(before.data, target.records, target.today),
+    freshVessel(soul, target.records, target.today),
+  ]);
+  const same = async (c: ProofCase) => {
+    const [a, b] = await Promise.all([
+      was.previewAction(c.actionId, c.inputs),
+      now.previewAction(c.actionId, c.inputs),
+    ]);
+    if (a.ok !== b.ok) return false;
+    return a.ok && b.ok ? effectDifferences(a.effects, b.effects).length === 0 : true;
+  };
+  return async (c: ProofCase, index: number) => {
+    const x = byIdx.get(index);
+    const input = x?.input as { actionId?: string; inputs?: unknown; outcome?: string } | undefined;
+    if (!x || !input || (input.outcome !== 'pass' && input.outcome !== 'skip')) return null;
+    if (
+      canonicalize({ actionId: input.actionId, inputs: input.inputs }) !==
+      canonicalize({ actionId: c.actionId, inputs: c.inputs })
+    )
+      return null;
+    if (!(await same(c))) return null;
+    return {
+      actionId: c.actionId,
+      inputs: c.inputs,
+      outcome: input.outcome,
+      ...(input.outcome === 'pass'
+        ? { old: x.oldOutput as SnapshotDiff, vessel: x.newOutput as SnapshotDiff }
+        : {}),
+      ...(x.explanation ? { reason: x.explanation } : {}),
     };
   };
 }

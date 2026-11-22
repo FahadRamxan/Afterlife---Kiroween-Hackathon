@@ -77,6 +77,48 @@ describe('proofProgress', () => {
   });
 });
 
+describe('accepted divergences (Prompt 74)', () => {
+  it('an accepted case is counted apart, and the proof says what was fixed', () => {
+    const accepted = ev('proof_case', {
+      ...(kase(2, 'pass', 3).payload as object),
+      outcome: 'accepted',
+      accepted: 1,
+      reused: true,
+    });
+    const p = proofProgress([kase(0, 'pass', 1), kase(1, 'pass', 2), accepted])!;
+    expect(p).toMatchObject({ done: 3, failed: 0, accepted: 1 });
+    expect(p.cases[0]).toMatchObject({ outcome: 'accepted', reused: true });
+    const proof = ProofSchema.parse({
+      soulVersion: 2,
+      seed: 1,
+      numRuns: 50,
+      lanes: 2,
+      passed: 40,
+      failed: 0,
+      skipped: 2,
+      accepted: 8,
+      reused: 30,
+      acceptedDivergences: [
+        { id: 'two-digit-year:medicine.expiry', text: 'EXPIRY is compared with four-digit years' },
+      ],
+      counterexample: null,
+    });
+    expect(proof.acceptedDivergences[0]!.text).toBe('EXPIRY is compared with four-digit years');
+    // An older proof (before Prompt 74) has none.
+    const old = ProofSchema.parse({
+      soulVersion: 1,
+      seed: 1,
+      numRuns: 50,
+      lanes: 2,
+      passed: 50,
+      failed: 0,
+      skipped: 0,
+      counterexample: null,
+    });
+    expect(old).toMatchObject({ accepted: 0, reused: 0, acceptedDivergences: [] });
+  });
+});
+
 describe('ProofSchema', () => {
   it('reads the steps API’s proof, counterexample and all', () => {
     const p = ProofSchema.parse({

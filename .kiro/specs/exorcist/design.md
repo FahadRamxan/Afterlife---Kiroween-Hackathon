@@ -11,6 +11,10 @@ The Exorcist is deterministic: each detector reads the Soul, the old app's recor
 - `packages/crew/src/exorcist/late-fee.ts`: `lateFeeProbes(input)` (the dates to probe) and `judgeLateFee(plan, results)`.
 - `packages/crew/src/exorcist/exorcise.ts`: `exorcise(input, probeResults?)`: every detector, deduplicated by code, sorted by severity.
 - `packages/crew/src/exorcist/score.ts`: `scoreExorcism(findings, knownBugs)`: each manifest bug found when a finding has its smell and target.
+- `packages/crew/src/exorcist/remedies.ts`: `remedyFor(finding, soul)` gives Keep and Fix as rule edits (`add` a rule, `set` an expression): two-digit years rewrite (or add) the check against today, in the old two-digit form for Keep and four-digit for Fix; negative stock and overflow add `<the field's effect> >= 0` or `<= capacity` for Fix (Keep changes nothing); a blank name adds `name != ''`; calendar weeks cannot be said in the rule language (Fix unavailable, with why). `applyEdits`, and `undoFixes(soul, remedies)`, the Soul that does what the old app does.
+- `packages/crew/src/exorcist/decide.ts`: `decideExorcism(db, project, code, decision)`: once per finding; a choice with edits writes a new Soul version; the remedy and version are kept on the row.
+- `packages/oracle/src/runner.ts`: `oldBehaviour` (run in lockstep with the reborn app: a difference it explains is `accepted`) and `reuse` (a case kept from the last proof). The prove step builds both: the old behaviour from the fixes, and reuse for the cases that are the same case, held then, and that the Soul then and now treat alike from a fresh start.
+- `apps/api/src/exorcisms.ts`: `GET /api/projects/:id/exorcisms`, `POST /api/projects/:id/exorcisms/:code` (`{ decision }`), which proves the new version.
 - `apps/worker/src/exorcise-step.ts`: the step: the newest Soul, the project's observations, the records from the bundle, the probes on the pool, then `exorcisms` rows (a decision already made is kept) and an `exorcism` event per finding.
 
 ## Components and Interfaces

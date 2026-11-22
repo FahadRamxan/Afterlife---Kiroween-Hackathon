@@ -267,3 +267,68 @@ describe('Shifa as the 1998 app really runs (its Y2K expiry check)', () => {
     expect(r.failed).toBe(0);
   });
 });
+
+describe('accepted divergences and reused cases (Prompt 74)', () => {
+  // The old app is Shifa as it really runs (two-digit years); the reborn app compares four-digit
+  // years, as the owner chose (Fix). The old behaviour is the app as it runs.
+  const fixedTarget = () => target(SOUL, () => vesselOldApp(SHIFA_AS_IT_RUNS_SOUL, RECORDS, TODAY));
+
+  // @spec exorcist#2.2
+  it('a difference the old behaviour explains is accepted, not failed', async () => {
+    const strict = await proveEquivalence(fixedTarget(), { numRuns: RUNS, seed: 6, ctx });
+    expect(strict.failed).toBeGreaterThan(0);
+    const r = await proveEquivalence(fixedTarget(), {
+      numRuns: RUNS,
+      seed: 6,
+      ctx,
+      oldBehaviour: SHIFA_AS_IT_RUNS_SOUL,
+    });
+    expect(r.failed).toBe(0);
+    expect(r.accepted).toBe(strict.failed);
+    const a = r.cases.find((c) => c.outcome === 'accepted')!;
+    expect(a.differences!.length).toBeGreaterThan(0);
+    expect(r.passed + r.accepted + r.skipped).toBe(RUNS);
+  });
+
+  it('a difference the old behaviour does not explain still fails', async () => {
+    // GST at 18% is no fix the owner made: with the fixes undone (the expiry check back to two-digit
+    // years, as undoFixes makes it) the reborn app still charges 18%, which the old app does not.
+    const oldBehaviour: Soul = {
+      ...SHIFA_AS_IT_RUNS_SOUL,
+      rules: SHIFA_AS_IT_RUNS_SOUL.rules.map((x) =>
+        x.id === 'gst-17-truncated'
+          ? { ...x, expression: x.expression.replace('0.17', '0.18') }
+          : x,
+      ),
+    };
+    const r = await proveEquivalence(target(WRONG_GST), {
+      numRuns: 40,
+      seed: 1,
+      ctx,
+      oldBehaviour,
+    });
+    expect(r.failed).toBeGreaterThan(0);
+    expect(r.accepted).toBe(0);
+  });
+
+  it('a case reused from the last proof is not run on the old app again', async () => {
+    let runs = 0;
+    const t = target(SOUL, () => {
+      const old = vesselOldApp(SOUL, RECORDS, TODAY);
+      return { ...old, run: (c) => (runs++, old.run(c)) };
+    });
+    const r = await proveEquivalence(t, {
+      numRuns: 20,
+      seed: 3,
+      ctx,
+      reuse: (c, i) =>
+        i % 2 === 0 ? { actionId: c.actionId, inputs: c.inputs, outcome: 'pass' } : null,
+    });
+    expect(r.reused).toBe(10);
+    expect(r.cases.filter((c) => c.reused).map((c) => c.index)).toEqual([
+      0, 2, 4, 6, 8, 10, 12, 14, 16, 18,
+    ]);
+    expect(runs).toBeLessThanOrEqual(10);
+    expect(r.failed).toBe(0);
+  });
+});

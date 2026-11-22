@@ -180,6 +180,15 @@ describe('the steps of a project', () => {
         skipped: 2,
         counterexample: cx,
         certificate: { reason: '3 cases differ from the old app' },
+        // Prompt 74: the owner's fixes, accepted, and the cases kept from the last proof.
+        accepted: 4,
+        reused: 30,
+        acceptedDivergences: [
+          {
+            id: 'two-digit-year:medicine.expiry',
+            text: 'EXPIRY is compared with four-digit years',
+          },
+        ],
       };
       await t.db
         .insert(pipelineSteps)

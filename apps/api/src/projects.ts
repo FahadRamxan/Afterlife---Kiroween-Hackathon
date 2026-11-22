@@ -232,6 +232,10 @@ export const StepStateSchema = z
             vessel: z.record(z.string(), z.string()).nullable(),
           })
           .nullable(),
+        /** Prompt 74: cases that differ as the owner's fixes say, cases kept from the last proof. */
+        accepted: z.number().int().optional(),
+        reused: z.number().int().optional(),
+        acceptedDivergences: z.array(z.object({ id: z.string(), text: z.string() })).optional(),
         /** The Rebirth Certificate (Prompt 71): its id, or why none was issued. */
         certificate: z
           .object({ id: z.string().optional(), reason: z.string().optional() })

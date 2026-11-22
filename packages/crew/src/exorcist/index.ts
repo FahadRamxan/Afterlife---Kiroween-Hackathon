@@ -30,3 +30,12 @@ export {
   type Severity,
   type Smell,
 } from './types';
+export { applyEdits, remedyFor, undoFixes, type Remedy, type RuleEdit } from './remedies';
+export {
+  DecisionError,
+  decideExorcism,
+  findingOf,
+  type Decision,
+  type DecisionResult,
+  type StoredFinding,
+} from './decide';
