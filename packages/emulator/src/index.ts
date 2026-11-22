@@ -30,6 +30,7 @@ export {
   type Screenshot,
 } from './controller';
 export { FakeEmulator, type FakeApp, type FakeAppApi } from './fake-emulator';
+export { keySteps } from './key-steps';
 export {
   KEY_NAMES,
   KeyParseError,

@@ -7,6 +7,8 @@
 import type { Soul } from '../ir';
 
 const MENU = 'fp_1eb0f03756fc7646';
+// A new bill asks for the customer first (BILL_CUSTOMER), then takes its lines (BILL).
+const BILL_CUSTOMER = 'fp_55dbc4ac877fc59a';
 const BILL = 'fp_1ea84e74e2cd7cec';
 const STOCK = 'fp_94f36efd8f8e0a33';
 const CUSTOMERS = 'fp_7ea2aa4052052a22';
@@ -96,9 +98,26 @@ export const SHIFA_REFERENCE_SOUL: Soul = {
       title: 'MAIN MENU',
       fields: [{ label: 'Choice', row: 18, col: 40, width: 1 }],
       navigation: [
-        { keys: '1', to: BILL },
+        { keys: '1', to: BILL_CUSTOMER },
         { keys: '2', to: STOCK },
         { keys: '3', to: CUSTOMERS },
+      ],
+    },
+    {
+      id: BILL_CUSTOMER,
+      title: 'NEW BILL',
+      fields: [
+        {
+          label: 'Customer ID (blank = walk-in)',
+          row: 2,
+          col: 32,
+          width: 5,
+          binds: { entity: 'bill', field: 'CUST_ID' },
+        },
+      ],
+      navigation: [
+        { keys: '{Enter}', to: BILL },
+        { keys: '{Esc}', to: MENU },
       ],
     },
     {
@@ -162,7 +181,7 @@ export const SHIFA_REFERENCE_SOUL: Soul = {
   actions: [
     {
       id: 'save-bill',
-      screen: BILL,
+      screen: BILL_CUSTOMER,
       name: 'Save a bill',
       // From its own screen: the customer, each line's code and quantity, Enter to end, F2.
       keys: '{@CUST_ID}{Enter}{lines}{#CODE}{Enter}{#QTY}{Enter}{/lines}{Enter}{F2}',
@@ -334,4 +353,31 @@ export const SHIFA_REFERENCE_SOUL: Soul = {
       confidence: 1,
     },
   ],
+};
+
+/** A date as Shifa's 1998 app compares it: YYMMDD, two-digit year (rules.c, rule_is_expired). */
+const yymmdd = (d: string) => `(year(${d}) % 100) * 10000 + month(${d}) * 100 + day(${d})`;
+
+/**
+ * Shifa as the 1998 app really runs (Prompt 68): the reference Soul with the old app's own expiry
+ * check, which compares two-digit years (the manifest's known bug y2k-expiry). In 1998 a batch good
+ * until 2000 or later reads as "00" and is refused as expired. The Oracle's strict proof on the real
+ * app passes with this Soul; with the reference Soul it finds exactly these lines. The Exorcist
+ * (Prompt 73) offers the owner the choice between the two.
+ */
+export const SHIFA_AS_IT_RUNS_SOUL: Soul = {
+  ...SHIFA_REFERENCE_SOUL,
+  provenance: {
+    ...SHIFA_REFERENCE_SOUL.provenance,
+    note: "The reference Soul with the 1998 app's own two-digit-year expiry check (its Y2K bug).",
+  },
+  rules: SHIFA_REFERENCE_SOUL.rules.map((r) =>
+    r.id === 'expired-batch-blocked'
+      ? {
+          ...r,
+          en: 'A medicine whose batch has expired cannot be added to a bill. The dates are compared with two-digit years, as the 1998 app does, so a batch good until 2000 or later counts as expired.',
+          expression: `${yymmdd('medicine.expiry')} >= ${yymmdd('today')}`,
+        }
+      : r,
+  ),
 };

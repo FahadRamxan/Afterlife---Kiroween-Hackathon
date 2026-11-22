@@ -552,6 +552,14 @@ export function evaluate(e: Expr, env: Env): Val {
           throw new DslError('addDays goes past the years 0 to 9999');
         return new DslDate(iso);
       }
+      case 'year':
+      case 'month':
+      case 'day': {
+        arity(1);
+        const iso = asDate(args[0]!, x.fn).iso;
+        const [from, to] = x.fn === 'year' ? [0, 4] : x.fn === 'month' ? [5, 7] : [8, 10];
+        return new D(Number(iso.slice(from, to)));
+      }
       case 'daysBetween':
       case 'weeksBetween': {
         arity(2);

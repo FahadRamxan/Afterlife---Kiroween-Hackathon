@@ -11,12 +11,12 @@ Prompt 67 is task 1, Prompt 68 task 2, Prompt 69 task 3, Prompt 70 task 4.
     - _Requirements: 1.1, 1.2, 1.4_
   - [x] 1.2 Bias to thresholds and date cutoffs, and prove every input passes field validation
     - _Requirements: 1.3, 1.5_
-- [ ] 2. The differential runner
-  - [ ] 2.1 Implement proveEquivalence with lanes in lockstep, skips and seeds
+- [x] 2. The differential runner
+  - [x] 2.1 Implement proveEquivalence with lanes in lockstep, skips and seeds
     - _Requirements: 2.1, 2.2, 2.3, 2.4_
-  - [ ] 2.2 Run the old app in the emulator: the screen graph and the macro
+  - [x] 2.2 Run the old app in the emulator: the screen graph and the macro
     - _Requirements: 2.1_
-  - [ ] 2.3 Add pnpm proof:shifa (200 cases on the real Shifa) to ci:local, and catch a changed rule
+  - [x] 2.3 Add pnpm proof:shifa (200 cases on the real Shifa) to ci:local, and catch a changed rule
     - _Requirements: 2.5_
 - [ ] 3. Shrinking and the counterexample
   - [ ] 3.1 Shrink a failing case with fast-check from its path, each try from a fresh start

@@ -86,8 +86,9 @@ Rebuild Shifa Medical Store from its Soul (version 1): model the old data files 
 - [ ] 14. Build the screens
   - [ ] 14.1 Build the MAIN MENU screen
   - [ ] 14.2 Build the NEW BILL screen
-  - [ ] 14.3 Build the STOCK screen
-  - [ ] 14.4 Build the CUSTOMERS screen
+  - [ ] 14.3 Build the NEW BILL screen
+  - [ ] 14.4 Build the STOCK screen
+  - [ ] 14.5 Build the CUSTOMERS screen
 
 ## Notes
 
@@ -103,7 +104,7 @@ Rebuild Shifa Medical Store from its Soul (version 1): model the old data files 
     { "id": 0, "tasks": ["1.1", "1.2", "1.3", "1.4"] },
     { "id": 1, "tasks": ["2.1", "3.1", "4.1", "5.1", "6.1", "7.1", "8.1", "9.1", "10.1", "11.1", "12.1", "13.1"] },
     { "id": 2, "tasks": ["2.2", "3.2", "4.2", "5.2", "6.2", "7.2", "8.2", "9.2", "10.2", "11.2", "12.2", "13.2"] },
-    { "id": 3, "tasks": ["14.1", "14.2", "14.3", "14.4"] }
+    { "id": 3, "tasks": ["14.1", "14.2", "14.3", "14.4", "14.5"] }
   ]
 }
 ```

@@ -14,14 +14,17 @@ How the screens connect, and the keys that move between them:
 graph TD
   s0["MAIN MENU"]
   s1["NEW BILL"]
-  s2["STOCK"]
-  s3["CUSTOMERS"]
+  s2["NEW BILL"]
+  s3["STOCK"]
+  s4["CUSTOMERS"]
   s0 -->|"1"| s1
-  s0 -->|"2"| s2
-  s0 -->|"3"| s3
+  s0 -->|"2"| s3
+  s0 -->|"3"| s4
+  s1 -->|"{Enter}"| s2
   s1 -->|"{Esc}"| s0
   s2 -->|"{Esc}"| s0
   s3 -->|"{Esc}"| s0
+  s4 -->|"{Esc}"| s0
 ```
 
 ## Components and Interfaces
@@ -34,6 +37,12 @@ graph TD
 - `1` goes to NEW BILL
 - `2` goes to STOCK
 - `3` goes to CUSTOMERS
+
+#### NEW BILL (`fp_55dbc4ac877fc59a`)
+
+- Customer ID (blank = walk-in): row 2, column 32, 5 wide, bill.CUST_ID
+- `{Enter}` goes to NEW BILL
+- `{Esc}` goes to MAIN MENU
 
 #### NEW BILL (`fp_1ea84e74e2cd7cec`)
 

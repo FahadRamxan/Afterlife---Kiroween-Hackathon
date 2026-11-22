@@ -23,12 +23,18 @@ importers:
       '@afterlife/mcp-emulator':
         specifier: workspace:^
         version: link:packages/mcp-emulator
+      '@afterlife/oracle':
+        specifier: workspace:^
+        version: link:packages/oracle
       '@afterlife/screen':
         specifier: workspace:^
         version: link:packages/screen
       '@afterlife/soul':
         specifier: workspace:^
         version: link:packages/soul
+      '@afterlife/vessel':
+        specifier: workspace:^
+        version: link:packages/vessel
       '@commitlint/cli':
         specifier: ^21.2.4
         version: 21.2.4(conventional-commits-parser@7.1.4)(typescript@5.9.3)

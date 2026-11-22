@@ -22,6 +22,8 @@ export function planSteps({ docker }) {
     { name: 'e2e', cmd: 'pnpm e2e', env: { CI: '1' } },
     // Prompt 62: Shifa's export, unzipped outside the repo, installs, passes its tests and builds.
     { name: 'export', cmd: 'pnpm export:check', env: {} },
+    // Prompt 68: the Oracle's proof, 200 cases on the real Shifa in js-dos against the Vessel.
+    { name: 'proof', cmd: 'pnpm proof:shifa', env: {} },
   ];
   if (docker) {
     steps.push(

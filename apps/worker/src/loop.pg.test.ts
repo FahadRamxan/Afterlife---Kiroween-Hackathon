@@ -150,7 +150,11 @@ describe('the worker job loop on pg-boss', () => {
     );
     expect(s!.attempts).toBe(2);
     expect(calls).toBe(2);
-    const states = (await listEvents(t.db, id)).map((e) => (e.payload as { state?: string }).state);
+    // The step's status is written just before its event: wait for the event too.
+    const states = await until(
+      async () => (await listEvents(t.db, id)).map((e) => (e.payload as { state?: string }).state),
+      (x) => x.includes('done'),
+    );
     expect(states).toEqual(['started', 'retrying', 'started', 'done']);
   });
 

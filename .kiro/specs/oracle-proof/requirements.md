@@ -37,6 +37,7 @@ Prompts 67 to 70: the Oracle proves the reborn app does what the old app did. It
 3. THE Oracle SHALL run the cases on several lanes at once when the emulator pool has room.
 4. WHEN the Vessel refuses a case the state no longer allows (the stock ran out), THE Oracle SHALL count it as skipped, not as a pass or a difference.
 5. A changed rule in the Vessel SHALL be found as a difference.
+6. THE strict proof on the real app SHALL use the Soul of the app as it really runs (Shifa's two-digit-year expiry check included); the intended Soul SHALL differ from it on exactly the cases of the known bug (a batch good until 2000 or later).
 
 ### Requirement 3: Shrinking and the counterexample
 

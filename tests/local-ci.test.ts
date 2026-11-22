@@ -16,13 +16,14 @@ describe('pnpm ci:local (review fix)', () => {
     expect(scripts['ci:local']).toBe('node scripts/ci-local.mjs');
   });
 
-  it('runs lint, typecheck, tests (2000 runs), e2e, the export, then the Docker checks', () => {
+  it('runs lint, typecheck, tests (2000 runs), e2e, the export, the proof, then the Docker checks', () => {
     expect(planSteps({ docker: true }).map((s) => s.name)).toEqual([
       'lint',
       'typecheck',
       'test (FC_NUM_RUNS=2000)',
       'e2e',
       'export',
+      'proof',
       'docker build api',
       'docker build worker',
       'docker smoke',
@@ -46,6 +47,13 @@ describe('pnpm ci:local (review fix)', () => {
       'pnpm export:check',
     );
   });
+  it('proves the Vessel against the real Shifa in js-dos: 200 cases (Prompt 68)', () => {
+    // @spec oracle-proof#2.3
+    expect(planSteps({ docker: false }).find((s) => s.name === 'proof')!.cmd).toBe(
+      'pnpm proof:shifa',
+    );
+    expect(read('scripts/proof-shifa.ts')).toContain('PROOF_CASES ?? 200');
+  });
   it('runs e2e against the production build, like CI did', () => {
     expect(planSteps({ docker: false }).find((s) => s.name === 'e2e')!.env).toEqual({ CI: '1' });
   });
@@ -57,6 +65,7 @@ describe('pnpm ci:local (review fix)', () => {
       'test (FC_NUM_RUNS=2000)',
       'e2e',
       'export',
+      'proof',
     ]);
   });
 
