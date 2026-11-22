@@ -1,5 +1,6 @@
 // @spec undertaker#2 The undertake step.
 // @spec undertaker#2.1 The undertake step: the old app's data into the Vessel's records (Prompt 64).
+import type { DbfRecord } from '@afterlife/dbf';
 import { insertSoulVersion, projects, vesselSync } from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { numberSoul, specRequirements, type Soul } from '@afterlife/soul';
@@ -34,6 +35,7 @@ async function project(soul: Soul | null, source: 'graveyard' | 'upload' = 'grav
 }
 function ctx(p: { id: string; source: string; sourceApp: string }) {
   const logs: string[] = [];
+  const events: [string, unknown][] = [];
   const c: StepContext = {
     projectId: p.id,
     project: {
@@ -46,10 +48,10 @@ function ctx(p: { id: string; source: string; sourceApp: string }) {
     attempt: 1,
     force: false,
     signal: new AbortController().signal,
-    emit: async () => undefined,
+    emit: async (type, payload) => void events.push([type, payload]),
     log: async (m) => void logs.push(m),
   };
-  return { c, logs };
+  return { c, logs, events };
 }
 const step = (c: StepContext, b: Uint8Array | null = bundle) =>
   undertakeStep({ db: t.db, bundleFor: async (p) => (p.source === 'graveyard' ? b : null) })(c);
@@ -89,6 +91,53 @@ describe('the undertake step', () => {
     expect(logs).toContain('MEDICINE.DBF: 40 records crossed, none rejected');
   });
 
+  it('reconciles what it wrote against the old data: all green, and a progress event per table', async () => {
+    // @spec undertaker#3.2 Prompt 65: the reconciliation of the real step, read back from Postgres.
+    const p = await project(SHIFA_REFERENCE_SOUL);
+    const { c, events, logs } = ctx(p);
+    const r = (await step(c)) as {
+      status: string;
+      output: {
+        reconciliation: {
+          matches: boolean;
+          lines: { table: string; total: string; ok: boolean }[];
+        };
+      };
+    };
+    expect(r.status).toBe('done');
+    expect(r.output.reconciliation.matches).toBe(true);
+    expect(r.output.reconciliation.lines.map((l) => `${l.table} ${l.total}`)).toContain(
+      'all stock value',
+    );
+    expect(r.output.reconciliation.lines.every((l) => l.ok)).toBe(true);
+    expect(logs.at(-1)).toMatch(/^Reconciled: \d+ totals match exactly$/);
+    // @spec undertaker#4.1 One event per table, for the data crossing panel (Prompt 66).
+    expect(events.filter(([t]) => t === 'migration').map(([, e]) => e)).toEqual([
+      { file: 'MEDICINE.DBF', entity: 'medicine', crossed: 40, rejected: 0, of: 40 },
+      { file: 'CUSTOMER.DBF', entity: 'customer', crossed: 8, rejected: 0, of: 8 },
+      expect.objectContaining({ file: 'BILLS.DBF', rejected: 0 }),
+      expect.objectContaining({ file: 'BILLITEM.DBF', rejected: 0 }),
+    ]);
+  });
+
+  it('a migration that does not reconcile fails the step, naming what differs', async () => {
+    const p = await project(SHIFA_REFERENCE_SOUL);
+    // A broken Vessel store that loses the first record of each file it is given.
+    const lossy = (id: string) => {
+      const s = new PgEntityStore(t.db, id);
+      return Object.assign(Object.create(s) as PgEntityStore, {
+        load: (file: string, records: DbfRecord[]) => s.load(file, records.slice(1)),
+      });
+    };
+    const r = await undertakeStep({ db: t.db, bundleFor: async () => bundle, storeFor: lossy })(
+      ctx(p).c,
+    );
+    expect(r.status).toBe('failed');
+    expect((r as { reason: string }).reason).toMatch(
+      /^The migration does not reconcile: MEDICINE\.DBF records 40 → 39/,
+    );
+  });
+
   it('never writes over records phones have synced sales into', async () => {
     const p = await project(SHIFA_REFERENCE_SOUL);
     await step(ctx(p).c);
@@ -108,7 +157,7 @@ describe('the undertake step', () => {
     const r = await step(c);
     expect(r).toMatchObject({ status: 'done', output: { written: false } });
     expect((await store.records('MEDICINE.DBF'))[0]!.values.QTY).toBe('1');
-    expect(logs.at(-1)).toBe(
+    expect(logs).toContain(
       'Phones have synced sales into this project’s records, so the migration was checked, not written over them',
     );
   });

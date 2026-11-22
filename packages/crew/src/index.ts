@@ -232,3 +232,11 @@ export {
   type Unconverted,
 } from './undertaker/convert';
 export { migrate, type MigratedTable, type Migration, type Rejected } from './undertaker/migrate';
+export {
+  controlTotals,
+  reconcile,
+  type ControlTotals,
+  type Reconciliation,
+  type ReconciliationLine,
+  type TableTotals,
+} from './undertaker/reconcile';

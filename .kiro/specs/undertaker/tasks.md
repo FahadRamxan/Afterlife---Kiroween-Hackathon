@@ -16,10 +16,10 @@ The conversion first (pure, with its round trip), then the control totals, then 
     - _Requirements: 1.5, 2.4_
   - [x] 2.2 Seed a phone from the server's records when there is no bundle
     - _Requirements: 1.5_
-- [ ] 3. Reconciliation
-  - [ ] 3.1 Implement controlTotals and reconcile, exact in decimals
+- [x] 3. Reconciliation
+  - [x] 3.1 Implement controlTotals and reconcile, exact in decimals
     - _Requirements: 2.1, 2.2, 2.3_
-  - [ ] 3.2 Test a deliberately broken migration (a mismatch) and a correct one (all green)
+  - [x] 3.2 Test a deliberately broken migration (a mismatch) and a correct one (all green)
     - _Requirements: 2.3_
 - [ ] 4. The data crossing panel
   - [ ] 4.1 Add the panel: slips, progress per table, the reconciliation table, the rejected records

@@ -370,6 +370,8 @@ export const EVENT_TYPES = [
   'proof_case',
   'exorcism',
   'log',
+  /** The Undertaker's progress, one per table (Prompt 66). */
+  'migration',
 ] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
 
