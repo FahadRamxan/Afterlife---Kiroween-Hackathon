@@ -40,6 +40,12 @@ export const ProofSchema = z.object({
       vessel: Values.nullable(),
     })
     .nullable(),
+  /** The Rebirth Certificate (Prompt 71): its id, or why none was issued. */
+  certificate: z
+    .object({ id: z.string().optional(), reason: z.string().optional() })
+    .nullable()
+    .default(null)
+    .transform((c) => ({ id: c?.id ?? null, reason: c?.reason ?? null })),
 });
 export type Proof = z.infer<typeof ProofSchema>;
 

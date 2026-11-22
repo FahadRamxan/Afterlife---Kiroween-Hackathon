@@ -179,6 +179,7 @@ describe('the steps of a project', () => {
         failed: 3,
         skipped: 2,
         counterexample: cx,
+        certificate: { reason: '3 cases differ from the old app' },
       };
       await t.db
         .insert(pipelineSteps)

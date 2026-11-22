@@ -113,5 +113,16 @@ describe('ProofSchema', () => {
       },
     });
     expect(p.counterexample!.differences[0]!.field).toBe('GST');
+    // @spec rebirth-certificate#2.3 Whether a certificate was issued (Prompt 71).
+    expect(p.certificate).toEqual({ reason: null, id: null });
+    const issued = ProofSchema.parse({
+      ...p,
+      counterexample: null,
+      certificate: { id: '0192b6a0-0000-7000-8000-000000000001' },
+    });
+    expect(issued.certificate).toEqual({
+      id: '0192b6a0-0000-7000-8000-000000000001',
+      reason: null,
+    });
   });
 });

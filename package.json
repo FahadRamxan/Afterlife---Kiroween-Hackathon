@@ -34,6 +34,7 @@
     "score:archaeology": "tsx scripts/score-archaeology.ts",
     "export:check": "tsx scripts/export-check.ts",
     "proof:shifa": "tsx scripts/proof-shifa.ts",
+    "cert:key": "tsx scripts/cert-key.ts",
     "db:migrate": "pnpm --filter @afterlife/db migrate",
     "db:migrate:down": "pnpm --filter @afterlife/db migrate:down",
     "db:seed": "pnpm --filter @afterlife/db seed",
@@ -42,6 +43,7 @@
     "soul:spec": "pnpm --filter @afterlife/soul spec"
   },
   "devDependencies": {
+    "@afterlife/certificate": "workspace:^",
     "@afterlife/crew": "workspace:^",
     "@afterlife/db": "workspace:^",
     "@afterlife/dbf": "workspace:^",

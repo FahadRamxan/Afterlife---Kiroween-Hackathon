@@ -4,6 +4,8 @@ import { useTranslations } from 'next-intl';
 import { useId, useState } from 'react';
 import { proofCounter, type Proof, type ProofCaseEvent, type ProofProgress } from '../lib/proof';
 
+const API = process.env.NEXT_PUBLIC_API_URL;
+
 const inputsText = (c: Pick<ProofCaseEvent, 'inputs'>) => {
   const lines = (c.inputs.lines ?? []).map((l) => Object.values(l).join(' x ')).join(', ');
   const values = Object.entries(c.inputs.values ?? {})
@@ -82,6 +84,27 @@ export function ProofPanel({
           ) : null}
         </div>
       </div>
+      {proof?.certificate.id ? (
+        <p
+          data-testid="proof-certificate"
+          className="rounded-lg border border-ectoplasm/50 p-3 text-bone"
+        >
+          {t('certificate.issued')}{' '}
+          <a
+            href={`${API ?? ''}/api/certificates/${proof.certificate.id}?download=1`}
+            className="text-ectoplasm underline"
+          >
+            {t('certificate.download')}
+          </a>
+        </p>
+      ) : proof?.certificate.reason ? (
+        <p data-testid="proof-certificate" className="text-sm text-bone/70">
+          {t('certificate.none')}{' '}
+          <span lang="en" dir="ltr">
+            {proof.certificate.reason}
+          </span>
+        </p>
+      ) : null}
       {cx ? (
         <div className="space-y-3">
           <button

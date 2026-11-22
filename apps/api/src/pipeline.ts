@@ -54,6 +54,7 @@ export class PgPipeline implements Pipeline {
         failed?: number;
         skipped?: number;
         counterexample?: NonNullable<StepState['proof']>['counterexample'];
+        certificate?: { id?: string; reason?: string };
         published?: unknown;
         actions?: { id: string; name: string; ok: boolean }[];
         tables?: {
@@ -126,6 +127,7 @@ export class PgPipeline implements Pipeline {
                 failed: output.failed ?? 0,
                 skipped: output.skipped ?? 0,
                 counterexample: output.counterexample ?? null,
+                certificate: output.certificate ?? null,
               }
             : null,
       };

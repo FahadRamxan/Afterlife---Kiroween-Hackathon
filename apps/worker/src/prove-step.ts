@@ -4,6 +4,7 @@
 // case, and emits a `proof_case` event for each for the Proof tab. The first difference is shrunk
 // and explained. The run and its cases are kept in proof_runs and proof_cases (the certificate,
 // Prompt 71, is issued from them). Differences are a finding, not a failure of the step.
+import type { SigningKey } from '@afterlife/certificate';
 import { loadGraph, type ScreenGraphJson } from '@afterlife/crew';
 import type { DbfRecord, SnapshotDiff } from '@afterlife/dbf';
 import { and, desc, eq, proofCases, proofRuns, souls, type Db } from '@afterlife/db';
@@ -18,6 +19,7 @@ import {
 import { SoulSchema, type Soul } from '@afterlife/soul';
 import { tablesFromBundle } from '@afterlife/vessel';
 import { graveyardDosTime, type EmulatorPool } from './possess';
+import { issueCertificate } from './certify';
 import type { StepContext, StepHandler } from './registry';
 
 /** Cases per proof (PROVE_CASES): enough to cover each rule, short enough for a demo. */
@@ -60,6 +62,8 @@ function graphOf(soul: Soul, mapped: ScreenGraphJson | null) {
 
 export type ProveDeps = {
   db: Db;
+  /** Signs the Rebirth Certificate (CERT_SIGNING_KEY); null: none is issued, and it says so. */
+  key?: SigningKey | null;
   pool?: EmulatorPool;
   bundleFor: (p: StepContext['project'], projectId: string) => Promise<Uint8Array | null>;
   numRuns?: number;
@@ -200,6 +204,20 @@ export function proveStep(deps: ProveDeps): StepHandler {
       `${r.numRuns} cases: ${r.passed} the same, ${r.failed} different, ${r.skipped} skipped`,
       r.failed ? 'warn' : 'info',
     );
+    // The Rebirth Certificate (Prompt 71): only when the proof holds on migrated data.
+    const cert = await issueCertificate(deps.db, {
+      project: { id: ctx.projectId, ...ctx.project },
+      soul: { id: row.id, version: row.version, ir: row.ir },
+      run: { id: run!.id, seed },
+      proof: r,
+      key: deps.key ?? null,
+    });
+    await ctx.log(
+      cert.issued
+        ? `Rebirth Certificate issued: ${cert.id}`
+        : `No Rebirth Certificate: ${cert.reason}`,
+      cert.issued ? 'info' : 'warn',
+    );
     return {
       status: 'done',
       output: {
@@ -212,6 +230,7 @@ export function proveStep(deps: ProveDeps): StepHandler {
         failed: r.failed,
         skipped: r.skipped,
         counterexample,
+        certificate: cert.issued ? { id: cert.id } : { reason: cert.reason },
       },
     };
   };

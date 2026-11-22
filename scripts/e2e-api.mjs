@@ -27,6 +27,10 @@ const open = (port) =>
     s.once('error', () => resolve(false));
   });
 
+// The Rebirth Certificate key for this run only: RFC 8032's published test key 1 (section 7.1),
+// which is in every Ed25519 test suite and must never sign a real certificate.
+const TEST_CERT_SECRET = '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60';
+const TEST_CERT_PUBLIC = 'd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a';
 let container;
 let url = process.env.E2E_DATABASE_URL;
 if (!url) {
@@ -96,6 +100,7 @@ const api = spawn('pnpm', ['--filter', '@afterlife/api', 'start'], {
     DATABASE_URL: url,
     RATE_LIMIT_PER_MINUTE: '5000',
     RATE_LIMIT_CREATE_PER_MINUTE: '1000',
+    CERT_PUBLIC_KEY: TEST_CERT_PUBLIC,
   },
 });
 const stop = () => {
@@ -121,6 +126,10 @@ const worker = spawn('pnpm', ['--filter', '@afterlife/worker', 'start'], {
     JSDOS_POOL_SIZE: '1',
     VIRUS_SCANNER: 'eicar-test',
     POSSESS_MAX_ACTIONS: '2',
+    // A short proof on the one emulator (a case is about 5 s); recorded runs keep their 50.
+    PROVE_CASES: '8',
+    PROVE_LANES: '1',
+    CERT_SIGNING_KEY: TEST_CERT_SECRET,
   },
 });
 worker.on('exit', (code) => {
