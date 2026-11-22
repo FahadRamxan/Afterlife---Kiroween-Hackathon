@@ -11,6 +11,7 @@ import { scanUpload, uploadBundle } from './scan-upload';
 import type { VirusScanner } from './scanner';
 import { translateSoulStep } from './translate-soul';
 import { DEFAULT_TOKEN_BUDGET, type LlmClient, type SpeechClient } from '@afterlife/crew';
+import type { SigningKey } from '@afterlife/certificate';
 
 export type StepContext = {
   projectId: string;
@@ -66,6 +67,8 @@ export function defaultRegistry(
     /** The proof: cases (PROVE_CASES) and old apps at once (PROVE_LANES). */
     proveCases?: number;
     proveLanes?: number;
+    /** Signs the Rebirth Certificate (CERT_SIGNING_KEY); none: no certificate is issued. */
+    certKey?: SigningKey | null;
     /** Transcribes séance voice notes (SPEECH_PROVIDER); null: none. */
     speech?: SpeechClient | null;
   } = {},
@@ -116,6 +119,7 @@ export function defaultRegistry(
           ...(deps.pool ? { pool: deps.pool } : {}),
           ...(deps.proveCases ? { numRuns: deps.proveCases } : {}),
           ...(deps.proveLanes ? { lanes: deps.proveLanes } : {}),
+          key: deps.certKey ?? null,
         })
       : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
     exorcise: notBuiltYet('exorcise', 'Prompt 73'),

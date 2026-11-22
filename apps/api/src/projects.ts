@@ -232,6 +232,10 @@ export const StepStateSchema = z
             vessel: z.record(z.string(), z.string()).nullable(),
           })
           .nullable(),
+        /** The Rebirth Certificate (Prompt 71): its id, or why none was issued. */
+        certificate: z
+          .object({ id: z.string().optional(), reason: z.string().optional() })
+          .nullable(),
       })
       .nullable(),
   })

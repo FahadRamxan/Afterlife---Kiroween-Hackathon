@@ -11,6 +11,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 import pkg from '../package.json' with { type: 'json' };
+import { certificateRoutes, type CertificateStore } from './certificates';
 import { dbfInspectRoutes } from './dbf-inspect';
 import { exportRoutes, type ExportStore } from './export';
 import type { Env } from './env';
@@ -36,6 +37,7 @@ export type AppStores = {
   ruleEvidence?: RuleEvidenceStore;
   vessel?: VesselStore;
   exports?: ExportStore;
+  certificates?: CertificateStore;
 };
 
 export type AppOptions = {
@@ -113,6 +115,7 @@ export function buildApp(
   });
 
   app.register(dbfInspectRoutes);
+  app.register(certificateRoutes(stores.certificates, env.CERT_PUBLIC_KEY));
   app.register(
     sessionRoutes(sessions, {
       createPerMinute: limits.createPerMinute,

@@ -53,6 +53,17 @@ const schema = z.object({
   /** Model tokens one project may use; the worker spends them, "Show your work" shows them. */
   LLM_TOKEN_BUDGET: z.coerce.number().int().min(0).default(DEFAULT_LLM_TOKEN_BUDGET),
   /**
+   * The public key of the Rebirth Certificates (Prompt 71): 32 bytes of hex, published at
+   * /.well-known/afterlife-key. The worker signs with its secret (CERT_SIGNING_KEY). Unset: none.
+   */
+  CERT_PUBLIC_KEY: z
+    .string()
+    .optional()
+    .transform((s) => (s?.trim() ? s.trim().toLowerCase() : undefined))
+    .refine((s) => s === undefined || /^[0-9a-f]{64}$/.test(s), {
+      message: 'must be 32 bytes, hex (64 characters)',
+    }),
+  /**
    * Postgres (Neon in prod, Docker locally). Without it séances are kept in memory, and lost on a
    * restart; the server says so when it starts.
    */

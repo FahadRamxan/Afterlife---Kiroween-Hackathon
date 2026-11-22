@@ -12,6 +12,7 @@
     "record": "tsx src/record.ts"
   },
   "devDependencies": {
+    "@afterlife/certificate": "workspace:^",
     "@afterlife/dbf": "workspace:^",
     "@types/node": "^22",
     "fast-check": "^4.10.2",

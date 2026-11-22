@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@afterlife/crew": "workspace:^",
+    "@afterlife/certificate": "workspace:^",
     "@afterlife/db": "workspace:^",
     "@afterlife/dbf": "workspace:^",
     "@afterlife/emulator": "workspace:^",

@@ -90,6 +90,7 @@ describe('worker image (Prompt 37)', () => {
 describe('.env.example files (Prompt 10)', () => {
   it('API example lists every variable parseEnv reads, plus DATABASE_URL', () => {
     expect(envKeys('apps/api/.env.example').sort()).toEqual([
+      'CERT_PUBLIC_KEY',
       'DATABASE_URL',
       'HOST',
       'LLM_TOKEN_BUDGET',

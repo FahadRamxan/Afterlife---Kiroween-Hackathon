@@ -1,6 +1,15 @@
 // @spec oracle-proof#4.1 The prove step (Prompt 70): the proof on the project's newest Soul, a
 // proof_case event per case, the run and its cases kept, the first difference shrunk.
-import { eq, insertSoulVersion, proofCases, proofRuns, projects } from '@afterlife/db';
+import { newSigningKey, verifyCertificate, type SigningKey } from '@afterlife/certificate';
+import {
+  certificates,
+  eq,
+  insertSoulVersion,
+  pipelineSteps,
+  proofCases,
+  proofRuns,
+  projects,
+} from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { vesselOldApp } from '@afterlife/oracle';
 import { numberSoul, specRequirements, type Soul } from '@afterlife/soul';
@@ -11,8 +20,10 @@ import { proveStep, seedOf } from './prove-step';
 import type { StepContext } from './registry';
 
 let t: TestDatabase;
+let key: SigningKey;
 beforeAll(async () => {
   t = await freshDatabase();
+  key = await newSigningKey();
 });
 afterAll(async () => {
   await t.drop();
@@ -63,6 +74,7 @@ const step = (numRuns = 30) =>
     numRuns,
     lanes: 2,
     shrinkMs: 20_000,
+    key,
     oldApp: (_soul, records, today) => async (work) => work(vesselOldApp(OLD, records, today)),
   });
 
@@ -93,7 +105,13 @@ describe('the prove step', () => {
     expect(
       await t.db.select().from(proofCases).where(eq(proofCases.proofRunId, run!.id)),
     ).toHaveLength(30);
-    expect(logs.at(-1)).toMatch(/^30 cases: \d+ the same, 0 different, \d+ skipped$/);
+    expect(logs).toContainEqual(
+      expect.stringMatching(/^30 cases: \d+ the same, 0 different, \d+ skipped$/),
+    );
+    // No undertake step ran for this project: no certificate, and it says why.
+    expect(logs.at(-1)).toBe(
+      'No Rebirth Certificate: The old app’s data has not been migrated yet',
+    );
   });
 
   it('a Soul that rounds GST is caught, shrunk and explained', async () => {
@@ -133,6 +151,44 @@ describe('the prove step', () => {
     const shrunk = rows.find((x) => x.idx === out.counterexample.index)!;
     expect(shrunk.passed).toBe(false);
     expect(shrunk.explanation).toBe(out.counterexample.explanation);
+  });
+
+  // @spec rebirth-certificate#2.1 The prove step issues the certificate when the proof holds.
+  it('a clean proof of migrated data issues a certificate that verifies; a difference issues none', async () => {
+    const p = await project(OLD);
+    await t.db.insert(pipelineSteps).values({
+      projectId: p.id,
+      step: 'undertake',
+      status: 'done',
+      output: { soulVersion: 1, reconciliation: { matches: true, lines: [] } },
+    });
+    const { c, logs } = ctx(p);
+    const r = (await step(20)(c)) as { output: { certificate: { id?: string; reason?: string } } };
+    expect(r.output.certificate.id).toMatch(/^[0-9a-f-]{36}$/);
+    expect(logs).toContain(`Rebirth Certificate issued: ${r.output.certificate.id}`);
+    const [row] = await t.db
+      .select()
+      .from(certificates)
+      .where(eq(certificates.id, r.output.certificate.id!));
+    const v = await verifyCertificate(
+      {
+        payload: row!.payload,
+        algorithm: 'Ed25519',
+        canonicalization: 'RFC8785',
+        signature: row!.signature,
+        publicKey: row!.publicKey,
+      },
+      key.publicKey,
+    );
+    expect(v.ok).toBe(true);
+    // A Soul that rounds GST: differences, so no certificate, and the step says why.
+    const q = await project(ROUNDED_GST);
+    const w = ctx(q);
+    const r2 = (await step(60)(w.c)) as {
+      output: { failed: number; certificate: { reason?: string } };
+    };
+    expect(r2.output.certificate.reason).toBe(`${r2.output.failed} cases differ from the old app`);
+    expect(w.logs).toContain(`No Rebirth Certificate: ${r2.output.certificate.reason}`);
   });
 
   it('says why it did nothing: no Soul, no actions, no old app', async () => {

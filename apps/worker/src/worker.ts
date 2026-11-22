@@ -1,5 +1,6 @@
 // The worker process: migrates the database (the API does too; an advisory lock keeps them from
 // clashing), starts pg-boss, makes the queues, and runs the job loop until it is stopped.
+import { certKeyFrom } from './cert-key';
 import {
   createBoss,
   createDb,
@@ -46,6 +47,10 @@ export async function startWorker({
 }: WorkerOptions): Promise<RunningWorker> {
   if (!databaseUrl)
     throw new Error('The worker needs DATABASE_URL: its jobs live in Postgres (pg-boss)');
+  // Before anything starts: a malformed signing key stops the worker here.
+  const certKey = registry ? null : await certKeyFrom(process.env);
+  if (!registry && !certKey)
+    log('No CERT_SIGNING_KEY: proofs run, but no Rebirth Certificate is issued');
   const db = createDb(databaseUrl, {
     max: 3,
     onIdleError: (e) => log(`database closed an idle connection: ${e.message}`),
@@ -73,6 +78,7 @@ export async function startWorker({
         scanner: scanner ?? scannerFromEnv(process.env),
         llm: llm === undefined ? llmClientFrom(process.env) : llm,
         budgetTokens: budgetTokens ?? tokenBudgetFrom(process.env),
+        certKey,
         ...(Number(process.env.PROVE_CASES) > 0
           ? { proveCases: Number(process.env.PROVE_CASES) }
           : {}),

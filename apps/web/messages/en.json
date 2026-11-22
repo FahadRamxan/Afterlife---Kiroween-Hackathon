@@ -379,7 +379,12 @@
         "fail": "It wrote no record.",
         "skip": "Skipped: the records no longer allowed this case."
       },
-      "log": "Cases, newest first"
+      "log": "Cases, newest first",
+      "certificate": {
+        "issued": "Rebirth Certificate issued: signed with the Afterlife key, so anyone can check it.",
+        "download": "Download the certificate",
+        "none": "No Rebirth Certificate yet:"
+      }
     }
   },
   "vessel": {
