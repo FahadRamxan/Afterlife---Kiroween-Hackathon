@@ -8,6 +8,7 @@ import { PgLlmCallStore } from './llm-calls';
 import { PgRuleEvidenceStore } from './rules';
 import { PgScreenGraphStore } from './screen-graph';
 import { PgVesselStore } from './vessel';
+import { PgExportStore } from './export';
 import { PgPipeline } from './pipeline';
 import { PgSoulStore } from './souls';
 import { PgUploadStore } from './uploads';
@@ -58,6 +59,7 @@ export async function openStores(
       screenGraphs: new PgScreenGraphStore(db),
       ruleEvidence: new PgRuleEvidenceStore(db),
       vessel: new PgVesselStore(db, (id) => projectStore.get(id)),
+      exports: new PgExportStore(db, (id) => projectStore.get(id)),
       live,
       pipeline,
     },

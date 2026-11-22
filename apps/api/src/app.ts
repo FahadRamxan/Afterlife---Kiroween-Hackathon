@@ -12,6 +12,7 @@ import {
 } from 'fastify-type-provider-zod';
 import pkg from '../package.json' with { type: 'json' };
 import { dbfInspectRoutes } from './dbf-inspect';
+import { exportRoutes, type ExportStore } from './export';
 import type { Env } from './env';
 import { liveRoutes, type LiveHub } from './live';
 import { llmCallRoutes, type LlmCallStore } from './llm-calls';
@@ -34,6 +35,7 @@ export type AppStores = {
   screenGraphs?: ScreenGraphStore;
   ruleEvidence?: RuleEvidenceStore;
   vessel?: VesselStore;
+  exports?: ExportStore;
 };
 
 export type AppOptions = {
@@ -150,6 +152,11 @@ export function buildApp(
   );
   app.register(
     vesselRoutes(stores.vessel, {
+      projectExists: async (id) => (await projects.get(id)) !== null,
+    }),
+  );
+  app.register(
+    exportRoutes(stores.exports, {
       projectExists: async (id) => (await projects.get(id)) !== null,
     }),
   );

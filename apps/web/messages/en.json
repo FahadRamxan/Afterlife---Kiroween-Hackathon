@@ -286,7 +286,8 @@
         "line": "Line {n}",
         "effects": "{file} ({name}): what the action changed"
       },
-      "openVessel": "Open the reborn app"
+      "openVessel": "Open the reborn app",
+      "export": "Export the reborn app"
     },
     "work": {
       "title": "Show your work",

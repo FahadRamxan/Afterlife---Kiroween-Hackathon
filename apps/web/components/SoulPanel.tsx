@@ -99,6 +99,14 @@ export function SoulPanel({
             <Link href={`/vessel/${projectId}`}>{t('openVessel')}</Link>
           </Button>
         ) : null}
+        {/* Prompt 62: the reborn app as code, with its Kiro files and tests. */}
+        {soul.actions.length && API ? (
+          <Button asChild size="sm" variant="secondary">
+            <a href={`${API}/api/projects/${projectId}/export`} download>
+              {t('export')}
+            </a>
+          </Button>
+        ) : null}
       </div>
       {soul.provenance.createdBy === 'reference' ? (
         <p
