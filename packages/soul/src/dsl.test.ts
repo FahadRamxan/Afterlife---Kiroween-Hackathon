@@ -75,6 +75,19 @@ describe('evaluate', () => {
     expect(ev('all(items, x => x.price < 1)', { items })).toBe(false);
   });
 
+  it('dates: year, month and day of a date, as numbers (Prompt 68)', () => {
+    const env = { today: dslDate('1998-07-15'), medicine: { expiry: dslDate('20000630') } };
+    expect(num('year(today)', env)).toBe('1998');
+    expect(num('month(today)', env)).toBe('7');
+    expect(num('day(medicine.expiry)', env)).toBe('30');
+    expect(num('year(medicine.expiry) % 100', env)).toBe('0');
+    // Shifa's 1998 expiry check, as the old app does it: two-digit years (its Y2K bug).
+    const yymmdd = (d: string) => `(year(${d}) % 100) * 10000 + month(${d}) * 100 + day(${d})`;
+    expect(ev(`${yymmdd('medicine.expiry')} >= ${yymmdd('today')}`, env)).toBe(false);
+    expect(() => ev('year(1998)', env)).toThrow(DslError);
+    expect(() => ev('month(today, 1)', env)).toThrow(DslError);
+  });
+
   it('dates: comparisons, addDays, daysBetween and weeksBetween', () => {
     const env = { today: dslDate('1998-07-15'), medicine: { expiry: dslDate('1998-07-15') } };
     expect(ev('medicine.expiry >= today', env)).toBe(true);

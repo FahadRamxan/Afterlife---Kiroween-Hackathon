@@ -7,7 +7,9 @@
 ## Architecture
 
 - `packages/oracle/src/arbitraries.ts`: `thresholdsOf(soul)`, `prepareCases(soul, records, opts)`, `caseArbitrary(ctx, actionId?)`.
-- `packages/oracle/src/compare.ts`: `sameEffects(old, vessel)`, `explainDifference(case)`.
+- `packages/oracle/src/compare.ts`: `effectDifferences(old, vessel)` and `sameEffects`: numbers compared as numbers, text without padding, inserted records paired by key, updates and deletions by record number. `explainDifference(case)` comes with shrinking.
+- `packages/oracle/src/old-app.ts`: `emulatorOldApp(emu, { soul, graph })`: Esc out of a screen the graph does not know, `replayPath` to the action's screen, the macro typed step by step (`keySteps` from `@afterlife/emulator`), the data files diffed from before the first key to after the last.
+- `scripts/proof-shifa.ts`: `pnpm proof:shifa`, a ci:local step.
 - `packages/oracle/src/runner.ts`: `proveEquivalence(target, { numRuns, seed, lanes, ... })`, with `OldApp` (an emulator lane) and the Vessel lane.
 - `apps/worker/src/prove-step.ts`: the prove step.
 - `apps/web/components/ProofPanel.tsx`: the Proof tab.
@@ -17,7 +19,8 @@
 - `ProofCase = { actionId: string; inputs: ActionInputs }`.
 - `prepareCases(soul, records, { today }): Promise<CaseContext>` works out each action's form, keys, line records and threshold cases (with the probe planner of `@afterlife/crew`); `caseArbitrary(ctx, actionId?): fc.Arbitrary<ProofCase>`.
 - `OldApp = { run(c: ProofCase): Promise<SnapshotDiff>; reset(): Promise<void> }`.
-- `proveEquivalence(...)` gives `{ seed, numRuns, passed, failed, skipped, cases, counterexample }`.
+- `proveEquivalence(target, opts)` gives `{ seed, numRuns, lanes, passed, failed, skipped, cases, firstFailure }`. The cases are the ones `fc.check` makes from the seed (`proofCases`), so case i replays alone with path `i`. Lane k takes cases k, k + lanes, ...; each lane starts again from the app's own records every 25 cases and after a difference.
+- `SHIFA_AS_IT_RUNS_SOUL` (`@afterlife/soul/examples/shifa`): the reference Soul with the old app's two-digit-year expiry check (`year`, `month`, `day` were added to the rule language). The strict proof on the real app uses it; the reference Soul differs from the real app exactly on batches good until 2000 or later (the manifest's `y2k-expiry`).
 
 ## Data Models
 
@@ -59,5 +62,6 @@ For any cases, a proof with a Vessel as the old app passes every case.
 
 - Property tests of the arbitraries on Shifa's reference Soul and seed records.
 - Unit tests of the runner with a Vessel standing in for the old app (fast), including a changed rule caught and shrunk.
-- `pnpm proof:shifa` (a ci:local step): 200 cases on the real Shifa in js-dos.
+- `pnpm proof:shifa` (a ci:local step): 200 cases on the real Shifa in js-dos with the as-it-runs Soul, 0 differences; then 60 with the reference Soul, every difference a Y2K line.
+- `old-app.integration.test.ts`: the emulator old app on the real Shifa, and an 18% GST caught.
 - An e2e test of the Proof tab.

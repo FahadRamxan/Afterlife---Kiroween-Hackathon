@@ -12,34 +12,13 @@ import {
 } from '@afterlife/crew';
 import type { DbfRecord, SnapshotDiff } from '@afterlife/dbf';
 import { observations, type Db } from '@afterlife/db';
-import {
-  parseKeys,
-  printKeys,
-  recordAction,
-  waitForStableScreen,
-  type Observation,
-} from '@afterlife/emulator';
+import { keySteps, recordAction, waitForStableScreen, type Observation } from '@afterlife/emulator';
 import { expandMacro, type Rule, type Soul } from '@afterlife/soul';
 import { MemoryEntityStore, type ActionInputs } from '@afterlife/vessel';
 import type { EmulatorPool } from './possess';
 
 /** At most this many bills are typed per round (each boots the app). */
 export const MAX_PROBE_BILLS = 8;
-
-/** The keys of a macro in the steps a person types them in: text, then the key that ends it. */
-export function keySteps(keys: string): string[] {
-  const out: string[] = [];
-  let text: ReturnType<typeof parseKeys> = [];
-  for (const s of parseKeys(keys)) {
-    if (s.kind === 'text') text.push(s);
-    else {
-      out.push(printKeys([...text, s]));
-      text = [];
-    }
-  }
-  if (text.length) out.push(printKeys(text));
-  return out;
-}
 
 const changed = (d: SnapshotDiff) =>
   Object.values(d.tables).some((t) => t.inserted.length || t.updated.length || t.deleted.length);

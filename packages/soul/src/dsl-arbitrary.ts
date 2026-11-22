@@ -21,6 +21,9 @@ const FNS = [
   'addDays',
   'daysBetween',
   'weeksBetween',
+  'year',
+  'month',
+  'day',
 ];
 const AGG = ['sum', 'count', 'any', 'all'];
 const BIN = ['+', '-', '*', '/', '%', '=', '!=', '<', '<=', '>', '>=', 'and', 'or'] as const;

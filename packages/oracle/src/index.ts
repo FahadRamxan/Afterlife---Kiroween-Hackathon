@@ -7,3 +7,20 @@ export {
   type ProofCase,
   type Threshold,
 } from './arbitraries';
+export { effectDifferences, normalValue, sameEffects, type Difference } from './compare';
+export { emulatorOldApp, type EmulatorOldAppOptions } from './old-app';
+export {
+  RESTART_EVERY,
+  freshVessel,
+  proofCases,
+  proofProperty,
+  proveEquivalence,
+  vesselOldApp,
+  type CaseOutcome,
+  type CaseResult,
+  type OldApp,
+  type OldRun,
+  type ProofOptions,
+  type ProofResult,
+  type ProofTarget,
+} from './runner';

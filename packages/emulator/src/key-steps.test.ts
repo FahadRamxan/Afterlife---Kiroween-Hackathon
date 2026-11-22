@@ -1,8 +1,8 @@
 // @spec archaeologist-completion#3.2 The keys of a probe, in the steps a person types them in.
-import { parseKeys, printKeys } from '@afterlife/emulator';
 import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
-import { keySteps } from './probe-runner';
+import { parseKeys, printKeys } from './keys';
+import { keySteps } from './key-steps';
 
 describe('keySteps', () => {
   it('splits a filled-in macro after each key that is not text', () => {
