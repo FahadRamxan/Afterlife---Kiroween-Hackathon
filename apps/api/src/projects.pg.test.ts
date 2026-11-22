@@ -94,6 +94,56 @@ describe('the steps of a project', () => {
         actions: [{ id: 'save-bill', name: 'Save a bill' }],
       });
       expect(steps[0].vessel).toBeNull();
+      // @spec undertaker#4.1 The undertake step, done: its report for the data crossing panel.
+      const report = {
+        tables: [
+          {
+            file: 'MEDICINE.DBF',
+            entity: 'medicine',
+            read: 40,
+            deleted: 0,
+            migrated: 39,
+            rejected: 1,
+          },
+        ],
+        rejected: [
+          {
+            file: 'MEDICINE.DBF',
+            entity: 'medicine',
+            recno: 2,
+            field: 'EXPIRY',
+            reason: 'r',
+            fix: 'f',
+          },
+        ],
+        reconciliation: {
+          matches: true,
+          lines: [
+            {
+              table: 'MEDICINE.DBF',
+              total: 'records',
+              before: '40',
+              rejected: '1',
+              after: '39',
+              ok: true,
+            },
+          ],
+          old: { tables: [], stockValue: null, balances: [] },
+          migrated: { tables: [], stockValue: null, balances: [] },
+        },
+      };
+      await t.db
+        .insert(pipelineSteps)
+        .values({ projectId: p.id, step: 'undertake', status: 'done', output: report });
+      const crossed = (
+        await app.inject({ method: 'GET', url: `/api/projects/${p.id}/steps` })
+      ).json().steps[3];
+      expect(crossed.crossing).toEqual({
+        tables: report.tables,
+        rejected: [{ file: 'MEDICINE.DBF', recno: 2, field: 'EXPIRY', reason: 'r', fix: 'f' }],
+        reconciliation: { matches: true, lines: report.reconciliation.lines },
+      });
+      expect(reborn.crossing).toBeNull();
       expect(
         (await app.inject({ method: 'GET', url: `/api/projects/${uuidv7()}/steps` })).statusCode,
       ).toBe(404);

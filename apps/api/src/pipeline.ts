@@ -48,6 +48,26 @@ export class PgPipeline implements Pipeline {
         recorded?: unknown;
         published?: unknown;
         actions?: { id: string; name: string; ok: boolean }[];
+        tables?: {
+          file: string;
+          entity: string;
+          read: number;
+          deleted: number;
+          migrated: number;
+          rejected: number;
+        }[];
+        rejected?: { file: string; recno: number; field: string; reason: string; fix: string }[];
+        reconciliation?: {
+          matches: boolean;
+          lines: {
+            table: string;
+            total: string;
+            before: string;
+            rejected: string;
+            after: string;
+            ok: boolean;
+          }[];
+        };
       } | null;
       const reason = typeof output?.reason === 'string' ? output.reason : null;
       return {
@@ -66,6 +86,24 @@ export class PgPipeline implements Pipeline {
                 actions: (output.actions ?? [])
                   .filter((a) => a.ok)
                   .map((a) => ({ id: a.id, name: a.name })),
+              }
+            : null,
+        // At most 100 rejected records on the page; the step's output has them all.
+        crossing:
+          step === 'undertake' && r?.status === 'done' && output?.reconciliation && output.tables
+            ? {
+                tables: output.tables,
+                rejected: (output.rejected ?? []).slice(0, 100).map((x) => ({
+                  file: x.file,
+                  recno: x.recno,
+                  field: x.field,
+                  reason: x.reason,
+                  fix: x.fix,
+                })),
+                reconciliation: {
+                  matches: output.reconciliation.matches,
+                  lines: output.reconciliation.lines,
+                },
               }
             : null,
       };

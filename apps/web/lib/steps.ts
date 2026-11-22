@@ -1,6 +1,7 @@
 // The pipeline steps of a project (Prompt 39): read from the API, moved along by live events.
 import { z } from 'zod';
 import type { Failure } from './projects';
+import { CrossingSchema } from './crossing';
 import type { LiveEvent } from './live';
 
 const StepStateSchema = z.object({
@@ -16,6 +17,8 @@ const StepStateSchema = z.object({
     .object({ url: z.string(), actions: z.array(z.object({ id: z.string(), name: z.string() })) })
     .nullable()
     .default(null),
+  /** The undertake step, done: its report (Prompt 66). */
+  crossing: CrossingSchema.nullable().default(null),
 });
 export type StepState = z.infer<typeof StepStateSchema>;
 

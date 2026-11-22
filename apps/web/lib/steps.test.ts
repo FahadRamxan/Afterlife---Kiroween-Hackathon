@@ -11,6 +11,7 @@ const pending = (step: string): StepState => ({
   recorded: false,
   finishedAt: null,
   vessel: null,
+  crossing: null,
 });
 const SIX = ['possess', 'archaeology', 'rebirth', 'undertake', 'prove', 'exorcise'].map(pending);
 const json = (status: number, body: unknown) =>
@@ -30,10 +31,10 @@ describe('getSteps and rerunStep', () => {
     const r = await getSteps('https://a', id, json(200, { projectId: id, steps: reborn }));
     expect(r.ok && r.steps[2]!.vessel).toEqual(vessel);
     const old = SIX.map((x) =>
-      Object.fromEntries(Object.entries(x).filter(([k]) => k !== 'vessel')),
+      Object.fromEntries(Object.entries(x).filter(([k]) => k !== 'vessel' && k !== 'crossing')),
     );
     const o = await getSteps('https://a', id, json(200, { projectId: id, steps: old }));
-    expect(o.ok && o.steps.every((x) => x.vessel === null)).toBe(true);
+    expect(o.ok && o.steps.every((x) => x.vessel === null && x.crossing === null)).toBe(true);
   });
 
   it('a step done in a recorded run is marked recorded by its live event (Prompt 53)', () => {

@@ -21,10 +21,10 @@ The conversion first (pure, with its round trip), then the control totals, then 
     - _Requirements: 2.1, 2.2, 2.3_
   - [x] 3.2 Test a deliberately broken migration (a mismatch) and a correct one (all green)
     - _Requirements: 2.3_
-- [ ] 4. The data crossing panel
-  - [ ] 4.1 Add the panel: slips, progress per table, the reconciliation table, the rejected records
+- [x] 4. The data crossing panel
+  - [x] 4.1 Add the panel: slips, progress per table, the reconciliation table, the rejected records
     - _Requirements: 3.1, 3.2, 3.3, 3.4_
-  - [ ] 4.2 Add an e2e test: every table shows a matching count
+  - [x] 4.2 Add an e2e test: every table shows a matching count
     - _Requirements: 3.2_
 
 ## Notes
