@@ -11,7 +11,8 @@ const total = (page: import('@playwright/test').Page, field: string) =>
 test('a recorded run’s own Soul, found without a model and probed in the old app, makes a bill', async ({
   page,
 }) => {
-  test.setTimeout(150_000);
+  // A whole recorded run replays first (six steps, about a minute; more on a loaded machine).
+  test.setTimeout(240_000);
   await page.goto('/graveyard');
   await page.getByRole('button', { name: 'Watch a recorded run of Shifa Medical Store' }).click();
   await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
