@@ -92,6 +92,13 @@
       "when": 1795205875998,
       "tag": "0012_vessel_sync",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1795317220507,
+      "tag": "0013_migration_events",
+      "breakpoints": true
     }
   ]
 }

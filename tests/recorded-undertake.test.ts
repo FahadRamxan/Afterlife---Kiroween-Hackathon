@@ -18,6 +18,7 @@ type Rec = {
         migrated: number;
         rejected: number;
       }[];
+      reconciliation?: { matches: boolean; lines: { table: string; total: string; ok: boolean }[] };
     } | null;
   }[];
 };
@@ -41,5 +42,11 @@ describe('the recorded undertake step', () => {
       expect(t.migrated, t.file).toBe(t.read - t.deleted);
       expect(t.migrated, t.file).toBeGreaterThan(0);
     }
+    // @spec undertaker#3.2 Prompt 65: what the real step wrote reconciles with the old data.
+    const report = step.output!.reconciliation!;
+    expect(report.matches).toBe(true);
+    expect(report.lines.length).toBeGreaterThanOrEqual(files.length);
+    for (const f of files)
+      expect(report.lines.find((l) => l.table === f && l.total === 'records')!.ok, f).toBe(true);
   });
 });
