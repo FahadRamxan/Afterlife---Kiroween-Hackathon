@@ -576,6 +576,9 @@ importers:
         specifier: ^4.10.2
         version: 4.10.2
     devDependencies:
+      '@afterlife/screen':
+        specifier: workspace:^
+        version: link:../screen
       '@types/node':
         specifier: ^22
         version: 22.20.5

@@ -82,6 +82,11 @@ async function prove(pool: HeadlessPool, soul: Soul, numRuns: number, label: str
         `${label} case ${String(c.index).padStart(3)} lane ${c.lane} ${c.actionId} ` +
           `${JSON.stringify(c.inputs)}: ${what} (${c.ms} ms) [${done}/${numRuns}]`,
       );
+      // A difference shows where the old app was left: its own screen says why.
+      if (c.outcome === 'fail')
+        console.log(
+          `  old app's screen: ${JSON.stringify((c.screen ?? []).map((l) => l.trimEnd()).filter(Boolean))}`,
+        );
     },
   });
   const secs = Math.round((Date.now() - start) / 1000);
