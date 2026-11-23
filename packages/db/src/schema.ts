@@ -67,6 +67,11 @@ export const projects = pgTable(
      * newest last-update date in its DBF headers); Graveyard apps use their manifest's.
      */
     dosTime: text('dos_time'),
+    /**
+     * Ghost Twin (Prompt 76): SHA-256 of the token the shop's capture tool sends its events with.
+     * Only the hash is kept; the token is shown once, when it is made.
+     */
+    twinTokenHash: text('twin_token_hash'),
     createdAt: createdAt(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
@@ -372,6 +377,8 @@ export const EVENT_TYPES = [
   'log',
   /** The Undertaker's progress, one per table (Prompt 66). */
   'migration',
+  /** Ghost Twin: a change the shop's data folder made, as it arrived (Prompt 76). */
+  'twin',
 ] as const;
 export type EventType = (typeof EVENT_TYPES)[number];
 

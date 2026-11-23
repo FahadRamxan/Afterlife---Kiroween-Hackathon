@@ -15,6 +15,7 @@ import { certificateRoutes, type CertificateStore } from './certificates';
 import { dbfInspectRoutes } from './dbf-inspect';
 import { exportRoutes, type ExportStore } from './export';
 import { exorcismRoutes, type ExorcismStore } from './exorcisms';
+import { twinRoutes, type TwinStore } from './twin';
 import type { Env } from './env';
 import { liveRoutes, type LiveHub } from './live';
 import { llmCallRoutes, type LlmCallStore } from './llm-calls';
@@ -40,6 +41,7 @@ export type AppStores = {
   exports?: ExportStore;
   certificates?: CertificateStore;
   exorcisms?: ExorcismStore;
+  twin?: TwinStore;
 };
 
 export type AppOptions = {
@@ -119,6 +121,7 @@ export function buildApp(
   app.register(dbfInspectRoutes);
   app.register(certificateRoutes(stores.certificates, env.CERT_PUBLIC_KEY));
   app.register(exorcismRoutes(stores.exorcisms, stores.pipeline));
+  app.register(twinRoutes(stores.twin));
   app.register(
     sessionRoutes(sessions, {
       createPerMinute: limits.createPerMinute,
