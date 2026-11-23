@@ -17,6 +17,7 @@
     "@afterlife/dbf": "workspace:^",
     "@afterlife/emulator": "workspace:^",
     "@afterlife/soul": "workspace:^",
+    "@afterlife/twin": "workspace:^",
     "@afterlife/vessel": "workspace:^",
     "@fastify/cors": "^11.4.3",
     "@fastify/multipart": "^10.1.9",

@@ -1,0 +1,24 @@
+{
+  "name": "@afterlife/twin",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Ghost Twin capture: watches a shop's DBF folder and sends each change to Afterlife.",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "bin": {
+    "afterlife-twin": "./src/cli.ts"
+  },
+  "scripts": {
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@afterlife/dbf": "workspace:^",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "vitest": "^5.1.0"
+  }
+}

@@ -11,6 +11,7 @@ import { PgVesselStore } from './vessel';
 import { PgExportStore } from './export';
 import { PgCertificateStore } from './certificates';
 import { PgExorcismStore } from './exorcisms';
+import { PgTwinStore } from './twin';
 import { PgPipeline } from './pipeline';
 import { PgSoulStore } from './souls';
 import { PgUploadStore } from './uploads';
@@ -64,6 +65,7 @@ export async function openStores(
       exports: new PgExportStore(db, (id) => projectStore.get(id)),
       certificates: new PgCertificateStore(db),
       exorcisms: new PgExorcismStore(db),
+      twin: new PgTwinStore(db),
       live,
       pipeline,
     },
