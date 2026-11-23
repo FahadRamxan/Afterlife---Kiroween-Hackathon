@@ -1,14 +1,17 @@
 // Prompt 45: every change to a Soul is a new version; the Soul tab lists them and compares two.
 import { expect, test } from '@playwright/test';
 import { SHIFA_REFERENCE_SOUL } from '../packages/soul/src/examples/shifa';
-
-const API = 'http://localhost:4000';
+import { API, raiseShifa } from './helpers/raise';
 
 test('the version timeline lists each version and compares two', async ({ page }) => {
-  await page.goto('/graveyard');
-  await page.getByRole('button', { name: 'Raise Shifa Medical Store' }).click();
-  await expect(page).toHaveURL(/\/raise\/[0-9a-f-]{36}$/, { timeout: 15_000 });
-  const id = page.url().split('/').at(-1)!;
+  // The pipeline's archaeology step stores a Soul version of its own: wait for it first, so the
+  // two versions this test posts are the newest (else the step's could land between them).
+  const id = await raiseShifa(page, { recorded: true });
+  const before = (await (await page.request.get(`${API}/api/projects/${id}/souls`)).json()) as {
+    versions: { version: number }[];
+  };
+  const a = before.versions.length + 1;
+  const b = a + 1;
 
   await page.request.post(`${API}/api/projects/${id}/souls`, { data: SHIFA_REFERENCE_SOUL });
   const v2 = {
@@ -37,14 +40,15 @@ test('the version timeline lists each version and compares two', async ({ page }
 
   await page.goto(`/raise/${id}?tab=soul`);
   const versions = page.getByTestId('soul-versions');
-  await expect(versions.getByTestId('version-2')).toContainText('by the owner');
-  await expect(versions.getByTestId('version-2')).toContainText('1 added, 1 removed, 1 changed');
+  await expect(versions.getByTestId(`version-${b}`)).toContainText('by the owner');
+  await expect(versions.getByTestId(`version-${b}`)).toContainText('1 added, 1 removed, 1 changed');
+  await expect(versions.getByTestId(`version-${a}`)).toContainText('by our team (reference)');
   await expect(versions.getByTestId('version-1')).toContainText('the first version');
-  await expect(page.getByTestId('soul')).toContainText('Soul version 2');
+  await expect(page.getByTestId('soul')).toContainText(`Soul version ${b}`);
 
   await versions.getByRole('button', { name: 'Compare' }).click();
   const diff = page.getByTestId('soul-diff');
-  await expect(diff).toContainText('From version 1 to version 2');
+  await expect(diff).toContainText(`From version ${a} to version ${b}`);
   await expect(diff.locator('[data-kind="added"]')).toContainText('sunday-closed');
   await expect(diff.locator('[data-kind="removed"]')).toContainText('gst-17-truncated');
   await expect(diff.locator('[data-kind="changed"]')).toContainText('bill.subtotal > 5000');
