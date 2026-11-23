@@ -15,6 +15,8 @@ The Exorcist is deterministic: each detector reads the Soul, the old app's recor
 - `packages/crew/src/exorcist/decide.ts`: `decideExorcism(db, project, code, decision)`: once per finding; a choice with edits writes a new Soul version; the remedy and version are kept on the row.
 - `packages/oracle/src/runner.ts`: `oldBehaviour` (run in lockstep with the reborn app: a difference it explains is `accepted`) and `reuse` (a case kept from the last proof). The prove step builds both: the old behaviour from the fixes, and reuse for the cases that are the same case, held then, and that the Soul then and now treat alike from a fresh start.
 - `apps/api/src/exorcisms.ts`: `GET /api/projects/:id/exorcisms`, `POST /api/projects/:id/exorcisms/:code` (`{ decision }`), which proves the new version.
+- `apps/web/components/ExorcismTab.tsx`, `apps/web/lib/exorcism.ts`: the ghost cards, Keep and Fix, the dissolve (Framer Motion; none under reduced motion), the ghosts left, and the decided list. The API gives each piece of screen evidence the old app's whole screen then (the evidence replay).
+- `apps/worker/src/recording.ts`: a recorded run stores its findings (evidence on the project's own observations) and counts its migration for the Soul it stored; `matchesRecording`: once the owner changes a rule, the steps that work from the Soul (rebirth, undertake, prove, exorcise) run live.
 - `apps/worker/src/exorcise-step.ts`: the step: the newest Soul, the project's observations, the records from the bundle, the probes on the pool, then `exorcisms` rows (a decision already made is kept) and an `exorcism` event per finding.
 
 ## Components and Interfaces

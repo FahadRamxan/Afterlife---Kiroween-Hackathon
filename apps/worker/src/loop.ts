@@ -8,6 +8,7 @@ import {
   enqueueStep,
   nextStep,
   emitEvent,
+  latestSoulRow,
   pipelineSteps,
   projects,
   type Db,
@@ -18,7 +19,7 @@ import {
   sql,
 } from '@afterlife/db';
 import type { Job, PgBoss } from 'pg-boss';
-import { loadRecording, replayStep, type Recording } from './recording';
+import { loadRecording, matchesRecording, replayStep, type Recording } from './recording';
 import type { Registry, StepContext, StepHandler } from './registry';
 
 export type JobLoop = { stop(): Promise<void> };
@@ -87,18 +88,29 @@ async function withTimeout<T>(
   }
 }
 
+/** The steps that work from the Soul (the others make it, or are not the pipeline's). */
+const FROM_SOUL = new Set<JobType>(['rebirth', 'undertake', 'prove', 'exorcise']);
+
 /**
  * The handler for this project: the registry's, or in demo mode the recorded run's (a project
  * whose app has no recording says so and is skipped).
  */
-function handlerFor(
+async function handlerFor(
   o: LoopOptions,
   registry: Registry,
   type: JobType,
-  project: { mode: 'live' | 'recorded'; sourceApp: string },
-): StepHandler {
+  project: { id: string; mode: 'live' | 'recorded'; sourceApp: string },
+): Promise<StepHandler> {
   if (project.mode !== 'recorded') return registry[type];
   const rec = (o.recordingFor ?? loadRecording)(project.sourceApp);
+  // The owner changed the Soul (an Exorcist fix): the recording no longer describes it, so the
+  // steps that work from the Soul run live on it.
+  if (
+    rec &&
+    FROM_SOUL.has(type) &&
+    !matchesRecording(rec, (await latestSoulRow(o.db, project.id))?.ir)
+  )
+    return registry[type];
   if (rec) return replayStep(rec, type, o.db);
   return async () => ({
     status: 'skipped',
@@ -157,13 +169,9 @@ async function runJob(o: LoopOptions, type: JobType, job: Job<unknown>) {
   await emit('step', { step: type, state: 'started', attempt });
 
   try {
+    const handler = await handlerFor(o, registry, type, { ...project, id: data.projectId });
     const result = await withTimeout(opts.timeoutSeconds, job.signal, (signal) =>
-      handlerFor(
-        o,
-        registry,
-        type,
-        project,
-      )({
+      handler({
         projectId: data.projectId,
         project: {
           name: project.name,

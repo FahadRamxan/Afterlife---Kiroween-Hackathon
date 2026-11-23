@@ -3,6 +3,7 @@ import { ScreenWireSchema, fromWire, gridText } from '@afterlife/screen';
 import { describe, expect, it } from 'vitest';
 import {
   MAX_PAUSE_MS,
+  matchesRecording,
   PROOF_CASE_PAUSE_MS,
   loadRecording,
   replayStep,
@@ -106,5 +107,36 @@ describe('replayStep', () => {
     expect(events.filter(([type]) => type === 'proof_case')).toHaveLength(10);
     expect(Date.now() - started).toBeLessThan(10 * PROOF_CASE_PAUSE_MS + 1000);
     expect(PROOF_CASE_PAUSE_MS).toBeLessThan(MAX_PAUSE_MS);
+  });
+});
+
+describe('matchesRecording (Prompt 75)', () => {
+  // @spec exorcist#3.2 Once the owner changes the Soul, the recording no longer describes it.
+  const rec = loadRecording('shifa')!;
+  const soul = rec.soul as { rules: { id: string; expression: string; evidence: string[] }[] };
+  it("the recording's own Soul, renumbered with new evidence ids, still matches", () => {
+    expect(
+      matchesRecording(rec, {
+        ...soul,
+        version: 7,
+        rules: soul.rules.map((r) => ({ ...r, evidence: ['x'] })),
+      }),
+    ).toBe(true);
+  });
+  it('a Soul with a rule added, removed or changed does not', () => {
+    const rule = {
+      ...soul.rules[0]!,
+      id: 'exorcist-fix-x',
+      expression: 'medicine.expiry >= today',
+    };
+    expect(matchesRecording(rec, { ...soul, rules: [...soul.rules, rule] })).toBe(false);
+    expect(matchesRecording(rec, { ...soul, rules: soul.rules.slice(1) })).toBe(false);
+    expect(
+      matchesRecording(rec, {
+        ...soul,
+        rules: soul.rules.map((r, i) => (i ? r : { ...r, expression: '0' })),
+      }),
+    ).toBe(false);
+    expect(matchesRecording(rec, null)).toBe(true);
   });
 });

@@ -110,6 +110,54 @@ describe('the worker job loop on pg-boss', () => {
     expect(job!.state).toBe('completed');
   });
 
+  // @spec exorcist#3.2 A recorded project whose Soul the owner changed proves it live.
+  it('a recorded run replays its steps, until the owner changes the Soul: then they run live', async () => {
+    const { SoulSchema, numberSoul, specRequirements } = await import('@afterlife/soul');
+    const { insertSoulVersion } = await import('@afterlife/db');
+    const { loadRecording } = await import('./recording');
+    const rec = loadRecording('shifa')!;
+    const [p] = await t.db
+      .insert(projects)
+      .values({
+        name: 'Shifa Medical Store',
+        source: 'graveyard',
+        sourceApp: 'shifa',
+        mode: 'recorded',
+      })
+      .returning();
+    const soul = SoulSchema.parse(rec.soul);
+    const changed = {
+      ...soul,
+      rules: [
+        ...soul.rules,
+        {
+          ...soul.rules[0]!,
+          id: 'exorcist-fix-x',
+          kind: 'validate' as const,
+          target: undefined,
+          expression: 'medicine.expiry >= today',
+        },
+      ],
+    };
+    await insertSoulVersion(t.db, p!.id, (v, parent) => {
+      const s = numberSoul(changed, p!.id, v, parent);
+      return { ir: s, specMarkdown: specRequirements(s) };
+    });
+    let live = 0;
+    handlers.prove = async () => (live++, { status: 'done', output: { live: true } });
+    try {
+      await enqueueStep(boss, t.db, 'prove', { projectId: p!.id, force: true });
+      const s = await until(
+        () => step(p!.id, 'prove'),
+        (x) => x?.status === 'done',
+      );
+      expect(live).toBe(1);
+      expect(s!.output).toEqual({ live: true });
+    } finally {
+      delete handlers.prove;
+    }
+  });
+
   it('jobs of one type run at once: a recorded run does not wait behind a live one', async () => {
     // Each possession waits until both have started: one at a time, neither would ever finish.
     const [a, b] = [await project(), await project()];

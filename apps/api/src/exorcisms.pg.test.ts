@@ -2,7 +2,7 @@
 // which writes the Soul version and proves it again.
 import { exorcise, type StoredFinding } from '@afterlife/crew';
 import { recordedInput } from '@afterlife/crew/exorcist/testing';
-import { exorcisms, insertSoulVersion, latestSoulRow } from '@afterlife/db';
+import { exorcisms, insertSoulVersion, latestSoulRow, observations, uuidv7 } from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { numberSoul, specRequirements } from '@afterlife/soul';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
@@ -43,6 +43,23 @@ async function project() {
     const s = numberSoul(shifa.soul, p.id, v, parent);
     return { ir: s, specMarkdown: specRequirements(s) };
   });
+  // The recorded observations, as this project's own (new ids; the evidence points at them).
+  const ids = new Map(shifa.observations.map((o) => [o.id, uuidv7()]));
+  await t.db.insert(observations).values(
+    shifa.observations.map((o, i) => ({
+      id: ids.get(o.id)!,
+      projectId: p.id,
+      seq: i + 1,
+      keys: o.keys,
+      screenBeforeFp: 'fp_0000000000000000',
+      screenAfterFp: 'fp_0000000000000000',
+      screenBefore: o.screenBefore,
+      screenAfter: o.screenAfter,
+      dbfDiff: o.dbfDiff,
+      durationMs: 1,
+      stable: true,
+    })),
+  );
   for (const f of exorcise(shifa)) {
     const stored: StoredFinding = {
       smell: f.smell,
@@ -50,7 +67,9 @@ async function project() {
       en: f.en,
       ur: f.ur,
       since: f.since,
-      evidence: f.evidence,
+      evidence: f.evidence.map((e) =>
+        e.kind === 'observation' ? { ...e, ref: ids.get(e.ref)! } : e,
+      ),
     };
     await t.db.insert(exorcisms).values({
       projectId: p.id,
@@ -89,6 +108,10 @@ describe('the exorcism routes', () => {
     });
     expect(y2k.titleUr).toMatch(/[\u0600-\u06FF]/);
     expect(y2k.evidence.length).toBeGreaterThan(0);
+    // @spec exorcist#3.1 The evidence replay: the old app's own screen where it showed it.
+    const shown = y2k.evidence.find((e: { kind: string }) => e.kind === 'observation');
+    expect(shown.screen.join('\n')).toContain('EXPIRED');
+    expect(shown.screen.join('\n')).toContain(shown.text.split('  (')[0]);
     // Most severe first.
     expect(body.findings.map((f: { severity: string }) => f.severity)).toEqual(['high', 'medium']);
   });
