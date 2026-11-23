@@ -8,13 +8,16 @@ import {
   PIPELINE,
   SEED_PROJECTS,
   asc,
+  desc,
   eq,
+  exorcisms,
   insertSoulVersion,
   latestSoulRow,
   observations,
   pipelineSteps,
   projectEvents,
   projects,
+  souls,
   type Db,
   type JobType,
 } from '@afterlife/db';
@@ -86,17 +89,26 @@ export const MAX_PAUSE_MS = 1500;
 export const PROOF_CASE_PAUSE_MS = 300;
 
 /** Replays one step of a recording: its events (paced, capped) and its output, marked recorded. */
-export function replayStep(rec: Recording, step: JobType, db?: Db): StepHandler {
+export function replayStep(
+  rec: Recording,
+  step: JobType,
+  db?: Db,
+  /** The longest pause between events (tests: 0). */
+  opts: { maxPauseMs?: number } = {},
+): StepHandler {
+  const most = opts.maxPauseMs ?? MAX_PAUSE_MS;
   return async (ctx) => {
     const s = rec.steps.find((x) => x.step === step);
     if (!s) return { status: 'skipped', reason: `The recorded run has no ${step} step` };
     if (db && step === 'possess' && rec.observations?.length)
       await keepObservations(db, ctx.projectId, rec);
     if (db && step === 'archaeology' && rec.soul) await keepSoul(db, ctx.projectId, rec);
+    if (db && step === 'exorcise' && s.status === 'done')
+      await keepFindings(db, ctx.projectId, rec, s.output);
     await ctx.log(`Recorded run from ${rec.recordedAt.slice(0, 10)}: replaying ${step}`);
     let at = 0;
     for (const e of s.events) {
-      const cap = e.type === 'proof_case' ? PROOF_CASE_PAUSE_MS : MAX_PAUSE_MS;
+      const cap = Math.min(most, e.type === 'proof_case' ? PROOF_CASE_PAUSE_MS : MAX_PAUSE_MS);
       const wait = Math.min(Math.max(e.afterMs - at, 0), cap);
       at = e.afterMs;
       if (wait) await new Promise((r) => setTimeout(r, wait));
@@ -104,8 +116,15 @@ export function replayStep(rec: Recording, step: JobType, db?: Db): StepHandler 
       await ctx.emit(e.type, e.payload);
     }
     const recorded = { recordedAt: rec.recordedAt };
-    if (s.status === 'done')
-      return { status: 'done', output: { ...(s.output as object), recorded } };
+    if (s.status === 'done') {
+      let output = { ...(s.output as object), recorded } as Record<string, unknown>;
+      // The recorded migration was of the recording's Soul, which this replay stored as its own.
+      if (db && step === 'undertake' && 'soulVersion' in output) {
+        const soul = await latestSoulRow(db, ctx.projectId);
+        if (soul) output = { ...output, soulVersion: soul.version };
+      }
+      return { status: 'done', output };
+    }
     const reason = (s.output as { reason?: string } | null)?.reason ?? 'skipped';
     return { status: 'skipped', reason: `Recorded run: ${reason}` };
   };
@@ -240,4 +259,83 @@ export async function recordRun(db: Db, projectId: string): Promise<Recording> {
       return { step, status: row.status, output: row.output, events: byStep.get(step) ?? [] };
     }),
   });
+}
+
+/**
+ * The recording's findings, for this project (Prompt 75): the owner keeps or fixes them as in a
+ * live run. Evidence on screens points at this project's own observations (matched by seq). A
+ * finding already here keeps its decision.
+ */
+async function keepFindings(db: Db, projectId: string, rec: Recording, output: unknown) {
+  const findings = ((output as { findings?: unknown[] } | null)?.findings ?? []) as {
+    code: string;
+    smell: string;
+    severity: 'low' | 'medium' | 'high' | 'critical';
+    target?: string;
+    titleEn: string;
+    titleUr: string;
+    en: string;
+    ur: string;
+    since: number | null;
+    evidence: { kind: string; ref: string; text: string }[];
+  }[];
+  if (!findings.length) return;
+  const rows = await db
+    .select({ id: observations.id, seq: observations.seq })
+    .from(observations)
+    .where(eq(observations.projectId, projectId));
+  const bySeq = new Map(rows.map((r) => [r.seq, r.id]));
+  const ids = new Map((rec.observations ?? []).map((o) => [o.id, bySeq.get(o.seq)]));
+  const [soul] = await db
+    .select({ id: souls.id })
+    .from(souls)
+    .where(eq(souls.projectId, projectId))
+    .orderBy(desc(souls.version))
+    .limit(1);
+  for (const f of findings)
+    await db
+      .insert(exorcisms)
+      .values({
+        projectId,
+        ...(soul ? { soulId: soul.id } : {}),
+        code: f.code,
+        severity: f.severity,
+        titleEn: f.titleEn,
+        titleUr: f.titleUr,
+        evidence: {
+          smell: f.smell,
+          target: f.target ?? null,
+          en: f.en,
+          ur: f.ur,
+          since: f.since,
+          evidence: f.evidence.map((e) =>
+            e.kind === 'observation' ? { ...e, ref: ids.get(e.ref) ?? e.ref } : e,
+          ),
+        },
+      })
+      .onConflictDoNothing({ target: [exorcisms.projectId, exorcisms.code] });
+}
+
+/** A Soul's rules as the recording compares them: what each one does, not its numbering. */
+const ruleSet = (soul: unknown) =>
+  JSON.stringify(
+    (
+      ((soul as { rules?: unknown[] } | null)?.rules ?? []) as {
+        kind?: string;
+        target?: string;
+        expression?: string;
+      }[]
+    )
+      .map((x) => `${x.kind}|${x.target ?? ''}|${x.expression}`)
+      .sort(),
+  );
+
+/**
+ * Whether the recording still describes a project's Soul (Prompt 75): the same rules (kind,
+ * target, expression). Once the owner changes a rule (an Exorcist fix), it does not, and the steps
+ * that depend on the Soul run live. No Soul yet: the recording is all there is.
+ */
+export function matchesRecording(rec: Recording, soul: unknown): boolean {
+  if (!soul || !rec.soul) return true;
+  return ruleSet(soul) === ruleSet(rec.soul);
 }

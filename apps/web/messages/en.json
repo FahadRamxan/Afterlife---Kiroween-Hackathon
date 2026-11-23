@@ -390,6 +390,35 @@
       "reused": "{n} cases kept from the last proof: the change does not touch them.",
       "divergence": "Accepted divergence:",
       "acceptedOne": "Fixed"
+    },
+    "exorcism": {
+      "title": "Ghosts of the old app",
+      "left": "{n, plural, =0 {No ghosts left} one {1 ghost left} other {# ghosts left}}",
+      "none": "No ghosts found: the Exorcist saw no legacy bug in what the old app did.",
+      "keep": "Keep",
+      "fix": "Fix",
+      "fixWill": "Fix:",
+      "fixWas": "The reborn app now:",
+      "proving": "Soul version {version} written. Proving the reborn app again: the certificate follows the proof.",
+      "keptSame": "Kept: the reborn app copies the old app exactly. Nothing to prove again.",
+      "fixedSame": "Fixed.",
+      "settled": "Decided",
+      "exorcised": "Exorcised:",
+      "kept": "Kept:",
+      "evidence": "{n, plural, one {The evidence} other {The evidence (#)}}",
+      "screen": "The old app's screen",
+      "kind": {
+        "observation": "On screen:",
+        "record": "In the data:",
+        "rule": "A rule:",
+        "probe": "Probe in the old app:"
+      },
+      "severity": {
+        "low": "low",
+        "medium": "medium",
+        "high": "high",
+        "critical": "critical"
+      }
     }
   },
   "vessel": {

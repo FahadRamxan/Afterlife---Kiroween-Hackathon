@@ -9,7 +9,16 @@ import {
   type Decision,
   type StoredFinding,
 } from '@afterlife/crew';
-import { asc, eq, exorcisms, latestSoulRow, type Db } from '@afterlife/db';
+import {
+  and,
+  asc,
+  eq,
+  exorcisms,
+  inArray,
+  latestSoulRow,
+  observations,
+  type Db,
+} from '@afterlife/db';
 import { SoulSchema } from '@afterlife/soul';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
@@ -25,7 +34,8 @@ export type ExorcismView = {
   en: string;
   ur: string;
   since: number | null;
-  evidence: { kind: string; ref: string; text: string }[];
+  /** Each piece of evidence; on a screen, the old app's whole screen then (the evidence replay). */
+  evidence: { kind: string; ref: string; text: string; screen?: string[] }[];
   decision: 'pending' | 'keep' | 'fix';
   decidedAt: string | null;
   fixable: boolean;
@@ -51,6 +61,26 @@ export class PgExorcismStore implements ExorcismStore {
       .from(exorcisms)
       .where(eq(exorcisms.projectId, projectId))
       .orderBy(asc(exorcisms.createdAt));
+    // The screens the evidence was seen on: this project's own observations only.
+    const refs = [
+      ...new Set(
+        rows.flatMap((r) =>
+          (r.evidence as StoredFinding).evidence
+            .filter((e) => e.kind === 'observation')
+            .map((e) => e.ref),
+        ),
+      ),
+    ].filter((x) => /^[0-9a-f-]{36}$/.test(x));
+    const screens = new Map(
+      refs.length
+        ? (
+            await this.db
+              .select({ id: observations.id, screen: observations.screenAfter })
+              .from(observations)
+              .where(and(eq(observations.projectId, projectId), inArray(observations.id, refs)))
+          ).map((o) => [o.id, (o.screen as { text?: string[] } | null)?.text ?? null])
+        : [],
+    );
     const latest = await latestSoulRow(this.db, projectId);
     const soul = latest ? SoulSchema.safeParse(latest.ir) : null;
     return rows
@@ -69,7 +99,10 @@ export class PgExorcismStore implements ExorcismStore {
           en: f.en,
           ur: f.ur,
           since: f.since,
-          evidence: f.evidence,
+          evidence: f.evidence.map((e) => {
+            const screen = e.kind === 'observation' ? screens.get(e.ref) : null;
+            return screen ? { ...e, screen } : e;
+          }),
           decision: row.decision,
           decidedAt: row.decidedAt?.toISOString() ?? null,
           fixable: !!remedy?.fix,

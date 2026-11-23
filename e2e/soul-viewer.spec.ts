@@ -31,9 +31,12 @@ test.describe('the Soul tab', () => {
       .getByRole('button', { name: 'Save the séance (1 action)' })
       .click({ timeout: 30_000 });
     await expect(seance.getByTestId('seance-saved')).toBeVisible();
+    // The séance's own observations: the live possession of this project may have saved its
+    // first steps by now too (it runs on a second emulator).
     const obs = (
-      await (await page.request.get(`${API}/api/projects/${projectId}/observations`)).json()
-    ).observations as { id: string }[];
+      (await (await page.request.get(`${API}/api/projects/${projectId}/observations`)).json())
+        .observations as { id: string; sessionId: string | null }[]
+    ).filter((o) => o.sessionId);
     expect(obs).toHaveLength(1);
 
     const soul = {

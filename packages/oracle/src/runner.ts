@@ -184,8 +184,27 @@ export async function proveEquivalence(
       /** The old behaviour does what the old app did: the difference is the fix, accepted. */
       const explained = async (c: ProofCase, oldEffects: SnapshotDiff) => {
         if (!keep) return false;
-        const k = await keep.performAction(c.actionId, c.inputs);
-        return effectDifferences(oldEffects, k.ok ? k.effects : NO_EFFECTS).length === 0;
+        // Two ways an app treats a line its rules refuse: the whole record refused, or (as Shifa
+        // does with an expired batch) the line refused when it is typed and the record saved
+        // without it. The old behaviour explains the case if either does what the old app did;
+        // it then performs that one, so it keeps step with the old app.
+        const lines: Record<string, string>[] = [];
+        for (const l of c.inputs.lines ?? [])
+          if ((await keep.previewAction(c.actionId, { ...c.inputs, lines: [l] })).ok) lines.push(l);
+        const ways = [
+          c.inputs,
+          ...(c.inputs.lines && lines.length < c.inputs.lines.length
+            ? [{ ...c.inputs, lines }]
+            : []),
+        ];
+        for (const typed of ways) {
+          const p = await keep.previewAction(c.actionId, typed);
+          if (effectDifferences(oldEffects, p.ok ? p.effects : NO_EFFECTS).length === 0) {
+            await keep.performAction(c.actionId, typed);
+            return true;
+          }
+        }
+        return false;
       };
       type Outcome = Pick<
         CaseResult,

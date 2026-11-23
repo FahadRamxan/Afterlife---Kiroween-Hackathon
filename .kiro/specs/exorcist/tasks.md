@@ -18,10 +18,10 @@ Prompt 73 is task 1, Prompt 74 task 2, Prompt 75 task 3.
     - _Requirements: 2.1, 2.2_
   - [x] 2.2 Re-run the proof of the affected cases, and list the divergence on the certificate
     - _Requirements: 2.2, 2.3_
-- [ ] 3. The Exorcism tab
-  - [ ] 3.1 Ghost cards with Keep and Fix, the dissolve and the counter
+- [x] 3. The Exorcism tab
+  - [x] 3.1 Ghost cards with Keep and Fix, the dissolve and the counter
     - _Requirements: 3.1, 3.2_
-  - [ ] 3.2 e2e: fix one, keep one, and see the certificate updated
+  - [x] 3.2 e2e: fix one, keep one, and see the certificate updated
     - _Requirements: 3.2, 2.3_
 
 ## Notes

@@ -10,6 +10,7 @@ import fc from 'fast-check';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { prepareCases, type CaseContext, type ProofCase } from './arbitraries';
 import {
+  freshVessel,
   proofCases,
   proofProperty,
   proveEquivalence,
@@ -330,5 +331,41 @@ describe('accepted divergences and reused cases (Prompt 74)', () => {
     ]);
     expect(runs).toBeLessThanOrEqual(10);
     expect(r.failed).toBe(0);
+  });
+});
+
+describe('a line the old app refuses at entry', () => {
+  // The real Shifa refuses an expired batch when its line is typed, and saves the bill without it.
+  // An old app that does so: each line it refuses on its own is dropped before the bill is saved.
+  const dropsLines = (): OldApp => {
+    const old = vesselOldApp(SHIFA_AS_IT_RUNS_SOUL, RECORDS, TODAY);
+    let probe = freshVessel(SHIFA_AS_IT_RUNS_SOUL, RECORDS, TODAY);
+    return {
+      async run(c) {
+        const v = await probe;
+        const lines: Record<string, string>[] = [];
+        for (const l of c.inputs.lines ?? [])
+          if ((await v.previewAction(c.actionId, { ...c.inputs, lines: [l] })).ok) lines.push(l);
+        const r = await old.run({ ...c, inputs: { ...c.inputs, lines } });
+        await v.performAction(c.actionId, { ...c.inputs, lines });
+        return r;
+      },
+      async reset() {
+        probe = freshVessel(SHIFA_AS_IT_RUNS_SOUL, RECORDS, TODAY);
+        await old.reset();
+      },
+    };
+  };
+
+  // @spec exorcist#2.2
+  it('a fixed bill with such a line is accepted: the old behaviour drops the line as the old app does', async () => {
+    const r = await proveEquivalence(target(SOUL, dropsLines), {
+      numRuns: RUNS,
+      seed: 6,
+      ctx,
+      oldBehaviour: SHIFA_AS_IT_RUNS_SOUL,
+    });
+    expect(r.failed, JSON.stringify(r.firstFailure?.differences)).toBe(0);
+    expect(r.accepted).toBeGreaterThan(0);
   });
 });
