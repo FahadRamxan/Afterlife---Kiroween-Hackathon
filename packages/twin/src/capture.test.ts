@@ -28,6 +28,23 @@ afterEach(() => rmSync(dir, { recursive: true, force: true }));
 const put = (name: string, f: DbfTable) => writeFileSync(path.join(dir, name), writeDbf(f));
 
 describe('createCapture', () => {
+  it('start() resolves once the first look is taken, so a change right after it is sent', async () => {
+    put('MEDICINE.DBF', MEDICINE);
+    const sent: TwinEvent[] = [];
+    // A slow first look: the folder is read only after start() has returned.
+    let looks = 0;
+    const c = createCapture({
+      dir,
+      intervalMs: 20,
+      post: async (e) => void sent.push(e),
+      beforeLook: () => (looks++ === 0 ? new Promise((r) => setTimeout(r, 200)) : undefined),
+    });
+    await c.start();
+    put('MEDICINE.DBF', { ...MEDICINE, records: [MEDICINE.records[0]!] });
+    for (let i = 0; i < 100 && !sent.length; i++) await new Promise((r) => setTimeout(r, 20));
+    await c.stop();
+    expect(sent.map((e) => e.files)).toEqual([['MEDICINE.DBF']]);
+  });
   it('the first look is the starting point; a change after it is an event with its diff', async () => {
     put('MEDICINE.DBF', MEDICINE);
     const sent: TwinEvent[] = [];

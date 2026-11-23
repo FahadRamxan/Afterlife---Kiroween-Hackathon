@@ -23,6 +23,8 @@ export type CaptureOptions = {
   now?: () => Date;
   /** Told what happened, for the CLI's output. */
   log?: (message: string) => void;
+  /** For tests: runs before each look (a slow disk). */
+  beforeLook?: () => Promise<void> | void;
 };
 
 export type Capture = {
@@ -30,7 +32,8 @@ export type Capture = {
   tick(): Promise<TwinEvent | null>;
   /** Events made but not taken by the API yet. */
   pending(): number;
-  start(): void;
+  /** Starts looking at the interval; resolves once the first look (the starting point) is taken. */
+  start(): Promise<void>;
   stop(): Promise<void>;
 };
 
@@ -67,6 +70,7 @@ export function createCapture(opts: CaptureOptions): Capture {
 
   async function tick(): Promise<TwinEvent | null> {
     let next: Snapshot;
+    await opts.beforeLook?.();
     try {
       next = await snapshotDir(opts.dir);
     } catch (e) {
@@ -93,13 +97,14 @@ export function createCapture(opts: CaptureOptions): Capture {
   return {
     tick,
     pending: () => queue.length,
-    start() {
+    async start() {
       if (timer) return;
       const look = () => {
         running = running.then(tick, tick);
       };
       look();
       timer = setInterval(look, opts.intervalMs ?? 1000);
+      await running;
     },
     async stop() {
       if (timer) clearInterval(timer);
