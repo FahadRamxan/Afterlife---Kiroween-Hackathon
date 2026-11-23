@@ -146,6 +146,12 @@ export class PgPipeline implements Pipeline {
     return (await enqueueStep(this.boss, this.db, step, { projectId, force: true })) !== null;
   }
 
+  async twin(projectId: string): Promise<boolean> {
+    return (
+      (await enqueueStep(this.boss, this.db, 'twin-replay', { projectId, force: true })) !== null
+    );
+  }
+
   async translate(projectId: string): Promise<boolean> {
     return (
       (await enqueueStep(this.boss, this.db, 'translate-soul', { projectId, force: true })) !== null

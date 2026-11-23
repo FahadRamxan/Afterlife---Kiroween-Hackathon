@@ -121,7 +121,13 @@ export function buildApp(
   app.register(dbfInspectRoutes);
   app.register(certificateRoutes(stores.certificates, env.CERT_PUBLIC_KEY));
   app.register(exorcismRoutes(stores.exorcisms, stores.pipeline));
-  app.register(twinRoutes(stores.twin));
+  app.register(
+    twinRoutes(stores.twin, stores.pipeline, {
+      days: env.TWIN_READY_DAYS,
+      matched: env.TWIN_READY_MATCHED,
+      openMismatches: env.TWIN_READY_MISMATCHES,
+    }),
+  );
   app.register(
     sessionRoutes(sessions, {
       createPerMinute: limits.createPerMinute,

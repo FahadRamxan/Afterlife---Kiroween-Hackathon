@@ -16,6 +16,7 @@
     "@afterlife/db": "workspace:^",
     "@afterlife/dbf": "workspace:^",
     "@afterlife/emulator": "workspace:^",
+    "@afterlife/oracle": "workspace:^",
     "@afterlife/soul": "workspace:^",
     "@afterlife/twin": "workspace:^",
     "@afterlife/vessel": "workspace:^",

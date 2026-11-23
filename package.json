@@ -36,6 +36,7 @@
     "proof:shifa": "tsx scripts/proof-shifa.ts",
     "cert:key": "tsx scripts/cert-key.ts",
     "twin": "tsx packages/twin/src/cli.ts",
+    "twin:record": "tsx scripts/twin-record.ts",
     "db:migrate": "pnpm --filter @afterlife/db migrate",
     "db:migrate:down": "pnpm --filter @afterlife/db migrate:down",
     "db:seed": "pnpm --filter @afterlife/db seed",

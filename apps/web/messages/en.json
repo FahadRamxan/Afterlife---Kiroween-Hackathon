@@ -419,6 +419,49 @@
         "high": "high",
         "critical": "critical"
       }
+    },
+    "twin": {
+      "title": "Ghost Twin: shadow mode",
+      "intro": "The shop keeps using the old app. Every change it makes to its data files is replayed in the reborn app and compared. When enough days match, the shop can switch over.",
+      "primaryOld": "The old app is the shop’s app",
+      "primaryVessel": "Switched over on {at}: the reborn app is the shop’s app",
+      "readiness": "Readiness to switch over",
+      "days": "{n} of {of} days of shadow use",
+      "matched": "{n} of {of} transactions matched",
+      "mismatched": "{n, plural, =0 {No open mismatches} one {1 open mismatch} other {# open mismatches}}",
+      "unknown": "{n, plural, =0 {No unknown actions} one {1 unknown action} other {# unknown actions}}",
+      "ready": "Ready: the reborn app did what the old app did on every transaction.",
+      "simulate": "Simulate a day in the shop ({day})",
+      "weekOver": "Every recorded day has been simulated",
+      "simulated": "{day}: {n, plural, one {1 transaction} other {# transactions}} from the recorded shop week, replayed in the reborn app",
+      "switch": "Switch over to the reborn app",
+      "confirmTitle": "Switch the shop to the reborn app?",
+      "confirmBody": "The old app’s data is migrated one last time and then frozen. From now on the shop uses the reborn app.",
+      "confirmYes": "Yes, switch over",
+      "confirmNo": "Not yet",
+      "switchedNotice": "Switched over. {n, plural, one {1 transaction} other {# transactions}} migrated; the old app’s data is frozen.",
+      "calendar": "Shop days",
+      "noDays": "No shop days yet.",
+      "candle": {
+        "matched": "All matched",
+        "mismatched": "Mismatch",
+        "unknown": "Unknown action",
+        "pending": "Comparing"
+      },
+      "feed": "Twin pairs (latest first)",
+      "noFeed": "No transactions from the shop yet.",
+      "old": "Old app:",
+      "new": "Reborn app:",
+      "outcome": {
+        "matched": "matched",
+        "mismatched": "mismatch",
+        "unknown": "unknown action",
+        "pending": "comparing"
+      },
+      "connect": "Connect the shop PC",
+      "connectBody": "Run the capture tool on the PC with the old app. It sends each change to the data files here. The token is shown once.",
+      "makeToken": "Make a token",
+      "newToken": "Make a new token (the old one stops working)"
     }
   },
   "vessel": {

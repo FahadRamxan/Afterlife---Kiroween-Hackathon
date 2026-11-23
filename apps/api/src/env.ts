@@ -64,6 +64,13 @@ const schema = z.object({
       message: 'must be 32 bytes, hex (64 characters)',
     }),
   /**
+   * Ghost Twin's switch-over rule (Prompt 78): ready when this many days of shadow use and this many
+   * transactions matched, with at most this many open mismatches. Defaults: 7, 200, 0.
+   */
+  TWIN_READY_DAYS: z.coerce.number().int().min(1).max(365).default(7),
+  TWIN_READY_MATCHED: z.coerce.number().int().min(1).max(1_000_000).default(200),
+  TWIN_READY_MISMATCHES: z.coerce.number().int().min(0).max(1_000_000).default(0),
+  /**
    * Postgres (Neon in prod, Docker locally). Without it séances are kept in memory, and lost on a
    * restart; the server says so when it starts.
    */

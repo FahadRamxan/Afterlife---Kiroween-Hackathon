@@ -13,20 +13,20 @@ Prompt 76 is task 1, Prompt 77 task 2, Prompt 78 task 3, Prompt 79 task 4.
     - _Requirements: 1.1, 1.2_
   - [x] 1.3 Add the API's twin token and events routes
     - _Requirements: 1.3_
-- [ ] 2. Replay and compare
-  - [ ] 2.1 Infer the action from the diff, replay it in the Vessel, compare and store the result
+- [x] 2. Replay and compare
+  - [x] 2.1 Infer the action from the diff, replay it in the Vessel, compare and store the result
     - _Requirements: 2.1, 2.2_
-  - [ ] 2.2 Send unknown actions to the Archaeologist as evidence
+  - [x] 2.2 Send unknown actions to the Archaeologist as evidence
     - _Requirements: 2.2_
-- [ ] 3. Readiness and switch-over
-  - [ ] 3.1 Work out the readiness score with configurable thresholds
+- [x] 3. Readiness and switch-over
+  - [x] 3.1 Work out the readiness score with configurable thresholds
     - _Requirements: 3.1_
-  - [ ] 3.2 Switch over: freeze the old data, final migration, the Vessel primary
+  - [x] 3.2 Switch over: freeze the old data, final migration, the Vessel primary
     - _Requirements: 3.2_
-- [ ] 4. The Ghost Twin tab
-  - [ ] 4.1 Calendar, live feed, readiness meter and switch-over
+- [x] 4. The Ghost Twin tab
+  - [x] 4.1 Calendar, live feed, readiness meter and switch-over
     - _Requirements: 4.1_
-  - [ ] 4.2 Simulate a day in the shop, with an e2e test
+  - [x] 4.2 Simulate a day in the shop, with an e2e test
     - _Requirements: 4.2_
 
 ## Notes

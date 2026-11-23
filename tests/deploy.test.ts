@@ -100,6 +100,9 @@ describe('.env.example files (Prompt 10)', () => {
       'RATE_LIMIT_PER_MINUTE',
       'SEANCE_STORAGE_MB',
       'TRUST_PROXY',
+      'TWIN_READY_DAYS',
+      'TWIN_READY_MATCHED',
+      'TWIN_READY_MISMATCHES',
       'WEB_ORIGINS',
     ]);
   });

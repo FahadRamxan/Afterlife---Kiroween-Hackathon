@@ -16,10 +16,25 @@ import { PgTwinStore } from './twin';
 let t: TestDatabase;
 let app: ReturnType<typeof buildApp>;
 let store: PgProjectStore;
+// @spec ghost-twin#2.1 Each event stored queues its replay (Prompt 77).
+const replays: string[] = [];
 beforeAll(async () => {
   t = await freshDatabase();
   store = new PgProjectStore(t.db);
-  app = buildApp(parseEnv({}), { logger: false }, { projects: store, twin: new PgTwinStore(t.db) });
+  app = buildApp(
+    parseEnv({}),
+    { logger: false },
+    {
+      projects: store,
+      twin: new PgTwinStore(t.db),
+      pipeline: {
+        start: async () => {},
+        steps: async () => [],
+        rerun: async () => true,
+        twin: async (id) => (replays.push(id), true),
+      },
+    },
+  );
   await app.ready();
 });
 afterAll(async () => {
@@ -32,6 +47,7 @@ const token = async (id: string) =>
   (await app.inject({ method: 'POST', url: `/api/projects/${id}/twin/token` })).json()
     .token as string;
 const EMPTY = { tables: {}, unchanged: [], addedTables: [], removedTables: [] };
+const NO_SCHEMA = { added: [], removed: [] };
 const event = (seq: number) => ({
   seq,
   occurredAt: '1998-07-15T10:00:00.000Z',
@@ -68,6 +84,8 @@ describe('the twin routes', () => {
     expect((await post(id, event(1), tok)).statusCode).toBe(201);
     expect((await post(id, event(2), tok)).statusCode).toBe(201);
     expect((await post(id, event(2), tok)).statusCode).toBe(409);
+    // Each new event queued its replay in the reborn app; the duplicate did not.
+    expect(replays.filter((x) => x === id)).toHaveLength(2);
     const rows = await t.db.select().from(twinEvents).where(eq(twinEvents.projectId, id));
     expect(rows.map((r) => r.seq).sort()).toEqual([1, 2]);
     expect(rows[0]!.occurredAt.toISOString()).toBe('1998-07-15T10:00:00.000Z');
@@ -78,6 +96,40 @@ describe('the twin routes', () => {
     ).json();
     expect(list.events.map((e: { seq: number }) => e.seq)).toEqual([1, 2]);
     expect(list.events[0]).toMatchObject({ files: ['MEDICINE.DBF'], matched: null });
+  });
+
+  it("lists what the old app changed in each file, for the twin feed's old side", async () => {
+    const id = await project();
+    const tok = await token(id);
+    const rec = { ITEM: 'ORS001', QTY: 3 };
+    const diff = {
+      ...EMPTY,
+      tables: {
+        'BILLS.DBF': {
+          key: 'BILLNO',
+          inserted: [rec],
+          updated: [],
+          deleted: [],
+          schema: NO_SCHEMA,
+        },
+        'MEDICINE.DBF': {
+          key: 'CODE',
+          schema: NO_SCHEMA,
+          inserted: [],
+          updated: [{ key: { CODE: 'ORS001' }, before: rec, after: rec, changed: ['QTY'] }],
+          deleted: [],
+        },
+      },
+    };
+    const r = await post(id, { ...event(1), files: ['BILLS.DBF', 'MEDICINE.DBF'], diff }, tok);
+    expect(r.statusCode).toBe(201);
+    const list = (
+      await app.inject({ method: 'GET', url: `/api/projects/${id}/twin/events` })
+    ).json();
+    expect(list.events[0].changes).toEqual({
+      'BILLS.DBF': { inserted: 1, updated: 0, deleted: 0 },
+      'MEDICINE.DBF': { inserted: 0, updated: 1, deleted: 0 },
+    });
   });
 
   it("refuses no token, a wrong one, another project's, and a body that is not an event", async () => {

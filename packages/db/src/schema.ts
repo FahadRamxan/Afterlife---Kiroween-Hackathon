@@ -72,12 +72,19 @@ export const projects = pgTable(
      * Only the hash is kept; the token is shown once, when it is made.
      */
     twinTokenHash: text('twin_token_hash'),
+    /**
+     * Ghost Twin's switch-over (Prompt 78): `vessel` once the shop switched to the reborn app (the
+     * old app's data frozen, migrated a last time), `old` until then.
+     */
+    primaryApp: text('primary_app').notNull().default('old'),
+    switchedAt: timestamp('switched_at', { withTimezone: true }),
     createdAt: createdAt(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [
     index('projects_created_at_idx').on(t.createdAt),
     check('projects_name_not_blank', sql`length(trim(${t.name})) > 0`),
+    check('projects_primary_app', sql`${t.primaryApp} in ('old', 'vessel')`),
   ],
 );
 

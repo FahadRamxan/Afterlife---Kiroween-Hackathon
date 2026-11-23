@@ -9,6 +9,20 @@ export {
 } from './arbitraries';
 export { effectDifferences, normalValue, sameEffects, type Difference } from './compare';
 export { emulatorOldApp, type EmulatorOldAppOptions } from './old-app';
+export {
+  DEFAULT_RULE,
+  readiness,
+  type Readiness,
+  type ReadinessRule,
+  type TwinResult,
+} from './readiness';
+export {
+  candidateActions,
+  inputsFromDiff,
+  replayTwin,
+  type TwinInput,
+  type TwinOutcome,
+} from './twin';
 export { explainDifference, type Explained } from './explain';
 export { SHRINK_TIME_LIMIT_MS, shrinkFailure, type Counterexample } from './shrink';
 export {

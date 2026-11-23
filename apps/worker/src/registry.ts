@@ -11,6 +11,7 @@ import { undertakeStep } from './undertake-step';
 import { scanUpload, uploadBundle } from './scan-upload';
 import type { VirusScanner } from './scanner';
 import { translateSoulStep } from './translate-soul';
+import { twinReplayStep } from './twin-step';
 import { DEFAULT_TOKEN_BUDGET, type LlmClient, type SpeechClient } from '@afterlife/crew';
 import type { SigningKey } from '@afterlife/certificate';
 
@@ -127,7 +128,10 @@ export function defaultRegistry(
     exorcise: db
       ? exorciseStep({ db, bundleFor, ...(deps.pool ? { pool: deps.pool } : {}) })
       : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
-    'twin-replay': notBuiltYet('twin-replay', 'Prompt 77'),
+    // Ghost Twin: each change the shop's old app made, replayed in the reborn app (Prompt 77).
+    'twin-replay': db
+      ? twinReplayStep({ db, bundleFor })
+      : async () => ({ status: 'skipped', reason: 'This worker has no database' }),
     'voice-change': notBuiltYet('voice-change', 'Prompt 81'),
     'scan-upload':
       db && deps.scanner

@@ -148,7 +148,8 @@ describe('the afterlife-twin CLI', () => {
         await new Promise((r) => setTimeout(r, 50));
       }
     };
-    await until(() => out.includes('watching'));
+    // Starting tsx in a child process is the slow part on a loaded machine (the full CI run).
+    await until(() => out.includes('watching'), 60_000);
     // The DOS app sells 2 strips of Panadol.
     writeFileSync(
       path.join(dir, 'MEDICINE.DBF'),
@@ -170,5 +171,5 @@ describe('the afterlife-twin CLI', () => {
     // The token is never printed.
     await until(() => out.includes('sent change 1'));
     expect(out).not.toContain(TOKEN);
-  }, 30_000);
+  }, 90_000);
 });

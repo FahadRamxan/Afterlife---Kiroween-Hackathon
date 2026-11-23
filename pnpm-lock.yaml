@@ -125,6 +125,9 @@ importers:
       '@afterlife/emulator':
         specifier: workspace:^
         version: link:../../packages/emulator
+      '@afterlife/oracle':
+        specifier: workspace:^
+        version: link:../../packages/oracle
       '@afterlife/soul':
         specifier: workspace:^
         version: link:../../packages/soul
@@ -5950,7 +5953,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  '@reduxjs/toolkit@1.9.7(react-redux@8.1.3(react@19.3.1)(redux@4.2.1))(react@19.3.1)':
+  '@reduxjs/toolkit@1.9.7(react-redux@8.1.3(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(redux@4.2.1))(react@19.3.1)':
     dependencies:
       immer: 9.0.21
       redux: 4.2.1
@@ -7354,7 +7357,7 @@ snapshots:
 
   js-dos@8.5.4(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(redux@4.2.1):
     dependencies:
-      '@reduxjs/toolkit': 1.9.7(react-redux@8.1.3(react@19.3.1)(redux@4.2.1))(react@19.3.1)
+      '@reduxjs/toolkit': 1.9.7(react-redux@8.1.3(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(redux@4.2.1))(react@19.3.1)
       nipplejs: 0.10.2
       preact: 10.29.8
       react-checkbox-tree: 1.8.0(react@19.3.1)

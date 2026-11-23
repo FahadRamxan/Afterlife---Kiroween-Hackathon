@@ -6,6 +6,7 @@ import { getProject, type Failure, type Project, type TimelineEvent } from '../l
 import type { RaiseTab } from '../lib/raise-tabs';
 import { useProjectLive } from '../lib/use-project-live';
 import { ExorcismTab } from './ExorcismTab';
+import { GhostTwinTab } from './GhostTwinTab';
 import { LivePanel } from './LivePanel';
 import { PageShell } from './PageShell';
 import { ProofTab } from './ProofTab';
@@ -129,7 +130,9 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
       <RaiseTabs
         initial={initial}
         ownEmpty={
-          possessing ? ['soul', 'possession', 'proof', 'exorcism'] : ['soul', 'proof', 'exorcism']
+          possessing
+            ? ['soul', 'possession', 'proof', 'exorcism', 'ghost-twin']
+            : ['soul', 'proof', 'exorcism', 'ghost-twin']
         }
         panels={
           app
@@ -156,6 +159,7 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
                 ),
                 proof: <ProofTab projectId={project.id} name={app.name} events={live.events} />,
                 exorcism: <ExorcismTab projectId={project.id} events={live.events} />,
+                'ghost-twin': <GhostTwinTab projectId={project.id} events={live.events} />,
               }
             : project.source === 'upload'
               ? {
@@ -168,6 +172,7 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
                     <ProofTab projectId={project.id} name={project.name} events={live.events} />
                   ),
                   exorcism: <ExorcismTab projectId={project.id} events={live.events} />,
+                  'ghost-twin': <GhostTwinTab projectId={project.id} events={live.events} />,
                 }
               : {}
         }

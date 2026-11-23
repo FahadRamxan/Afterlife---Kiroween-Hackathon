@@ -15,7 +15,16 @@ describe('parseEnv', () => {
       RATE_LIMIT_PER_MINUTE: 300,
       RATE_LIMIT_CREATE_PER_MINUTE: 20,
       LLM_TOKEN_BUDGET: 200_000,
+      // Ghost Twin's switch-over rule: 7 days, 200 matched, 0 open mismatches.
+      TWIN_READY_DAYS: 7,
+      TWIN_READY_MATCHED: 200,
+      TWIN_READY_MISMATCHES: 0,
     });
+  });
+  it('refuses a switch-over rule that could never be met or is nonsense', () => {
+    expect(() => parseEnv({ TWIN_READY_DAYS: '0' })).toThrow();
+    expect(() => parseEnv({ TWIN_READY_MISMATCHES: '-1' })).toThrow();
+    expect(parseEnv({ TWIN_READY_MATCHED: '50' }).TWIN_READY_MATCHED).toBe(50);
   });
 
   it('reads a comma-separated list of allowed web origins', () => {
