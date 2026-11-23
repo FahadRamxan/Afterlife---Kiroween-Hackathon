@@ -23,10 +23,10 @@ Prompt 76 is task 1, Prompt 77 task 2, Prompt 78 task 3, Prompt 79 task 4.
     - _Requirements: 3.1_
   - [x] 3.2 Switch over: freeze the old data, final migration, the Vessel primary
     - _Requirements: 3.2_
-- [ ] 4. The Ghost Twin tab
-  - [ ] 4.1 Calendar, live feed, readiness meter and switch-over
+- [x] 4. The Ghost Twin tab
+  - [x] 4.1 Calendar, live feed, readiness meter and switch-over
     - _Requirements: 4.1_
-  - [ ] 4.2 Simulate a day in the shop, with an e2e test
+  - [x] 4.2 Simulate a day in the shop, with an e2e test
     - _Requirements: 4.2_
 
 ## Notes
