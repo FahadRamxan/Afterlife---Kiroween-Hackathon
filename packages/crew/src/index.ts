@@ -123,6 +123,10 @@ export {
   type Transcript,
 } from './speech/types';
 export { speechClientFrom, type SpeechEnv } from './speech/config';
+// Speech client: Amazon Transcribe, a fallback chain, and the transcript normaliser (Prompt 80).
+export { TranscribeSpeechClient, TRANSCRIBE_LANGUAGE, mediaFormatOf } from './speech/transcribe';
+export { FallbackSpeechClient } from './speech/fallback';
+export { normaliseTranscript, asciiDigits } from './speech/normalise';
 
 // The screen graph, kept and replayed (Prompt 52).
 export {

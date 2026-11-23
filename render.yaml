@@ -22,6 +22,17 @@ services:
       # Shown on "Show your work"; the same number as the worker's.
       - key: LLM_TOKEN_BUDGET
         value: '200000'
+      # Spoken rule changes (Prompt 80): `transcribe` (Amazon Transcribe) or `none`.
+      - key: SPEECH_PROVIDER
+        sync: false
+      - key: TRANSCRIBE_BUCKET
+        sync: false
+      - key: AWS_REGION
+        value: us-east-1
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
 
   - type: worker
     name: afterlife-worker
@@ -45,3 +56,8 @@ services:
         sync: false
       - key: LLM_TOKEN_BUDGET
         value: '200000'
+      # Seance voice notes (Prompt 80): `transcribe` or `none`.
+      - key: SPEECH_PROVIDER
+        sync: false
+      - key: TRANSCRIBE_BUCKET
+        sync: false
