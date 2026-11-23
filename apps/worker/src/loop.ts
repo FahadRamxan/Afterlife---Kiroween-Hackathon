@@ -111,6 +111,8 @@ async function handlerFor(
     !matchesRecording(rec, (await latestSoulRow(o.db, project.id))?.ir)
   )
     return registry[type];
+  // A job the recording has no step for (Ghost Twin, a translation) is never replayed: it runs live.
+  if (rec && !rec.steps.some((s) => s.step === type)) return registry[type];
   if (rec) return replayStep(rec, type, o.db);
   return async () => ({
     status: 'skipped',

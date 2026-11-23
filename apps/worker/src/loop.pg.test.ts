@@ -158,6 +158,32 @@ describe('the worker job loop on pg-boss', () => {
     }
   });
 
+  // @spec ghost-twin#2.1 Ghost Twin is never in a recording: on a recorded project it runs live.
+  it('a job the recording has no step for runs live on a recorded project', async () => {
+    const [p] = await t.db
+      .insert(projects)
+      .values({
+        name: 'Shifa Medical Store',
+        source: 'graveyard',
+        sourceApp: 'shifa',
+        mode: 'recorded',
+      })
+      .returning();
+    let live = 0;
+    handlers['twin-replay'] = async () => (live++, { status: 'done', output: { replayed: 0 } });
+    try {
+      await enqueueStep(boss, t.db, 'twin-replay', { projectId: p!.id, force: true });
+      const s = await until(
+        () => step(p!.id, 'twin-replay'),
+        (x) => x?.status === 'done',
+      );
+      expect(live).toBe(1);
+      expect(s!.output).toEqual({ replayed: 0 });
+    } finally {
+      delete handlers['twin-replay'];
+    }
+  });
+
   it('jobs of one type run at once: a recorded run does not wait behind a live one', async () => {
     // Each possession waits until both have started: one at a time, neither would ever finish.
     const [a, b] = [await project(), await project()];
@@ -271,10 +297,10 @@ describe('the worker job loop on pg-boss', () => {
 
   it('a step that is not built yet is "skipped" with its reason, never "done"', async () => {
     const id = await project();
-    // Ghost Twin's replay is not built yet (Prompt 77).
-    await enqueueStep(boss, t.db, 'twin-replay', { projectId: id });
+    // The Living Soul's voice change is not built yet (Prompt 81).
+    await enqueueStep(boss, t.db, 'voice-change', { projectId: id });
     const s = await until(
-      () => step(id, 'twin-replay'),
+      () => step(id, 'voice-change'),
       (s) => s?.status === 'skipped',
     );
     expect(s!.error).toBeNull();

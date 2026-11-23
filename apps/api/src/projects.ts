@@ -136,6 +136,8 @@ export interface Pipeline {
   rerun(projectId: string, step: PipelineStep): Promise<boolean>;
   /** Queues the Urdu translation of the project's newest Soul. False when it is already queued. */
   translate?(projectId: string): Promise<boolean>;
+  /** Queues Ghost Twin's replay of the project's new twin events (Prompt 77). */
+  twin?(projectId: string): Promise<boolean>;
 }
 
 export const StepStateSchema = z
