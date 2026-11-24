@@ -160,6 +160,60 @@ describe('analyzeScreen on the sample apps (10 screens, plus a live frame)', () 
     await snapshot(model('iqra/students/STU1'), 'iqra-students');
   });
 
+  it('a menu written "1. Item", "2) Item" or "A. Item", the commonest DOS style (review 61-80, a blind test)', () => {
+    // An app Afterlife was never shown (a 1999 weighbridge): its menu was not seen as one, so the
+    // Possessor typed into "Your choice" and stopped after one action.
+    const cells = (lines: string[]) =>
+      Array.from({ length: 25 }, (_, r) =>
+        [...(lines[r] ?? '').padEnd(80).slice(0, 80)].map((ch) => ({
+          code: ch.charCodeAt(0),
+          fg: 15,
+          bg: 1,
+        })),
+      );
+    const lines = [
+      ' MADINA COMPUTER KANTA  v1.2        MAIN MENU                          19/10/99',
+      '',
+      '',
+      '',
+      '                        1. Weigh Vehicle (New Slip)',
+      '                        2. Parties',
+      '                        3. Item Rates',
+      "                        4. Today's Slips",
+      '                        0. Exit',
+      '',
+      '',
+      '                        Your choice:',
+    ];
+    const m = analyzeScreen(gridFromCells(cells(lines)));
+    expect(m.menu?.kind).toBe('numbered');
+    expect(m.menu?.items.map((i) => [i.key, i.label])).toEqual([
+      ['1', 'Weigh Vehicle (New Slip)'],
+      ['2', 'Parties'],
+      ['3', 'Item Rates'],
+      ['4', "Today's Slips"],
+      ['0', 'Exit'],
+    ]);
+    const paren = analyzeScreen(gridFromCells(cells(lines.map((l) => l.replace(/(\d)\./, '$1)')))));
+    expect(paren.menu?.items.map((i) => i.key)).toEqual(['1', '2', '3', '4', '0']);
+    const letters = analyzeScreen(
+      gridFromCells(
+        cells(['', '   A. Add party', '   C. Change rate', '   X. Exit', '', '   Choice:']),
+      ),
+    );
+    expect(letters.menu?.kind).toBe('lettered');
+    expect(letters.menu?.items.map((i) => [i.key, i.label])).toEqual([
+      ['A', 'Add party'],
+      ['C', 'Change rate'],
+      ['X', 'Exit'],
+    ]);
+    // Not a menu: prices and dates that start with digits.
+    const prices = analyzeScreen(
+      gridFromCells(cells(['', '   12.50 per strip', '   19/10/99 opened', '   10.5 kg'])),
+    );
+    expect(prices.menu).toBeNull();
+  });
+
   it('Barkat main menu: lettered items', async () => {
     const m = model('barkat/menu/MENU');
     expect(m.menu?.kind).toBe('lettered');

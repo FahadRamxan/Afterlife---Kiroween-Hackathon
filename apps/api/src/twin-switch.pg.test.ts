@@ -5,12 +5,14 @@ import { eq, insertSoulVersion, projects, twinEvents } from '@afterlife/db';
 import { freshDatabase, type TestDatabase } from '@afterlife/db/testing';
 import { numberSoul, specRequirements } from '@afterlife/soul';
 import { SHIFA_AS_IT_RUNS_SOUL } from '@afterlife/soul/examples/shifa';
+import { tablesFromBundle } from '@afterlife/vessel';
 import { PgEntityStore } from '@afterlife/vessel/postgres';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildApp } from './app';
 import { parseEnv } from './env';
 import { PgProjectStore } from './projects-pg';
 import { PgTwinStore } from './twin';
+import { graveyardBundle } from './vessel';
 
 const WEEK = JSON.parse(
   readFileSync(resolve(__dirname, '../../../samples/graveyard/shifa/twin-week.json'), 'utf8'),
@@ -132,6 +134,32 @@ describe('readiness, a simulated day, and the switch-over', () => {
     });
     expect(late.statusCode).toBe(409);
     expect(late.json().error).toBe('SWITCHED');
+  });
+
+  it('a bill a phone made in the reborn app before the switch-over does not block it: the old app’s records win', async () => {
+    const id = await shifa();
+    await simulate(id);
+    await allMatched(id);
+    // A phone tried the reborn app during shadow mode: its records are the old app's plus one
+    // bill of its own (what a sync leaves in the project's records).
+    const vessel = new PgEntityStore(t.db, id);
+    const old = tablesFromBundle(
+      graveyardBundle({ source: 'graveyard', sourceApp: 'shifa' })!,
+      SHIFA_AS_IT_RUNS_SOUL,
+    );
+    for (const [f, tbl] of Object.entries(old)) await vessel.load(f, tbl.records);
+    const bills = old['BILLS.DBF']!.records;
+    const tryOut = { ...bills[0]!.values, BILL_NO: '9807-9999' };
+    await vessel.load('BILLS.DBF', [...bills, { deleted: false, values: tryOut }]);
+    const r = await switchOver(id);
+    expect(r.json()).toMatchObject({ primaryApp: 'vessel' });
+    const after = (await vessel.records('BILLS.DBF')).filter((b) => !b.deleted);
+    // The old app's bills and the recorded day's, not the phone's try-out.
+    const day1Bills = WEEK.events
+      .filter((e) => e.day === WEEK.days[0])
+      .filter((e) => (e as { files?: string[] }).files?.includes('BILLS.DBF')).length;
+    expect(after.length).toBe(bills.length + day1Bills);
+    expect(after.some((b) => b.values.BILL_NO === '9807-9999')).toBe(false);
   });
 
   it('an app with no recorded shop day cannot be simulated', async () => {

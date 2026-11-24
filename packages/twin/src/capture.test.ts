@@ -108,4 +108,29 @@ describe('createCapture', () => {
     expect(sent).toEqual([1, 2]);
     expect(c.pending()).toBe(0);
   });
+
+  it('a fatal refusal (the shop switched over) stops the capture, says why once, and sends nothing more', async () => {
+    put('MEDICINE.DBF', MEDICINE);
+    let posts = 0;
+    const fatal: string[] = [];
+    const logs: string[] = [];
+    const c = createCapture({
+      dir,
+      post: async () => {
+        posts++;
+        throw Object.assign(new Error('switched over'), { fatal: true });
+      },
+      log: (m) => logs.push(m),
+      onFatal: (e) => fatal.push(e.message),
+    });
+    await c.tick();
+    put('MEDICINE.DBF', { ...MEDICINE, records: [MEDICINE.records[0]!] });
+    await c.tick();
+    put('MEDICINE.DBF', MEDICINE);
+    expect(await c.tick()).toBeNull();
+    expect(posts).toBe(1);
+    expect(fatal).toEqual(['switched over']);
+    expect(logs).toContain('stopped: switched over');
+    expect(logs.some((m) => m.startsWith('could not send'))).toBe(false);
+  });
 });

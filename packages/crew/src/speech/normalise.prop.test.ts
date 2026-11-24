@@ -90,6 +90,8 @@ describe('normaliseTranscript (properties)', () => {
       'ko',
       'stock',
       'qeemat',
+      'saath',
+      'bara',
       'رعایت',
       'بل',
       'دوائی',

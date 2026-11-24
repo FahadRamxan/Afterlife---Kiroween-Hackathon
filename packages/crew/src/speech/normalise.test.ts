@@ -54,6 +54,15 @@ describe('normaliseTranscript', () => {
     expect(n('رعایت دو')).toBe('رعایت دو');
     expect(n('छूट दो')).toBe('छूट दो');
     expect(n('दो प्रतिशत')).toBe('2%');
+    // Roman Urdu as people type it: "saath" is also "with", "bara" also "big", "tera" also "your".
+    expect(n('senior citizens ke saath 10 feesad discount')).toBe(
+      'senior citizens ke saath 10% discount',
+    );
+    expect(n('bara bill par paanch feesad')).toBe('bara bill par 5%');
+    expect(n('tera bill 5000 se upar hai')).toBe('tera bill 5000 se upar hai');
+    expect(n('saath feesad')).toBe('60%');
+    expect(n('saath hazaar')).toBe('60000');
+    expect(n('bara feesad')).toBe('12%');
   });
   it('keeps punctuation and spacing, and never joins numbers across a comma', () => {
     expect(n('paanch, das')).toBe('5, 10');

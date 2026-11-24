@@ -52,12 +52,17 @@ export function GhostTwinTab({ projectId, events }: { projectId: string; events:
   const [version, setVersion] = useState(0);
   useEffect(() => {
     let alive = true;
-    Promise.all([getTwin(API, projectId), getTwinEvents(API, projectId)]).then(([o, list]) => {
+    (async () => {
+      const o = await getTwin(API, projectId);
       if (!alive) return;
-      if (o.ok) setTwin(o.twin);
-      else setError(o.message);
-      if (list.ok) setFeed(list.events.slice(-FEED).reverse());
-    });
+      if (!o.ok) return setError(o.message);
+      setTwin(o.twin);
+      // The newest pairs: the list gives the changes after a number, oldest first, 500 at most,
+      // so from the start it would stop at the 500th change of a real shop and never move on.
+      const after = Math.max(0, (o.twin.lastSeq ?? 0) - FEED);
+      const list = await getTwinEvents(API, projectId, after);
+      if (alive && list.ok) setFeed(list.events.slice(-FEED).reverse());
+    })();
     return () => {
       alive = false;
     };

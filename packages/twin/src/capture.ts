@@ -17,12 +17,17 @@ export type TwinEvent = {
 
 export type CaptureOptions = {
   dir: string;
-  /** Sends one event; throws when it could not (it is sent again, before newer ones). */
-  post: (e: TwinEvent) => Promise<void>;
+  /**
+   * Sends one event, and may give the number the API keeps it under; throws when it could not (it
+   * is sent again, before newer ones). An error with `fatal: true` stops the capture instead.
+   */
+  post: (e: TwinEvent) => Promise<number | void>;
   intervalMs?: number;
   now?: () => Date;
   /** Told what happened, for the CLI's output. */
   log?: (message: string) => void;
+  /** Told once when the capture stops for good (the shop switched over). */
+  onFatal?: (e: Error) => void;
   /** For tests: runs before each look (a slow disk). */
   beforeLook?: () => Promise<void> | void;
 };
@@ -54,14 +59,24 @@ export function createCapture(opts: CaptureOptions): Capture {
   const queue: TwinEvent[] = [];
   let timer: ReturnType<typeof setInterval> | null = null;
   let running: Promise<unknown> = Promise.resolve();
+  let stopped = false;
 
   async function flush() {
-    while (queue.length) {
+    while (queue.length && !stopped) {
       try {
-        await opts.post(queue[0]!);
-        log(`sent change ${queue[0]!.seq}`);
+        const taken = await opts.post(queue[0]!);
+        log(`sent change ${typeof taken === 'number' ? taken : queue[0]!.seq}`);
         queue.shift();
       } catch (e) {
+        if ((e as { fatal?: boolean }).fatal) {
+          // Nothing more will be taken: stop looking instead of sending it again every interval.
+          stopped = true;
+          if (timer) clearInterval(timer);
+          timer = null;
+          log(`stopped: ${(e as Error).message}`);
+          opts.onFatal?.(e as Error);
+          return;
+        }
         log(`could not send change ${queue[0]!.seq} yet: ${(e as Error).message}`);
         return;
       }
@@ -69,6 +84,7 @@ export function createCapture(opts: CaptureOptions): Capture {
   }
 
   async function tick(): Promise<TwinEvent | null> {
+    if (stopped) return null;
     let next: Snapshot;
     await opts.beforeLook?.();
     try {
@@ -98,7 +114,7 @@ export function createCapture(opts: CaptureOptions): Capture {
     tick,
     pending: () => queue.length,
     async start() {
-      if (timer) return;
+      if (timer || stopped) return;
       const look = () => {
         running = running.then(tick, tick);
       };

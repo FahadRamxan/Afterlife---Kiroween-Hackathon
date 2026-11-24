@@ -112,10 +112,12 @@ export function VerifyCertificate({ certId }: { certId: string }) {
           data-testid="certificate-lines"
           className="mt-4 space-y-1 font-mono text-sm"
         >
+          {/* On a phone (the QR code opens this page on one) each value goes under its label: two
+              columns there left the values a few letters wide, broken mid-word. */}
           {certificateLines(state.payload).map((l, i) => (
-            <div key={i} className="grid grid-cols-[14rem_1fr] gap-2">
+            <div key={i} className="grid grid-cols-1 gap-x-2 sm:grid-cols-[14rem_1fr]">
               <dt className="whitespace-pre text-graveyard/70">{l.label}</dt>
-              <dd className="break-all">{l.value}</dd>
+              <dd className="[overflow-wrap:anywhere]">{l.value}</dd>
             </div>
           ))}
         </dl>

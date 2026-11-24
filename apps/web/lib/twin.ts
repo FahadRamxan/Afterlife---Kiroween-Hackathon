@@ -27,6 +27,8 @@ export const TwinOverviewSchema = z.object({
   primaryApp: z.enum(['old', 'vessel']),
   switchedAt: z.string().nullable(),
   hasToken: z.boolean(),
+  /** The newest change's number: the feed asks for the changes after the one FEED before it. */
+  lastSeq: z.number().int().nonnegative().optional(),
   simulate: z.object({
     available: z.boolean(),
     nextDay: z.string().nullable(),

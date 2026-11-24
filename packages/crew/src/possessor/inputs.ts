@@ -66,14 +66,19 @@ function monthFormatIn(label: string): MonthFormat | null {
   return null;
 }
 
-/** The data file field whose name matches a word of the label ("Party ID" matches PARTY_ID). */
+/**
+ * The data file field whose name matches a word of the label ("Party ID" matches PARTY_ID). When
+ * a word of the label names the file too, that file's field wins a tie: "Party Code" is PARTY.DBF's
+ * P_CODE, not ITEM.DBF's I_CODE (an app Afterlife was never shown: every slip was refused).
+ */
 function matchDbf(label: string, samples: DataSample[]) {
   const w = words(label).filter((x) => x.length >= 2);
   const joined = w.join('_');
   let best: { s: DataSample; f: DataSample['fields'][number]; score: number } | null = null;
-  for (const s of samples)
+  for (const s of samples) {
+    const named = w.includes(s.file.replace(/\.DBF$/i, '').toUpperCase()) ? 0.5 : 0;
     for (const f of s.fields) {
-      const score =
+      const base =
         f.name === joined
           ? 3
           : w.includes(f.name)
@@ -81,8 +86,10 @@ function matchDbf(label: string, samples: DataSample[]) {
             : w.some((x) => f.name.split('_').includes(x))
               ? 1
               : 0;
+      const score = base > 0 ? base + named : 0;
       if (score > (best?.score ?? 0)) best = { s, f, score };
     }
+  }
   return best;
 }
 
@@ -97,7 +104,9 @@ export function typeField(field: FieldInfo, samples: DataSample[]): TypedField {
     : [];
   const width = Math.max(1, field.length ?? dbf?.length ?? 20);
   const month = monthFormatIn(label);
-  const decimals = m?.f.type === 'N' ? (existing[0]?.split('.')[1]?.length ?? 2) : 2;
+  // The places the existing values have: a whole number (BAGS 220) has none.
+  const decimals =
+    m?.f.type === 'N' && existing[0] !== undefined ? (existing[0].split('.')[1]?.length ?? 0) : 2;
   const date = dateFormatIn(label, width);
   let type: FieldType;
   // A box too narrow for the date is not typed as one (a 1-character flag next to a date field).

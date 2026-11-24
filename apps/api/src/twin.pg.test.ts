@@ -162,19 +162,9 @@ describe('the twin routes', () => {
     };
     try {
       writeFileSync(path.join(dir, 'MEDICINE.DBF'), writeDbf(table));
-      // The poster's fetch goes to this app, not the network.
-      const fetcher = (async (url: string, init: RequestInit) => {
-        const r = await app.inject({
-          method: 'POST',
-          url: new URL(url).pathname,
-          payload: init.body as string,
-          headers: init.headers as Record<string, string>,
-        });
-        return new Response(r.body, { status: r.statusCode });
-      }) as unknown as typeof fetch;
       const c = createCapture({
         dir,
-        post: httpPoster({ api: 'http://api', projectId: id, token: tok, fetcher }),
+        post: httpPoster({ api: 'http://api', projectId: id, token: tok, fetcher: viaApp }),
       });
       await c.tick();
       writeFileSync(
@@ -194,4 +184,70 @@ describe('the twin routes', () => {
       rmSync(dir, { recursive: true, force: true });
     }
   });
+
+  it('a capture started again (the shop PC restarted) goes on from the newest change: none is lost', async () => {
+    const id = await project();
+    const tok = await token(id);
+    const dir = mkdtempSync(path.join(tmpdir(), 'twin-restart-'));
+    const table: DbfTable = {
+      fields: [
+        { name: 'CODE', type: 'C', length: 6, decimals: 0 },
+        { name: 'QTY', type: 'N', length: 5, decimals: 0 },
+      ],
+      records: [{ deleted: false, values: { CODE: 'PAN500', QTY: '240' } }],
+    };
+    const sell = (qty: string) =>
+      writeFileSync(
+        path.join(dir, 'MEDICINE.DBF'),
+        writeDbf({ ...table, records: [{ deleted: false, values: { CODE: 'PAN500', QTY: qty } }] }),
+      );
+    const capture = () =>
+      createCapture({
+        dir,
+        post: httpPoster({ api: 'http://api', projectId: id, token: tok, fetcher: viaApp }),
+      });
+    try {
+      writeFileSync(path.join(dir, 'MEDICINE.DBF'), writeDbf(table));
+      const first = capture();
+      await first.tick();
+      sell('238');
+      await first.tick();
+      sell('236');
+      await first.tick();
+      // The PC restarts: a new capture, numbering its changes from 1 again.
+      const second = capture();
+      await second.tick();
+      sell('230');
+      await second.tick();
+      expect(second.pending()).toBe(0);
+      const rows = await t.db
+        .select()
+        .from(twinEvents)
+        .where(eq(twinEvents.projectId, id))
+        .orderBy(twinEvents.seq);
+      expect(rows.map((r) => r.seq)).toEqual([1, 2, 3]);
+      const after = (r: (typeof rows)[number]) =>
+        (
+          r.event as {
+            diff: { tables: Record<string, { updated: { changes: { after: string }[] }[] }> };
+          }
+        ).diff.tables['MEDICINE.DBF']!.updated[0]!.changes[0]!.after;
+      expect(rows.map(after)).toEqual(['238', '236', '230']);
+      const o = (await app.inject({ method: 'GET', url: `/api/projects/${id}/twin` })).json();
+      expect(o.lastSeq).toBe(3);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
 });
+
+/** The capture tool's fetch, sent to this app instead of the network. */
+const viaApp = (async (url: string, init?: RequestInit) => {
+  const r = await app.inject({
+    method: (init?.method ?? 'GET') as 'GET' | 'POST',
+    url: new URL(url).pathname,
+    ...(init?.body ? { payload: init.body as string } : {}),
+    headers: (init?.headers ?? {}) as Record<string, string>,
+  });
+  return new Response(r.body, { status: r.statusCode });
+}) as unknown as typeof fetch;
