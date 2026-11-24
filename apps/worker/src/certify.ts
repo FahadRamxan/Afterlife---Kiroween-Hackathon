@@ -50,6 +50,14 @@ export async function issueCertificate(db: Db, x: CertifyInput): Promise<Certify
       issued: false,
       reason: `${x.proof.failed} ${x.proof.failed === 1 ? 'case differs' : 'cases differ'} from the old app`,
     };
+  // A proof whose cases were mostly skipped (the records no longer allowed them) shows too little:
+  // the CI's own proof (pnpm proof:shifa) fails when fewer than half run, and so does a certificate.
+  const ran = x.proof.passed + x.proof.accepted;
+  if (ran < x.proof.numRuns / 2)
+    return {
+      issued: false,
+      reason: `Only ${ran} of ${x.proof.numRuns} cases ran (the others were skipped): too few to certify`,
+    };
   const [step] = await db
     .select({ status: pipelineSteps.status, output: pipelineSteps.output })
     .from(pipelineSteps)

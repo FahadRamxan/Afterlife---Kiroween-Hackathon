@@ -208,6 +208,17 @@ export function ProofPanel({
                 {t('caseLine', { index: latest.index })} · {latest.actionId} · {inputsText(latest)}
               </p>
               <Written values={latest.vessel} label={t(`nothingWritten.${latest.outcome}`)} />
+              {/* Why: the reborn app could not work it out, refused it, or it was skipped. */}
+              {latest.reason ? (
+                <p
+                  lang="en"
+                  dir="ltr"
+                  data-testid="proof-reason"
+                  className="mt-3 text-sm text-bone/80"
+                >
+                  {latest.reason}
+                </p>
+              ) : null}
             </div>
           </div>
         </div>

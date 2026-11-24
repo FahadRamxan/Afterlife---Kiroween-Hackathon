@@ -252,6 +252,17 @@ describe('issueCertificate', () => {
       issued: false,
       reason: 'This worker has no signing key (CERT_SIGNING_KEY)',
     });
+    // No difference, but most cases skipped: too little was proved (as in pnpm proof:shifa).
+    const skippy = await setup();
+    expect(
+      await issue({
+        ...skippy,
+        proof: { numRuns: 50, passed: 20, failed: 0, skipped: 30, accepted: 4 },
+      }),
+    ).toEqual({
+      issued: false,
+      reason: 'Only 24 of 50 cases ran (the others were skipped): too few to certify',
+    });
     expect(await t.db.select().from(certificates)).toHaveLength(before);
   });
 

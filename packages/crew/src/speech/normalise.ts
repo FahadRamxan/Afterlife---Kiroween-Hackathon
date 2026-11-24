@@ -200,7 +200,8 @@ export function normaliseTranscript(text: string): string {
 }
 /**
  * Words that are numbers only beside a percent word or another number word: everyday words too,
- * in Roman Urdu or English, and دو / दो (two, and also give: "chhoot do").
+ * in Roman Urdu or English, and دو / दो (two, and also give: "chhoot do"). In Roman Urdu as people
+ * type it, "saath" is also "with" (ke saath), "bara" also "big" and "tera" also "your".
  */
 const AMBIGUOUS = new Set([
   'do',
@@ -212,6 +213,9 @@ const AMBIGUOUS = new Set([
   'char',
   'bis',
   'sath',
+  'saath',
+  'bara',
+  'tera',
   'aat',
   'one',
   'دو',

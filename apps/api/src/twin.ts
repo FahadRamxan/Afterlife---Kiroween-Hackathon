@@ -15,6 +15,7 @@ import {
   projects,
   sql,
   twinEvents,
+  uploads,
   type Db,
 } from '@afterlife/db';
 import {
@@ -107,6 +108,7 @@ export class TwinError extends Error {
       | 'NOT_READY'
       | 'SWITCHED'
       | 'NO_SOUL'
+      | 'NO_DATA'
       | 'CONFLICT',
     message: string,
   ) {
@@ -120,6 +122,7 @@ const TWIN_STATUS: Record<TwinError['code'], number> = {
   NOT_READY: 409,
   SWITCHED: 409,
   NO_SOUL: 409,
+  NO_DATA: 409,
   CONFLICT: 409,
 };
 
@@ -137,6 +140,11 @@ export type TwinOverview = {
   primaryApp: 'old' | 'vessel';
   switchedAt: string | null;
   hasToken: boolean;
+  /**
+   * The newest change's number (0: none yet). afterlife-twin, started again, numbers its changes
+   * on from it, and the twin feed asks for the changes after it.
+   */
+  lastSeq: number;
   simulate: { available: boolean; nextDay: string | null; recordedDays: number };
 };
 
@@ -222,11 +230,21 @@ export class PgTwinStore implements TwinStore {
     const [p] = await this.db.select().from(projects).where(eq(projects.id, projectId));
     return p ?? null;
   }
+  /** The old app's bundle: a Graveyard app's file, or an upload's once it is scanned clean. */
+  private async bundleOf(projectId: string, p: { source: string; sourceApp: string }) {
+    if (p.source !== 'upload') return graveyardBundle(p);
+    const [u] = await this.db
+      .select({ status: uploads.status, bundle: uploads.bundle })
+      .from(uploads)
+      .where(eq(uploads.projectId, projectId));
+    return u?.status === 'clean' && u.bundle ? new Uint8Array(u.bundle) : null;
+  }
   async overview(projectId: string, rule: ReadinessRule): Promise<TwinOverview | null> {
     const p = await this.project(projectId);
     if (!p) return null;
     const rows = await this.db
       .select({
+        seq: twinEvents.seq,
         occurredAt: twinEvents.occurredAt,
         matched: twinEvents.matched,
         newResult: twinEvents.newResult,
@@ -262,6 +280,7 @@ export class PgTwinStore implements TwinStore {
       primaryApp: p.primaryApp === 'vessel' ? 'vessel' : 'old',
       switchedAt: p.switchedAt?.toISOString() ?? null,
       hasToken: !!p.twinTokenHash,
+      lastSeq: rows.at(-1)?.seq ?? 0,
       simulate: {
         available: !!week && p.primaryApp !== 'vessel',
         nextDay: p.primaryApp === 'vessel' ? null : nextDay,
@@ -305,21 +324,19 @@ export class PgTwinStore implements TwinStore {
     const soulRow = await latestSoulRow(this.db, projectId);
     if (!soulRow) throw new TwinError('NO_SOUL', 'This project has no Soul yet');
     const soul = SoulSchema.parse(soulRow.ir);
-    // The final migration: the shop's records as the old app left them, every change applied.
+    // The final migration: the shop's records as the old app left them, every change applied. It
+    // starts from the old app's own data files, as the twin's replay does, and never from the
+    // reborn app's records: a phone may have made bills in the reborn app while the old app was
+    // still the shop's, and the old app's changes do not fit on those ("BILLS.DBF: record 3 was
+    // added by someone else"), so one try-out bill blocked the switch-over for good. The reborn
+    // app is given the old app's records, as the confirmation says.
     const vessel = new PgEntityStore(this.db, projectId);
     const files = [...new Set(soul.entities.map((e) => e.file.toUpperCase()))];
-    let records: Record<string, DbfRecord[]> = {};
-    for (const f of files) records[f] = await vessel.records(f);
-    if (files.every((f) => !records[f]!.length) && p.source === 'graveyard') {
-      const bundle = graveyardBundle(p);
-      if (bundle)
-        records = Object.fromEntries(
-          Object.entries(tablesFromBundle(bundle, soul)).map(([f, t]) => [
-            f.toUpperCase(),
-            t.records,
-          ]),
-        );
-    }
+    const bundle = await this.bundleOf(projectId, p);
+    if (!bundle) throw new TwinError('NO_DATA', "The old app's data files are not here yet");
+    let records: Record<string, DbfRecord[]> = Object.fromEntries(
+      Object.entries(tablesFromBundle(bundle, soul)).map(([f, t]) => [f.toUpperCase(), t.records]),
+    );
     const rows = await this.db
       .select({ event: twinEvents.event })
       .from(twinEvents)

@@ -301,7 +301,11 @@ export function analyzeScreen(grid: ScreenGrid): ScreenModel {
   const candidates = inner.filter((r) => !inTable.has(r));
   const reverseRun = (r: number) => runs(grid, r).find((x) => isReverse(x.bg) && x.bg !== bodyBg);
   for (const kind of ['numbered', 'lettered'] as const) {
-    const re = kind === 'numbered' ? /^(\d{1,2})\s{1,3}(\S.*)$/ : /^([A-Z])\s{2,}(\S.*)$/;
+    // "1  New Bill", and the commonest DOS style too: "1. New Slip", "2) Parties", "A. Add".
+    const re =
+      kind === 'numbered'
+        ? /^(\d{1,2})[.)]?\s{1,3}(\S.*)$/
+        : /^([A-Z])(?:[.)]\s{1,3}|\s{2,})(\S.*)$/;
     const items: Item[] = [];
     for (const r of candidates) {
       const p = pieces(text[r]!, 3);

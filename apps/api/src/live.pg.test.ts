@@ -138,8 +138,10 @@ describe('GET /api/projects/:id/live', () => {
     const ok = await a.injectWS(`/api/projects/${id}/live`, {
       headers: { origin: 'https://afterlife.example' },
     });
+    // Listen before the event is sent: a message that comes first would be missed.
+    const got = inbox(ok);
     await emitEvent(t.db, id, 'log', log('hello'));
-    await inbox(ok).until(1);
+    await got.until(1);
     ok.terminate();
   });
 });

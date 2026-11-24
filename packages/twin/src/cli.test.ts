@@ -26,6 +26,8 @@ let server: Server;
 let api: string;
 let got: Got[];
 let answer: (g: Got) => number;
+let reply: (g: Got) => string;
+const posts = () => got.filter((g) => g.method === 'POST');
 const read = (req: IncomingMessage) =>
   new Promise<string>((ok) => {
     let s = '';
@@ -35,6 +37,7 @@ const read = (req: IncomingMessage) =>
 beforeEach(async () => {
   got = [];
   answer = () => 201;
+  reply = () => '{"message":"x"}';
   server = createServer(async (req, res) => {
     const g: Got = {
       method: req.method!,
@@ -43,7 +46,7 @@ beforeEach(async () => {
       body: JSON.parse((await read(req)) || '{}'),
     };
     got.push(g);
-    res.writeHead(answer(g), { 'content-type': 'application/json' }).end('{"message":"x"}');
+    res.writeHead(answer(g), { 'content-type': 'application/json' }).end(reply(g));
   });
   await new Promise<void>((ok) => server.listen(0, '127.0.0.1', ok));
   api = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
@@ -58,8 +61,10 @@ describe('httpPoster (a mock API)', () => {
     diff: { tables: {}, unchanged: [], addedTables: [], removedTables: [] },
   };
   it('posts each event to the project, with the twin token', async () => {
-    await httpPoster({ api, projectId: PROJECT, token: TOKEN })(event);
-    expect(got).toEqual([
+    await expect(httpPoster({ api, projectId: PROJECT, token: TOKEN })(event)).resolves.toBe(3);
+    // First it asks the twin for its newest change (none here), once.
+    expect(got[0]).toMatchObject({ method: 'GET', url: `/api/projects/${PROJECT}/twin` });
+    expect(posts()).toEqual([
       {
         method: 'POST',
         url: `/api/projects/${PROJECT}/twin/events`,
@@ -68,19 +73,39 @@ describe('httpPoster (a mock API)', () => {
       },
     ]);
   });
+  it('a capture started again goes on from the newest change the API has, so its changes are not taken as already there', async () => {
+    reply = (g) => (g.method === 'GET' ? '{"lastSeq":40}' : '{}');
+    const post = httpPoster({ api, projectId: PROJECT, token: TOKEN });
+    await expect(post(event)).resolves.toBe(43);
+    await expect(post({ ...event, seq: 4 })).resolves.toBe(44);
+    expect(posts().map((g) => g.body.seq)).toEqual([43, 44]);
+    expect(got.filter((g) => g.method === 'GET')).toHaveLength(1);
+  });
   it('an event the API already has (409) is done; a refusal or an error is thrown, to be sent again', async () => {
-    answer = () => 409;
-    await expect(
-      httpPoster({ api, projectId: PROJECT, token: TOKEN })(event),
-    ).resolves.toBeUndefined();
-    answer = () => 401;
+    answer = (g) => (g.method === 'GET' ? 200 : 409);
+    await expect(httpPoster({ api, projectId: PROJECT, token: TOKEN })(event)).resolves.toBe(3);
+    answer = (g) => (g.method === 'GET' ? 200 : 401);
     await expect(httpPoster({ api, projectId: PROJECT, token: TOKEN })(event)).rejects.toThrow(
       'The API refused the twin token (401)',
     );
-    answer = () => 500;
+    answer = (g) => (g.method === 'GET' ? 200 : 500);
     await expect(httpPoster({ api, projectId: PROJECT, token: TOKEN })(event)).rejects.toThrow(
       '500',
     );
+    // Asking for the twin fails too: thrown, and asked again on the next send.
+    answer = () => 503;
+    const post = httpPoster({ api, projectId: PROJECT, token: TOKEN });
+    await expect(post(event)).rejects.toThrow('503');
+    answer = () => 201;
+    await expect(post(event)).resolves.toBe(3);
+  });
+  it('after the switch-over (409 SWITCHED) it stops for good instead of counting the change as sent', async () => {
+    answer = (g) => (g.method === 'GET' ? 200 : 409);
+    reply = (g) =>
+      g.method === 'GET' ? '{"lastSeq":7}' : '{"error":"SWITCHED","message":"frozen"}';
+    await expect(
+      httpPoster({ api, projectId: PROJECT, token: TOKEN })(event),
+    ).rejects.toMatchObject({ name: 'TwinStoppedError', fatal: true });
   });
 });
 
@@ -155,14 +180,14 @@ describe('the afterlife-twin CLI', () => {
       path.join(dir, 'MEDICINE.DBF'),
       writeDbf({ ...TABLE, records: [{ deleted: false, values: { CODE: 'PAN500', QTY: '238' } }] }),
     );
-    await until(() => got.length > 0);
-    expect(got[0]).toMatchObject({
+    await until(() => posts().length > 0);
+    expect(posts()[0]).toMatchObject({
       method: 'POST',
       url: `/api/projects/${PROJECT}/twin/events`,
       auth: `Bearer ${TOKEN}`,
     });
-    expect(got[0]!.body).toMatchObject({ seq: 1, files: ['MEDICINE.DBF'] });
-    const diff = got[0]!.body.diff as {
+    expect(posts()[0]!.body).toMatchObject({ seq: 1, files: ['MEDICINE.DBF'] });
+    const diff = posts()[0]!.body.diff as {
       tables: Record<string, { updated: { changes: unknown[] }[] }>;
     };
     expect(diff.tables['MEDICINE.DBF']!.updated[0]!.changes).toEqual([

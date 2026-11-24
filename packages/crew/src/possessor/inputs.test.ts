@@ -69,6 +69,40 @@ describe('typeField', () => {
     expect(typeField(f('Note', 20), BARKAT).type).toEqual({ kind: 'text' });
   });
 
+  it('"Party Code" is the code of the file named PARTY, not of the first file with a code', () => {
+    // A 1999 weighbridge Afterlife was never shown: ITEM.DBF (I_CODE) came first, so every slip
+    // was typed with an item code as the party and refused.
+    const KANTA: DataSample[] = [
+      {
+        file: 'ITEM.DBF',
+        fields: [{ name: 'I_CODE', type: 'C', length: 3 }],
+        records: [{ I_CODE: 'WHT' }, { I_CODE: 'RIC' }],
+      },
+      {
+        file: 'PARTY.DBF',
+        fields: [{ name: 'P_CODE', type: 'C', length: 4 }],
+        records: [{ P_CODE: 'A001' }, { P_CODE: 'A002' }],
+      },
+    ];
+    expect(typeField(f('Party Code', 4), KANTA)).toMatchObject({
+      dbf: { file: 'PARTY.DBF', name: 'P_CODE' },
+      existing: ['A001', 'A002'],
+    });
+    expect(typeField(f('Item Code', 3), KANTA)).toMatchObject({
+      dbf: { file: 'ITEM.DBF', name: 'I_CODE' },
+      existing: ['WHT', 'RIC'],
+    });
+    // A whole number in the data (BAGS 220) is typed without decimals, not as "1.00".
+    const SLIP: DataSample[] = [
+      {
+        file: 'SLIP.DBF',
+        fields: [{ name: 'BAGS', type: 'N', length: 4 }],
+        records: [{ BAGS: '220' }, { BAGS: '60' }],
+      },
+    ];
+    expect(typeField(f('Bags', 4), SLIP).type).toEqual({ kind: 'money', decimals: 0 });
+  });
+
   it('a prompt without a width on screen takes the data field width', () => {
     expect(typeField(f('Party ID', null), BARKAT).width).toBe(4);
   });

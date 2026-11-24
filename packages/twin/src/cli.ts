@@ -22,6 +22,11 @@ const capture = createCapture({
   intervalMs: o.intervalMs,
   post: httpPoster({ api: o.api, projectId: o.project, token: o.token }),
   log: (m) => console.log(`[${new Date().toISOString()}] ${m}`),
+  // The shop switched over: the old app's data is frozen, so there is nothing more to watch.
+  onFatal: (e) => {
+    console.error(`afterlife-twin: ${e.message}`);
+    process.exit(1);
+  },
 });
 // Said once the first look is taken: a change from then on is sent.
 await capture.start();

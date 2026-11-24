@@ -33,6 +33,10 @@ services:
         sync: false
       - key: AWS_SECRET_ACCESS_KEY
         sync: false
+      # The Rebirth Certificate's public key (Prompt 71), from `pnpm cert:key`, published at
+      # /.well-known/afterlife-key. Without it no certificate can be checked.
+      - key: CERT_PUBLIC_KEY
+        sync: false
 
   - type: worker
     name: afterlife-worker
@@ -60,4 +64,8 @@ services:
       - key: SPEECH_PROVIDER
         sync: false
       - key: TRANSCRIBE_BUCKET
+        sync: false
+      # Signs the Rebirth Certificate (Prompt 71), from `pnpm cert:key`; on the worker only.
+      # Without it proofs run but no certificate is issued.
+      - key: CERT_SIGNING_KEY
         sync: false
