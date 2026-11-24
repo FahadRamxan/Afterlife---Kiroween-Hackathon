@@ -60,7 +60,7 @@ type Ci = {
   fsReadFile(path: string): Promise<Uint8Array>;
   fsWriteFile(path: string, data: Uint8Array): Promise<void>;
   screenshot(): Promise<ImageData>;
-  simulateKeyPress(...codes: number[]): void;
+  simulateKeyPress(...codes: number[]): Promise<void>;
   exit(): Promise<void>;
 };
 type PageWindow = {
@@ -119,14 +119,12 @@ export function pageEmulators(page: Page): JsDosEmulators {
         }, id);
         return { width: r.width, height: r.height, data: unb64(r.data) };
       },
-      // Playwright runs evaluations on one page in order, so presses arrive in order.
-      simulateKeyPress: (...codes) => {
-        page
-          .evaluate(([n, c]) => (window as unknown as PageWindow).cis![n]!.simulateKeyPress(...c), [
-            id,
-            codes,
-          ] as const)
-          .catch(() => {});
+      // Resolves once the press is in the page, so sendKeys keeps its gap between presses.
+      simulateKeyPress: async (...codes) => {
+        await page.evaluate(
+          ([n, c]) => (window as unknown as PageWindow).cis![n]!.simulateKeyPress(...c),
+          [id, codes] as const,
+        );
       },
       exit: async () => {
         await page.evaluate(async (n) => {
