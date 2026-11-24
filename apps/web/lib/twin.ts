@@ -130,6 +130,12 @@ export async function newTwinToken(api: string | undefined, id: string) {
   );
   return r.ok ? { ok: true as const, token: r.body.token } : r;
 }
+/**
+ * How often the tab re-reads the twin while changes are still being compared (null: no need). The
+ * live feed usually says when; this is for a missed event, so the page never waits forever.
+ */
+export const pollMs = (twin: TwinOverview | null): number | null =>
+  twin && twin.readiness.pending > 0 ? 3000 : null;
 export type Candle = 'matched' | 'mismatched' | 'unknown' | 'pending';
 /** A day's candle: red with any mismatch, green only when every transaction matched. */
 export function candleOf(d: TwinDay): Candle {

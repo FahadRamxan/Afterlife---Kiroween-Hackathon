@@ -2,6 +2,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   candleOf,
+  pollMs,
   changesText,
   getTwin,
   getTwinEvents,
@@ -132,6 +133,16 @@ describe('the shop PC token', () => {
     vi.stubGlobal('fetch', f);
     expect(await newTwinToken('http://api', ID)).toEqual({ ok: true, token: tok });
     expect(f).toHaveBeenCalledWith(`http://api/api/projects/${ID}/twin/token`, { method: 'POST' });
+  });
+});
+describe('re-reading while comparing', () => {
+  // The tab re-reads on live events; if one is missed it must not wait on "Comparing" forever.
+  it('re-reads every few seconds while a change is still being compared, and not otherwise', () => {
+    const at = (pending: number) =>
+      TwinOverviewSchema.parse({ ...overview, readiness: { ...overview.readiness, pending } });
+    expect(pollMs(at(3))).toBe(3000);
+    expect(pollMs(at(0))).toBeNull();
+    expect(pollMs(null)).toBeNull();
   });
 });
 describe('the candle of a day', () => {

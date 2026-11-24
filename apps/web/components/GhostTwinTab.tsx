@@ -9,6 +9,7 @@ import {
   getTwin,
   getTwinEvents,
   newTwinToken,
+  pollMs,
   simulateDay,
   switchOver,
   type Candle,
@@ -67,6 +68,14 @@ export function GhostTwinTab({ projectId, events }: { projectId: string; events:
       alive = false;
     };
   }, [projectId, beats, version]);
+  // While changes are still being compared, read again now and then: a missed live event must
+  // not leave the day on "Comparing".
+  const every = pollMs(twin);
+  useEffect(() => {
+    if (!every) return;
+    const id = setInterval(() => setVersion((v) => v + 1), every);
+    return () => clearInterval(id);
+  }, [every]);
   async function simulate() {
     setBusy(true);
     setError(null);
