@@ -16,6 +16,7 @@ import {
   LlmRetryableError,
   fitRequest,
   type ContentBlock,
+  type ProviderBlock,
   type LlmCapabilities,
   type Json,
   type LlmClient,
@@ -48,10 +49,13 @@ type Sender = {
   send(cmd: ConverseCommand, opts?: { abortSignal?: AbortSignal }): Promise<unknown>;
 };
 
+const notProvider = (b: ContentBlock): b is Exclude<ContentBlock, ProviderBlock> =>
+  b.type !== 'provider';
 export function toBedrockMessages(messages: LlmMessage[]): BedrockMessage[] {
   return messages.map((m) => ({
     role: m.role,
-    content: m.content.map((b): BedrockBlock => {
+    // Another provider's blocks (Claude API thinking) mean nothing to Bedrock: left out.
+    content: m.content.filter(notProvider).map((b): BedrockBlock => {
       switch (b.type) {
         case 'text':
           return { text: b.text };

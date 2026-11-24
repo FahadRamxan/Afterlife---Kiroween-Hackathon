@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { AnthropicLlmClient } from './anthropic';
 import { BedrockLlmClient } from './bedrock';
 import { DEFAULT_TOKEN_BUDGET, llmClientFrom, tokenBudgetFrom } from './config';
 
@@ -15,8 +16,24 @@ describe('llmClientFrom', () => {
     expect(c).toBeInstanceOf(BedrockLlmClient);
     expect(c?.model).toBe('eu.anthropic.claude-sonnet-x');
   });
+  it('builds the Claude API client; the key stays in the environment, the model can be changed', () => {
+    const c = llmClientFrom({ LLM_PROVIDER: 'Anthropic', ANTHROPIC_API_KEY: 'sk-test' });
+    expect(c).toBeInstanceOf(AnthropicLlmClient);
+    expect(c?.model).toBe('claude-sonnet-5-5');
+    expect(JSON.stringify(c)).not.toContain('sk-test');
+    expect(
+      llmClientFrom({
+        LLM_PROVIDER: 'anthropic',
+        ANTHROPIC_API_KEY: 'k',
+        ANTHROPIC_MODEL_ID: 'claude-opus-5',
+      })?.model,
+    ).toBe('claude-opus-5');
+  });
+  it('says the key is missing instead of failing on the first call', () => {
+    expect(() => llmClientFrom({ LLM_PROVIDER: 'anthropic' })).toThrow('ANTHROPIC_API_KEY');
+  });
   it('refuses a provider it does not know', () => {
-    expect(() => llmClientFrom({ LLM_PROVIDER: 'openai' })).toThrow(/bedrock or none/);
+    expect(() => llmClientFrom({ LLM_PROVIDER: 'openai' })).toThrow(/bedrock, anthropic or none/);
   });
 });
 

@@ -14,7 +14,13 @@ export type ToolResultBlock = {
   content: Json;
   isError: boolean;
 };
-export type ContentBlock = TextBlock | ToolUseBlock | ToolResultBlock;
+/**
+ * A block only its provider understands, kept as it came (Claude's thinking blocks, with their
+ * signatures). The runtime sends the assistant's content back unchanged in a tool loop, so the
+ * provider gets it back as it must; other providers leave it out.
+ */
+export type ProviderBlock = { type: 'provider'; provider: string; block: Json };
+export type ContentBlock = TextBlock | ToolUseBlock | ToolResultBlock | ProviderBlock;
 
 export type LlmMessage = { role: 'user' | 'assistant'; content: ContentBlock[] };
 

@@ -35,6 +35,7 @@
     "export:check": "tsx scripts/export-check.ts",
     "proof:shifa": "tsx scripts/proof-shifa.ts",
     "cert:key": "tsx scripts/cert-key.ts",
+    "llm:smoke": "tsx --env-file-if-exists=apps/worker/.env scripts/llm-smoke.ts",
     "twin": "tsx packages/twin/src/cli.ts",
     "twin:record": "tsx scripts/twin-record.ts",
     "db:migrate": "pnpm --filter @afterlife/db migrate",
