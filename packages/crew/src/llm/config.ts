@@ -1,6 +1,7 @@
-// Which model the worker uses, from its environment. Bedrock when it is asked for; otherwise
+// Which model the worker uses, from its environment. Bedrock or the Claude API when asked for; otherwise
 // none, and the agents say a model is needed rather than inventing answers.
 import { DEFAULT_LLM_TOKEN_BUDGET } from '@afterlife/db';
+import { AnthropicLlmClient } from './anthropic';
 import { BedrockLlmClient } from './bedrock';
 import type { LlmClient } from './types';
 
@@ -11,6 +12,9 @@ export type LlmEnv = {
   LLM_PROVIDER?: string;
   BEDROCK_MODEL_ID?: string;
   AWS_REGION?: string;
+  /** Read by the Anthropic SDK itself; only checked here to say it is missing. */
+  ANTHROPIC_API_KEY?: string;
+  ANTHROPIC_MODEL_ID?: string;
   LLM_TOKEN_BUDGET?: string;
 };
 
@@ -32,5 +36,13 @@ export function llmClientFrom(env: LlmEnv): LlmClient | null {
       ...(env.BEDROCK_MODEL_ID ? { model: env.BEDROCK_MODEL_ID } : {}),
       ...(env.AWS_REGION ? { region: env.AWS_REGION } : {}),
     });
-  throw new Error(`LLM_PROVIDER must be bedrock or none, not "${env.LLM_PROVIDER}"`);
+  if (provider === 'anthropic') {
+    if (!env.ANTHROPIC_API_KEY?.trim())
+      throw new Error('LLM_PROVIDER=anthropic needs ANTHROPIC_API_KEY (the Claude API key)');
+    return new AnthropicLlmClient({
+      apiKey: env.ANTHROPIC_API_KEY.trim(),
+      ...(env.ANTHROPIC_MODEL_ID?.trim() ? { model: env.ANTHROPIC_MODEL_ID.trim() } : {}),
+    });
+  }
+  throw new Error(`LLM_PROVIDER must be bedrock, anthropic or none, not "${env.LLM_PROVIDER}"`);
 }

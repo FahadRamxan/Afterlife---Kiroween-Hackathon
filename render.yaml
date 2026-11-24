@@ -49,7 +49,7 @@ services:
     envVars:
       - key: DATABASE_URL
         sync: false
-      # The language model (Prompt 47): `bedrock`, or `none` to run without one.
+      # The language model (Prompt 47, 80a): `bedrock`, `anthropic` or `none`.
       - key: LLM_PROVIDER
         sync: false
       - key: AWS_REGION
@@ -57,6 +57,9 @@ services:
       - key: AWS_ACCESS_KEY_ID
         sync: false
       - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      # For LLM_PROVIDER=anthropic: the Claude API key.
+      - key: ANTHROPIC_API_KEY
         sync: false
       - key: LLM_TOKEN_BUDGET
         value: '200000'

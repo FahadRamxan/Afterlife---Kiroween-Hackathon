@@ -8,6 +8,7 @@ import {
   DEFAULT_BEDROCK_MODEL,
   fromBedrockOutput,
   toBedrockInput,
+  toBedrockMessages,
 } from './bedrock';
 import { LlmRetryableError, type LlmRequest } from './types';
 
@@ -249,5 +250,19 @@ describe('BedrockLlmClient', () => {
     expect(denied).toMatchObject({ name: 'AccessDeniedException' });
     const invalid = await call('ValidationException', 400).catch((e: unknown) => e);
     expect(invalid).not.toBeInstanceOf(LlmRetryableError);
+  });
+});
+describe('toBedrockMessages with blocks from another provider', () => {
+  it('leaves out thinking blocks from the Claude API, keeping the rest in order', () => {
+    const [m] = toBedrockMessages([
+      {
+        role: 'assistant',
+        content: [
+          { type: 'provider', provider: 'anthropic', block: { type: 'thinking', thinking: 'x' } },
+          { type: 'text', text: 'GST' },
+        ],
+      },
+    ]);
+    expect(m!.content).toEqual([{ text: 'GST' }]);
   });
 });

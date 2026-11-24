@@ -13,6 +13,12 @@ export {
   toBedrockMessages,
 } from './llm/bedrock';
 export {
+  AnthropicLlmClient,
+  DEFAULT_ANTHROPIC_MODEL,
+  fromAnthropicMessage,
+  toAnthropicParams,
+} from './llm/anthropic';
+export {
   AGENTS,
   MemoryLlmCallLog,
   type AgentName,

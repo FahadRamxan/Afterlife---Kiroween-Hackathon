@@ -65,7 +65,7 @@ function screensOf(
 
 export { MAX_RULE_TARGETS } from '@afterlife/crew';
 export const NO_RULE_MODEL =
-  'No language model is set up on this worker (LLM_PROVIDER=bedrock, with AWS credentials): the rules are found among short expressions over the fields, each checked against every observation';
+  'No language model is set up on this worker (LLM_PROVIDER=bedrock with AWS credentials, or anthropic with ANTHROPIC_API_KEY): the rules are found among short expressions over the fields, each checked against every observation';
 export const MODEL_RULES =
   'The language model proposes candidate rules, with short expressions over the fields; each is checked against every observation';
 

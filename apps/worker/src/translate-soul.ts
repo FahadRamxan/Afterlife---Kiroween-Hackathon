@@ -15,7 +15,7 @@ import { SoulSchema, numberSoul, specRequirements, type Soul } from '@afterlife/
 import type { StepHandler } from './registry';
 
 export const NO_MODEL =
-  'No language model is set up on this worker (LLM_PROVIDER=bedrock, with AWS credentials), so the rules cannot be translated';
+  'No language model is set up on this worker (LLM_PROVIDER=bedrock with AWS credentials, or anthropic with ANTHROPIC_API_KEY), so the rules cannot be translated';
 
 export function translateSoulStep(deps: {
   db: Db;
