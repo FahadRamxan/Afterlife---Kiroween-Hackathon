@@ -462,6 +462,21 @@
       "connectBody": "Run the capture tool on the PC with the old app. It sends each change to the data files here. The token is shown once.",
       "makeToken": "Make a token",
       "newToken": "Make a new token (the old one stops working)"
+    },
+    "living": {
+      "title": "Say a rule change",
+      "intro": "Say the change in Urdu or English, or type it. Numbers are read the way they are said: \"paanch feesad\" is 5%.",
+      "speak": "Speak a change",
+      "stop": "Stop and read it",
+      "listening": "Listening… (up to a minute)",
+      "reading": "Reading what was said…",
+      "typeLabel": "Or type it",
+      "read": "Read it",
+      "noMic": "The microphone could not be opened: type the change instead.",
+      "typed": "Typed",
+      "heardFrom": "Heard by {source}",
+      "normalised": "With its numbers read:",
+      "next": "Turning this into a proposed rule change is not built yet."
     }
   },
   "vessel": {

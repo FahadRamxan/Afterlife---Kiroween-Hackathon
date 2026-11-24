@@ -90,6 +90,7 @@ describe('worker image (Prompt 37)', () => {
 describe('.env.example files (Prompt 10)', () => {
   it('API example lists every variable parseEnv reads, plus DATABASE_URL', () => {
     expect(envKeys('apps/api/.env.example').sort()).toEqual([
+      'AWS_REGION',
       'CERT_PUBLIC_KEY',
       'DATABASE_URL',
       'HOST',
@@ -99,6 +100,10 @@ describe('.env.example files (Prompt 10)', () => {
       'RATE_LIMIT_CREATE_PER_MINUTE',
       'RATE_LIMIT_PER_MINUTE',
       'SEANCE_STORAGE_MB',
+      'SPEECH_FALLBACK_REGION',
+      'SPEECH_PROVIDER',
+      'TRANSCRIBE_BUCKET',
+      'TRANSCRIBE_FALLBACK_BUCKET',
       'TRUST_PROXY',
       'TWIN_READY_DAYS',
       'TWIN_READY_MATCHED',
@@ -114,7 +119,13 @@ describe('.env.example files (Prompt 10)', () => {
   });
   it('worker example names the model settings, with no credentials in it (Prompt 47)', () => {
     expect(envKeys('apps/worker/.env.example')).toEqual(
-      expect.arrayContaining(['LLM_PROVIDER', 'AWS_REGION', 'LLM_TOKEN_BUDGET']),
+      expect.arrayContaining([
+        'LLM_PROVIDER',
+        'AWS_REGION',
+        'LLM_TOKEN_BUDGET',
+        'SPEECH_PROVIDER',
+        'TRANSCRIBE_BUCKET',
+      ]),
     );
     expect(read('apps/worker/.env.example')).not.toMatch(/^AWS_(ACCESS|SECRET)/m);
   });

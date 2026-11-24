@@ -19,7 +19,15 @@ describe('parseEnv', () => {
       TWIN_READY_DAYS: 7,
       TWIN_READY_MATCHED: 200,
       TWIN_READY_MISMATCHES: 0,
+      // No speech service unless asked (Prompt 80): typed requests still work.
+      SPEECH_PROVIDER: 'none',
     });
+  });
+  it('takes Amazon Transcribe as the speech service, and refuses another', () => {
+    expect(
+      parseEnv({ SPEECH_PROVIDER: 'Transcribe', TRANSCRIBE_BUCKET: 'shop-voice' }),
+    ).toMatchObject({ SPEECH_PROVIDER: 'transcribe', TRANSCRIBE_BUCKET: 'shop-voice' });
+    expect(() => parseEnv({ SPEECH_PROVIDER: 'whisper' })).toThrow('SPEECH_PROVIDER');
   });
   it('refuses a switch-over rule that could never be met or is nonsense', () => {
     expect(() => parseEnv({ TWIN_READY_DAYS: '0' })).toThrow();

@@ -90,6 +90,32 @@ describe('BrowserJsDos', () => {
     expect(conf).toContain('date 07-15-1998');
   });
 
+  it('waits for each press to reach the emulator before the next (a busy page lost keys)', async () => {
+    // A headless page answers late when it is busy: presses queued behind each other arrived back
+    // to back, with no gap, and DOS dropped some ("Code: BRO" for BRO100).
+    const js = fakeJsDos();
+    const events: string[] = [];
+    const real = js.emulators.dosboxWorker;
+    js.emulators.dosboxWorker = async (init) => {
+      const ci = await real(init);
+      return {
+        ...ci,
+        simulateKeyPress: (...codes: number[]) => {
+          events.push(`send ${codes}`);
+          return new Promise<void>((r) =>
+            setTimeout(() => {
+              events.push(`arrived ${codes}`);
+              r();
+            }, 30),
+          );
+        },
+      };
+    };
+    const c = new BrowserJsDos({ emulators: js.emulators, keyDelayMs: 0 });
+    await c.boot(bundle);
+    await c.sendKeys('12');
+    expect(events).toEqual(['send 49', 'arrived 49', 'send 50', 'arrived 50']);
+  });
   it('presses keys with the js-dos codes, one press at a time', async () => {
     const js = fakeJsDos();
     const c = new BrowserJsDos({ emulators: js.emulators, keyDelayMs: 0 });

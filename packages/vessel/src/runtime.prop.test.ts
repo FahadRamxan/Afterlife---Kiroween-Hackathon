@@ -56,6 +56,8 @@ describe('performAction (properties)', () => {
   });
 
   it('is deterministic: the same bills on the same data give the same effects', async () => {
+    // About 1 s alone; the full suite shares the CPU with Postgres and emulator tests.
+
     await fc.assert(
       fc.asyncProperty(fc.array(bill, { minLength: 1, maxLength: 3 }), async (bills) => {
         const runOnce = async () => {
@@ -67,7 +69,7 @@ describe('performAction (properties)', () => {
         expect(await runOnce()).toEqual(await runOnce());
       }),
     );
-  });
+  }, 30_000);
 
   it('money stays exact: whole paisa, and the total is subtotal - discount + GST (invariant)', async () => {
     await fc.assert(

@@ -23,7 +23,8 @@ export type JsDosCi = {
   fsReadFile(path: string): Promise<Uint8Array>;
   fsWriteFile(path: string, contents: Uint8Array): Promise<void>;
   screenshot(): Promise<{ width: number; height: number; data: Uint8ClampedArray | Uint8Array }>;
-  simulateKeyPress(...keyCodes: number[]): void;
+  /** In a headless page it resolves once the press has reached the emulator. */
+  simulateKeyPress(...keyCodes: number[]): void | Promise<void>;
   exit(): Promise<void>;
 };
 
@@ -123,7 +124,9 @@ export class BrowserJsDos implements EmulatorController {
     const ci = this.running();
     const presses = jsdosKeys(typeof keys === 'string' ? parseKeys(keys) : keys);
     for (const codes of presses) {
-      ci.simulateKeyPress(...codes);
+      // Wait for the press to arrive before the gap starts: a busy page would otherwise get the
+      // presses queued behind it back to back, and DOS drops keys that come with no gap.
+      await ci.simulateKeyPress(...codes);
       await sleep(this.keyDelayMs);
     }
   }

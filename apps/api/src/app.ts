@@ -16,6 +16,8 @@ import { dbfInspectRoutes } from './dbf-inspect';
 import { exportRoutes, type ExportStore } from './export';
 import { exorcismRoutes, type ExorcismStore } from './exorcisms';
 import { twinRoutes, type TwinStore } from './twin';
+import { voiceRoutes } from './voice';
+import type { SpeechClient } from '@afterlife/crew';
 import type { Env } from './env';
 import { liveRoutes, type LiveHub } from './live';
 import { llmCallRoutes, type LlmCallStore } from './llm-calls';
@@ -42,6 +44,8 @@ export type AppStores = {
   certificates?: CertificateStore;
   exorcisms?: ExorcismStore;
   twin?: TwinStore;
+  /** Transcribes the owner's spoken rule changes (SPEECH_PROVIDER); null or unset: none. */
+  speech?: SpeechClient | null;
 };
 
 export type AppOptions = {
@@ -139,6 +143,7 @@ export function buildApp(
     projectRoutes(projects, { createPerMinute: limits.createPerMinute, pipeline: stores.pipeline }),
   );
   app.register(liveRoutes(stores.live ?? null, env.WEB_ORIGINS));
+  app.register(voiceRoutes(stores.speech ?? null, { perMinute: limits.createPerMinute }));
   app.register(
     soulRoutes(stores.souls, {
       projectExists: async (id) => (await projects.get(id)) !== null,

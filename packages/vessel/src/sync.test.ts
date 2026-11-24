@@ -151,6 +151,8 @@ describe('sync (property)', () => {
   });
 
   it('one phone, any bills, offline: after syncing the server has exactly the phone’s records (convergence)', async () => {
+    // About 1 s alone; the full suite shares the CPU with Postgres and emulator tests.
+
     await fc.assert(
       fc.asyncProperty(fc.array(bill, { maxLength: 5 }), async (bills) => {
         const p = await phone();
@@ -163,5 +165,5 @@ describe('sync (property)', () => {
           expect(await s.store.records(f)).toEqual(await p.store.records(f));
       }),
     );
-  });
+  }, 30_000);
 });

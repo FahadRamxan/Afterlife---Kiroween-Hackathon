@@ -9,6 +9,7 @@ import { diffSnapshots, snapshot } from '@afterlife/dbf';
 import {
   keySteps,
   observeScreen,
+  parseKeys,
   recordAction,
   waitForStableScreen,
   type EmulatorController,
@@ -65,6 +66,36 @@ async function settleData(
   }
 }
 
+/**
+ * After typing a text, waits until the line the cursor is on shows all of it. A loaded emulator
+ * can lose keys: the field then shows only the start of the text, and pressing the key that ends
+ * it would save something nobody typed. That is an error (the runner starts both sides again and
+ * tries the case once more), not something the old app did. A blank screen (a fake) is not checked.
+ */
+async function typedShows(emu: EmulatorController, text: string, maxWaitMs = 5000) {
+  const want = text.toUpperCase();
+  const start = Date.now();
+  for (;;) {
+    const s = await observeScreen(emu);
+    // A blank screen (a fake) shows nothing to check.
+    if (s.text.every((l) => !l.trim())) return;
+    // The cursor's line; when the cursor is not shown (it blinks), anywhere on the screen.
+    const lines = s.cursor ? [s.text[s.cursor.row] ?? ''] : s.text;
+    if (lines.some((l) => l.toUpperCase().includes(want))) return;
+    if (Date.now() - start >= maxWaitMs) {
+      // What of the text the field holds: the longest start of it before the cursor.
+      const before = s.cursor ? lines[0]!.slice(0, s.cursor.col).toUpperCase().trimEnd() : '';
+      let got = '';
+      for (let n = want.length - 1; n > 0; n--)
+        if (before.endsWith(want.slice(0, n))) {
+          got = text.slice(0, n);
+          break;
+        }
+      throw new Error(`The old app did not get all the keys typed: "${text}" shows as "${got}"`);
+    }
+    await new Promise((r) => setTimeout(r, 50));
+  }
+}
 /** Drives an emulator that has booted the old app. reset() boots it again on its own files. */
 export function emulatorOldApp(emu: EmulatorController, opts: EmulatorOldAppOptions): OldApp {
   const known = new Set([
@@ -94,8 +125,29 @@ export function emulatorOldApp(emu: EmulatorController, opts: EmulatorOldAppOpti
       const files = (await emu.listFiles()).filter((f) => /\.DBF$/i.test(f));
       const raw = await readBytes(emu, files);
       const before = await snapshot(raw);
+      const typedValues = [
+        ...Object.values(c.inputs.values ?? {}),
+        ...(c.inputs.lines ?? []).flatMap((l) => Object.values(l)),
+      ]
+        .map((v) => String(v ?? ''))
+        .filter((v) => v.trim() !== '');
       for (const keys of keySteps(expandMacro(action.keys, c.inputs))) {
-        await emu.sendKeys(keys);
+        const strokes = parseKeys(keys);
+        const end = strokes.at(-1)?.kind === 'key' ? strokes.length - 1 : strokes.length;
+        const text = strokes
+          .slice(0, end)
+          .map((s) => (s.kind === 'text' ? s.text : ''))
+          .join('');
+        if (text) {
+          await emu.sendKeys(strokes.slice(0, end));
+          // The value typed into a field ends the text (before it can come a menu key, the
+          // "A" of Add): that is what the field must show.
+          const value = typedValues
+            .filter((v) => text.toUpperCase().endsWith(v.toUpperCase()))
+            .sort((a, b) => b.length - a.length)[0];
+          if (value) await typedShows(emu, value);
+        }
+        if (end < strokes.length) await emu.sendKeys(strokes.slice(end));
         await waitForStableScreen(emu);
       }
       await settleData(emu, files, raw, opts.dataQuietMs ?? 1500);

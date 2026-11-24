@@ -15,7 +15,7 @@ Built for Kiroween 2026 (category: Resurrection) by Matrix AE.
 ## Layout
 
 - `apps/web`, `apps/api`, `apps/worker`: the Studio, the API and the job worker
-- `packages/*`: soul, vessel, dbf, screen, emulator, oracle, crew, certificate, mcp-emulator, ui, db (Drizzle schema and migrations)
+- `packages/*`: soul, vessel, dbf, screen, emulator, oracle, crew, certificate, twin, mcp-emulator, ui, db (Drizzle schema and migrations)
 - `powers/afterlife`, `samples/graveyard`, `e2e`, `docs`
 - `docs/brand`: the logo (a tombstone with a DOS cursor inside it: the dead app, running again), as a mark, an app icon and this banner. All three are made from `packages/ui/src/brand.ts` and the design tokens, and a test keeps them current.
 
@@ -46,6 +46,10 @@ See [plan.md](plan.md) for the plan and [prompt.md](prompt.md) for the build pro
 | `pnpm test:coverage`     | Vitest with coverage (the table below; HTML report in `coverage/`)                             |
 | `pnpm soul:spec`         | Write the Kiro spec of a Soul: `pnpm soul:spec <soul.json \| --example> <dir>`                 |
 | `pnpm score:archaeology` | Score the Archaeologist against each sample's hidden rules (`--write` updates the score below) |
+| `pnpm proof:shifa`       | The differential proof of the real 1998 Shifa against its Soul, strict and Y2K, on 4 emulators |
+| `pnpm cert:key`          | Make an Ed25519 key pair for Rebirth Certificates (`CERT_SIGNING_KEY`, `CERT_PUBLIC_KEY`)      |
+| `pnpm twin`              | `afterlife-twin`, the Ghost Twin capture tool for a shop PC (see `docs/twin.md`)               |
+| `pnpm twin:record`       | Record a shop week in the real Shifa app for "Simulate a day in the shop"                      |
 
 ## How we test
 
@@ -58,44 +62,48 @@ GitHub Actions is off for this repo, so every check runs locally. The workflow f
 5. **Nightly** (planned, not set up yet): a Kiro Crew scheduled job will run `pnpm ci:local` on its own clone of `main` and send the result.
 6. **After a deploy**: `pnpm smoke:prod <url>`.
 
-Current counts: 1775 unit and property tests in 177 files (integration and Postgres tests included), and 140 Playwright tests (after the review of 51 to 60). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
+Current counts: 2119 unit and property tests in 238 files (integration and Postgres tests included), and 154 Playwright tests (as of Prompt 80). The worker integration tests and several e2e tests run the real sample apps in js-dos (headless Chromium), so a test run boots DOS dozens of times.
 
 ## Coverage
 
 Package code coverage from `pnpm test:coverage` (HTML report in `coverage/`). This table is refreshed with each README update (every 20 prompts).
 
-| Metric     | %   | Covered   |
-| ---------- | --- | --------- |
-| Lines      | 91% | 5452/5977 |
-| Statements | 90% | 6452/7161 |
-| Functions  | 93% | 1638/1762 |
-| Branches   | 85% | 3722/4380 |
+| Metric     | %   | Covered     |
+| ---------- | --- | ----------- |
+| Lines      | 93% | 8590/9226   |
+| Statements | 92% | 10262/11165 |
+| Functions  | 94% | 2638/2793   |
+| Branches   | 85% | 6089/7149   |
 
-As of Prompt 60. The code covered grew by a third since Prompt 50 (the Archaeologist, the Vessel runtime, its stores and its sync), and line coverage rose from 90% to 91%. Property tests run with `FC_NUM_RUNS=100` in the git hooks and 2000 in `pnpm ci:local`.
+As of Prompt 80. The code covered grew by half since Prompt 60 (receipts and export, the Surgeon, the Undertaker, the Oracle, the certificate, the Exorcist, Ghost Twin and the speech client), and line coverage rose from 91% to 93%. On a busy machine, run it with fewer workers (`pnpm exec vitest run --coverage --maxWorkers 3`): with every file at once under coverage, the Postgres and emulator tests time out. Property tests run with `FC_NUM_RUNS=100` in the git hooks and 2000 in `pnpm ci:local`.
 
 ## Status
 
-Prompts 1 to 60 are merged, with a review round after every ten. The review of 51 to 60 fixed three bugs in the reborn app's sync and stock checks (two syncs at once could lose a sale; a phone could send its outbox twice at once; two lines of one medicine could sell more than the stock), and its findings for Kiro are done: the Archaeologist infers the actions, finds rules without a model and types its probe bills into the old app; the model table is by family; the screen graph groups states under their screen; and small fixes in the reborn app and the Soul tab. For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
+Prompts 1 to 80 are merged. Review rounds ran after every ten prompts up to 60; the review of 61 to 80 has not happened yet. For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
 
 - **1 to 10, foundation:** the monorepo, steering and hooks, the Haunted Ledger design system, the app shell (English and Urdu), the deploy skeleton.
 - **11 to 21, the Graveyard and data:** the DOS toolchain, three sample dead apps (Shifa Medical Store, Iqra School Fees, Barkat Kiryana Ledger) with their legacy bugs, the Graveyard page, the `.DBF` reader, writer, snapshot, diff and viewer, and the DBF inspector API behind the upload card.
 - **22 to 25, reading the screen:** a text-mode decoder that reads DOS screens back from emulator pixels by VGA glyph matching (no OCR), screen semantics (menus, fields, tables, messages), a layout fingerprint, and the live `CrtScreen` component.
 - **26 to 30, driving the old app:** the `EmulatorController` interface and key language, js-dos v8 in the browser and in a headless worker pool, the action recorder that turns a key press into an observation (screens before and after, and the data diff), and repeatable runs from a fresh state.
-
 - **31 to 34, the séance and MCP:** the owner records a séance on the live old app (keys, screens, data changes, an optional voice note); an MCP server that lets Kiro boot and drive the sample apps, with its guide at `/docs/mcp`.
 - **35 to 40, API, worker and data:** Postgres with Drizzle (migrations up and down), the projects API with OpenAPI docs and per-visitor rate limits, a pg-boss job loop in the worker, live progress over WebSocket (Postgres `LISTEN/NOTIFY`), the pipeline that runs the six Crew steps in order with resume and "Run again", a labelled "Recorded run" demo mode, and uploading your own dead app (zip checks, a ClamAV virus scan, a server-built js-dos bundle, its own DOS clock).
-
 - **41 to 46, the Soul:** the Soul IR in zod with a reference Soul of Shifa written by our team as the answer key, a rule expression language (our own parser and decimal evaluator, no `eval`) with a "Try a rule" playground, a Kiro spec writer (requirements in EARS, design, tasks and a steering file, checked by Kiro's own spec checker), the Soul tab with evidence and a spec download, immutable Soul versions with a diff view, and rules in Urdu (a shop-word glossary, cached per rule).
-- **47 to 50, the Possessor:** an LLM runtime behind `LlmClient` (Amazon Bedrock Converse and a fake for tests, retries, a token budget per project, zod-checked answers, every call on the "Show your work" panel); the Possessor, which explores the old app by itself (a screen graph, the LLM only for field values, Esc to go back, never a key that quits); an input strategy that types boundary values and records what the app refuses; and guided possession, which walks the owner's séance first and attaches their voice notes as hints.
-- **51 to 52, watching it work:** the Possession Theater (the screen graph growing live in React Flow, each data change as a card) and a stored screen graph with `replayPath`, the shortest key path to any screen.
-- **53 to 57, the Archaeologist:** entities, keys, foreign keys and counters from the data files; the model proposes 3 to 5 candidate rules per value written; every candidate is checked against every observation and only the simplest that explains all of them is kept, with probes when a threshold was never tried ("Try a bill subtotal of exactly 5000 and of 5001."); a score against each sample's hidden rules; and rules that light a candle and write themselves in on the Soul tab.
-- **58 to 60, the Vessel:** the runtime that runs a Soul (fields from rules, counters, parent keys and line positions; effects as DBF diffs; Shifa's scripted bills give exactly the real app's diffs), stores in memory, IndexedDB and Postgres; the reborn app at `/vessel/<id>` (the old menu as a bottom bar or a sidebar, a search-as-you-type picker, a running total, Urdu labels); and offline-first: bills saved on the phone with no network, synced when it is back, stock conflicts listed for the owner.
+- **47 to 50, the Possessor:** an LLM runtime behind `LlmClient` (Amazon Bedrock Converse and a fake for tests, retries, a token budget per project, zod-checked answers, every call on the "Show your work" panel); the Possessor, which explores the old app by itself; an input strategy that types boundary values and records what the app refuses; and guided possession, which walks the owner's séance first.
+- **51 to 57, watching it work, and the Archaeologist:** the Possession Theater (the screen graph growing live in React Flow) and `replayPath`; entities, keys and counters from the data files; candidate rules checked against every observation, the simplest that explains all of them kept, with probes typed into the old app when a threshold was never tried; a score against each sample's hidden rules.
+- **58 to 60, the Vessel:** the runtime that runs a Soul, its stores (memory, IndexedDB, Postgres), the reborn app at `/vessel/<id>` in English and Urdu, and offline-first sync with stock conflicts listed for the owner.
+- **61 to 62, receipts and export:** the old app's bill screen as an 80 mm receipt, WhatsApp text and a PDF; "Export the reborn app" downloads a standalone Next.js app running the Soul, with its Kiro spec and tests.
+- **63 to 66, the Surgeon and the Undertaker:** the rebirth step compiles and smoke-tests every action and publishes the reborn app; the undertake step migrates the old records field by field, rejects what cannot be converted with a reason, and reconciles counts, sums, stock value and balances to the paisa, shown as the "Data crossing" panel.
+- **67 to 70, the Oracle:** cases made up from the Soul with fast-check and aimed at the rules' thresholds; the differential runner drives the real old app in headless js-dos and the Vessel in lockstep on parallel lanes; the first difference is shrunk to a minimal case and explained in one sentence; the Proof tab shows it live. On Shifa it found the app's Y2K expiry bug by itself.
+- **71 to 72, the Rebirth Certificate:** RFC 8785 canonical JSON signed with Ed25519, issued only for 0 failed cases and reconciled data; `/verify/<id>` checks the signature in the browser, with a QR code and a PDF, and shows a tampered file as invalid.
+- **73 to 75, the Exorcist:** deterministic detectors for two-digit years, overflow, negative stock, date arithmetic and more, with evidence from the old app's own screens; Keep or Fix for each; a fix becomes a new Soul version, proved again, with the fix listed on the certificate as an accepted divergence. The Exorcism tab shows each bug as a ghost card.
+- **76 to 79, Ghost Twin:** `afterlife-twin` watches a real shop's data folder and sends each change; the worker replays it in the reborn app and compares; readiness (7 days, 200 matched, 0 open mismatches, configurable); switch-over migrates one last time and freezes the old data. The Ghost Twin tab has a candle per shop day, the twin pairs, the readiness meter and "Simulate a day in the shop", from a week recorded in the real 1998 app (216 transactions).
+- **80, the speech client:** Amazon Transcribe behind `SpeechClient` with a fallback provider, and a normaliser that reads numbers as they are said ("paanch feesad" is 5%, in Roman Urdu, Urdu script, English and Devanagari). The Living Soul tab records with MediaRecorder or takes typed text.
 
 ### What works today, and what does not yet
 
-- **Works:** possession explores for real (on Shifa, 47 actions find 5 screens in 11 states, 6 data changes and 4 of the app's refusals). With no language model, the Archaeologist infers the actions (save a bill, add a customer) and finds the rules: on real Shifa it typed 7 probe bills into the old app (12.50 to 10,001) and found all 8 of the reference Soul's computed rules, the 10% discount over Rs 5,000 and the GST after it included. A recorded run of Shifa opens that Soul in the reborn app, which makes the bill with the old app's numbers. The Possession Theater, the rule check, the live rule animation, and the reborn app all work in the browser. The reborn app matches the 1998 app to the paisa (8 insulin: 5,200.00, 520.00 off, GST 795.60, total 5,475.60), in English and Urdu, and offline.
-- **Not yet:** without a model, the rules that refuse something (an expired batch, more than the stock) are not found, nor Iqra's fees by class and Barkat's credit limit (scores below). Most of the e2e tests of the reborn app still run the reference Soul our team wrote from the C source, so their numbers are checked against a known answer. The rebirth, undertake, prove and exorcise steps still say "not built yet (Prompt N)" and are marked skipped, never done.
-- **Next:** Prompts 61 to 80, each from a Kiro spec in `.kiro/specs/`: receipts, export, the Surgeon, the Undertaker, the Oracle and the certificate, the Exorcist, and Ghost Twin.
+- **Works:** the whole flow on Shifa, from the Graveyard to a signed certificate. Possession explores the real app; with no language model the Archaeologist finds all 8 computed rules of the reference Soul (it types 7 probe bills into the old app); the reborn app matches the 1998 app to the paisa, in English and Urdu, and offline; the Undertaker migrates and reconciles; the Oracle's strict proof of Shifa as it really runs gives 188 cases the same and 0 different on 4 emulators; the Exorcist finds the Y2K expiry bug and the negative stock; Fix proves the fixed Soul and issues a certificate listing the divergence; the Ghost Twin week matches every transaction and the shop can switch over.
+- **Not yet:** without a model, the rules that refuse something (an expired batch, more than the stock) are not found, nor Iqra's fees by class and Barkat's credit limit (scores below). The Exorcist finds 2 of Shifa's 3 hidden bugs: its discount overflow never shows in anything recorded. Amazon Transcribe has no Urdu, so spoken Urdu goes as Hindi and comes back in Devanagari; the Living Soul tab shows the transcript and its numbers, but turning a request into a rule change is Prompts 81 to 83. `afterlife-twin` is tested on temp folders and the recorded week, not yet on a real shop PC.
+- **Next:** Prompts 81 to 100, each from a Kiro spec in `.kiro/specs/`: voice to rule change, its verification loop, and the rest of the plan.
 
 `/design` boots the real Shifa EXE in js-dos: you can press keys, record what an action changed in the data files, and replay it from a fresh state. Details are in [docs/progress.md](docs/progress.md).
 

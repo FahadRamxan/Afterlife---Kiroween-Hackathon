@@ -23,8 +23,9 @@ const capture = createCapture({
   post: httpPoster({ api: o.api, projectId: o.project, token: o.token }),
   log: (m) => console.log(`[${new Date().toISOString()}] ${m}`),
 });
+// Said once the first look is taken: a change from then on is sent.
+await capture.start();
 console.log(`afterlife-twin: watching ${o.dir} every ${o.intervalMs} ms for project ${o.project}`);
-capture.start();
 for (const sig of ['SIGINT', 'SIGTERM'] as const)
   process.on(sig, () => {
     void capture.stop().then(() => {

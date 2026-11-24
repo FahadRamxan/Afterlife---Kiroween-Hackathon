@@ -71,6 +71,21 @@ const schema = z.object({
   TWIN_READY_MATCHED: z.coerce.number().int().min(1).max(1_000_000).default(200),
   TWIN_READY_MISMATCHES: z.coerce.number().int().min(0).max(1_000_000).default(0),
   /**
+   * The speech service for the owner's spoken rule changes (Prompt 80): `transcribe` (Amazon
+   * Transcribe in AWS_REGION, recordings in TRANSCRIBE_BUCKET, deleted after) or `none`. A
+   * second region (SPEECH_FALLBACK_REGION, with TRANSCRIBE_FALLBACK_BUCKET) is tried when the
+   * first fails. AWS credentials come from the usual AWS variables, never from this file.
+   */
+  SPEECH_PROVIDER: z
+    .string()
+    .default('none')
+    .transform((s) => s.trim().toLowerCase() || 'none')
+    .pipe(z.enum(['none', 'transcribe'])),
+  TRANSCRIBE_BUCKET: z.string().trim().min(1).optional(),
+  AWS_REGION: z.string().trim().min(1).optional(),
+  SPEECH_FALLBACK_REGION: z.string().trim().min(1).optional(),
+  TRANSCRIBE_FALLBACK_BUCKET: z.string().trim().min(1).optional(),
+  /**
    * Postgres (Neon in prod, Docker locally). Without it séances are kept in memory, and lost on a
    * restart; the server says so when it starts.
    */

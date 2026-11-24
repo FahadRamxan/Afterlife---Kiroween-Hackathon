@@ -8,6 +8,7 @@ import { useProjectLive } from '../lib/use-project-live';
 import { ExorcismTab } from './ExorcismTab';
 import { GhostTwinTab } from './GhostTwinTab';
 import { LivePanel } from './LivePanel';
+import { LivingSoulTab } from './LivingSoulTab';
 import { PageShell } from './PageShell';
 import { ProofTab } from './ProofTab';
 import { RaiseTabs } from './RaiseTabs';
@@ -131,8 +132,8 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
         initial={initial}
         ownEmpty={
           possessing
-            ? ['soul', 'possession', 'proof', 'exorcism', 'ghost-twin']
-            : ['soul', 'proof', 'exorcism', 'ghost-twin']
+            ? ['soul', 'possession', 'proof', 'exorcism', 'ghost-twin', 'living-soul']
+            : ['soul', 'proof', 'exorcism', 'ghost-twin', 'living-soul']
         }
         panels={
           app
@@ -160,6 +161,7 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
                 proof: <ProofTab projectId={project.id} name={app.name} events={live.events} />,
                 exorcism: <ExorcismTab projectId={project.id} events={live.events} />,
                 'ghost-twin': <GhostTwinTab projectId={project.id} events={live.events} />,
+                'living-soul': <LivingSoulTab />,
               }
             : project.source === 'upload'
               ? {
@@ -173,6 +175,7 @@ export function ProjectRaise({ id, initial }: { id: string; initial: RaiseTab })
                   ),
                   exorcism: <ExorcismTab projectId={project.id} events={live.events} />,
                   'ghost-twin': <GhostTwinTab projectId={project.id} events={live.events} />,
+                  'living-soul': <LivingSoulTab />,
                 }
               : {}
         }
