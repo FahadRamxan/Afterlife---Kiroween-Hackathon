@@ -836,7 +836,35 @@ What changed in the plan:
 - **Merged:** 81 with 82, 86 with 88, 89 with 90, 94 with 97, 95 with 96.
 - **New:** deploy, DBF dialects, the FBR digital invoice, and raising an app from its data alone.
 - **UI (added later the same day):** 87 now restyles the reborn app (daylight, the old app's keys, the owner's phone), 93 carries the seven moments itself, and the design reference is `docs/ui/afterlife-ui-update.html`.
+- **Added on 25 November:** 80a (reading the `.env` files, and the Claude API as a model provider, before 81), the README refresh in 100, and Phase 21 (Prompts 101 to 104, after judging).
 - **The order matters:** 81 to 84 first.
+
+---
+
+## Before Prompt 81: the settings and the Claude API (Prompt 80a)
+
+### 80a. The `.env` files, and the Claude API as a model provider [F]
+
+The first bullet is needed either way; the rest only if the team uses a Claude API key instead of Bedrock (Bedrock stays). Do it right after the review branch is merged and before 81, so the model parts of 81 can run.
+
+- **Read the `.env` files:** today nothing loads `apps/worker/.env` or `apps/api/.env`, although both `.env.example` files say to copy them; the worker and the API read only their environment. Make their `dev` and `start` scripts load the file when it exists (for example `tsx --env-file-if-exists=.env`), with a test that a value set only in `.env` reaches the worker's settings.
+
+- **The client:** a new `packages/crew/src/llm/anthropic.ts`, `AnthropicLlmClient implements LlmClient`, with the official SDK `@anthropic-ai/sdk` (added to `packages/crew`). Map our `LlmRequest` to `client.messages.create` (system, messages, tools with our JSON schemas as `input_schema`) and the reply back to `LlmResponse` (text and tool_use blocks, the stop reason, input and output tokens for the budget), the way `bedrock.ts` does for Converse.
+- **The setting:** `LLM_PROVIDER=anthropic`. The SDK reads the key from `ANTHROPIC_API_KEY`; never log or print it. `ANTHROPIC_MODEL_ID` overrides the model; the default is `claude-sonnet-5-5`, the same model as the Bedrock default. Reuse the capability table by model family.
+- **Claude Sonnet 5.5 rules:**
+  - no forced `tool_choice` (`any` or `tool` returns a 400, so use `auto` and name the tool in the prompt);
+  - no temperature, and never `thinking: {type: "disabled"}` (both return a 400);
+  - thinking is on by default, so in the tool loop append the assistant's whole `content` array unchanged, thinking blocks included, before the tool results.
+- **Refusals:** check `stop_reason`. Turn on the server-side fallback (`client.beta.messages.create` with `betas: ["server-side-fallback-2026-07-01"]` and `fallbacks: "default"`), and report a remaining `refusal` or `max_tokens` as an error, never as empty text. Retry on the SDK's typed errors (rate limit, connection, 5xx), not on message text.
+- **Everywhere it is named:** the error message ("bedrock, anthropic or none"), the two "No language model is set up" messages, `apps/worker/.env.example`, `render.yaml` (`ANTHROPIC_API_KEY` as `sync: false`) and `docs/deploy.md`.
+
+**Done when:**
+
+- unit tests with a fake SDK client cover the mapping, the setting and a refusal;
+- `pnpm llm:smoke` makes one tiny real call when `ANTHROPIC_API_KEY` is set (the owner adds it to `apps/worker/.env`), and skips otherwise;
+- a live raise of Shifa shows Claude API calls in the LLM call log.
+
+Commit as `feat(crew): env files and the claude api provider`.
 
 ---
 
@@ -932,7 +960,7 @@ Commit as `fix: certificate honesty, uploads and twin restarts`.
 Prompt 10, now for real. The rules require a working URL, free for judges, until **29 January 2027**.
 
 - **Where:** the web on Vercel, the database on Neon, the API and worker on Render (`render.yaml`, worker on `standard`) or on one 2 GB VM (AWS Lightsail) with Docker Compose and Caddy for HTTPS.
-- **Settings:** `CERT_SIGNING_KEY` and `CERT_PUBLIC_KEY` (`pnpm cert:key`), `LLM_PROVIDER` (`bedrock` once it works, else `none`), `WEB_ORIGINS`, `TRUST_PROXY`.
+- **Settings:** `CERT_SIGNING_KEY` and `CERT_PUBLIC_KEY` (`pnpm cert:key`), `LLM_PROVIDER` (`anthropic` with `ANTHROPIC_API_KEY` after 80a, or `bedrock` with AWS keys; else `none`), `WEB_ORIGINS`, `TRUST_PROXY`.
 - **The demo:** the recorded runs as the demo cache, and a kill switch to recorded mode.
 - **Monitoring:** an uptime check every 10 minutes (a Kiro Crew heartbeat).
 
@@ -1208,7 +1236,7 @@ Commit as `feat(power): afterlife and kiro evidence`.
 
 Merges the old 94 and 97.
 
-- **Re-record all three Graveyard apps** with the model once AWS works, with fixed proof seeds. Do not re-record the holdout: it is never tuned for.
+- **Re-record all three Graveyard apps** with the model once a provider works (80a, or Bedrock), with fixed proof seeds. Do not re-record the holdout: it is never tuned for.
 - **The golden e2e** `e2e/full-rebirth.spec.ts`:
   1. raise Shifa;
   2. possession;
@@ -1344,9 +1372,55 @@ Before submitting, check each item and tick it in `docs/submission-checklist.md`
    - the Kiro write-up;
    - the test instructions.
 7. Every team member is added to the Devpost project.
+8. The README is refreshed as of Prompt 100, as at every 20 prompts: the counts, the coverage table, the Status (what 81 to 100 delivered), what works and what does not yet, and Next (Phase 21).
 
-Submit on **3 December**, take screenshots of the confirmation, and keep the production stack running until 29 January 2027 (the end of judging).
+Submit on **3 December**, tag the submitted commit `kiroween-submission` and push the tag, take screenshots of the confirmation, and keep the production stack running until 29 January 2027 (the end of judging).
 
 **Done when:** submitted.
 
 Commit as `chore: submission`.
+
+---
+
+## Phase 21: After the hackathon (Prompts 101–104)
+
+Start these only after judging ends on 29 January 2027. Until then the live URL runs the submitted commit (the `kiroween-submission` tag), and new work stays on branches that are not deployed there.
+
+### 101. Owner accounts [F]
+
+Today the project link is the key (Prompt 83 says so in `docs/security.md`).
+
+- Owner sign-in with an emailed one-time code, and an owner key per project for `afterlife-twin`.
+- Roles in the reborn app: the owner, and a cashier who can bill but cannot Keep, Fix or switch over.
+- The certificate's opaque reference stays shareable.
+
+**Done when:** every write needs the owner's session or key, and the security tests cover each route for each role.
+
+Commit as `feat: owner accounts`.
+
+### 102. FBR live, through a licensed integrator [S]
+
+- Swap the simulated `FbrClient` for the real one through a licensed integrator (PRAL integrates free of cost), with the production credentials only in the server's secret store.
+- The receipt drops "(sandbox)" only for an invoice FBR has confirmed.
+
+**Done when:** a test business in FBR's sandbox, then one pilot shop, issues a real 22-digit invoice, and the 72-hour edit rule holds.
+
+Commit as `feat(vessel): fbr live`.
+
+### 103. Visual Basic 6, Access and SQL Server apps [F]
+
+If the optional extra in 85 was not done: read `.mdb` and `.accdb` files with `mdb-reader`, then SQL Server databases (common under Visual Basic 6 programs), into the same table model, so these apps raise from their data (Prompt 88).
+
+**Done when:** an Access billing sample raises from a recorded week and gets a twin certificate.
+
+Commit as `feat(dbf): access and sql server`.
+
+### 104. Ready for a pilot in a real shop [Q]
+
+- `afterlife-twin` as a one-click Windows installer that starts with the PC.
+- An owner consent page in English and Urdu, and a support export with customer names removed.
+- `docs/pilot.md`: the runbook (install, two weeks of twin, the switch-over, rolling back) and what to record (what broke, the time each step took, what the owner said).
+
+**Done when:** a teammate installs it on a clean Windows 11 PC from the runbook alone, and a recorded week matches.
+
+Commit as `feat(twin): pilot ready`.

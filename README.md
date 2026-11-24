@@ -79,7 +79,7 @@ As of Prompt 80. The code covered grew by half since Prompt 60 (receipts and exp
 
 ## Status
 
-Prompts 1 to 80 are merged. Review rounds ran after every ten prompts up to 60; the review of 61 to 80 has not happened yet. For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
+Prompts 1 to 80 are merged. Review rounds ran after every ten prompts up to 60, then one for 61 to 80. Its 11 fixes are merged: the switch-over after a bill made on a phone, `afterlife-twin` after a restart or a switch-over, the twin feed past 500 changes, no certificate when most proof cases were skipped, why a case failed on the Proof tab, the certificate on phones, Roman Urdu number words, the certificate keys on Render, menus written "1. Item", and two Possessor fixes from a blind test. For Prompt 33, Kiro drove Shifa through MCP in a real chat; the transcript is in `docs/kiro-usage.md`.
 
 - **1 to 10, foundation:** the monorepo, steering and hooks, the Haunted Ledger design system, the app shell (English and Urdu), the deploy skeleton.
 - **11 to 21, the Graveyard and data:** the DOS toolchain, three sample dead apps (Shifa Medical Store, Iqra School Fees, Barkat Kiryana Ledger) with their legacy bugs, the Graveyard page, the `.DBF` reader, writer, snapshot, diff and viewer, and the DBF inspector API behind the upload card.
@@ -102,8 +102,22 @@ Prompts 1 to 80 are merged. Review rounds ran after every ten prompts up to 60; 
 ### What works today, and what does not yet
 
 - **Works:** the whole flow on Shifa, from the Graveyard to a signed certificate. Possession explores the real app; with no language model the Archaeologist finds all 8 computed rules of the reference Soul (it types 7 probe bills into the old app); the reborn app matches the 1998 app to the paisa, in English and Urdu, and offline; the Undertaker migrates and reconciles; the Oracle's strict proof of Shifa as it really runs gives 188 cases the same and 0 different on 4 emulators; the Exorcist finds the Y2K expiry bug and the negative stock; Fix proves the fixed Soul and issues a certificate listing the divergence; the Ghost Twin week matches every transaction and the shop can switch over.
-- **Not yet:** without a model, the rules that refuse something (an expired batch, more than the stock) are not found, nor Iqra's fees by class and Barkat's credit limit (scores below). The Exorcist finds 2 of Shifa's 3 hidden bugs: its discount overflow never shows in anything recorded. Amazon Transcribe has no Urdu, so spoken Urdu goes as Hindi and comes back in Devanagari; the Living Soul tab shows the transcript and its numbers, but turning a request into a rule change is Prompts 81 to 83. `afterlife-twin` is tested on temp folders and the recorded week, not yet on a real shop PC.
-- **Next:** Prompts 81 to 100, each from a Kiro spec in `.kiro/specs/`: voice to rule change, its verification loop, and the rest of the plan.
+- **Not yet:** the certificate above comes from the reference Soul our team wrote as the answer key. Without a model, no sample app reaches a certificate from the Soul the pipeline learns itself: the rules that refuse something (an expired batch, more than the stock) are not found, nor Iqra's fees by class and Barkat's credit limit (scores below). On an app we never tuned for (a 1999 weighbridge), possession stopped at the main menu; two fixes came from it, and the rest is Prompt 82. The Exorcist finds 2 of Shifa's 3 hidden bugs: its discount overflow never shows in anything recorded. Amazon Transcribe has no Urdu, so spoken Urdu goes as Hindi and comes back in Devanagari; the Living Soul tab shows the transcript and its numbers, but turning a request into a rule change is Prompts 89 and 90. `afterlife-twin` is tested on temp folders and the recorded week, not yet on a real shop PC.
+- **Next:** the prompts below, from 80a to 104.
+
+### What is left: Prompts 80a to 104
+
+Revised after the review of 61 to 80 and our market research ([docs/who-it-is-for.md](docs/who-it-is-for.md)): the people who need Afterlife are registered Pakistani businesses whose old billing program has lost its maker, and FBR's digital invoicing makes them change now. The full prompts are in [prompt.md](prompt.md), each with its "Done when".
+
+- **80a, settings and the Claude API:** the worker and the API read their `.env` files, and the model can come from the Claude API as well as Amazon Bedrock.
+- **81 to 84, true for every app:** certificates from the Soul the pipeline learns; what the blind test found; certificate honesty, uploads and twin restarts; deploy for the judges.
+- **85 to 88, the apps people really run, and FBR's why-now:** every DBF dialect (FoxPro, Visual FoxPro, dBASE); the FBR digital invoice, then the reborn app in a daylight theme with the old keys and an FBR-ready receipt; raising an app from its data alone.
+- **89 and 90, the Living Soul:** a spoken or typed request becomes a verified rule change, and its tab.
+- **91 to 93, the Studio:** the landing page with the real pitch; the judge playground; the raise page as one story, with motion and sound.
+- **94, Kiro breadth:** the Afterlife power, custom agents and the evidence.
+- **95 to 97, hardening:** the golden e2e and the demo cache; security and observability; accessibility, Urdu right to left and phones.
+- **98 to 100, submission:** the Kiro write-up and this README; the demo video; the final checklist, with this README refreshed as of Prompt 100 and the submitted commit tagged.
+- **101 to 104, after judging ends on 29 January 2027:** owner accounts; FBR live through a licensed integrator; Visual Basic 6, Access and SQL Server apps; ready for a pilot in a real shop.
 
 `/design` boots the real Shifa EXE in js-dos: you can press keys, record what an action changed in the data files, and replay it from a fresh state. Details are in [docs/progress.md](docs/progress.md).
 
