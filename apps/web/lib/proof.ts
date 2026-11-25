@@ -28,6 +28,10 @@ export const ProofSchema = z.object({
   accepted: z.number().default(0),
   reused: z.number().default(0),
   acceptedDivergences: z.array(z.object({ id: z.string(), text: z.string() })).default([]),
+  /** Actions not reborn yet (Prompt 81): not proved, each with why. */
+  notReborn: z
+    .array(z.object({ actionId: z.string(), name: z.string(), reason: z.string() }))
+    .default([]),
   counterexample: z
     .object({
       index: z.number(),

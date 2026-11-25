@@ -93,6 +93,24 @@ export function ProofPanel({
               ))}
             </ul>
           ) : null}
+          {proof?.notReborn.length ? (
+            <div data-testid="proof-not-reborn" className="mt-2 text-sm">
+              <p className="font-semibold text-candle">{t('notRebornTitle')}</p>
+              <ul className="mt-1 space-y-1 text-bone">
+                {proof.notReborn.map((n) => (
+                  <li key={n.actionId} data-action={n.actionId}>
+                    <span lang="en" dir="ltr" className="font-semibold">
+                      {n.name}
+                    </span>
+                    {': '}
+                    <span lang="en" dir="ltr" className="text-bone/80">
+                      {n.reason}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
           {proof ? (
             <p data-testid="proof-done" className="text-sm text-bone/70">
               {failed

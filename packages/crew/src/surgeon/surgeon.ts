@@ -38,6 +38,12 @@ export type SmokeTest = {
   refused?: string[];
   /** Why it could not be run at all (no rule for what it changes). */
   error?: string;
+  /**
+   * Not reborn yet (Prompt 81): the old app works out these fields (entity.FIELD) itself, and no
+   * rule says how, so the reborn app cannot write them.
+   */
+  notReborn?: true;
+  missing?: string[];
 };
 
 export type VesselConfig = {
@@ -128,6 +134,22 @@ async function smokeTest(
     form = actionForm(soul, actionId);
   } catch (e) {
     return { ...head, ok: false, error: (e as Error).message };
+  }
+  const missing = [
+    ...form.header.missing.map((f) => `${form.header.entity.id}.${f.name}`),
+    ...(form.line?.missing ?? []).map((f) => `${form.line!.entity.id}.${f.name}`),
+  ];
+  if (missing.length) {
+    const words = missing.map((m) => m.replace('.', ' ').replace(/-/g, ' '));
+    const list =
+      words.length > 1 ? `${words.slice(0, -1).join(', ')} and ${words.at(-1)}` : words[0];
+    return {
+      ...head,
+      ok: false,
+      notReborn: true,
+      missing,
+      error: `Not reborn yet: the old app works out ${list}, and no rule says how`,
+    };
   }
   const keysOf = (l: FormPart['links'][number]) =>
     (records[l.entity.file.toUpperCase()] ?? [])

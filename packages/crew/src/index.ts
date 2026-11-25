@@ -252,3 +252,15 @@ export {
 } from './undertaker/reconcile';
 // The Exorcist: legacy bugs and flaws, with their evidence (Prompts 73 to 75).
 export * from './exorcist/index';
+// Refusal rules without a model (Prompt 81).
+export {
+  inferRefusals,
+  lineAttempts,
+  refusalProbes,
+  MAX_REFUSAL_PROBES,
+  type AttemptStep,
+  type LineAttempt,
+  type RefusalProbe,
+  type Undecided,
+} from './archaeologist/refusals';
+export { workableRules } from './archaeologist/workable';

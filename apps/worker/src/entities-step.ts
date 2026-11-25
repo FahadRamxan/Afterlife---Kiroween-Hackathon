@@ -12,6 +12,8 @@ import {
   loadGraph,
   stepFromObservation,
   inferRules,
+  type AttemptStep,
+  workableRules,
   type EffectObservation,
   type Inferred,
   type LlmClient,
@@ -21,7 +23,8 @@ import { readDbf, type SnapshotDiff } from '@afterlife/dbf';
 import { asc, eq, insertSoulVersion, observations, sessions, sql, type Db } from '@afterlife/db';
 import { numberSoul, specRequirements, type Soul } from '@afterlife/soul';
 import { graveyardDosTime, type EmulatorPool } from './possess';
-import { probeRunner } from './probe-runner';
+import { probeRunner, typeBill } from './probe-runner';
+import { refusalRound } from './refusal-round';
 import { unzipSync } from 'fflate';
 import type { StepContext, StepHandler } from './registry';
 
@@ -227,7 +230,72 @@ export function entitiesStep(deps: {
       if (!(e instanceof LlmBudgetError)) throw e;
       await ctx.log(`Rules stopped: ${e.message}`, 'warn');
     }
-    const rules = found?.rules ?? [];
+    // Refusals (Prompt 81): what the old app refuses as it is typed (a quantity over the stock),
+    // from the steps seen and, when they cannot decide, boundary bills typed into the old app.
+    const refusal = await refusalRound({
+      steps: rows.map((r) => ({
+        id: r.id,
+        keys: r.keys,
+        screenBefore: r.screenBefore as AttemptStep['screenBefore'],
+        screenAfter: r.screenAfter as AttemptStep['screenAfter'],
+        dbfDiff: r.dbfDiff as SnapshotDiff,
+      })),
+      draft,
+      tables: Object.fromEntries(
+        Object.entries(records).map(([f, rs]) => [f, rs.map((r) => ({ values: r.values }))]),
+      ),
+      ...(graph && deps.pool
+        ? {
+            type: (action, inputs) =>
+              typeBill(
+                { pool: deps.pool!, bundle, graph, dosTime: today, signal: ctx.signal },
+                action,
+                inputs,
+              ),
+            store: async (o, hint) => {
+              const [row] = await deps.db
+                .insert(observations)
+                .values({
+                  projectId: ctx.projectId,
+                  seq: seq++,
+                  keys: o.keys,
+                  screenBeforeFp: (o.screenBefore as { fingerprint: string }).fingerprint,
+                  screenAfterFp: (o.screenAfter as { fingerprint: string }).fingerprint,
+                  screenBefore: o.screenBefore,
+                  screenAfter: o.screenAfter,
+                  dbfDiff: o.dbfDiff,
+                  durationMs: 0,
+                  stable: true,
+                  hint: { text: hint, from: 'probe' },
+                })
+                .returning({ id: observations.id });
+              return row!.id;
+            },
+          }
+        : {}),
+      log: (m, level) => ctx.log(m, level),
+      signal: ctx.signal,
+    });
+    for (const rule of refusal.rules) {
+      await ctx.log(`Refusal rule: ${rule.en} (${rule.expression})`);
+      await ctx.emit('rule_found', {
+        ruleId: rule.id,
+        target: null,
+        expression: rule.expression,
+        en: rule.en,
+        confidence: rule.confidence,
+        observations: rule.evidence.length,
+        candidates: [],
+        alsoFit: [],
+        probes: [],
+      });
+    }
+    // A rule the action cannot work out (it reads what nobody types and no rule gives) is left out:
+    // the reborn app could only write blank (Prompt 81).
+    const workable = workableRules([...(found?.rules ?? []), ...refusal.rules], draft);
+    for (const r of workable.rejected)
+      await ctx.log(`Rule ${r.rule} left out: ${r.reason}`, 'warn');
+    const rules = workable.kept;
     const soul: Soul = {
       ...draft,
       provenance: {
@@ -252,7 +320,8 @@ export function entitiesStep(deps: {
       actions: actions.length,
       rules: rules.length,
       unexplained: found?.unexplained ?? [],
-      probed: found?.probed.length ?? 0,
+      probed: (found?.probed.length ?? 0) + refusal.probed,
+      refusals: refusal.rules.length,
       probes: (found?.probes ?? []).map((p) => p.text),
     };
     await ctx.emit('soul_updated', { ...output, reason: rules.length ? 'rules' : 'entities' });

@@ -107,7 +107,9 @@ describe('proveEquivalence', () => {
     expect(new Set(c.cases.map((x) => x.lane))).toEqual(new Set([0, 1, 2]));
   });
 
-  it('case i replays alone with fast-check’s path i, from the seed', async () => {
+  // Repeated cases are skipped (Prompt 81), so case i is fast-check's run `cases[i].run`, not
+  // run i: it still replays alone from the seed and that run.
+  it('case i replays alone with fast-check’s path, its own run, from the seed', async () => {
     const cases = await proofCases(ctx, { numRuns: 20, seed: 42 });
     expect(cases).toHaveLength(20);
     for (const i of [0, 7, 12, 19]) {
@@ -116,10 +118,26 @@ describe('proveEquivalence', () => {
         proofProperty(ctx, undefined, async (c) => {
           seen ??= c;
         }),
-        { seed: 42, path: String(i), numRuns: 1 },
+        { seed: 42, path: String(cases[i]!.run), numRuns: 1 },
       );
-      expect(seen).toEqual(cases[i]);
+      expect(seen).toEqual({ actionId: cases[i]!.actionId, inputs: cases[i]!.inputs });
     }
+  });
+
+  // @spec learned-certificates#3.2 Distinct cases, weighted towards actions with rules (Prompt 81).
+  it('never repeats a case: no two are the same action with the same inputs', async () => {
+    for (const seed of [1, 42, 1998, 27395345]) {
+      const cases = await proofCases(ctx, { numRuns: 200, seed });
+      const keys = cases.map((c) => JSON.stringify([c.actionId, c.inputs]));
+      expect(new Set(keys).size).toBe(keys.length);
+    }
+  });
+
+  it('gives most cases to the action with rules: few "add a customer", which has one rule', async () => {
+    const cases = await proofCases(ctx, { numRuns: 200, seed: 1998 });
+    const customers = cases.filter((c) => c.actionId === 'add-customer').length;
+    expect(customers).toBeGreaterThan(0);
+    expect(customers).toBeLessThan(200 * 0.3);
   });
 
   it('runs a lane per old app, and starts each again from its own records every 25 cases', async () => {

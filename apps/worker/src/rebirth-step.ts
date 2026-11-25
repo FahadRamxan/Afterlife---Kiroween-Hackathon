@@ -49,6 +49,26 @@ export function rebirthStep(deps: {
         s.ok ? 'info' : 'warn',
       );
     for (const p of r.problems) await ctx.log(p, 'warn');
+    // Not reborn yet (Prompt 81): when every action left out is only waiting for a rule the old
+    // app's arithmetic needs, nothing is wrong with the step: it says so, and the data still moves
+    // and the Exorcist still looks. Any other reason is a failure.
+    if (!r.published && r.smoke.length && r.smoke.every((s) => s.ok || s.notReborn)) {
+      await ctx.log(`Nothing is reborn yet: ${r.problems.join('; ')}`, 'warn');
+      return {
+        status: 'done',
+        output: {
+          url: null,
+          soulVersion: row.version,
+          published: false,
+          actions: r.smoke.map((s) => ({ id: s.actionId, name: s.name, ok: s.ok })),
+          rules: { compiled: r.compiled.length, failed: failed.length },
+          problems: r.problems,
+          config: null,
+          smoke: r.smoke,
+          compiled: r.compiled,
+        },
+      };
+    }
     if (!r.published) return { status: 'failed', reason: r.problems.join('; ') };
     const published = r.config!.actions.length;
     await ctx.log(

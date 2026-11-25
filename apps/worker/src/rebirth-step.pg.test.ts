@@ -112,6 +112,24 @@ describe('the rebirth step', () => {
     });
   });
 
+  // @spec learned-certificates#2.2 Not reborn yet is not a failure (Prompt 81).
+  it('every action only "not reborn yet": done, nothing published, each listed with what is missing', async () => {
+    const p = await project({
+      ...SHIFA_REFERENCE_SOUL,
+      actions: SHIFA_REFERENCE_SOUL.actions.filter((a) => a.id === 'save-bill'),
+      rules: SHIFA_REFERENCE_SOUL.rules.filter((x) => x.target !== 'bill.gst'),
+    });
+    const { c, logs } = ctx(p);
+    const r = (await step(c)) as { status: string; output: Record<string, unknown> };
+    expect(r).toMatchObject({ status: 'done', output: { published: false, config: null } });
+    expect(r.output.smoke).toEqual([
+      expect.objectContaining({ actionId: 'save-bill', notReborn: true, missing: ['bill.GST'] }),
+    ]);
+    expect(logs.map(([m]) => m)).toContain(
+      'Nothing is reborn yet: Save a bill is left out: Not reborn yet: the old app works out bill GST, and no rule says how',
+    );
+  });
+
   it('a Soul with no actions yet (a short possession saved nothing): skipped, not failed', async () => {
     const p = await project({ ...SHIFA_REFERENCE_SOUL, actions: [] });
     expect(await step(ctx(p).c)).toEqual({

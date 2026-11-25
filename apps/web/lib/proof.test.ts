@@ -116,6 +116,28 @@ describe('accepted divergences (Prompt 74)', () => {
       counterexample: null,
     });
     expect(old).toMatchObject({ accepted: 0, reused: 0, acceptedDivergences: [] });
+    expect(old.notReborn).toEqual([]);
+  });
+  // @spec learned-certificates#3.1 The Proof tab lists what is not reborn yet (Prompt 81).
+  it('reads the actions not reborn yet, each with why', () => {
+    const proof = ProofSchema.parse({
+      soulVersion: 1,
+      seed: 1998,
+      numRuns: 0,
+      lanes: 0,
+      passed: 0,
+      failed: 0,
+      skipped: 0,
+      counterexample: null,
+      notReborn: [
+        {
+          actionId: 'add-payment',
+          name: 'Add a payment',
+          reason: 'Not reborn yet: the old app works out payment FEE, and no rule says how',
+        },
+      ],
+    });
+    expect(proof.notReborn.map((n) => n.name)).toEqual(['Add a payment']);
   });
 });
 

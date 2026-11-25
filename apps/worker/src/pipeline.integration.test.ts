@@ -56,7 +56,12 @@ describe('the pipeline on the real Shifa', () => {
       // step of them is kept too, labelled with the probe it was for.
       const probes = kept.filter(probe);
       expect(probes.length).toBeGreaterThan(0);
-      for (const o of probes) expect((o.hint as { text: string }).text).toMatch(/^probe: bill\./);
+      // Threshold probes ("bill.subtotal = 5000"), and the refusal probes of Prompt 81: a line at
+      // the stock and one over it.
+      const hints = probes.map((o) => (o.hint as { text: string }).text);
+      for (const h of hints)
+        expect(h).toMatch(/^probe: (bill\.|bill_item\.qty against medicine\.qty$)/);
+      expect(hints).toContain('probe: bill_item.qty against medicine.qty');
 
       // The steps ran in order, and possess read the real main menu.
       const events = await listEvents(t.db, p!.id, { limit: 500 });

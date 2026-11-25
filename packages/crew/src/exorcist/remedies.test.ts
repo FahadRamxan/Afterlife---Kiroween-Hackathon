@@ -60,11 +60,15 @@ describe('remedyFor: two-digit years', () => {
 
 describe('remedyFor: the other smells', () => {
   it('negative stock: Keep changes nothing; Fix refuses a bill that takes the stock below zero', async () => {
-    const r = remedyFor(negative, shifa.soul);
+    // INS100: 12 in stock. Since Prompt 81 the learned Soul refuses 13 as it is typed (the old app
+    // does too); the Fix is the bound on the stock itself (the old app's F3 edit skips the check),
+    // shown on the Soul without its refusal rules.
+    expect(await sells(shifa.soul, 'INS100', '13')).toBe(false);
+    const base = { ...shifa.soul, rules: shifa.soul.rules.filter((x) => x.kind !== 'validate') };
+    const r = remedyFor(negative, base);
     expect(r.keep).toEqual([]);
-    const fix = applyEdits(shifa.soul, r.fix!);
-    // INS100: 12 in stock.
-    expect(await sells(shifa.soul, 'INS100', '13')).toBe(true);
+    const fix = applyEdits(base, r.fix!);
+    expect(await sells(base, 'INS100', '13')).toBe(true);
     expect(await sells(fix, 'INS100', '13')).toBe(false);
     expect(await sells(fix, 'INS100', '12')).toBe(true);
   });

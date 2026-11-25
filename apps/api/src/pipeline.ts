@@ -58,6 +58,7 @@ export class PgPipeline implements Pipeline {
         accepted?: number;
         reused?: number;
         acceptedDivergences?: { id: string; text: string }[];
+        notReborn?: { actionId: string; name: string; reason: string }[];
         published?: unknown;
         actions?: { id: string; name: string; ok: boolean }[];
         tables?: {
@@ -136,6 +137,7 @@ export class PgPipeline implements Pipeline {
                 ...(output.acceptedDivergences
                   ? { acceptedDivergences: output.acceptedDivergences }
                   : {}),
+                ...(output.notReborn?.length ? { notReborn: output.notReborn } : {}),
               }
             : null,
       };

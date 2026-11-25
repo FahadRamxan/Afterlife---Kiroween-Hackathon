@@ -43,8 +43,8 @@ export type ProbeRunDeps = {
 };
 
 /** Types one planned bill into a freshly booted old app. Gives the steps it observed. */
-async function typeBill(
-  d: ProbeRunDeps,
+export async function typeBill(
+  d: Pick<ProbeRunDeps, 'pool' | 'bundle' | 'graph' | 'dosTime' | 'signal'>,
   action: Soul['actions'][number],
   inputs: ActionInputs,
 ): Promise<Observation[]> {

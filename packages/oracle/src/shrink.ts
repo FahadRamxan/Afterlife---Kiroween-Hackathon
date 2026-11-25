@@ -67,7 +67,7 @@ export async function shrinkFailure(
   opts: { seed: number; actionId?: string; ctx?: CaseContext; timeLimitMs?: number },
 ): Promise<Counterexample> {
   const ctx = opts.ctx ?? (await prepareCases(target.soul, target.records, target));
-  const path = String(failure.index);
+  const path = String(failure.run ?? failure.index);
   return target.withOldApp(async (old) => {
     let tries = 0;
     const failing = new Map<string, Tried>();

@@ -238,6 +238,10 @@ export const StepStateSchema = z
         accepted: z.number().int().optional(),
         reused: z.number().int().optional(),
         acceptedDivergences: z.array(z.object({ id: z.string(), text: z.string() })).optional(),
+        /** Prompt 81: actions the Surgeon did not publish, so not proved, and why. */
+        notReborn: z
+          .array(z.object({ actionId: z.string(), name: z.string(), reason: z.string() }))
+          .optional(),
         /** The Rebirth Certificate (Prompt 71): its id, or why none was issued. */
         certificate: z
           .object({ id: z.string().optional(), reason: z.string().optional() })
