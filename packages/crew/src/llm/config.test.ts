@@ -29,6 +29,20 @@ describe('llmClientFrom', () => {
       })?.model,
     ).toBe('claude-opus-5');
   });
+  it('reads how hard Claude thinks (ANTHROPIC_EFFORT), and refuses a level it does not know', () => {
+    const base = { LLM_PROVIDER: 'anthropic', ANTHROPIC_API_KEY: 'k' };
+    const effort = (e?: string) =>
+      (
+        llmClientFrom({
+          ...base,
+          ...(e === undefined ? {} : { ANTHROPIC_EFFORT: e }),
+        }) as AnthropicLlmClient | null
+      )?.effort;
+    expect(effort()).toBe('low');
+    expect(effort('High')).toBe('high');
+    expect(effort('none')).toBeNull();
+    expect(() => effort('turbo')).toThrow(/low, medium, high, xhigh, max or none/);
+  });
   it('says the key is missing instead of failing on the first call', () => {
     expect(() => llmClientFrom({ LLM_PROVIDER: 'anthropic' })).toThrow('ANTHROPIC_API_KEY');
   });

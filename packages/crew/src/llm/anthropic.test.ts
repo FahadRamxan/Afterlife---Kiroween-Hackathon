@@ -6,7 +6,9 @@ import { describe, expect, it } from 'vitest';
 import {
   AnthropicLlmClient,
   DEFAULT_ANTHROPIC_MODEL,
+  THINKING_ROOM,
   fromAnthropicMessage,
+  takesEffort,
   toAnthropicParams,
   type AnthropicSender,
 } from './anthropic';
@@ -56,7 +58,9 @@ describe('toAnthropicParams', () => {
     const p = toAnthropicParams('claude-sonnet-5-5', REQ);
     expect(p).toEqual({
       model: 'claude-sonnet-5-5',
-      max_tokens: 400,
+      // The 400 the caller asked for its answer, and room to think at low effort.
+      max_tokens: 400 + 2_048,
+      output_config: { effort: 'low' },
       system: 'You read old shop programs.',
       messages: [{ role: 'user', content: [{ type: 'text', text: 'Which field is GST?' }] }],
       tools: [
@@ -78,6 +82,31 @@ describe('toAnthropicParams', () => {
     const p = toAnthropicParams('claude-sonnet-4-5', REQ);
     expect(p.tool_choice).toEqual({ type: 'tool', name: 'answer' });
     expect(p).not.toHaveProperty('temperature');
+  });
+  // Review of Prompt 81: Sonnet 5.5 thinks first (effort `high` by default) and thinking counts
+  // toward max_tokens, so the Possessor's 300-token call could end before its answer started.
+  it('asks for low effort and leaves room to think; another effort gets more room, none gets the default', () => {
+    const high = toAnthropicParams('claude-sonnet-5-5', REQ, undefined, 'high');
+    expect(high.output_config).toEqual({ effort: 'high' });
+    expect(high.max_tokens).toBe(400 + THINKING_ROOM.high);
+    const none = toAnthropicParams('claude-sonnet-5-5', REQ, undefined, null);
+    expect(none).not.toHaveProperty('output_config');
+    expect(none.max_tokens).toBe(400 + THINKING_ROOM.default);
+    // A model without the effort setting gets none (it would answer 400).
+    expect(toAnthropicParams('claude-haiku-4-5-20251001', REQ)).not.toHaveProperty('output_config');
+  });
+  it('knows which models take an effort', () => {
+    for (const m of [
+      'claude-sonnet-5-5',
+      'claude-sonnet-4-6',
+      'claude-opus-5',
+      'claude-opus-5-5',
+      'claude-haiku-5-5',
+      'claude-fable-5-2',
+    ])
+      expect([m, takesEffort(m)]).toEqual([m, true]);
+    for (const m of ['claude-haiku-4-5-20251001', 'claude-sonnet-4-5', 'gpt-x', 'claude-3-haiku'])
+      expect([m, takesEffort(m)]).toEqual([m, false]);
   });
   it('sends thinking blocks back unchanged, and tool results as tool_result blocks', () => {
     const p = toAnthropicParams('claude-sonnet-5-5', {
@@ -124,7 +153,17 @@ describe('AnthropicLlmClient', () => {
     expect(c.capabilities).toEqual({ forcedToolChoice: false, temperature: false });
     const r = await c.converse(REQ);
     expect(r.stopReason).toBe('tool_use');
-    expect(f.calls[0]!.body).toMatchObject({ fallbacks: 'default' });
+    expect(f.calls[0]!.body).toMatchObject({
+      fallbacks: 'default',
+      output_config: { effort: 'low' },
+    });
+  });
+  it('sends the effort it was given, or none', async () => {
+    const f = fake(REPLY);
+    await new AnthropicLlmClient({ client: f.sender, effort: 'medium' }).converse(REQ);
+    await new AnthropicLlmClient({ client: f.sender, effort: null }).converse(REQ);
+    expect(f.calls[0]!.body).toMatchObject({ output_config: { effort: 'medium' } });
+    expect(f.calls[1]!.body).not.toHaveProperty('output_config');
   });
   it('a refusal that the fallback did not answer is an error, never empty text', async () => {
     const c = new AnthropicLlmClient({

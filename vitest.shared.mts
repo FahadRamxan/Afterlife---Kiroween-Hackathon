@@ -4,9 +4,10 @@ import { configDefaults, defineProject } from 'vitest/config';
 /**
  * Per-test time limit. With FC_NUM_RUNS above 100 (ci:local and nightly run 2000 property cases)
  * a property test does 20 times the work, often next to every other project: 60 s. The git hooks
- * run 100 cases and keep Vitest's 5 s.
+ * run 100 cases: 20 s, since on a busy laptop (Kiro, a dev server and e2e browsers at once) tests
+ * that pass alone in a second went over Vitest's 5 s (review of 61 to 80).
  */
-export const TEST_TIMEOUT = Number(process.env.FC_NUM_RUNS ?? 100) > 100 ? 60_000 : 5_000;
+export const TEST_TIMEOUT = Number(process.env.FC_NUM_RUNS ?? 100) > 100 ? 60_000 : 20_000;
 
 /**
  * Tests that boot real js-dos in headless Chromium. From the root they run in the "emulator"
