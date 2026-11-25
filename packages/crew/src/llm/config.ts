@@ -1,7 +1,7 @@
 // Which model the worker uses, from its environment. Bedrock or the Claude API when asked for; otherwise
 // none, and the agents say a model is needed rather than inventing answers.
 import { DEFAULT_LLM_TOKEN_BUDGET } from '@afterlife/db';
-import { AnthropicLlmClient } from './anthropic';
+import { ANTHROPIC_EFFORTS, AnthropicLlmClient, type AnthropicEffort } from './anthropic';
 import { BedrockLlmClient } from './bedrock';
 import type { LlmClient } from './types';
 
@@ -15,8 +15,21 @@ export type LlmEnv = {
   /** Read by the Anthropic SDK itself; only checked here to say it is missing. */
   ANTHROPIC_API_KEY?: string;
   ANTHROPIC_MODEL_ID?: string;
+  /** How hard Claude thinks: low (the default), medium, high, xhigh, max, or none. */
+  ANTHROPIC_EFFORT?: string;
   LLM_TOKEN_BUDGET?: string;
 };
+
+/** ANTHROPIC_EFFORT: undefined for the client's default, null for `none` (the model's own). */
+export function anthropicEffortFrom(env: LlmEnv): AnthropicEffort | null | undefined {
+  const raw = env.ANTHROPIC_EFFORT?.trim().toLowerCase();
+  if (!raw) return undefined;
+  if (raw === 'none') return null;
+  if ((ANTHROPIC_EFFORTS as readonly string[]).includes(raw)) return raw as AnthropicEffort;
+  throw new Error(
+    `ANTHROPIC_EFFORT must be low, medium, high, xhigh, max or none, not "${env.ANTHROPIC_EFFORT}"`,
+  );
+}
 
 export function tokenBudgetFrom(env: LlmEnv): number {
   const raw = env.LLM_TOKEN_BUDGET?.trim();
@@ -39,9 +52,11 @@ export function llmClientFrom(env: LlmEnv): LlmClient | null {
   if (provider === 'anthropic') {
     if (!env.ANTHROPIC_API_KEY?.trim())
       throw new Error('LLM_PROVIDER=anthropic needs ANTHROPIC_API_KEY (the Claude API key)');
+    const effort = anthropicEffortFrom(env);
     return new AnthropicLlmClient({
       apiKey: env.ANTHROPIC_API_KEY.trim(),
       ...(env.ANTHROPIC_MODEL_ID?.trim() ? { model: env.ANTHROPIC_MODEL_ID.trim() } : {}),
+      ...(effort === undefined ? {} : { effort }),
     });
   }
   throw new Error(`LLM_PROVIDER must be bedrock, anthropic or none, not "${env.LLM_PROVIDER}"`);

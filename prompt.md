@@ -837,6 +837,7 @@ What changed in the plan:
 - **New:** deploy, DBF dialects, the FBR digital invoice, and raising an app from its data alone.
 - **UI (added later the same day):** 87 now restyles the reborn app (daylight, the old app's keys, the owner's phone), 93 carries the seven moments itself, and the design reference is `docs/ui/afterlife-ui-update.html`.
 - **Added on 25 November:** 80a (reading the `.env` files, and the Claude API as a model provider, before 81), the README refresh in 100, and Phase 21 (Prompts 101 to 104, after judging).
+- **25 November, after 80a and 81 were merged:** the review gave Claude room to think (low effort and a thinking allowance on every call). What 81 left moved into 82 (the screen reader, refusals on every typed field, rules that belong to one action, Barkat without a model) and 83 (a certificate says which actions it covers). The model checks of 80a and 81 are a step of their own: "After 81", below.
 - **The order matters:** 81 to 84 first.
 
 ---
@@ -897,6 +898,16 @@ Write the spec first (`.kiro/specs/learned-certificates/`), then:
 
 Commit as `fix(crew): certificates from the learned soul`.
 
+### After 81: the checks that need the model
+
+80a and 81 are merged; three of their "Done when" lines need a model key. Run them once the owner has put `LLM_PROVIDER=anthropic` and `ANTHROPIC_API_KEY` in `apps/worker/.env` (never ask for the key in chat, never print or log it):
+
+- `pnpm llm:smoke` answers;
+- a live raise of Shifa shows Claude API calls in the "Show your work" call log, with their tokens, and no call ends on `max_tokens`;
+- live raises of Iqra and Barkat with the model: which actions are reborn, the proof result, and the certificate or why there is none.
+
+Report the results. Whatever is still missing goes into 82. No commit unless something had to change (then a `fix(crew): ...` with a test).
+
 ### 82. What the blind test found [F]
 
 The holdout app in `kiroween-2026/holdout-kanta` (Fahad copies it to `samples/holdout/kanta`; its `HIDDEN-ANSWERS.md` stays out of the repo) has things our samples never had:
@@ -916,10 +927,18 @@ Fix, with a test for each:
 - **Archaeologist:**
   - explain whole-number outputs too (`hypotheses.ts` skips any value without a decimal point; amounts in whole rupees are common), skipping only the fields the macro types;
   - read a linked record as it was at that observation (apply the earlier observations' changes), not as uploaded: a rate changed mid-day broke "RATE = the item's rate";
-  - add `(a - b) * c`, `(a - b) / c`, `round(x, 0)` and thresholds with a non-zero else (FEE is 100 over 20,000 kg, else 50).
-- **Screen reader:** a label with a unit in brackets gets its label (allow `( ) % -` in `labelBefore`).
-  - This also labels Iqra's "Fee month (MMYYYY)" and changes 10 Iqra screen fingerprints.
-  - Re-record Iqra (`pnpm pipeline:record`) and its fixtures in the same PR.
+  - add `(a - b) * c`, `(a - b) / c`, `round(x, 0)` and thresholds with a non-zero else (FEE is 100 over 20,000 kg, else 50);
+  - rules that belong to one action: a rule that fits every save of one action but not another's is kept for that action (an `actions` list on the rule in the Soul), not dropped, and the Vessel, the Surgeon, the workable check and the Oracle use it only there. Barkat needs it: KIND is "S" on a sale and "P" on a payment, BALANCE adds the amount on a sale and takes it off on a payment;
+  - a field that every save of an action writes with the same value, and no key types, is that value (`ledger.kind = "S"`).
+- **Refusals (what 81 left):**
+  - every typed field, not only a bill line's: 81 reads line fields against the linked record only, so Barkat's limits and the holdout's tare are never seen;
+  - against the same record too, as 81's spec says (`slip.tare < slip.gross`), and one sum (`party.balance + ledger.amount <= party.limit`, Barkat's credit limit);
+  - a message is a refusal only when the save after it leaves the value out (a warning that still saves is not one);
+  - the records start again at every boot: each séance and each stored probe starts from the data files, so mark the first step of each (81 marks only the probes it types in that same run, so a second raise of the same project reads them as one long day).
+- **Screen reader:**
+  - a label with a unit in brackets gets its label (allow `( ) % -` in `labelBefore`). This also labels Iqra's "Fee month (MMYYYY)", which changes 10 Iqra screen fingerprints, and takes FEE_MONTH off the list of what Iqra's "Add a payment" misses (the owner types it);
+  - a box right after another field's value gets its own label (Shifa's `Code: PAN500   Qty:` leaves Qty unlabelled), and the focused field stays focused while the cursor blinks off; then remove the two stand-ins for these in `fieldOf` (`packages/crew/src/archaeologist/refusals.ts`);
+  - re-record the three Graveyard runs (`pnpm pipeline:record`) and their fixtures in the same PR.
 - **Séances on uploaded apps.** The studio says "later". When the Possessor is stuck, the owner shows it.
 - **Score the holdout** in `pnpm score:archaeology`, next to the samples, and never tune on its answers.
 
@@ -927,7 +946,9 @@ Fix, with a test for each:
 
 - a live raise of the holdout without a model saves slips by itself;
 - it learns at least NET, RATE, FEE and the slip counter;
-- its score is printed next to the samples'.
+- its score is printed next to the samples';
+- without a model, Barkat's two actions are reborn (no longer "not reborn yet") and proved: report the proof, a certificate is the goal;
+- Shifa's recorded run still learns its stock rule and reaches its certificate after the Fix (`e2e/exorcism.spec.ts`).
 
 Commit as `fix(crew): generality from the blind test`.
 
@@ -935,7 +956,8 @@ Commit as `fix(crew): generality from the blind test`.
 
 - **Certificate:**
   - a proof run that issues a certificate runs every case, or the payload gets `reused` and the verify page shows it;
-  - when phones synced before the migration, the certificate says "checked, not written".
+  - when phones synced before the migration, the certificate says "checked, not written";
+  - it says which actions it covers: since 81 only the published actions are proved, so a certificate can cover part of an app. The payload lists the actions proved and those not reborn yet (with what each misses), and the verify page shows "covers 2 of 3 actions".
 - **Security:**
   - the certificate carries an opaque reference instead of the project id (the id is the key to all of a project's data and every write);
   - `docs/security.md` says a project link is a secret.

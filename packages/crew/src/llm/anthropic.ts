@@ -23,6 +23,56 @@ type Message = Anthropic.Beta.Messages.BetaMessage;
 export const DEFAULT_ANTHROPIC_MODEL = 'claude-sonnet-5-5';
 /** Server-side fallback: a model that declines for policy reasons hands over to another. */
 const FALLBACK_BETA = 'server-side-fallback-2026-07-01';
+/** How hard Claude thinks before it answers (`output_config.effort`). */
+export type AnthropicEffort = 'low' | 'medium' | 'high' | 'xhigh' | 'max';
+export const ANTHROPIC_EFFORTS: readonly AnthropicEffort[] = [
+  'low',
+  'medium',
+  'high',
+  'xhigh',
+  'max',
+];
+/**
+ * Our calls are short extraction and classification, sized at 300 to 1,200 tokens for the answer.
+ * Sonnet 5.5 thinks before almost every reply from `medium` up (its default is `high`), and the
+ * thinking counts toward `max_tokens`, so a short call could end before its answer starts. At
+ * `low` it skips thinking on most simple requests (review of Prompt 81). ANTHROPIC_EFFORT changes it.
+ */
+export const DEFAULT_ANTHROPIC_EFFORT: AnthropicEffort = 'low';
+/** Tokens for thinking on top of what the caller asked for its answer, by effort. */
+export const THINKING_ROOM: Record<AnthropicEffort | 'default', number> = {
+  low: 2_048,
+  medium: 4_096,
+  high: 8_192,
+  xhigh: 16_384,
+  max: 16_384,
+  // No effort sent: the model's own default (`high` on Sonnet 5.5).
+  default: 8_192,
+};
+/**
+ * Models that take `output_config.effort`: Sonnet and Opus 4.6 and later, Haiku 5.5 and later,
+ * every Fable and Mythos. Others (Haiku 4.5) answer 400 to it, so they get none by default.
+ */
+export function takesEffort(model: string): boolean {
+  const m = /claude-([a-z]+)-(\d+)(?:-(\d{1,2}))?(?=[-:.@]|$)/.exec(model);
+  if (!m) return false;
+  const [major, minor] = [Number(m[2]), Number(m[3] ?? 0)];
+  const from = (a: number, b: number) => major > a || (major === a && minor >= b);
+  switch (m[1]) {
+    case 'fable':
+    case 'mythos':
+      return true;
+    case 'sonnet':
+    case 'opus':
+      return from(4, 6);
+    case 'haiku':
+      return from(5, 5);
+    default:
+      return false;
+  }
+}
+const defaultEffort = (model: string): AnthropicEffort | null =>
+  takesEffort(model) ? DEFAULT_ANTHROPIC_EFFORT : null;
 /** The part of the SDK client this uses (a fake in tests). */
 export type AnthropicSender = {
   create(body: Params, opts?: { signal?: AbortSignal }): Promise<Message>;
@@ -57,6 +107,8 @@ export function toAnthropicParams(
   model: string,
   request: LlmRequest,
   capabilities: LlmCapabilities = { ...bedrockCapabilities(model), temperature: false },
+  /** null: none sent, so the model's own default applies. */
+  effort: AnthropicEffort | null = defaultEffort(model),
 ): Params {
   const req = fitRequest(request, capabilities);
   const choice =
@@ -67,7 +119,10 @@ export function toAnthropicParams(
         : { type: 'tool' as const, name: req.toolChoice.tool };
   return {
     model,
-    max_tokens: req.maxTokens,
+    // Thinking counts toward max_tokens: room for it on top of the answer the caller sized. Only
+    // the tokens used are billed, and the runtime counts them against the project's budget.
+    max_tokens: req.maxTokens + THINKING_ROOM[effort ?? 'default'],
+    ...(effort ? { output_config: { effort } } : {}),
     ...(req.system ? { system: req.system } : {}),
     messages: req.messages.map((m) => ({
       role: m.role,
@@ -113,11 +168,22 @@ export class AnthropicLlmClient implements LlmClient {
   readonly provider = PROVIDER;
   readonly model: string;
   readonly capabilities: LlmCapabilities;
+  /** The effort sent with every call; null: none (the model's default). */
+  readonly effort: AnthropicEffort | null;
   private readonly client: AnthropicSender;
-  constructor(opts: { model?: string; apiKey?: string; client?: AnthropicSender } = {}) {
+  constructor(
+    opts: {
+      model?: string;
+      apiKey?: string;
+      client?: AnthropicSender;
+      /** Left out: `low` for a model that takes it; null: none. */
+      effort?: AnthropicEffort | null;
+    } = {},
+  ) {
     this.model = opts.model ?? DEFAULT_ANTHROPIC_MODEL;
     // The SDK takes no temperature at all; the tool choice follows the model family.
     this.capabilities = { ...bedrockCapabilities(this.model), temperature: false };
+    this.effort = opts.effort === undefined ? defaultEffort(this.model) : opts.effort;
     if (opts.client) this.client = opts.client;
     else {
       // The key is read from ANTHROPIC_API_KEY by the SDK (or given); never kept on this object.
@@ -129,7 +195,7 @@ export class AnthropicLlmClient implements LlmClient {
     let m: Message;
     try {
       m = await this.client.create(
-        toAnthropicParams(this.model, req, this.capabilities),
+        toAnthropicParams(this.model, req, this.capabilities, this.effort),
         opts.signal ? { signal: opts.signal } : undefined,
       );
     } catch (e) {
