@@ -15,6 +15,8 @@ import {
   eq,
   exorcisms,
   ne,
+  pipelineSteps,
+  projects,
   proofCases,
   proofRuns,
   souls,
@@ -48,6 +50,8 @@ const MAX_EVENT_DIFFERENCES = 20;
 
 /** The project's seed: the same project proves the same cases again (its first 8 hex digits). */
 export const seedOf = (projectId: string) => parseInt(projectId.replace(/-/g, '').slice(0, 8), 16);
+/** The seed of every recorded project's proof (Prompt 81): the year Shifa was written. */
+export const RECORDED_SEED = 1998;
 
 /** The record the case wrote (the bill), as one side wrote it: what the Proof tab shows. */
 function writtenRecord(soul: Soul, actionId: string, d: SnapshotDiff | undefined) {
@@ -113,19 +117,71 @@ export function proveStep(deps: ProveDeps): StepHandler {
     const records = Object.fromEntries(
       Object.entries(tablesFromBundle(bundle, soul)).map(([f, t]) => [f.toUpperCase(), t.records]),
     );
+    // Prove what was published (Prompt 81): the actions the Surgeon's smoke test passed. The others
+    // are not reborn yet, and are listed with why, not counted as differences.
+    const [rebirth] = await deps.db
+      .select({ output: pipelineSteps.output })
+      .from(pipelineSteps)
+      .where(and(eq(pipelineSteps.projectId, ctx.projectId), eq(pipelineSteps.step, 'rebirth')));
+    const surgeon = rebirth?.output as
+      | {
+          smoke?: {
+            actionId: string;
+            name: string;
+            ok: boolean;
+            error?: string;
+            refused?: string[];
+          }[];
+          config?: { actions?: { id: string }[] } | null;
+        }
+      | undefined;
+    const published = surgeon?.smoke
+      ? new Set((surgeon.config?.actions ?? []).map((a) => a.id))
+      : new Set(soul.actions.map((a) => a.id));
+    const notReborn = (surgeon?.smoke ?? [])
+      .filter((s) => !published.has(s.actionId))
+      .map((s) => ({
+        actionId: s.actionId,
+        name: s.name,
+        reason: s.error ?? `Its smoke test was refused (${(s.refused ?? []).join('; ')})`,
+      }));
+    for (const n of notReborn)
+      await ctx.log(`Not reborn yet, so not proved: ${n.name}. ${n.reason}`);
+    const [{ mode } = { mode: 'live' }] = await deps.db
+      .select({ mode: projects.mode })
+      .from(projects)
+      .where(eq(projects.id, ctx.projectId));
+    // A recorded run (demo mode) proves with one seed, so the demo and the e2e give the same answer.
+    const seed = mode === 'recorded' ? RECORDED_SEED : seedOf(ctx.projectId);
+    if (!published.size)
+      return {
+        status: 'done',
+        output: {
+          soulVersion: row.version,
+          seed,
+          numRuns: 0,
+          passed: 0,
+          failed: 0,
+          skipped: 0,
+          lanes: 0,
+          notReborn,
+          certificate: { reason: 'No action is reborn yet, so there is nothing to prove' },
+        },
+      };
+    const provable: Soul = { ...soul, actions: soul.actions.filter((a) => published.has(a.id)) };
     let withOldApp: ProofTarget['withOldApp'];
-    if (deps.oldApp) withOldApp = deps.oldApp(soul, records, today);
+    if (deps.oldApp) withOldApp = deps.oldApp(provable, records, today);
     else {
       const graph = graphOf(soul, await loadGraph(deps.db, ctx.projectId));
       const pool = deps.pool!;
       withOldApp = <R>(work: (old: OldApp) => Promise<R>) =>
         pool.use(
           bundle,
-          (emu) => work(emulatorOldApp(emu, { soul, graph })),
+          (emu) => work(emulatorOldApp(emu, { soul: provable, graph })),
           dosTime ? { dosTime } : {},
         );
     }
-    const target: ProofTarget = { soul, records, today, withOldApp };
+    const target: ProofTarget = { soul: provable, records, today, withOldApp };
     // The owner's fixes (Prompt 74): with them undone the Soul does what the old app does, so the
     // Oracle runs it alongside and accepts the differences it explains.
     const fixes = (
@@ -140,14 +196,13 @@ export function proveStep(deps: ProveDeps): StepHandler {
     });
     const oldBehaviour = fixes.length
       ? undoFixes(
-          soul,
+          provable,
           fixes.map((f) => f.remedy),
         )
       : undefined;
     const acceptedDivergences = fixes.map((f) => ({ id: f.code, text: f.remedy.fixEn }));
     const numRuns = deps.numRuns ?? DEFAULT_PROVE_CASES;
     const lanes = deps.lanes ?? DEFAULT_PROVE_LANES;
-    const seed = seedOf(ctx.projectId);
     const [run] = await deps.db
       .insert(proofRuns)
       .values({ projectId: ctx.projectId, soulId: row.id, seed, caseCount: numRuns })
@@ -155,7 +210,7 @@ export function proveStep(deps: ProveDeps): StepHandler {
     await ctx.log(
       `Proving Soul version ${row.version}: ${numRuns} cases on ${lanes} lanes, seed ${seed}`,
     );
-    const reuse = await reuseFrom(deps.db, ctx.projectId, run!.id, seed, soul, target);
+    const reuse = await reuseFrom(deps.db, ctx.projectId, run!.id, seed, provable, target);
     if (reuse) await ctx.log(`Cases the change does not touch keep the outcome of the last proof`);
     // Running totals ride on every event: the page keeps only the newest events.
     const tally = { done: 0, failed: 0, skipped: 0, accepted: 0 };
@@ -275,6 +330,7 @@ export function proveStep(deps: ProveDeps): StepHandler {
         reused: r.reused,
         acceptedDivergences,
         counterexample,
+        notReborn,
         certificate: cert.issued ? { id: cert.id } : { reason: cert.reason },
       },
     };

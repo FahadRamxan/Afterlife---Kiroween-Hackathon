@@ -20,7 +20,12 @@ import {
 import { probePlanner } from '@afterlife/crew';
 import fc from 'fast-check';
 
-export type ProofCase = { actionId: string; inputs: ActionInputs };
+export type ProofCase = {
+  actionId: string;
+  inputs: ActionInputs;
+  /** fast-check's run that made it, from the seed: it replays alone with this path. */
+  run?: number;
+};
 export type Threshold = { ref: string; value: string };
 
 const COMPARE = new Set(['<', '<=', '>', '>=', '=']);
@@ -347,5 +352,23 @@ export function caseArbitrary(ctx: CaseContext, actionId?: string): fc.Arbitrary
         )
       : made;
   };
-  return of.length === 1 ? forAction(of[0]!) : fc.oneof(...of.map(forAction));
+  // Most cases where the rules are (Prompt 81): an action gets a share by how many rules read or
+  // write its records, so "add a customer" (one rule) does not take half the proof.
+  const weight = (a: ActionContext) => {
+    const names = new Set(
+      [a.form.header.entity.id, a.form.line?.entity.id]
+        .filter((x): x is string => !!x)
+        .map((id) => id.replace(/-/g, '_')),
+    );
+    if (a.form.line) names.add('item');
+    const n = ctx.soul.rules.filter((r) =>
+      [r.target ?? '', r.expression].some((s) =>
+        [...names].some((nm) => new RegExp(`\\b${nm}\\.`).test(s)),
+      ),
+    ).length;
+    return 1 + n;
+  };
+  return of.length === 1
+    ? forAction(of[0]!)
+    : fc.oneof(...of.map((a) => ({ arbitrary: forAction(a), weight: weight(a) })));
 }

@@ -289,6 +289,54 @@ describe('actionForm', () => {
       'CODE -> medicine.CODE',
     ]);
     expect(f.header.links.map((l) => l.entity.id)).toEqual(['customer']);
+    expect(f.header.missing).toEqual([]);
+    expect(f.line?.missing).toEqual([]);
     expect(() => actionForm(SHIFA, 'nope')).toThrow(VesselError);
+  });
+  // @spec learned-certificates#2.2 A field the old app works out is never an input (Prompt 81).
+  it('asks only for what the key macro types; what the old app works out with no rule is missing', () => {
+    // Iqra's learned Soul: the owner types the student and the month; FEE, DISCOUNT, LATE_FEE and
+    // TOTAL are the old app's arithmetic, and no rule says how yet.
+    const iqra: Soul = {
+      ...SHIFA,
+      entities: [
+        {
+          id: 'payment',
+          name: 'Payment',
+          file: 'PAYMENT.DBF',
+          key: ['RECEIPT'],
+          fields: ['RECEIPT', 'STU_ID', 'FEE_MONTH', 'FEE', 'DISCOUNT', 'LATE_FEE', 'TOTAL'].map(
+            (name) => ({
+              name,
+              type: name === 'STU_ID' || name === 'FEE_MONTH' ? 'C' : 'N',
+              length: 8,
+              decimals: 0,
+            }),
+          ),
+          foreignKeys: [],
+          counters: [{ field: 'RECEIPT', pattern: 'n' }],
+        },
+      ] as Soul['entities'],
+      actions: [
+        {
+          id: 'add-payment',
+          name: 'Add a payment',
+          screen: 'fp_pay',
+          keys: '{@STU_ID}{Enter}{@FEE_MONTH}{Enter}{F2}',
+          effects: [
+            {
+              kind: 'insert',
+              entity: 'payment',
+              fields: ['RECEIPT', 'STU_ID', 'FEE_MONTH', 'FEE', 'DISCOUNT', 'LATE_FEE', 'TOTAL'],
+            },
+          ],
+        },
+      ] as Soul['actions'],
+      rules: [],
+      screens: [],
+    };
+    const f = actionForm(iqra, 'add-payment');
+    expect(f.header.inputs.map((x) => x.name)).toEqual(['STU_ID', 'FEE_MONTH']);
+    expect(f.header.missing.map((x) => x.name)).toEqual(['FEE', 'DISCOUNT', 'LATE_FEE', 'TOTAL']);
   });
 });

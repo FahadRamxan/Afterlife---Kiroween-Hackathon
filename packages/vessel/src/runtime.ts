@@ -16,6 +16,7 @@ import {
   DslError,
   dslDate,
   evaluate,
+  macroFields,
   nextId,
   parseExpr,
   recordEnv,
@@ -291,6 +292,8 @@ export type FormPart = {
   entity: Entity;
   inputs: DbfField[];
   computed: DbfField[];
+  /** Written by the old app, not typed by its keys, and filled by no rule: not reborn yet. */
+  missing: DbfField[];
   /** Fields that pick another record (a line's CODE is a medicine's CODE): the picker searches it. */
   links: { field: string; entity: Entity; refField: string }[];
 };
@@ -302,12 +305,25 @@ export function actionForm(soul: Soul, actionId: string): ActionForm {
   const p = plan(soul, action);
   const filled = new Set(p.order.map((o) => `${o.scope}:${o.field}`));
   if (p.position) filled.add(`line:${p.position}`);
-  const split = (e: Entity, scope: 'header' | 'line', fields: string[], links: Link[]) => ({
-    entity: e,
-    links,
-    inputs: e.fields.filter((f) => fields.includes(f.name) && !filled.has(`${scope}:${f.name}`)),
-    computed: e.fields.filter((f) => filled.has(`${scope}:${f.name}`)),
-  });
+  // What the owner types is what the old app's keys type (Prompt 81): a field the old app works
+  // out itself (FEE, NET, BALANCE) is never an input, even when no rule says how yet; it is
+  // missing instead, and the action cannot be reborn until a rule fills it. A hand-written Soul
+  // whose macro types no field keeps the fields nothing fills as inputs.
+  const typed = macroFields(action.keys);
+  const anyTyped = typed.record.length + typed.line.length > 0;
+  const split = (e: Entity, scope: 'header' | 'line', fields: string[], links: Link[]) => {
+    const own = scope === 'header' ? typed.record : typed.line;
+    const open = e.fields.filter(
+      (f) => fields.includes(f.name) && !filled.has(`${scope}:${f.name}`),
+    );
+    return {
+      entity: e,
+      links,
+      inputs: anyTyped ? open.filter((f) => own.includes(f.name)) : open,
+      computed: e.fields.filter((f) => filled.has(`${scope}:${f.name}`)),
+      missing: anyTyped ? open.filter((f) => !own.includes(f.name)) : [],
+    };
+  };
   return {
     action,
     header: split(p.header, 'header', p.headerFields, p.headerLinks),

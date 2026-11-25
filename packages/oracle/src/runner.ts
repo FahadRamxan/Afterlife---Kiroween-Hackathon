@@ -33,8 +33,10 @@ export type OldApp = {
 export type CaseOutcome = 'pass' | 'fail' | 'skip' | 'accepted';
 
 export type CaseResult = {
-  /** The case's number from 0; also its fast-check path, to replay it alone. */
+  /** The case's number from 0. */
   index: number;
+  /** fast-check's run that made it: its path, to replay it alone (the index when absent). */
+  run?: number;
   lane: number;
   actionId: string;
   inputs: ProofCase['inputs'];
@@ -125,15 +127,26 @@ export function proofProperty(
  * The cases a proof runs: the ones fc.assert makes from the seed, in order, so case i replays
  * alone with path `${i}` (fc.sample biases its values differently, so it is not used).
  */
+/** fast-check runs per case asked for: room to skip the repeats. */
+const DISTINCT_TRIES = 5;
 export async function proofCases(
   ctx: CaseContext,
   opts: { numRuns: number; seed: number; actionId?: string },
 ): Promise<ProofCase[]> {
+  // No case twice (Prompt 81): a 200-case proof had 3 bills 7 to 9 times each. fast-check is
+  // asked for more runs and the repeats are skipped; each case keeps the run that made it, so it
+  // still replays alone from the seed.
   const cases: ProofCase[] = [];
+  const seen = new Set<string>();
+  let run = 0;
   const property = proofProperty(ctx, opts.actionId, async (c) => {
-    cases.push(c);
+    const at = run++;
+    const key = JSON.stringify([c.actionId, c.inputs]);
+    if (cases.length >= opts.numRuns || seen.has(key)) return;
+    seen.add(key);
+    cases.push({ ...c, run: at });
   });
-  await fc.check(property, { numRuns: opts.numRuns, seed: opts.seed });
+  await fc.check(property, { numRuns: opts.numRuns * DISTINCT_TRIES, seed: opts.seed });
   return cases;
 }
 
@@ -286,6 +299,7 @@ export async function proveEquivalence(
           lane,
           actionId: c.actionId,
           inputs: c.inputs,
+          ...(c.run !== undefined ? { run: c.run } : {}),
           ...outcome,
           ms: Date.now() - start,
         };

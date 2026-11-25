@@ -389,7 +389,8 @@
       "accepted": "{n} cases differ from the old app as the owner chose: accepted divergences.",
       "reused": "{n} cases kept from the last proof: the change does not touch them.",
       "divergence": "Accepted divergence:",
-      "acceptedOne": "Fixed"
+      "acceptedOne": "Fixed",
+      "notRebornTitle": "Not reborn yet, so not proved:"
     },
     "exorcism": {
       "title": "Ghosts of the old app",

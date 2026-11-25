@@ -16,7 +16,7 @@ import { numberSoul, specRequirements, type Soul } from '@afterlife/soul';
 import { SHIFA_AS_IT_RUNS_SOUL } from '@afterlife/soul/examples/shifa';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { graveyardBundle } from './possess';
-import { proveStep, seedOf } from './prove-step';
+import { proveStep, RECORDED_SEED, seedOf } from './prove-step';
 import type { StepContext } from './registry';
 
 let t: TestDatabase;
@@ -205,5 +205,89 @@ describe('the prove step', () => {
       status: 'skipped',
       reason: 'This worker has no emulator to run the old app in',
     });
+  });
+
+  // @spec learned-certificates#3 Prove what was published.
+  // @spec learned-certificates#3.1 Only the actions the Surgeon published are proved (Prompt 81).
+  it('proves only the published actions, and lists the others as not reborn yet', async () => {
+    const p = await project(OLD);
+    await t.db.insert(pipelineSteps).values({
+      projectId: p.id,
+      step: 'rebirth',
+      status: 'done',
+      output: {
+        smoke: [
+          { actionId: 'save-bill', name: 'Save a bill', ok: true },
+          {
+            actionId: 'add-customer',
+            name: 'Add a customer',
+            ok: false,
+            notReborn: true,
+            missing: ['customer.PHONE'],
+            error: 'Not reborn yet: the old app works out customer PHONE, and no rule says how',
+          },
+        ],
+        config: { actions: [{ id: 'save-bill' }] },
+      },
+    });
+    const { c, logs } = ctx(p);
+    const r = (await step(20)(c)) as { status: string; output: Record<string, unknown> };
+    expect(r.status).toBe('done');
+    const cases = await t.db
+      .select({ input: proofCases.input })
+      .from(proofCases)
+      .innerJoin(proofRuns, eq(proofRuns.id, proofCases.proofRunId))
+      .where(eq(proofRuns.projectId, p.id));
+    expect(new Set(cases.map((x) => (x.input as { actionId: string }).actionId))).toEqual(
+      new Set(['save-bill']),
+    );
+    expect(r.output.notReborn).toEqual([
+      {
+        actionId: 'add-customer',
+        name: 'Add a customer',
+        reason: 'Not reborn yet: the old app works out customer PHONE, and no rule says how',
+      },
+    ]);
+    expect(logs.join('\n')).toContain('Not reborn yet, so not proved: Add a customer');
+  });
+
+  it('with no action published, proves nothing and says so; no certificate', async () => {
+    const p = await project(OLD);
+    await t.db.insert(pipelineSteps).values({
+      projectId: p.id,
+      step: 'rebirth',
+      status: 'done',
+      output: {
+        smoke: OLD.actions.map((a) => ({
+          actionId: a.id,
+          name: a.name,
+          ok: false,
+          notReborn: true,
+          error: 'Not reborn yet: the old app works out x, and no rule says how',
+        })),
+        config: null,
+      },
+    });
+    const r = (await step(20)(ctx(p).c)) as { status: string; output: Record<string, unknown> };
+    expect(r).toMatchObject({
+      status: 'done',
+      output: {
+        numRuns: 0,
+        certificate: { reason: 'No action is reborn yet, so there is nothing to prove' },
+      },
+    });
+    expect((r.output.notReborn as unknown[]).length).toBe(OLD.actions.length);
+  });
+
+  // @spec learned-certificates#3.2 A recorded run proves with a fixed seed (Prompt 81).
+  it('a recorded project proves with the fixed seed, whatever its id', async () => {
+    const seeds: number[] = [];
+    for (let i = 0; i < 2; i++) {
+      const p = await project(OLD);
+      await t.db.update(projects).set({ mode: 'recorded' }).where(eq(projects.id, p.id));
+      const r = (await step(5)(ctx(p).c)) as { output: { seed: number } };
+      seeds.push(r.output.seed);
+    }
+    expect(seeds).toEqual([RECORDED_SEED, RECORDED_SEED]);
   });
 });

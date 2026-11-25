@@ -90,6 +90,26 @@ describe('operate', () => {
     expect(r.config!.actions.map((a) => a.id)).toEqual(['add-customer']);
   });
 
+  // @spec learned-certificates#2 Unworkable rules.
+  // @spec learned-certificates#2.2 The Surgeon types only the macro's fields (Prompt 81).
+  it('an action writing what the old app works out with no rule is "not reborn yet", with what is missing', async () => {
+    // The bill's GST is the old app's arithmetic; without its rule nobody types it, so the reborn
+    // app cannot write it: no smoke test typing "1" into it.
+    const soul: Soul = { ...SOUL, rules: SOUL.rules.filter((x) => x.target !== 'bill.gst') };
+    const r = await run(soul);
+    expect(r.smoke.find((s) => s.actionId === 'save-bill')).toMatchObject({
+      ok: false,
+      notReborn: true,
+      missing: ['bill.GST'],
+      error: 'Not reborn yet: the old app works out bill GST, and no rule says how',
+    });
+    expect(r.config!.actions.map((a) => a.id)).toEqual(['add-customer']);
+    // The smoke test only typed what the old app's keys type.
+    expect(
+      Object.keys(r.smoke.find((s) => s.actionId === 'add-customer')!.inputs!.values ?? {}),
+    ).toEqual(['NAME', 'PHONE']);
+  });
+
   it('a bill the rules always refuse fails its smoke test with the rule’s words', async () => {
     const soul: Soul = {
       ...SOUL,

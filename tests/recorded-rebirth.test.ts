@@ -14,6 +14,7 @@ type Rec = {
       actions?: { id: string; ok: boolean }[];
       rules?: { compiled: number; failed: number };
       problems?: string[];
+      smoke?: { actionId: string; ok: boolean; notReborn?: true; missing?: string[] }[];
     } | null;
   }[];
   soul?: { actions: { id: string }[] };
@@ -24,7 +25,7 @@ const rec = (app: string) =>
   ) as Rec;
 
 describe('the recorded rebirth step', () => {
-  it.each(['shifa', 'iqra', 'barkat'])('%s: published, every action of its Soul passing', (app) => {
+  it.each(['shifa'])('%s: published, every action of its Soul passing', (app) => {
     const r = rec(app);
     const step = r.steps.find((s) => s.step === 'rebirth')!;
     expect(step.status).toBe('done');
@@ -34,4 +35,22 @@ describe('the recorded rebirth step', () => {
       r.soul!.actions.map((a) => [a.id, true]),
     );
   });
+  // @spec learned-certificates#2.2 Without a model, Iqra's fees and Barkat's balances are the old
+  // app's arithmetic that no rule explains yet (Prompt 81): nothing is published, nothing failed.
+  it.each(['iqra', 'barkat'])(
+    '%s: done, nothing published, every action not reborn yet with what it misses',
+    (app) => {
+      const r = rec(app);
+      const step = r.steps.find((s) => s.step === 'rebirth')!;
+      expect(step.status).toBe('done');
+      expect(step.output).toMatchObject({ published: false });
+      expect(step.output!.rules!.failed).toBe(0);
+      const smoke = step.output!.smoke!;
+      expect(smoke.map((s) => s.actionId)).toEqual(r.soul!.actions.map((a) => a.id));
+      for (const s of smoke) {
+        expect(s).toMatchObject({ ok: false, notReborn: true });
+        expect(s.missing!.length).toBeGreaterThan(0);
+      }
+    },
+  );
 });
